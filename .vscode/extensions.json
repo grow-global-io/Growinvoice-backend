@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "SonarSource.sonarlint-vscode",
+    "aaron-bond.better-comments",
+    "naumovs.color-highlight",
+    "zenstack.zenstack",
+    "ms-azuretools.vscode-docker",
+    "Prisma.prisma"
+  ]
+}
