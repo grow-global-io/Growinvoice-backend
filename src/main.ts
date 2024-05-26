@@ -8,6 +8,7 @@ async function bootstrap() {
   app.use(new RequestLoggerMiddleware().use);
   app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
+
     .setTitle('Growinvoice API')
     .setDescription('Enhance your business with Growinvoice API')
     .setVersion('1.0')

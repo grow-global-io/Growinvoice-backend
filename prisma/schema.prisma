@@ -48,5 +48,7 @@ model User {
   email     String    @unique()
   name      String?
   phone     String?
+  /// @DtoEntityHidden
+  /// @DtoApiHidden
   password  String
 }

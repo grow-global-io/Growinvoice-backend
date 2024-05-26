@@ -2,6 +2,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { LoginUserDto } from '@/user/dto/login-user.dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@shared/decorators/user.decorator';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -28,5 +29,20 @@ export class AuthService {
       message: 'Login successful',
       authToken: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async verifyToken(user: User) {
+    const userData = await this.prismaService.user.findUnique({
+      where: { id: user.sub },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return userData;
   }
 }

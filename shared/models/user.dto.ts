@@ -34,8 +34,4 @@ export class UserDto {
     nullable: true,
   })
   phone: string | null;
-  @ApiProperty({
-    type: 'string',
-  })
-  password: string;
 }

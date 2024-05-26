@@ -1,7 +1,7 @@
 // user.decorator.ts
 // user.interface.ts
 export interface User {
-  id: string;
+  sub: string;
   email: string;
   // add other properties as needed
 }

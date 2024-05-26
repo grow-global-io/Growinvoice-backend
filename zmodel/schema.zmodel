@@ -41,5 +41,5 @@ model User extends Base {
     email    String  @unique
     name     String?
     phone    String?
-    password String
+    password String  @DtoEntityHidden @DtoApiHidden
 }
