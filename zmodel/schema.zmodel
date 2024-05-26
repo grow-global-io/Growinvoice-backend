@@ -1,0 +1,45 @@
+import "base"
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+plugin prisma {
+    provider = '@core/prisma'
+    format = true
+    output = "../prisma/schema.prisma"
+}
+
+generator nestjsDto {
+    provider                        = "prisma-generator-nestjs-dto"
+    output                          = "../shared/models"
+    outputToNestJsResourceStructure = "false"
+    flatResourceStructure           = "false"
+    exportRelationModifierClasses   = "true"
+    reExport                        = "true"
+    createDtoPrefix                 = "Create"
+    updateDtoPrefix                 = "Update"
+    dtoSuffix                       = "Dto"
+    entityPrefix                    = ""
+    entitySuffix                    = ""
+    classValidation                 = "true"
+    fileNamingStyle                 = "camel"
+    noDependencies                  = "false"
+    outputType                      = "class"
+    definiteAssignmentAssertion     = "false"
+    requiredResponseApiProperty     = "true"
+    prettier                        = "true"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User extends Base {
+    id       String  @id @default(cuid())
+    email    String  @unique
+    name     String?
+    phone    String?
+    password String
+}

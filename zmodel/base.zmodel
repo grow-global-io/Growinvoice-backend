@@ -1,0 +1,22 @@
+attribute @DtoReadOnly()
+attribute @DtoCreateHidden()
+attribute @DtoUpdateHidden()
+attribute @DtoEntityHidden()
+attribute @DtoApiHidden()
+attribute @DtoCreateOptional()
+attribute @DtoUpdateOptional()
+attribute @DtoRelationRequired()
+attribute @DtoRelationCanCreateOnCreate()
+attribute @DtoRelationCanConnectOnCreate()
+attribute @DtoRelationCanCreateOnUpdate()
+attribute @DtoRelationCanConnectOnUpdate()
+attribute @DtoRelationCanDisconnectOnUpdate()
+attribute @DtoRelationIncludeId()
+attribute @DtoTypeFullUpdate()
+
+abstract model Base {
+  createdAt DateTime @default(now()) @DtoCreateHidden() @DtoUpdateHidden()
+  updatedAt DateTime? @updatedAt @DtoCreateHidden() @DtoUpdateHidden()
+  isExist Boolean @default(true) @DtoCreateHidden() @DtoUpdateHidden()
+  @@deny('read', isExist == false)
+}
