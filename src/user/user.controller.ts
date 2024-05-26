@@ -6,6 +6,7 @@ import { ErrorMessageDto } from '@shared/dto/errorMessage.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { LoginSuccessDto } from './dto/login-success.dto';
 import { AuthService } from '@/auth/auth.service';
+import { IsPublic } from '@shared/decorators/public.decorator';
 
 @ApiTags('users')
 @Controller('user')
@@ -15,6 +16,7 @@ export class UserController {
     private authService: AuthService,
   ) {}
 
+  @IsPublic()
   @Post('create')
   @ApiResponse({
     status: 201,
@@ -25,6 +27,7 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
+  @IsPublic()
   @Post('login')
   @ApiResponse({
     status: 200,
