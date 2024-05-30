@@ -3,10 +3,16 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '@shared/models';
 import * as bcrypt from 'bcrypt';
 import { CreateUserCompany } from './dto/create-user-company.dto';
+import { MailService } from '@/mail/mail.service';
+import { v4 as uuidv4 } from 'uuid';
+import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private mailService: MailService,
+  ) {}
 
   private async validateCreateUserDto(data: CreateUserDto) {
     const errors = [];
@@ -71,6 +77,65 @@ export class UserService {
     return {
       message: 'User created successfully',
       status: 201,
+    };
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+    });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const token = uuidv4();
+    const expiry = new Date();
+    expiry.setHours(expiry.getHours() + 1); // Token valid for 1 hour
+
+    await this.prismaService.user.update({
+      where: { email },
+      data: {
+        resetToken: token,
+        resetTokenExpiry: expiry,
+      },
+    });
+
+    await this.mailService.sendEmail(email, token);
+
+    // Send password reset email
+    return {
+      message: 'Password reset email sent successfully',
+      status: 200,
+    };
+  }
+
+  async resetPassword(resetPassword: ResetPasswordTokenDto) {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        resetToken: resetPassword.token,
+        resetTokenExpiry: {
+          gt: new Date(),
+        },
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('Invalid or expired token');
+    }
+
+    const hashedPassword = await bcrypt.hash(resetPassword.password, 10);
+
+    await this.prismaService.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpiry: null,
+      },
+    });
+    return {
+      message: 'Password reset successfully',
+      status: 200,
     };
   }
 }

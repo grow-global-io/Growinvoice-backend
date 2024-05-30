@@ -5,10 +5,11 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from '@/auth/auth.service';
+import { MailService } from '@/mail/mail.service';
 
 @Module({
   imports: [PassportModule, ConfigModule.forRoot()],
-  providers: [UserService, PrismaService, AuthService],
+  providers: [UserService, PrismaService, AuthService, MailService],
   controllers: [UserController],
   exports: [UserService],
 })

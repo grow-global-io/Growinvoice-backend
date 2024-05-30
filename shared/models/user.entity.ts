@@ -40,6 +40,17 @@ export class User {
   })
   password: string;
   @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  resetToken: string | null;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    nullable: true,
+  })
+  resetTokenExpiry: Date | null;
+  @ApiProperty({
     isArray: true,
     required: false,
   })

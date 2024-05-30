@@ -37,19 +37,25 @@ generator nestjsDto {
 model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt DateTime  @default(now())
+  createdAt        DateTime  @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt DateTime? @updatedAt()
+  updatedAt        DateTime? @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist   Boolean   @default(true)
-  id        String    @id() @default(cuid())
-  email     String    @unique()
-  name      String?
-  phone     String?
-  password  String
-  company   Company[]
+  isExist          Boolean   @default(true)
+  id               String    @id() @default(cuid())
+  email            String    @unique()
+  name             String?
+  phone            String?
+  password         String
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  resetToken       String?
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  resetTokenExpiry DateTime?
+  company          Company[]
 }
 
 /// @@deny('read', isExist == false)
@@ -73,5 +79,5 @@ model Company {
   zip       String?
   vat       String?
   user_id   String
-  user      User      @relation(fields: [user_id], references: [id])
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
