@@ -3,3 +3,8 @@ export * from './create-user.dto';
 export * from './update-user.dto';
 export * from './user.entity';
 export * from './user.dto';
+export * from './connect-company.dto';
+export * from './create-company.dto';
+export * from './update-company.dto';
+export * from './company.entity';
+export * from './company.dto';

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserDto {
+export class CompanyDto {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -23,12 +23,12 @@ export class UserDto {
   @ApiProperty({
     type: 'string',
   })
-  email: string;
+  name: string;
   @ApiProperty({
     type: 'string',
     nullable: true,
   })
-  name: string | null;
+  address: string | null;
   @ApiProperty({
     type: 'string',
     nullable: true,
@@ -36,6 +36,27 @@ export class UserDto {
   phone: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  password: string;
+  country: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  state: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  city: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  zip: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  vat: string | null;
 }

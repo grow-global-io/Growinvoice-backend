@@ -37,9 +37,24 @@ datasource db {
 }
 
 model User extends Base {
-    id       String  @id @default(cuid())
-    email    String  @unique
+    id       String    @id @default(cuid())
+    email    String    @unique
     name     String?
     phone    String?
-    password String  @DtoEntityHidden @DtoApiHidden
+    password String
+    company  Company[]
+}
+
+model Company extends Base {
+    id      String  @id @default(cuid())
+    name    String
+    address String?
+    phone   String?
+    country String?
+    state   String?
+    city    String?
+    zip     String?
+    vat     String?
+    user_id String
+    user    User    @relation(fields: [user_id], references: [id])
 }

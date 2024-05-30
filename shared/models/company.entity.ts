@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Company } from './company.entity';
+import { User } from './user.entity';
 
-export class User {
+export class Company {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -24,12 +24,12 @@ export class User {
   @ApiProperty({
     type: 'string',
   })
-  email: string;
+  name: string;
   @ApiProperty({
     type: 'string',
     nullable: true,
   })
-  name: string | null;
+  address: string | null;
   @ApiProperty({
     type: 'string',
     nullable: true,
@@ -37,11 +37,35 @@ export class User {
   phone: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  password: string;
+  country: string | null;
   @ApiProperty({
-    isArray: true,
+    type: 'string',
+    nullable: true,
+  })
+  state: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  city: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  zip: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  vat: string | null;
+  @ApiProperty({
+    type: 'string',
+  })
+  user_id: string;
+  @ApiProperty({
     required: false,
   })
-  company?: Company[];
+  user?: User;
 }
