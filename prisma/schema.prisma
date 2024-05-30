@@ -55,6 +55,7 @@ model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
   resetTokenExpiry DateTime?
+  /// @DtoEntityHidden
   company          Company[]
 }
 

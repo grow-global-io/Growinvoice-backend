@@ -44,7 +44,7 @@ model User extends Base {
     password         String
     resetToken       String?   @DtoCreateHidden @DtoUpdateHidden
     resetTokenExpiry DateTime? @DtoCreateHidden @DtoUpdateHidden
-    company          Company[]
+    company          Company[] @DtoEntityHidden
 }
 
 model Company extends Base {
