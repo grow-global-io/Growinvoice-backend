@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { RequestLoggerMiddleware } from '@shared/middleware/logger.middleware';
+import { wakeDyno, wakeDynos } from 'heroku-keep-awake';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const DYNO_URL = 'https://growinvoice-backend-16f908d94aed.herokuapp.com';
+  const DYNO_URLS = ['https://growinvoice-backend-16f908d94aed.herokuapp.com'];
   app.use(new RequestLoggerMiddleware().use);
   app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
@@ -29,6 +32,10 @@ async function bootstrap() {
     origin: '*',
   });
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 3000, () => {
+    wakeDyno(DYNO_URL); // Use this function when only needing to wake a single Heroku app.
+
+    wakeDynos(DYNO_URLS); // Use this function when needing to wake multiple Heroku apps.
+  });
 }
 bootstrap();
