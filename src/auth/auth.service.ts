@@ -43,6 +43,9 @@ export class AuthService {
         updatedAt: true,
       },
     });
+    if (!userData) {
+      throw new BadRequestException('User not found');
+    }
     return userData;
   }
 }
