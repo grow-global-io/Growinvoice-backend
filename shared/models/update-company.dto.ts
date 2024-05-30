@@ -65,12 +65,4 @@ export class UpdateCompanyDto {
   @IsOptional()
   @IsString()
   vat?: string | null;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  gst?: string | null;
 }

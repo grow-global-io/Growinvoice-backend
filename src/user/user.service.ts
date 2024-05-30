@@ -2,6 +2,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '@shared/models';
 import * as bcrypt from 'bcrypt';
+import { CreateUserCompany } from './dto/create-user-company.dto';
 
 @Injectable()
 export class UserService {
@@ -49,16 +50,24 @@ export class UserService {
     }
   }
 
-  async createUser(data: CreateUserDto) {
+  async createUser(data: CreateUserCompany) {
     await this.validateCreateUserDto(data);
     await this.checkIfUserExists(data.email);
     const hashedPassword = await bcrypt.hash(data.password, 12);
     await this.prismaService.user.create({
       data: {
-        ...data,
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
         password: hashedPassword,
+        company: {
+          create: {
+            name: data.companyName,
+          },
+        },
       },
     });
+
     return {
       message: 'User created successfully',
       status: 201,

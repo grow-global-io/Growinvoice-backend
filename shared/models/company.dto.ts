@@ -59,9 +59,4 @@ export class CompanyDto {
     nullable: true,
   })
   vat: string | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  gst: string | null;
 }

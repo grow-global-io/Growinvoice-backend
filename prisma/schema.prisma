@@ -72,7 +72,6 @@ model Company {
   city      String?
   zip       String?
   vat       String?
-  gst       String?
   user_id   String
   user      User      @relation(fields: [user_id], references: [id])
 }
