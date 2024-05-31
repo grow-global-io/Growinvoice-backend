@@ -37,14 +37,11 @@ datasource db {
 }
 
 model User extends Base {
-    id               String    @id @default(cuid())
-    email            String    @unique
-    name             String?
-    phone            String?
-    password         String
-    resetToken       String?   @DtoCreateHidden @DtoUpdateHidden
-    resetTokenExpiry DateTime? @DtoCreateHidden @DtoUpdateHidden
-    company          Company[] @DtoEntityHidden
+    id      String    @id @default(cuid())
+    email   String    @unique
+    name    String
+    phone   String?
+    company Company[] @DtoEntityHidden
 }
 
 model Company extends Base {

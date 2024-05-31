@@ -37,26 +37,19 @@ generator nestjsDto {
 model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt        DateTime  @default(now())
+  createdAt DateTime  @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt        DateTime? @updatedAt()
+  updatedAt DateTime? @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist          Boolean   @default(true)
-  id               String    @id() @default(cuid())
-  email            String    @unique()
-  name             String?
-  phone            String?
-  password         String
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
-  resetToken       String?
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
-  resetTokenExpiry DateTime?
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  email     String    @unique()
+  name      String
+  phone     String?
   /// @DtoEntityHidden
-  company          Company[]
+  company   Company[]
 }
 
 /// @@deny('read', isExist == false)

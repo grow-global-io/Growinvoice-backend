@@ -6,11 +6,16 @@ import { promisify } from 'util';
 import * as jwksRsa from 'jwks-rsa';
 import { Jwt as jwtType } from 'jsonwebtoken';
 import * as jwt from 'jsonwebtoken';
+import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtFullDataStrategy extends PassportStrategy(
+  Strategy,
+  'jwtFullData',
+) {
   private jwksClient: jwksRsa.JwksClient;
+  private token: string;
 
   constructor(private configService: ConfigService) {
     super({
@@ -22,8 +27,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         done: any,
       ) => {
         let decodedToken: jwtType;
+
+        this.token = rawJwtToken;
+
         try {
-          decodedToken = jwt.decode(rawJwtToken, { complete: true });
+          decodedToken = jwt.decode(rawJwtToken, { complete: true }) as jwtType;
           if (!decodedToken || !decodedToken.header.kid) {
             throw new UnauthorizedException('Invalid token');
           }
@@ -47,13 +55,25 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   private async getSigningKey(kid: string): Promise<string> {
     const getSigningKey = promisify(this.jwksClient.getSigningKey);
     const key = await getSigningKey(kid);
-    return key.getPublicKey();
+    return key?.getPublicKey() as string;
   }
 
   async validate(payload: any) {
     if (!payload) {
       throw new UnauthorizedException('Invalid token');
     }
-    return { userId: payload.sub, id: payload.sub.split('|')[1] }; // or any other properties you want to attach
+    const userInfo = await axios.get(
+      `https://${this.configService.get('AUTH0_DOMAIN')}/userinfo`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.token}`, // Extract the actual token from the request
+        },
+      },
+    );
+    const id = payload.sub.split('|')[1];
+    return {
+      ...userInfo.data,
+      id,
+    };
   }
 }

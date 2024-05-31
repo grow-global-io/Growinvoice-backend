@@ -26,27 +26,11 @@ export class User {
   email: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  name: string | null;
+  name: string;
   @ApiProperty({
     type: 'string',
     nullable: true,
   })
   phone: string | null;
-  @ApiProperty({
-    type: 'string',
-  })
-  password: string;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  resetToken: string | null;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-    nullable: true,
-  })
-  resetTokenExpiry: Date | null;
 }
