@@ -6,8 +6,8 @@ import { wakeDyno, wakeDynos } from 'heroku-keep-awake';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const DYNO_URL = 'https://growinvoice-backend-16f908d94aed.herokuapp.com';
-  const DYNO_URLS = ['https://growinvoice-backend-16f908d94aed.herokuapp.com'];
+  const DYNO_URL = 'https://growinvoice-94ee0dd2031b.herokuapp.com';
+  const DYNO_URLS = ['https://growinvoice-94ee0dd2031b.herokuapp.com'];
   app.use(new RequestLoggerMiddleware().use);
   app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
