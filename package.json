@@ -10,9 +10,9 @@
     "output": "shared/models"
   },
   "scripts": {
-    "build": "yarn global add @nestjs/cli && nest build",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "yarn global add @nestjs/cli && nest start",
+    "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
