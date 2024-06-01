@@ -10,7 +10,7 @@
     "output": "shared/models"
   },
   "scripts": {
-    "build": "nest build",
+    "build": "yarn prisma generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "yarn add @nestjs/cli -f && nest start",
     "start:dev": "nest start --watch",
