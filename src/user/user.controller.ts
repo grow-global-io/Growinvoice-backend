@@ -1,16 +1,22 @@
-import { Body, Controller, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { ErrorMessageDto } from '@shared/dto/errorMessage.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { LoginResponseDto } from './dto/login-response.dto';
+import { LoginSuccessDto } from './dto/login-success.dto';
+import { AuthService } from '@/auth/auth.service';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { CreateUserCompany } from './dto/create-user-company.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
 
 @ApiTags('users')
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
 
   @IsPublic()
   @Post('create')
@@ -28,45 +34,31 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'User logged in successfully',
-    type: LoginResponseDto,
+    type: LoginSuccessDto,
   })
   async loginUser(@Body() loginUserDto: LoginUserDto) {
-    return this.userService.login(loginUserDto);
+    return this.authService.loginUser(loginUserDto);
   }
 
   @IsPublic()
-  @Post('password-less-login')
+  @Post('forgot-password')
   @ApiResponse({
     status: 200,
-    description: 'User logged in successfully',
-    type: LoginResponseDto,
-  })
-  async passwordLessLogin(@Query('email') email: string) {
-    return this.userService.passwordLessLogin(email);
-  }
-
-  @IsPublic()
-  @Post('password-less-login-verify')
-  @ApiResponse({
-    status: 200,
-    description: 'User logged in successfully',
-    type: LoginResponseDto,
-  })
-  async passwordLessLoginVerify(
-    @Query('email') email: string,
-    @Query('code') code: string,
-  ) {
-    return this.userService.passwordLessLoginVerify(email, code);
-  }
-
-  @IsPublic()
-  @Post('change-password')
-  @ApiResponse({
-    status: 200,
-    description: 'Password changed successfully',
+    description: 'Password reset email sent successfully',
     type: ErrorMessageDto,
   })
-  async changePassword(@Query('email') email: string) {
-    return this.userService.changePassword(email);
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
+    return this.userService.forgotPassword(body.email);
+  }
+
+  @IsPublic()
+  @Post('reset-password')
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successfully',
+    type: ErrorMessageDto,
+  })
+  async resetPassword(@Body() body: ResetPasswordTokenDto) {
+    return this.userService.resetPassword(body);
   }
 }
