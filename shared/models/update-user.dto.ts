@@ -12,11 +12,10 @@ export class UpdateUserDto {
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  name?: string | null;
+  name?: string;
   @ApiProperty({
     type: 'string',
     required: false,
@@ -25,11 +24,4 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   phone?: string | null;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  password?: string;
 }

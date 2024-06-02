@@ -1,141 +1,182 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from '@shared/models';
-import * as bcrypt from 'bcrypt';
 import { CreateUserCompany } from './dto/create-user-company.dto';
-import { MailService } from '@/mail/mail.service';
-import { v4 as uuidv4 } from 'uuid';
-import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
+import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     private prismaService: PrismaService,
-    private mailService: MailService,
+    private configService: ConfigService,
   ) {}
 
-  private async validateCreateUserDto(data: CreateUserDto) {
-    const errors = [];
-
-    if (!data.email) {
-      errors.push('Email is required');
-    } else if (!this.isValidEmail(data.email)) {
-      errors.push('Email is not valid');
-    }
-
-    if (!data.password) {
-      errors.push('Password is required');
-    } else if (!this.isValidPassword(data.password)) {
-      errors.push(
-        'Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-      );
-    }
-
-    if (errors.length > 0) {
-      throw new BadRequestException(errors[0]);
-    }
-  }
-
-  private isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
-  private isValidPassword(password: string): boolean {
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-    return passwordRegex.test(password);
-  }
-
-  private async checkIfUserExists(email: string) {
-    const existingUser = await this.prismaService.user.findUnique({
-      where: { email },
-    });
-    if (existingUser) {
-      throw new BadRequestException('User already exists');
-    }
-  }
-
   async createUser(data: CreateUserCompany) {
-    await this.validateCreateUserDto(data);
-    await this.checkIfUserExists(data.email);
-    const hashedPassword = await bcrypt.hash(data.password, 12);
-    await this.prismaService.user.create({
-      data: {
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        password: hashedPassword,
-        company: {
-          create: {
-            name: data.companyName,
+    try {
+      const response = await axios.post(
+        `https://${this.configService.get('AUTH0_DOMAIN')}/dbconnections/signup`,
+        {
+          client_id: this.configService.get('AUTH0_CLIENT_ID'),
+          email: data.email,
+          password: data.password,
+          connection: 'Username-Password-Authentication',
+          given_name: data.name,
+          family_name: data.name,
+          name: data.name,
+          nickname: data.name,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
           },
         },
-      },
-    });
-
-    return {
-      message: 'User created successfully',
-      status: 201,
-    };
-  }
-
-  async forgotPassword(email: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: { email },
-    });
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    const token = uuidv4();
-    const expiry = new Date();
-    expiry.setHours(expiry.getHours() + 1); // Token valid for 1 hour
-
-    await this.prismaService.user.update({
-      where: { email },
-      data: {
-        resetToken: token,
-        resetTokenExpiry: expiry,
-      },
-    });
-
-    await this.mailService.sendEmail(email, token);
-
-    // Send password reset email
-    return {
-      message: 'Password reset email sent successfully',
-      status: 200,
-    };
-  }
-
-  async resetPassword(resetPassword: ResetPasswordTokenDto) {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        resetToken: resetPassword.token,
-        resetTokenExpiry: {
-          gt: new Date(),
+      );
+      await this.prismaService.user.create({
+        data: {
+          email: data.email,
+          name: data.name,
+          phone: data.phone,
+          id: response.data._id,
+          company: {
+            create: {
+              name: data.companyName,
+            },
+          },
         },
-      },
-    });
-
-    if (!user) {
-      throw new BadRequestException('Invalid or expired token');
+      });
+      return {
+        message: 'User created successfully',
+        status: 201,
+      };
+    } catch (error) {
+      console.log(error?.response?.data);
+      throw new BadRequestException(
+        error?.response?.data?.description === 'Invalid sign up'
+          ? 'User already exists'
+          : error?.response?.data?.error_description ??
+            error?.response?.data?.description ??
+            error?.response?.data?.error ??
+            'Error creating user',
+      );
     }
+  }
 
-    const hashedPassword = await bcrypt.hash(resetPassword.password, 10);
+  async login(data: LoginUserDto) {
+    try {
+      const response = await axios.post(
+        `https://${this.configService.get('AUTH0_DOMAIN')}/oauth/token`,
+        {
+          grant_type: 'password',
+          username: data.email,
+          password: data.password,
+          audience: `https://${this.configService.get('AUTH0_DOMAIN')}/api/v2/`,
+          scope: 'openid profile email',
+          client_id: this.configService.get('AUTH0_CLIENT_ID'),
+          client_secret: this.configService.get('AUTH0_CLIENT_SECRET'),
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw new BadRequestException(
+        error?.response?.data?.error_description ??
+          error?.response?.data?.description ??
+          error?.response?.data?.error ??
+          'Error logging in',
+      );
+    }
+  }
 
-    await this.prismaService.user.update({
-      where: { id: user.id },
-      data: {
-        password: hashedPassword,
-        resetToken: null,
-        resetTokenExpiry: null,
-      },
+  async findByEmail(email: string) {
+    return this.prismaService.user.findUnique({
+      where: { email },
     });
-    return {
-      message: 'Password reset successfully',
-      status: 200,
-    };
+  }
+
+  async findAll() {
+    return this.prismaService.user.findMany();
+  }
+
+  async passwordLessLogin(email: string) {
+    try {
+      const response = await axios.post(
+        `https://${this.configService.get('AUTH0_DOMAIN')}/passwordless/start`,
+        {
+          client_id: this.configService.get('AUTH0_CLIENT_ID'),
+          client_secret: this.configService.get('AUTH0_CLIENT_SECRET'),
+          connection: 'email',
+          email: email, //set for connection=email
+          send: 'code', //if left null defaults to link
+          authParams: {
+            scope: 'openid profile email',
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw new BadRequestException(
+        error?.response?.data?.error_description ??
+          error?.response?.data?.description ??
+          error?.response?.data?.error ??
+          'Error logging in',
+      );
+    }
+  }
+
+  async passwordLessLoginVerify(email: string, code: string) {
+    try {
+      const response = await axios.post(
+        `https://${this.configService.get('AUTH0_DOMAIN')}/oauth/token`,
+        {
+          grant_type: 'http://auth0.com/oauth/grant-type/passwordless/otp',
+          client_id: this.configService.get('AUTH0_CLIENT_ID'),
+          client_secret: this.configService.get('AUTH0_CLIENT_SECRET'),
+          otp: code,
+          realm: 'email',
+          username: email,
+          audience: `https://${this.configService.get('AUTH0_DOMAIN')}/api/v2/`,
+          scope: 'openid profile email',
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw new BadRequestException(
+        error?.response?.data?.error_description ??
+          error?.response?.data?.description ??
+          error?.response?.data?.error ??
+          'Error logging in',
+      );
+    }
+  }
+
+  async changePassword(email: string) {
+    try {
+      const response = await axios.post(
+        `https://${this.configService.get('AUTH0_DOMAIN')}/dbconnections/change_password`,
+        {
+          client_id: this.configService.get('AUTH0_CLIENT_ID'),
+          email,
+          connection: 'Username-Password-Authentication',
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      throw new BadRequestException(
+        error?.response?.data?.error_description ??
+          error?.response?.data?.description ??
+          error?.response?.data?.error ??
+          'Error changing password',
+      );
+    }
   }
 }
