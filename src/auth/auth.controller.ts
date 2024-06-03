@@ -4,6 +4,7 @@ import { GetUser, User } from '@shared/decorators/user.decorator';
 import { AuthService } from './auth.service';
 import { User as UserDto } from '@shared/models';
 import { IsPublic } from '@shared/decorators/public.decorator';
+import { userWithCompanyDto } from './dto/user-with-company.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -11,7 +12,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Get('verify')
-  @ApiResponse({ status: 200, type: UserDto })
+  @ApiResponse({ status: 200, type: userWithCompanyDto })
   status(@GetUser() user: User) {
     return this.authService.verifyToken(user);
   }
