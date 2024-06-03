@@ -1,8 +1,8 @@
-import { CompanyDto, User } from '@shared/models';
+import { CompanyDto, UserDto } from '@shared/models';
 import { IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class userWithCompanyDto extends User {
+export class UserWithCompanyDto extends UserDto {
   @IsOptional()
   @Type(() => CompanyDto)
   company?: CompanyDto;

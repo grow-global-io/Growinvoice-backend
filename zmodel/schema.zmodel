@@ -44,7 +44,7 @@ model User extends Base {
     password         String
     resetToken       String?   @DtoCreateHidden @DtoUpdateHidden
     resetTokenExpiry DateTime? @DtoCreateHidden @DtoUpdateHidden
-    company          Company[] @DtoEntityHidden
+    company          Company[] @DtoApiHidden
 }
 
 model Company extends Base {
@@ -57,6 +57,6 @@ model Company extends Base {
     city    String?
     zip     String?
     vat     String?
-    user_id String
+    user_id String  @unique
     user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

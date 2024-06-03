@@ -55,7 +55,7 @@ model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
   resetTokenExpiry DateTime?
-  /// @DtoEntityHidden
+  /// @DtoApiHidden
   company          Company[]
 }
 
@@ -79,6 +79,6 @@ model Company {
   city      String?
   zip       String?
   vat       String?
-  user_id   String
+  user_id   String    @unique()
   user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

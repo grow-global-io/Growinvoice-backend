@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { ErrorMessageDto } from '@shared/dto/errorMessage.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -9,7 +9,11 @@ import { IsPublic } from '@shared/decorators/public.decorator';
 import { CreateUserCompany } from './dto/create-user-company.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
+import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
+import { User } from '@shared/models';
+import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 
+@ApiExtraModels(User)
 @ApiTags('users')
 @Controller('user')
 export class UserController {
@@ -20,13 +24,17 @@ export class UserController {
 
   @IsPublic()
   @Post('create')
-  @ApiResponse({
+  @ApiSuccessResponse(User, {
     status: 201,
-    description: 'User created successfully',
-    type: ErrorMessageDto,
   })
-  async createUser(@Body() createUserDto: CreateUserCompany) {
-    return this.userService.createUser(createUserDto);
+  async createUser(
+    @Body() createUserDto: CreateUserCompany,
+  ): Promise<SuccessResponseDto<User>> {
+    const result = await this.userService.createUser(createUserDto);
+    return {
+      message: 'User created successfully',
+      result,
+    };
   }
 
   @IsPublic()

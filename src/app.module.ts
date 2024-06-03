@@ -4,6 +4,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { MailService } from './mail/mail.service';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { MailService } from './mail/mail.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    CompanyModule,
   ],
   controllers: [],
   providers: [MailService],

@@ -1,4 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Company } from './company.entity';
 
 export class User {
   @ApiProperty({
@@ -49,4 +50,6 @@ export class User {
     nullable: true,
   })
   resetTokenExpiry: Date | null;
+  @ApiHideProperty()
+  company?: Company[];
 }

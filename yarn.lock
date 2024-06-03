@@ -4966,6 +4966,11 @@ pretty-repl@^4.0.0:
     emphasize "^4.2.0"
     strip-ansi "^6.0.0"
 
+prisma-paginate@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/prisma-paginate/-/prisma-paginate-5.2.1.tgz#00e3761091229d3aea80ea9d21852089891e43f4"
+  integrity sha512-GwR39iSOGUqTkfpEl75hA/LyMUkhAwc2DqyhDkO6ug+u3zBUZlIfEWolqHOCrHOAKQlaNpgnP2nxFLH0LjBMtA==
+
 prisma@^4.16.2:
   version "4.16.2"
   resolved "https://registry.npmjs.org/prisma/-/prisma-4.16.2.tgz"

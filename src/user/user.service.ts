@@ -1,11 +1,12 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from '@shared/models';
+import { CreateUserDto, User } from '@shared/models';
 import * as bcrypt from 'bcrypt';
 import { CreateUserCompany } from './dto/create-user-company.dto';
 import { MailService } from '@/mail/mail.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UserService {
@@ -60,7 +61,7 @@ export class UserService {
     await this.validateCreateUserDto(data);
     await this.checkIfUserExists(data.email);
     const hashedPassword = await bcrypt.hash(data.password, 12);
-    await this.prismaService.user.create({
+    const result = await this.prismaService.user.create({
       data: {
         email: data.email,
         name: data.name,
@@ -73,11 +74,7 @@ export class UserService {
         },
       },
     });
-
-    return {
-      message: 'User created successfully',
-      status: 201,
-    };
+    return plainToInstance(User, result);
   }
 
   async forgotPassword(email: string) {

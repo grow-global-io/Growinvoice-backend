@@ -4,6 +4,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@shared/decorators/user.decorator';
 import * as bcrypt from 'bcrypt';
+import { UserWithCompanyDto } from './dto/user-with-company.dto';
+import { plainToInstance } from 'class-transformer';
+import { UserDto } from '@shared/models';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +42,7 @@ export class AuthService {
     if (!userData) {
       throw new BadRequestException('User not found');
     }
-    return userData;
+    return plainToInstance(UserWithCompanyDto, userData);
   }
 
   async getUser(id: string) {
@@ -49,6 +52,6 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('User not found');
     }
-    return user;
+    return plainToInstance(UserDto, user);
   }
 }
