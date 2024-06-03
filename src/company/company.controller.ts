@@ -1,10 +1,11 @@
 import { Controller, Get, Body, Param, Delete, Put } from '@nestjs/common';
 import { CompanyService } from './company.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { CompanyDto, UpdateCompanyDto } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
-import { ErrorMessageDto } from '@shared/dto/errorMessage.dto';
+import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 
+@ApiExtraModels(SuccessResponseDto)
 @ApiTags('company')
 @Controller('company')
 export class CompanyController {
@@ -26,11 +27,7 @@ export class CompanyController {
   }
 
   @Delete(':id')
-  @ApiResponse({
-    status: 200,
-    type: ErrorMessageDto,
-    description: 'Company removed successfully',
-  })
+  @ApiSuccessResponse()
   async remove(@Param('id') id: string) {
     await this.companyService.remove(id);
     return { message: 'Company removed successfully' };
