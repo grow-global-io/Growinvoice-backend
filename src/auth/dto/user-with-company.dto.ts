@@ -5,5 +5,5 @@ import { Type } from 'class-transformer';
 export class UserWithCompanyDto extends UserDto {
   @IsOptional()
   @Type(() => CompanyDto)
-  company?: CompanyDto;
+  company?: CompanyDto[];
 }
