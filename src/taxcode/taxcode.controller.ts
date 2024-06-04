@@ -13,7 +13,7 @@ import { ApiSuccessResponse } from '@shared/decorators/api-success-response.deco
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('TaxCode')
+@ApiTags('taxCode')
 @Controller('taxcode')
 export class TaxcodeController {
   constructor(private readonly taxcodeService: TaxcodeService) {}
