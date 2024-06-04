@@ -1,7 +1,8 @@
+import { ProductType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class UpdateCompanyDto {
+export class UpdateProductDto {
   @ApiProperty({
     type: 'string',
     required: false,
@@ -16,55 +17,42 @@ export class UpdateCompanyDto {
   })
   @IsOptional()
   @IsString()
-  address?: string | null;
+  description?: string | null;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  price?: number;
+  @ApiProperty({
+    enum: ProductType,
+    required: false,
+  })
+  @IsOptional()
+  type?: ProductType;
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  phone?: string | null;
+  unit_id?: string;
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  country?: string | null;
+  hsnCode_id?: string;
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  state?: string | null;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  city?: string | null;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  zip?: string | null;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  vat?: string | null;
+  tax_id?: string;
   @ApiProperty({
     type: 'string',
     required: false,

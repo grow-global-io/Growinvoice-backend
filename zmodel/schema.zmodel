@@ -36,15 +36,24 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum ProductType {
+    Service
+    Good
+}
+
 model User extends Base {
-    id               String    @id @default(cuid())
-    email            String    @unique
+    id               String        @id @default(cuid())
+    email            String        @unique
     name             String?
     phone            String?
     password         String
-    resetToken       String?   @DtoCreateHidden @DtoUpdateHidden
-    resetTokenExpiry DateTime? @DtoCreateHidden @DtoUpdateHidden
-    company          Company[] @DtoApiHidden
+    resetToken       String?       @DtoCreateHidden @DtoUpdateHidden
+    resetTokenExpiry DateTime?     @DtoCreateHidden @DtoUpdateHidden
+    company          Company[]     @DtoApiHidden
+    product          Product[]     @DtoApiHidden
+    hsnCode          HSNCode[]     @DtoApiHidden
+    tax              Tax[]         @DtoApiHidden
+    productUnit      ProductUnit[] @DtoApiHidden
 }
 
 model Company extends Base {
@@ -57,6 +66,49 @@ model Company extends Base {
     city    String?
     zip     String?
     vat     String?
-    user_id String  @unique
+    user_id String  @unique @DtoRelationIncludeId
     user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model HSNCode extends Base {
+    id      String    @id @default(cuid())
+    code    String
+    tax     Float
+    user_id String    @DtoRelationIncludeId
+    user    User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    Product Product[] @DtoApiHidden
+}
+
+model Tax extends Base {
+    id      String    @id @default(cuid())
+    name    String
+    rate    Float
+    user_id String    @DtoRelationIncludeId
+    user    User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    Product Product[] @DtoApiHidden
+}
+
+model ProductUnit extends Base {
+    id      String    @id @default(cuid())
+    name    String
+    symbol  String
+    user_id String    @DtoRelationIncludeId
+    user    User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    Product Product[] @DtoApiHidden
+}
+
+model Product extends Base {
+    id          String      @id @default(cuid())
+    name        String
+    description String?
+    price       Float
+    type        ProductType
+    unit_id     String      @DtoRelationIncludeId
+    unit        ProductUnit @relation(fields: [unit_id], references: [id], onDelete: Cascade)
+    hsnCode_id  String      @DtoRelationIncludeId
+    hsnCode     HSNCode     @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+    tax_id      String      @DtoRelationIncludeId
+    tax         Tax         @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+    user_id     String      @DtoRelationIncludeId
+    user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

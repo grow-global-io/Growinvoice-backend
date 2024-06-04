@@ -1,5 +1,9 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Company } from './company.entity';
+import { Product } from './product.entity';
+import { HSNCode } from './hSNCode.entity';
+import { Tax } from './tax.entity';
+import { ProductUnit } from './productUnit.entity';
 
 export class User {
   @ApiProperty({
@@ -52,4 +56,12 @@ export class User {
   resetTokenExpiry: Date | null;
   @ApiHideProperty()
   company?: Company[];
+  @ApiHideProperty()
+  product?: Product[];
+  @ApiHideProperty()
+  hsnCode?: HSNCode[];
+  @ApiHideProperty()
+  tax?: Tax[];
+  @ApiHideProperty()
+  productUnit?: ProductUnit[];
 }

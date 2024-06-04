@@ -64,4 +64,10 @@ export class CreateCompanyDto {
   @IsOptional()
   @IsString()
   vat?: string | null;
+  @ApiProperty({
+    type: 'string',
+  })
+  @IsNotEmpty()
+  @IsString()
+  user_id: string;
 }

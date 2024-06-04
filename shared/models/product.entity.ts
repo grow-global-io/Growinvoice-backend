@@ -1,6 +1,11 @@
+import { ProductType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { ProductUnit } from './productUnit.entity';
+import { HSNCode } from './hSNCode.entity';
+import { Tax } from './tax.entity';
+import { User } from './user.entity';
 
-export class CompanyDto {
+export class Product {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -28,39 +33,46 @@ export class CompanyDto {
     type: 'string',
     nullable: true,
   })
-  address: string | null;
+  description: string | null;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+  })
+  price: number;
+  @ApiProperty({
+    enum: ProductType,
+  })
+  type: ProductType;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  phone: string | null;
+  unit_id: string;
+  @ApiProperty({
+    required: false,
+  })
+  unit?: ProductUnit;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  country: string | null;
+  hsnCode_id: string;
+  @ApiProperty({
+    required: false,
+  })
+  hsnCode?: HSNCode;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  state: string | null;
+  tax_id: string;
   @ApiProperty({
-    type: 'string',
-    nullable: true,
+    required: false,
   })
-  city: string | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  zip: string | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  vat: string | null;
+  tax?: Tax;
   @ApiProperty({
     type: 'string',
   })
   user_id: string;
+  @ApiProperty({
+    required: false,
+  })
+  user?: User;
 }

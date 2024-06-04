@@ -33,19 +33,24 @@ generator nestjsDto {
   prettier                        = "true"
 }
 
+enum ProductType {
+  Service
+  Good
+}
+
 /// @@deny('read', isExist == false)
 model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt        DateTime  @default(now())
+  createdAt        DateTime      @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt        DateTime? @updatedAt()
+  updatedAt        DateTime?     @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist          Boolean   @default(true)
-  id               String    @id() @default(cuid())
-  email            String    @unique()
+  isExist          Boolean       @default(true)
+  id               String        @id() @default(cuid())
+  email            String        @unique()
   name             String?
   phone            String?
   password         String
@@ -57,6 +62,14 @@ model User {
   resetTokenExpiry DateTime?
   /// @DtoApiHidden
   company          Company[]
+  /// @DtoApiHidden
+  product          Product[]
+  /// @DtoApiHidden
+  hsnCode          HSNCode[]
+  /// @DtoApiHidden
+  tax              Tax[]
+  /// @DtoApiHidden
+  productUnit      ProductUnit[]
 }
 
 /// @@deny('read', isExist == false)
@@ -79,6 +92,100 @@ model Company {
   city      String?
   zip       String?
   vat       String?
+  /// @DtoRelationIncludeId
   user_id   String    @unique()
   user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+/// @@deny('read', isExist == false)
+model HSNCode {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  code      String
+  tax       Float
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  Product   Product[]
+}
+
+/// @@deny('read', isExist == false)
+model Tax {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  name      String
+  rate      Float
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  Product   Product[]
+}
+
+/// @@deny('read', isExist == false)
+model ProductUnit {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  name      String
+  symbol    String
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  Product   Product[]
+}
+
+/// @@deny('read', isExist == false)
+model Product {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt   DateTime    @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt   DateTime?   @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist     Boolean     @default(true)
+  id          String      @id() @default(cuid())
+  name        String
+  description String?
+  price       Float
+  type        ProductType
+  /// @DtoRelationIncludeId
+  unit_id     String
+  unit        ProductUnit @relation(fields: [unit_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  hsnCode_id  String
+  hsnCode     HSNCode     @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  tax_id      String
+  tax         Tax         @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id     String
+  user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
