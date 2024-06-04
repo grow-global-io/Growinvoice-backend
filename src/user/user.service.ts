@@ -7,6 +7,8 @@ import { MailService } from '@/mail/mail.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
 import { plainToInstance } from 'class-transformer';
+import { updateCurrencyCompanyDto } from './dto/update-currency-company.dto';
+import { User as UserTokenDetails } from '@shared/decorators/user.decorator';
 
 @Injectable()
 export class UserService {
@@ -134,5 +136,36 @@ export class UserService {
       message: 'Password reset successfully',
       status: 200,
     };
+  }
+
+  async updateCurrencyCompany(
+    data: updateCurrencyCompanyDto,
+    user: UserTokenDetails,
+  ) {
+    const result = await this.prismaService.user.update({
+      where: { id: user.sub },
+      data: {
+        currency_id: data.currency_id,
+        company: {
+          update: {
+            where: {
+              user_id: user.sub,
+            },
+            data: {
+              name: data.companyName,
+              phone: data.phoneNumber,
+              country: data.country,
+              state: data.state,
+              city: data.city,
+              address: data.address,
+              zip: data.zipCode,
+              vat: data.vat,
+              logo: data.logo,
+            },
+          },
+        },
+      },
+    });
+    return plainToInstance(User, result);
   }
 }

@@ -49,6 +49,8 @@ model User extends Base {
     password         String
     resetToken       String?       @DtoCreateHidden @DtoUpdateHidden
     resetTokenExpiry DateTime?     @DtoCreateHidden @DtoUpdateHidden
+    currency_id      String?       @DtoRelationIncludeId @DtoCreateHidden @DtoUpdateHidden
+    currency         Currencies?   @relation(fields: [currency_id], references: [id], onDelete: SetNull)
     company          Company[]     @DtoApiHidden
     product          Product[]     @DtoApiHidden
     hsnCode          HSNCode[]     @DtoApiHidden
@@ -67,6 +69,7 @@ model Company extends Base {
     city    String?
     zip     String?
     vat     String?
+    logo    String?
     user_id String  @unique @DtoRelationIncludeId
     user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
@@ -134,4 +137,5 @@ model Currencies extends Base {
     symbol     String
     code       String
     short_code String
+    user       User[] @DtoApiHidden
 }

@@ -12,6 +12,11 @@ import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { User } from '@shared/models';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
+import { updateCurrencyCompanyDto } from './dto/update-currency-company.dto';
+import {
+  GetUser,
+  User as UserTokenDetails,
+} from '@shared/decorators/user.decorator';
 
 @ApiExtraModels(User)
 @ApiTags('users')
@@ -68,5 +73,18 @@ export class UserController {
   })
   async resetPassword(@Body() body: ResetPasswordTokenDto) {
     return this.userService.resetPassword(body);
+  }
+
+  @Post('update-currency-company')
+  @ApiSuccessResponse(User, { status: 201 })
+  async updateCurrencyCompany(
+    @Body() body: updateCurrencyCompanyDto,
+    @GetUser() user: UserTokenDetails,
+  ): Promise<SuccessResponseDto<User>> {
+    const result = await this.userService.updateCurrencyCompany(body, user);
+    return {
+      message: 'Currency and company updated successfully',
+      result,
+    };
   }
 }

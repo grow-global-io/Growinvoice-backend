@@ -68,6 +68,14 @@ export class UpdateCompanyDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  logo?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
   })
   @IsOptional()
   @IsString()

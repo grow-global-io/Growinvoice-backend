@@ -60,6 +60,11 @@ model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
   resetTokenExpiry DateTime?
+  /// @DtoRelationIncludeId
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  currency_id      String?
+  currency         Currencies?   @relation(fields: [currency_id], references: [id], onDelete: SetNull)
   /// @DtoApiHidden
   company          Company[]
   /// @DtoApiHidden
@@ -94,6 +99,7 @@ model Company {
   city      String?
   zip       String?
   vat       String?
+  logo      String?
   /// @DtoRelationIncludeId
   user_id   String    @unique()
   user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -233,4 +239,6 @@ model Currencies {
   symbol     String
   code       String
   short_code String
+  /// @DtoApiHidden
+  user       User[]
 }

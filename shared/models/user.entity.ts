@@ -1,4 +1,5 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Currencies } from './currencies.entity';
 import { Company } from './company.entity';
 import { Product } from './product.entity';
 import { HSNCode } from './hSNCode.entity';
@@ -55,6 +56,16 @@ export class User {
     nullable: true,
   })
   resetTokenExpiry: Date | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  currency_id: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  currency?: Currencies | null;
   @ApiHideProperty()
   company?: Company[];
   @ApiHideProperty()

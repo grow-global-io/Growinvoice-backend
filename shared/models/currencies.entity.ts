@@ -1,4 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { User } from './user.entity';
 
 export class Currencies {
   @ApiProperty({
@@ -36,4 +37,6 @@ export class Currencies {
     type: 'string',
   })
   short_code: string;
+  @ApiHideProperty()
+  user?: User[];
 }

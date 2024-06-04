@@ -61,6 +61,11 @@ export class CompanyDto {
   vat: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
+  })
+  logo: string | null;
+  @ApiProperty({
+    type: 'string',
   })
   user_id: string;
 }

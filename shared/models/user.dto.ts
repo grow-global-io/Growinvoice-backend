@@ -49,4 +49,9 @@ export class UserDto {
     nullable: true,
   })
   resetTokenExpiry: Date | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  currency_id: string | null;
 }

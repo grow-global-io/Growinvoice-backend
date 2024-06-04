@@ -66,6 +66,14 @@ export class CreateCompanyDto {
   vat?: string | null;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  logo?: string | null;
+  @ApiProperty({
+    type: 'string',
   })
   @IsNotEmpty()
   @IsString()
