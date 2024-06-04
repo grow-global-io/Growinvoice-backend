@@ -11,7 +11,9 @@ import { TaxcodeService } from './taxcode.service';
 import { CreateTaxDto, TaxDto, UpdateTaxDto } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('TaxCode')
 @Controller('taxcode')
 export class TaxcodeController {
   constructor(private readonly taxcodeService: TaxcodeService) {}
