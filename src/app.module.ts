@@ -9,6 +9,8 @@ import { ProductModule } from './product/product.module';
 import { ProductunitModule } from './productunit/productunit.module';
 import { HsncodeModule } from './hsncode/hsncode.module';
 import { TaxcodeModule } from './taxcode/taxcode.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskserviceService } from './taskservice/taskservice.service';
 
 @Module({
   imports: [
@@ -23,8 +25,9 @@ import { TaxcodeModule } from './taxcode/taxcode.module';
     ProductunitModule,
     HsncodeModule,
     TaxcodeModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
-  providers: [MailService],
+  providers: [MailService, TaskserviceService],
 })
 export class AppModule {}
