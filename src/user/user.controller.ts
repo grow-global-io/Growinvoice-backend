@@ -50,7 +50,7 @@ export class UserController {
     type: LoginSuccessDto,
   })
   async loginUser(@Body() loginUserDto: LoginUserDto) {
-    return this.authService.loginUser(loginUserDto);
+    return await this.authService.loginUser(loginUserDto);
   }
 
   @IsPublic()
