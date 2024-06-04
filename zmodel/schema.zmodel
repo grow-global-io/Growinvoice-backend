@@ -54,6 +54,7 @@ model User extends Base {
     hsnCode          HSNCode[]     @DtoApiHidden
     tax              Tax[]         @DtoApiHidden
     productUnit      ProductUnit[] @DtoApiHidden
+    customer         Customer[]    @DtoApiHidden
 }
 
 model Company extends Base {
@@ -111,4 +112,26 @@ model Product extends Base {
     tax         Tax         @relation(fields: [tax_id], references: [id], onDelete: Cascade)
     user_id     String      @DtoRelationIncludeId
     user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Customer extends Base {
+    id      String  @id @default(cuid())
+    name    String
+    email   String?
+    phone   String?
+    address String?
+    country String?
+    state   String?
+    city    String?
+    zip     String?
+    user_id String  @DtoRelationIncludeId
+    user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Currencies extends Base {
+    id         String @id @default(cuid())
+    name       String
+    symbol     String
+    code       String
+    short_code String
 }

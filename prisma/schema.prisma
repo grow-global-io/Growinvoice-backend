@@ -70,6 +70,8 @@ model User {
   tax              Tax[]
   /// @DtoApiHidden
   productUnit      ProductUnit[]
+  /// @DtoApiHidden
+  customer         Customer[]
 }
 
 /// @@deny('read', isExist == false)
@@ -188,4 +190,47 @@ model Product {
   /// @DtoRelationIncludeId
   user_id     String
   user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+/// @@deny('read', isExist == false)
+model Customer {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  address   String?
+  country   String?
+  state     String?
+  city      String?
+  zip       String?
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+/// @@deny('read', isExist == false)
+model Currencies {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  name       String
+  symbol     String
+  code       String
+  short_code String
 }

@@ -11,6 +11,7 @@ import { HsncodeModule } from './hsncode/hsncode.module';
 import { TaxcodeModule } from './taxcode/taxcode.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskserviceService } from './taskservice/taskservice.service';
+import { CurrencyModule } from './currency/currency.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TaskserviceService } from './taskservice/taskservice.service';
     HsncodeModule,
     TaxcodeModule,
     ScheduleModule.forRoot(),
+    CurrencyModule,
   ],
   controllers: [],
   providers: [MailService, TaskserviceService],

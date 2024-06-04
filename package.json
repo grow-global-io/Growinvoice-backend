@@ -20,7 +20,8 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "generate": "rimraf shared/models && zenstack generate --schema zmodel/schema.zmodel",
     "make:migration": "zenstack format && yarn run generate && yarn run migrate",
-    "migrate": "prisma format && prisma migrate dev && npx prisma generate"
+    "migrate": "prisma format && prisma migrate dev && npx prisma generate",
+    "seed": "ts-node prisma/seeder/seeder.ts"
   },
   "dependencies": {
     "@brakebein/prisma-generator-nestjs-dto": "^1.21.0",

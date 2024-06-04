@@ -4,6 +4,7 @@ import { Product } from './product.entity';
 import { HSNCode } from './hSNCode.entity';
 import { Tax } from './tax.entity';
 import { ProductUnit } from './productUnit.entity';
+import { Customer } from './customer.entity';
 
 export class User {
   @ApiProperty({
@@ -64,4 +65,6 @@ export class User {
   tax?: Tax[];
   @ApiHideProperty()
   productUnit?: ProductUnit[];
+  @ApiHideProperty()
+  customer?: Customer[];
 }
