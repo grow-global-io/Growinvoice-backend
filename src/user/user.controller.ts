@@ -49,7 +49,9 @@ export class UserController {
     description: 'User logged in successfully',
     type: LoginSuccessDto,
   })
-  async loginUser(@Body() loginUserDto: LoginUserDto) {
+  async loginUser(
+    @Body() loginUserDto: LoginUserDto,
+  ): Promise<LoginSuccessDto> {
     return await this.authService.loginUser(loginUserDto);
   }
 

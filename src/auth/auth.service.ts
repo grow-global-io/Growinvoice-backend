@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { UserWithCompanyDto } from './dto/user-with-company.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserDto } from '@shared/models';
+import { LoginSuccessDto } from '@/user/dto/login-success.dto';
 
 @Injectable()
 export class AuthService {
@@ -28,10 +29,10 @@ export class AuthService {
 
     const payload = { sub: user.id, email: user.email };
 
-    return {
+    return plainToInstance(LoginSuccessDto, {
       message: 'Login successful',
       authToken: await this.jwtService.signAsync(payload),
-    };
+    });
   }
 
   async verifyToken(user: User) {
