@@ -7,6 +7,8 @@ import { MailService } from './mail/mail.service';
 import { CompanyModule } from './company/company.module';
 import { ProductModule } from './product/product.module';
 import { ProductunitModule } from './productunit/productunit.module';
+import { HsncodeModule } from './hsncode/hsncode.module';
+import { TaxcodeModule } from './taxcode/taxcode.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { ProductunitModule } from './productunit/productunit.module';
     CompanyModule,
     ProductModule,
     ProductunitModule,
+    HsncodeModule,
+    TaxcodeModule,
   ],
   controllers: [],
   providers: [MailService],

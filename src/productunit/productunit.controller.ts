@@ -15,6 +15,7 @@ import {
   UpdateProductUnitDto,
 } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
+import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 
 @ApiTags('productunit')
 @Controller('productunit')
@@ -25,12 +26,14 @@ export class ProductunitController {
   @ApiSuccessResponse(ProductUnitDto, {
     status: 201,
   })
-  async create(@Body() createProductunitDto: CreateProductUnitDto) {
+  async create(
+    @Body() createProductunitDto: CreateProductUnitDto,
+  ): Promise<SuccessResponseDto<ProductUnitDto>> {
     const productunit =
       await this.productunitService.create(createProductunitDto);
 
     return {
-      data: productunit,
+      result: productunit,
       message: 'Product unit created successfully',
     };
   }
@@ -50,13 +53,13 @@ export class ProductunitController {
   async update(
     @Param('id') id: string,
     @Body() updateProductunitDto: UpdateProductUnitDto,
-  ) {
+  ): Promise<SuccessResponseDto<ProductUnitDto>> {
     const productUnit = await this.productunitService.update(
       id,
       updateProductunitDto,
     );
     return {
-      data: productUnit,
+      result: productUnit,
       message: 'Product unit updated successfully',
     };
   }
