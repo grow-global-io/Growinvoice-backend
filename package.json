@@ -10,6 +10,7 @@
     "output": "shared/models"
   },
   "scripts": {
+    "prebuild": "rimraf dist",
     "build": "yarn prisma generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"shared/**/*.ts\"",
     "start": "nest start",
