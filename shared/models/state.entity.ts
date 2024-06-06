@@ -1,5 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Country } from './country.entity';
+import { BillingAddress } from './billingAddress.entity';
+import { ShippingAddress } from './shippingAddress.entity';
 
 export class State {
   @ApiProperty({
@@ -34,4 +36,8 @@ export class State {
     required: false,
   })
   country?: Country;
+  @ApiHideProperty()
+  BillingAddress?: BillingAddress[];
+  @ApiHideProperty()
+  ShippingAddress?: ShippingAddress[];
 }

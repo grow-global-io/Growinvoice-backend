@@ -1,5 +1,8 @@
+import { CustomerOption } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from './user.entity';
+import { Currencies } from './currencies.entity';
+import { BillingAddress } from './billingAddress.entity';
+import { ShippingAddress } from './shippingAddress.entity';
 
 export class Customer {
   @ApiProperty({
@@ -29,6 +32,11 @@ export class Customer {
     type: 'string',
     nullable: true,
   })
+  display_name: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
   email: string | null;
   @ApiProperty({
     type: 'string',
@@ -39,34 +47,36 @@ export class Customer {
     type: 'string',
     nullable: true,
   })
-  address: string | null;
+  website: string | null;
   @ApiProperty({
-    type: 'string',
-    nullable: true,
+    enum: CustomerOption,
   })
-  country: string | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  state: string | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  city: string | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  zip: string | null;
+  option: CustomerOption;
   @ApiProperty({
     type: 'string',
   })
-  user_id: string;
+  currencies_id: string;
   @ApiProperty({
-    type: () => User,
+    type: () => Currencies,
     required: false,
   })
-  user?: User;
+  currencies?: Currencies;
+  @ApiProperty({
+    type: 'string',
+  })
+  billingAddress_id: string;
+  @ApiProperty({
+    type: () => BillingAddress,
+    required: false,
+  })
+  billingAddress?: BillingAddress;
+  @ApiProperty({
+    type: 'string',
+  })
+  shippingAddress_id: string;
+  @ApiProperty({
+    type: () => ShippingAddress,
+    required: false,
+  })
+  shippingAddress?: ShippingAddress;
 }

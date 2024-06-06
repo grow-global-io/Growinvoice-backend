@@ -41,6 +41,12 @@ enum ProductType {
     Good
 }
 
+enum CustomerOption {
+    Freelancer
+    BusinessWithGST
+    BusinessWithoutGST
+}
+
 model User extends Base {
     id               String        @id @default(cuid())
     email            String        @unique
@@ -56,7 +62,6 @@ model User extends Base {
     hsnCode          HSNCode[]     @DtoApiHidden
     tax              Tax[]         @DtoApiHidden
     productUnit      ProductUnit[] @DtoApiHidden
-    customer         Customer[]    @DtoApiHidden
 }
 
 model Company extends Base {
@@ -117,40 +122,73 @@ model Product extends Base {
     user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model Customer extends Base {
-    id      String  @id @default(cuid())
-    name    String
-    email   String?
-    phone   String?
-    address String?
-    country String?
-    state   String?
-    city    String?
-    zip     String?
-    user_id String  @DtoRelationIncludeId
-    user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+
+model BillingAddress extends Base {
+    id         String     @id @default(cuid())
+    address    String
+    city       String
+    state_id   String     @DtoRelationIncludeId
+    state      State      @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    country_id String     @DtoRelationIncludeId
+    country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    zip        String
+    customer   Customer[] @DtoApiHidden
+}
+
+model ShippingAddress extends Base {
+    id         String     @id @default(cuid())
+    address    String
+    city       String
+    state_id   String     @DtoRelationIncludeId
+    state      State      @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    country_id String     @DtoRelationIncludeId
+    country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    zip        String
+    customer   Customer[] @DtoApiHidden
 }
 
 model Currencies extends Base {
-    id         String @id @default(cuid())
+    id         String     @id @default(cuid())
     name       String
     symbol     String
     code       String
     short_code String
-    user       User[] @DtoApiHidden
+    currency   Customer[] @DtoApiHidden
+    user       User[]     @DtoApiHidden
 }
 
 model Country extends Base {
-    id         String  @id @default(cuid())
-    name       String
-    code       String
-    phone_code String
-    state      State[]
+    id              String            @id @default(cuid())
+    name            String
+    code            String
+    phone_code      String
+    state           State[]           @DtoApiHidden
+    BillingAddress  BillingAddress[]  @DtoApiHidden
+    ShippingAddress ShippingAddress[] @DtoApiHidden
 }
 
 model State extends Base {
-    id         String  @id @default(cuid())
-    name       String
-    country_id String  @DtoRelationIncludeId
-    country    Country @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    id              String            @id @default(cuid())
+    name            String
+    country_id      String            @DtoRelationIncludeId
+    country         Country           @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    BillingAddress  BillingAddress[]  @DtoApiHidden
+    ShippingAddress ShippingAddress[] @DtoApiHidden
+}
+
+model Customer extends Base {
+    id                 String          @id @default(cuid())
+    name               String
+    display_name       String?
+    email              String?
+    phone              String?
+    website            String?
+    option             CustomerOption
+    currencies_id      String          @DtoRelationIncludeId
+    currencies         Currencies      @relation(fields: [currencies_id], references: [id])
+    billingAddress_id  String          @DtoRelationIncludeId
+    billingAddress     BillingAddress  @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
+    shippingAddress_id String          @DtoRelationIncludeId
+    shippingAddress    ShippingAddress @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
 }

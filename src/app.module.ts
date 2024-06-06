@@ -12,6 +12,7 @@ import { TaxcodeModule } from './taxcode/taxcode.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskserviceService } from './taskservice/taskservice.service';
 import { CurrencyModule } from './currency/currency.module';
+import { CustomerModule } from './customer/customer.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CurrencyModule } from './currency/currency.module';
     TaxcodeModule,
     ScheduleModule.forRoot(),
     CurrencyModule,
+    CustomerModule,
   ],
   controllers: [],
   providers: [MailService, TaskserviceService],

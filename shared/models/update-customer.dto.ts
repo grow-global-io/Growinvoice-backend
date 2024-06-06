@@ -1,3 +1,4 @@
+import { CustomerOption } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
@@ -9,6 +10,14 @@ export class UpdateCustomerDto {
   @IsOptional()
   @IsString()
   name?: string;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  display_name?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
@@ -32,44 +41,32 @@ export class UpdateCustomerDto {
   })
   @IsOptional()
   @IsString()
-  address?: string | null;
+  website?: string | null;
   @ApiProperty({
-    type: 'string',
+    enum: CustomerOption,
     required: false,
-    nullable: true,
   })
   @IsOptional()
-  @IsString()
-  country?: string | null;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  state?: string | null;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  city?: string | null;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  zip?: string | null;
+  option?: CustomerOption;
   @ApiProperty({
     type: 'string',
     required: false,
   })
   @IsOptional()
   @IsString()
-  user_id?: string;
+  currencies_id?: string;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  billingAddress_id?: string;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  shippingAddress_id?: string;
 }

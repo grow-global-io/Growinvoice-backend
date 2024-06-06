@@ -38,6 +38,12 @@ enum ProductType {
   Good
 }
 
+enum CustomerOption {
+  Freelancer
+  BusinessWithGST
+  BusinessWithoutGST
+}
+
 /// @@deny('read', isExist == false)
 model User {
   /// @DtoCreateHidden
@@ -75,8 +81,6 @@ model User {
   tax              Tax[]
   /// @DtoApiHidden
   productUnit      ProductUnit[]
-  /// @DtoApiHidden
-  customer         Customer[]
 }
 
 /// @@deny('read', isExist == false)
@@ -199,46 +203,73 @@ model Product {
 }
 
 /// @@deny('read', isExist == false)
-model Customer {
+model BillingAddress {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt DateTime  @default(now())
+  createdAt  DateTime   @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt DateTime? @updatedAt()
+  updatedAt  DateTime?  @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist   Boolean   @default(true)
-  id        String    @id() @default(cuid())
-  name      String
-  email     String?
-  phone     String?
-  address   String?
-  country   String?
-  state     String?
-  city      String?
-  zip       String?
+  isExist    Boolean    @default(true)
+  id         String     @id() @default(cuid())
+  address    String
+  city       String
   /// @DtoRelationIncludeId
-  user_id   String
-  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  state_id   String
+  state      State      @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  country_id String
+  country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  zip        String
+  /// @DtoApiHidden
+  customer   Customer[]
+}
+
+/// @@deny('read', isExist == false)
+model ShippingAddress {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime   @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime?  @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean    @default(true)
+  id         String     @id() @default(cuid())
+  address    String
+  city       String
+  /// @DtoRelationIncludeId
+  state_id   String
+  state      State      @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  country_id String
+  country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  zip        String
+  /// @DtoApiHidden
+  customer   Customer[]
 }
 
 /// @@deny('read', isExist == false)
 model Currencies {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime  @default(now())
+  createdAt  DateTime   @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime? @updatedAt()
+  updatedAt  DateTime?  @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean   @default(true)
-  id         String    @id() @default(cuid())
+  isExist    Boolean    @default(true)
+  id         String     @id() @default(cuid())
   name       String
   symbol     String
   code       String
   short_code String
+  /// @DtoApiHidden
+  currency   Customer[]
   /// @DtoApiHidden
   user       User[]
 }
@@ -247,34 +278,72 @@ model Currencies {
 model Country {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime  @default(now())
+  createdAt       DateTime          @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime? @updatedAt()
+  updatedAt       DateTime?         @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean   @default(true)
-  id         String    @id() @default(cuid())
-  name       String
-  code       String
-  phone_code String
-  state      State[]
+  isExist         Boolean           @default(true)
+  id              String            @id() @default(cuid())
+  name            String
+  code            String
+  phone_code      String
+  /// @DtoApiHidden
+  state           State[]
+  /// @DtoApiHidden
+  BillingAddress  BillingAddress[]
+  /// @DtoApiHidden
+  ShippingAddress ShippingAddress[]
 }
 
 /// @@deny('read', isExist == false)
 model State {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime  @default(now())
+  createdAt       DateTime          @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime? @updatedAt()
+  updatedAt       DateTime?         @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean   @default(true)
-  id         String    @id() @default(cuid())
-  name       String
+  isExist         Boolean           @default(true)
+  id              String            @id() @default(cuid())
+  name            String
   /// @DtoRelationIncludeId
-  country_id String
-  country    Country   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  country_id      String
+  country         Country           @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  BillingAddress  BillingAddress[]
+  /// @DtoApiHidden
+  ShippingAddress ShippingAddress[]
+}
+
+/// @@deny('read', isExist == false)
+model Customer {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt          DateTime        @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt          DateTime?       @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist            Boolean         @default(true)
+  id                 String          @id() @default(cuid())
+  name               String
+  display_name       String?
+  email              String?
+  phone              String?
+  website            String?
+  option             CustomerOption
+  /// @DtoRelationIncludeId
+  currencies_id      String
+  currencies         Currencies      @relation(fields: [currencies_id], references: [id])
+  /// @DtoRelationIncludeId
+  billingAddress_id  String
+  billingAddress     BillingAddress  @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  shippingAddress_id String
+  shippingAddress    ShippingAddress @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
 }
