@@ -139,3 +139,18 @@ model Currencies extends Base {
     short_code String
     user       User[] @DtoApiHidden
 }
+
+model Country extends Base {
+    id         String  @id @default(cuid())
+    name       String
+    code       String
+    phone_code String
+    state      State[]
+}
+
+model State extends Base {
+    id         String  @id @default(cuid())
+    name       String
+    country_id String  @DtoRelationIncludeId
+    country    Country @relation(fields: [country_id], references: [id], onDelete: Cascade)
+}

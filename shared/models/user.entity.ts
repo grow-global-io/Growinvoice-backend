@@ -62,6 +62,7 @@ export class User {
   })
   currency_id: string | null;
   @ApiProperty({
+    type: () => Currencies,
     required: false,
     nullable: true,
   })

@@ -48,6 +48,7 @@ export class Product {
   })
   unit_id: string;
   @ApiProperty({
+    type: () => ProductUnit,
     required: false,
   })
   unit?: ProductUnit;
@@ -56,6 +57,7 @@ export class Product {
   })
   hsnCode_id: string;
   @ApiProperty({
+    type: () => HSNCode,
     required: false,
   })
   hsnCode?: HSNCode;
@@ -64,6 +66,7 @@ export class Product {
   })
   tax_id: string;
   @ApiProperty({
+    type: () => Tax,
     required: false,
   })
   tax?: Tax;
@@ -72,6 +75,7 @@ export class Product {
   })
   user_id: string;
   @ApiProperty({
+    type: () => User,
     required: false,
   })
   user?: User;

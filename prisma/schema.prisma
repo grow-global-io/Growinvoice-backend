@@ -242,3 +242,39 @@ model Currencies {
   /// @DtoApiHidden
   user       User[]
 }
+
+/// @@deny('read', isExist == false)
+model Country {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  name       String
+  code       String
+  phone_code String
+  state      State[]
+}
+
+/// @@deny('read', isExist == false)
+model State {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  name       String
+  /// @DtoRelationIncludeId
+  country_id String
+  country    Country   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+}

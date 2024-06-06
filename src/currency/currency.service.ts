@@ -11,4 +11,20 @@ export class CurrencyService {
     const currencies = await this.prismaService.currencies.findMany();
     return plainToInstance(CurrenciesDto, currencies);
   }
+
+  async findCountries() {
+    return await this.prismaService.country.findMany();
+  }
+
+  async findStates() {
+    return await this.prismaService.state.findMany();
+  }
+
+  async findStatesByCountry(countryId: string) {
+    return await this.prismaService.state.findMany({
+      where: {
+        country_id: countryId,
+      },
+    });
+  }
 }

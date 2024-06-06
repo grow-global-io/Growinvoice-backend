@@ -1,8 +1,7 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { User } from './user.entity';
-import { Product } from './product.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { Country } from './country.entity';
 
-export class HSNCode {
+export class State {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -25,21 +24,14 @@ export class HSNCode {
   @ApiProperty({
     type: 'string',
   })
-  code: string;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  tax: number;
+  name: string;
   @ApiProperty({
     type: 'string',
   })
-  user_id: string;
+  country_id: string;
   @ApiProperty({
-    type: () => User,
+    type: () => Country,
     required: false,
   })
-  user?: User;
-  @ApiHideProperty()
-  Product?: Product[];
+  country?: Country;
 }

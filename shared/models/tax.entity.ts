@@ -36,6 +36,7 @@ export class Tax {
   })
   user_id: string;
   @ApiProperty({
+    type: () => User,
     required: false,
   })
   user?: User;

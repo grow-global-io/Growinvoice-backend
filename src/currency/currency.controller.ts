@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { CurrencyService } from './currency.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -10,5 +10,20 @@ export class CurrencyController {
   @Get()
   findAll() {
     return this.currencyService.findAll();
+  }
+
+  @Get('countries')
+  findCountries() {
+    return this.currencyService.findCountries();
+  }
+
+  @Get('states')
+  findStates() {
+    return this.currencyService.findStates();
+  }
+
+  @Get('statesByCountry')
+  findStatesByCountry(@Query('countryId') countryId: string) {
+    return this.currencyService.findStatesByCountry(countryId);
   }
 }

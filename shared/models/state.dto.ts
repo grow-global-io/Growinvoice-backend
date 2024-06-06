@@ -1,8 +1,6 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { User } from './user.entity';
-import { Product } from './product.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class ProductUnit {
+export class StateDto {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -29,16 +27,5 @@ export class ProductUnit {
   @ApiProperty({
     type: 'string',
   })
-  symbol: string;
-  @ApiProperty({
-    type: 'string',
-  })
-  user_id: string;
-  @ApiProperty({
-    type: () => User,
-    required: false,
-  })
-  user?: User;
-  @ApiHideProperty()
-  Product?: Product[];
+  country_id: string;
 }
