@@ -11,6 +11,7 @@ import { ProductService } from './product.service';
 import { CreateProductDto, ProductDto, UpdateProductDto } from '@shared/models';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
+import { GetUser, User } from '@shared/decorators/user.decorator';
 
 @ApiTags('product')
 @Controller('product')
@@ -28,8 +29,8 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  async findAll(@GetUser() user: User) {
+    return await this.productService.findAll(user?.sub);
   }
 
   @Get(':id')

@@ -13,8 +13,10 @@ export class ProductService {
     });
   }
 
-  async findAll() {
-    const products = await this.prismaService.product.findMany();
+  async findAll(user_id: string) {
+    const products = await this.prismaService.product.findMany({
+      where: { user_id },
+    });
     return plainToInstance(ProductDto, products);
   }
 
