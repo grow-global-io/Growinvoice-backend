@@ -40,8 +40,8 @@ export class ProductunitController {
   }
 
   @Get()
-  findAll(@GetUser() user: User) {
-    return this.productunitService.findAll(user.sub);
+  async findAll(@GetUser() user: User) {
+    return await this.productunitService.findAll(user.sub);
   }
 
   @Get(':id')

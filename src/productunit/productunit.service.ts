@@ -17,8 +17,8 @@ export class ProductunitService {
     });
   }
 
-  findAll(userId: string) {
-    const productunit = this.prismaService.productUnit.findMany({
+  async findAll(userId: string) {
+    const productunit = await this.prismaService.productUnit.findMany({
       where: { user_id: userId },
     });
 
