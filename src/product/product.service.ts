@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreateProductDto, ProductDto, UpdateProductDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
+import { ProductWithAllDataDto } from './dto/product-with-allproperties.dto';
 
 @Injectable()
 export class ProductService {
@@ -16,8 +17,11 @@ export class ProductService {
   async findAll(user_id: string) {
     const products = await this.prismaService.product.findMany({
       where: { user_id },
+      include: {
+        unit: true,
+      },
     });
-    return plainToInstance(ProductDto, products);
+    return plainToInstance(ProductWithAllDataDto, products);
   }
 
   async findOne(id: string) {
