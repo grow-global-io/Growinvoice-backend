@@ -13,8 +13,10 @@ export class HsncodeService {
     return plainToInstance(HSNCodeDto, hsncode);
   }
 
-  async findAll() {
-    const hsncode = await this.prismaService.hSNCode.findMany();
+  async findAll(user_id: string) {
+    const hsncode = await this.prismaService.hSNCode.findMany({
+      where: { user_id },
+    });
     return plainToInstance(HSNCodeDto, hsncode);
   }
 

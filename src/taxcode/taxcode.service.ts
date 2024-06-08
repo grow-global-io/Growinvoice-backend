@@ -13,8 +13,10 @@ export class TaxcodeService {
     return plainToInstance(TaxDto, taxcode);
   }
 
-  findAll() {
-    const taxcode = this.prismaService.tax.findMany();
+  async findAll(user_id: string) {
+    const taxcode = await this.prismaService.tax.findMany({
+      where: { user_id },
+    });
     return plainToInstance(TaxDto, taxcode);
   }
 
