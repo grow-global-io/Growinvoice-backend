@@ -12,7 +12,7 @@ import { CreateTaxDto, TaxDto, UpdateTaxDto } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { GetUser } from '@shared/decorators/user.decorator';
+import { GetUser, User } from '@shared/decorators/user.decorator';
 
 @ApiTags('taxCode')
 @Controller('taxcode')
@@ -30,8 +30,8 @@ export class TaxcodeController {
   }
 
   @Get()
-  async findAll(@GetUser() userId: string) {
-    return await this.taxcodeService.findAll(userId);
+  async findAll(@GetUser() user: User) {
+    return await this.taxcodeService.findAll(user?.sub);
   }
 
   @Get(':id')
