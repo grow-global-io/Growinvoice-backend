@@ -13,11 +13,5 @@ export class CreateProductUnitDto {
   })
   @IsNotEmpty()
   @IsString()
-  symbol: string;
-  @ApiProperty({
-    type: 'string',
-  })
-  @IsNotEmpty()
-  @IsString()
   user_id: string;
 }

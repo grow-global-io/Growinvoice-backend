@@ -29,10 +29,6 @@ export class ProductUnit {
   @ApiProperty({
     type: 'string',
   })
-  symbol: string;
-  @ApiProperty({
-    type: 'string',
-  })
   user_id: string;
   @ApiProperty({
     type: () => User,

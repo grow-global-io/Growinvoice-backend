@@ -27,9 +27,5 @@ export class ProductUnitDto {
   @ApiProperty({
     type: 'string',
   })
-  symbol: string;
-  @ApiProperty({
-    type: 'string',
-  })
   user_id: string;
 }

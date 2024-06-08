@@ -15,12 +15,5 @@ export class UpdateProductUnitDto {
   })
   @IsOptional()
   @IsString()
-  symbol?: string;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
   user_id?: string;
 }

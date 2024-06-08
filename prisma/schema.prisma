@@ -164,7 +164,6 @@ model ProductUnit {
   isExist   Boolean   @default(true)
   id        String    @id() @default(cuid())
   name      String
-  symbol    String
   /// @DtoRelationIncludeId
   user_id   String
   user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
