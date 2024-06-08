@@ -90,7 +90,6 @@ model HSNCode extends Base {
 
 model Tax extends Base {
     id          String    @id @default(cuid())
-    name        String
     percentage  Float
     description String?
     user_id     String    @DtoRelationIncludeId

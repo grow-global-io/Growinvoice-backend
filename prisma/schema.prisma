@@ -142,7 +142,6 @@ model Tax {
   /// @DtoUpdateHidden
   isExist     Boolean   @default(true)
   id          String    @id() @default(cuid())
-  name        String
   percentage  Float
   description String?
   /// @DtoRelationIncludeId

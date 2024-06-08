@@ -23,10 +23,6 @@ export class Tax {
   })
   id: string;
   @ApiProperty({
-    type: 'string',
-  })
-  name: string;
-  @ApiProperty({
     type: 'number',
     format: 'float',
   })

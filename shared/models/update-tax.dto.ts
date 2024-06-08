@@ -3,13 +3,6 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateTaxDto {
   @ApiProperty({
-    type: 'string',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  name?: string;
-  @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,
