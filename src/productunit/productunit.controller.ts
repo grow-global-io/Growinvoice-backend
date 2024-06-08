@@ -16,6 +16,7 @@ import {
 } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
+import { GetUser, User } from '@shared/decorators/user.decorator';
 
 @ApiTags('productunit')
 @Controller('productunit')
@@ -39,8 +40,8 @@ export class ProductunitController {
   }
 
   @Get()
-  findAll() {
-    return this.productunitService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.productunitService.findAll(user.sub);
   }
 
   @Get(':id')

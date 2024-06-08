@@ -100,7 +100,6 @@ model Tax extends Base {
 model ProductUnit extends Base {
     id      String    @id @default(cuid())
     name    String
-    symbol  String
     user_id String    @DtoRelationIncludeId
     user    User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
     Product Product[] @DtoApiHidden

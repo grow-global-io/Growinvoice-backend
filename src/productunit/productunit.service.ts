@@ -17,8 +17,10 @@ export class ProductunitService {
     });
   }
 
-  findAll() {
-    const productunit = this.prismaService.productUnit.findMany();
+  findAll(userId: string) {
+    const productunit = this.prismaService.productUnit.findMany({
+      where: { user_id: userId },
+    });
 
     return plainToInstance(ProductUnitDto, productunit);
   }
