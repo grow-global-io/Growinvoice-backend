@@ -89,12 +89,13 @@ model HSNCode extends Base {
 }
 
 model Tax extends Base {
-    id      String    @id @default(cuid())
-    name    String
-    rate    Float
-    user_id String    @DtoRelationIncludeId
-    user    User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    Product Product[] @DtoApiHidden
+    id          String    @id @default(cuid())
+    name        String
+    percentage  Float
+    description String?
+    user_id     String    @DtoRelationIncludeId
+    user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    Product     Product[] @DtoApiHidden
 }
 
 model ProductUnit extends Base {

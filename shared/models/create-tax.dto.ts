@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTaxDto {
   @ApiProperty({
@@ -14,7 +14,15 @@ export class CreateTaxDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  rate: number;
+  percentage: number;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  description?: string | null;
   @ApiProperty({
     type: 'string',
   })

@@ -16,7 +16,15 @@ export class UpdateTaxDto {
   })
   @IsOptional()
   @IsNumber()
-  rate?: number;
+  percentage?: number;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  description?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,

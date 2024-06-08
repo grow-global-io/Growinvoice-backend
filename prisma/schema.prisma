@@ -134,21 +134,22 @@ model HSNCode {
 model Tax {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt DateTime  @default(now())
+  createdAt   DateTime  @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt DateTime? @updatedAt()
+  updatedAt   DateTime? @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist   Boolean   @default(true)
-  id        String    @id() @default(cuid())
-  name      String
-  rate      Float
+  isExist     Boolean   @default(true)
+  id          String    @id() @default(cuid())
+  name        String
+  percentage  Float
+  description String?
   /// @DtoRelationIncludeId
-  user_id   String
-  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id     String
+  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
-  Product   Product[]
+  Product     Product[]
 }
 
 /// @@deny('read', isExist == false)

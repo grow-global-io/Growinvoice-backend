@@ -28,7 +28,12 @@ export class TaxDto {
     type: 'number',
     format: 'float',
   })
-  rate: number;
+  percentage: number;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  description: string | null;
   @ApiProperty({
     type: 'string',
   })
