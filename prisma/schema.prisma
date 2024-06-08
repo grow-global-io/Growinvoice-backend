@@ -188,6 +188,9 @@ model Product {
   price       Float
   type        ProductType
   /// @DtoRelationIncludeId
+  currency_id String
+  currency    Currencies  @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
   unit_id     String
   unit        ProductUnit @relation(fields: [unit_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
@@ -271,6 +274,8 @@ model Currencies {
   currency   Customer[]
   /// @DtoApiHidden
   user       User[]
+  /// @DtoApiHidden
+  product    Product[]
 }
 
 /// @@deny('read', isExist == false)

@@ -34,6 +34,12 @@ export class CreateProductDto {
   })
   @IsNotEmpty()
   @IsString()
+  currency_id: string;
+  @ApiProperty({
+    type: 'string',
+  })
+  @IsNotEmpty()
+  @IsString()
   unit_id: string;
   @ApiProperty({
     type: 'string',

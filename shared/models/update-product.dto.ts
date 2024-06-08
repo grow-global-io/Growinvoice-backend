@@ -38,6 +38,13 @@ export class UpdateProductDto {
   })
   @IsOptional()
   @IsString()
+  currency_id?: string;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
   unit_id?: string;
   @ApiProperty({
     type: 'string',

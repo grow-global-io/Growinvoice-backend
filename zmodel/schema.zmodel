@@ -111,6 +111,8 @@ model Product extends Base {
     description String?
     price       Float
     type        ProductType
+    currency_id String      @DtoRelationIncludeId
+    currency    Currencies  @relation(fields: [currency_id], references: [id], onDelete: Cascade)
     unit_id     String      @DtoRelationIncludeId
     unit        ProductUnit @relation(fields: [unit_id], references: [id], onDelete: Cascade)
     hsnCode_id  String      @DtoRelationIncludeId
@@ -155,6 +157,7 @@ model Currencies extends Base {
     short_code String
     currency   Customer[] @DtoApiHidden
     user       User[]     @DtoApiHidden
+    product    Product[]  @DtoApiHidden
 }
 
 model Country extends Base {

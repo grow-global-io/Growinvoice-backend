@@ -19,6 +19,7 @@ export class ProductService {
       where: { user_id },
       include: {
         unit: true,
+        currency: true,
       },
     });
     return plainToInstance(ProductWithAllDataDto, products);

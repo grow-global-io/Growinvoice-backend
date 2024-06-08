@@ -42,6 +42,10 @@ export class ProductDto {
   @ApiProperty({
     type: 'string',
   })
+  currency_id: string;
+  @ApiProperty({
+    type: 'string',
+  })
   unit_id: string;
   @ApiProperty({
     type: 'string',

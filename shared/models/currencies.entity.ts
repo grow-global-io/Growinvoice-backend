@@ -1,6 +1,7 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Customer } from './customer.entity';
 import { User } from './user.entity';
+import { Product } from './product.entity';
 
 export class Currencies {
   @ApiProperty({
@@ -42,4 +43,6 @@ export class Currencies {
   currency?: Customer[];
   @ApiHideProperty()
   user?: User[];
+  @ApiHideProperty()
+  product?: Product[];
 }

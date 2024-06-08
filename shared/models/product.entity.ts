@@ -1,5 +1,6 @@
 import { ProductType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Currencies } from './currencies.entity';
 import { ProductUnit } from './productUnit.entity';
 import { HSNCode } from './hSNCode.entity';
 import { Tax } from './tax.entity';
@@ -43,6 +44,15 @@ export class Product {
     enum: ProductType,
   })
   type: ProductType;
+  @ApiProperty({
+    type: 'string',
+  })
+  currency_id: string;
+  @ApiProperty({
+    type: () => Currencies,
+    required: false,
+  })
+  currency?: Currencies;
   @ApiProperty({
     type: 'string',
   })
