@@ -61,4 +61,8 @@ export class CustomerDto {
     type: 'string',
   })
   shippingAddress_id: string;
+  @ApiProperty({
+    type: 'string',
+  })
+  user_id: string;
 }

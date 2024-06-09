@@ -62,6 +62,7 @@ model User extends Base {
     hsnCode          HSNCode[]     @DtoApiHidden
     tax              Tax[]         @DtoApiHidden
     productUnit      ProductUnit[] @DtoApiHidden
+    customer         Customer[]    @DtoApiHidden
 }
 
 model Company extends Base {
@@ -193,4 +194,6 @@ model Customer extends Base {
     billingAddress     BillingAddress  @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
     shippingAddress_id String          @DtoRelationIncludeId
     shippingAddress    ShippingAddress @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
+    user_id            String          @DtoRelationIncludeId
+    user               User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

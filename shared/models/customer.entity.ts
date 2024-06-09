@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Currencies } from './currencies.entity';
 import { BillingAddress } from './billingAddress.entity';
 import { ShippingAddress } from './shippingAddress.entity';
+import { User } from './user.entity';
 
 export class Customer {
   @ApiProperty({
@@ -79,4 +80,13 @@ export class Customer {
     required: false,
   })
   shippingAddress?: ShippingAddress;
+  @ApiProperty({
+    type: 'string',
+  })
+  user_id: string;
+  @ApiProperty({
+    type: () => User,
+    required: false,
+  })
+  user?: User;
 }

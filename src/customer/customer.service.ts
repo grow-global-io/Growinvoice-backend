@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateCustomerDto } from '@shared/models';
 import { CreateCustomerWithAddressDto } from './dto/create-customer-with-address.dto';
 import { PrismaService } from '@/prisma/prisma.service';
+import { plainToInstance } from 'class-transformer';
+import { UpdateCustomerWithAddressDto } from './dto/update-customer-with-address.dto';
+import { GetCustomerWithAddressDto } from './dto/get-customer-with-address.dto';
 
 @Injectable()
 export class CustomerService {
@@ -29,23 +31,81 @@ export class CustomerService {
             id: customerDetails.currencies_id,
           },
         },
+        user: {
+          connect: {
+            id: customerDetails.user_id,
+          },
+        },
       },
     });
   }
 
-  findAll() {
-    return `This action returns all customer`;
+  async findAll(userId: string) {
+    const customers = await this.prismaServie.customer.findMany({
+      where: {
+        user_id: userId,
+      },
+      include: {
+        billingAddress: true,
+        shippingAddress: true,
+      },
+    });
+    return plainToInstance(GetCustomerWithAddressDto, customers);
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} customer`;
+  async findOne(id: string) {
+    const customer = await this.prismaServie.customer.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        billingAddress: true,
+        shippingAddress: true,
+      },
+    });
+    return plainToInstance(GetCustomerWithAddressDto, customer);
   }
 
-  update(id: string, updateCustomerDto: UpdateCustomerDto) {
-    return `This action updates a #${id} customer`;
+  async update(id: string, updateCustomerDto: UpdateCustomerWithAddressDto) {
+    const { billingDetails, shippingDetails, ...customerDetails } =
+      updateCustomerDto;
+
+    return await this.prismaServie.customer.update({
+      where: {
+        id,
+      },
+      data: {
+        name: customerDetails.name,
+        option: customerDetails?.option,
+        billingAddress: {
+          update: billingDetails,
+        },
+        shippingAddress: {
+          update: shippingDetails,
+        },
+        display_name: customerDetails.display_name,
+        email: customerDetails.email,
+        phone: customerDetails.phone,
+        website: customerDetails.website,
+        currencies: {
+          connect: {
+            id: customerDetails.currencies_id,
+          },
+        },
+        user: {
+          connect: {
+            id: customerDetails.user_id,
+          },
+        },
+      },
+    });
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} customer`;
+  async remove(id: string) {
+    return await this.prismaServie.customer.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

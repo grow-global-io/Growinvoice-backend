@@ -69,4 +69,11 @@ export class UpdateCustomerDto {
   @IsOptional()
   @IsString()
   shippingAddress_id?: string;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  user_id?: string;
 }

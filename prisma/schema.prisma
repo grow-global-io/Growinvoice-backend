@@ -81,6 +81,8 @@ model User {
   tax              Tax[]
   /// @DtoApiHidden
   productUnit      ProductUnit[]
+  /// @DtoApiHidden
+  customer         Customer[]
 }
 
 /// @@deny('read', isExist == false)
@@ -350,4 +352,7 @@ model Customer {
   /// @DtoRelationIncludeId
   shippingAddress_id String
   shippingAddress    ShippingAddress @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id            String
+  user               User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

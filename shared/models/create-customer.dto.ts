@@ -64,4 +64,10 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   @IsString()
   shippingAddress_id: string;
+  @ApiProperty({
+    type: 'string',
+  })
+  @IsNotEmpty()
+  @IsString()
+  user_id: string;
 }
