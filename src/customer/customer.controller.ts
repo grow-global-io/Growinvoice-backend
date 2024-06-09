@@ -8,13 +8,14 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import { CustomerDto, UpdateCustomerDto } from '@shared/models';
+import { UpdateCustomerDto } from '@shared/models';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCustomerWithAddressDto } from './dto/create-customer-with-address.dto';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
+import { GetCustomerWithAddressDto } from './dto/get-customer-with-address.dto';
 
 @ApiTags('customer')
 @Controller('customer')
@@ -23,10 +24,10 @@ export class CustomerController {
 
   @IsPublic()
   @Post()
-  @ApiSuccessResponse(CustomerDto, { status: 201 })
+  @ApiSuccessResponse(GetCustomerWithAddressDto, { status: 201 })
   async create(
     @Body() createCustomerDto: CreateCustomerWithAddressDto,
-  ): Promise<SuccessResponseDto<CustomerDto>> {
+  ): Promise<SuccessResponseDto<GetCustomerWithAddressDto>> {
     const customer = await this.customerService.create(createCustomerDto);
     return {
       result: customer,
@@ -45,11 +46,11 @@ export class CustomerController {
   }
 
   @Patch(':id')
-  @ApiSuccessResponse(CustomerDto, { status: 200 })
+  @ApiSuccessResponse(GetCustomerWithAddressDto, { status: 200 })
   async update(
     @Param('id') id: string,
     @Body() updateCustomerDto: UpdateCustomerDto,
-  ): Promise<SuccessResponseDto<CustomerDto>> {
+  ): Promise<SuccessResponseDto<GetCustomerWithAddressDto>> {
     return {
       result: await this.customerService.update(id, updateCustomerDto),
       message: 'Customer updated successfully',
