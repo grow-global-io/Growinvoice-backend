@@ -197,3 +197,9 @@ model Customer extends Base {
     user_id            String          @DtoRelationIncludeId
     user               User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
+
+model Post extends Base {
+    id      String @id @default(cuid())
+    title   String
+    content String
+}

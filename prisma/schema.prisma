@@ -356,3 +356,19 @@ model Customer {
   user_id            String
   user               User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
+
+/// @@deny('read', isExist == false)
+model Post {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  title     String
+  content   String
+}

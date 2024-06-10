@@ -58,3 +58,8 @@ export * from './create-customer.dto';
 export * from './update-customer.dto';
 export * from './customer.entity';
 export * from './customer.dto';
+export * from './connect-post.dto';
+export * from './create-post.dto';
+export * from './update-post.dto';
+export * from './post.entity';
+export * from './post.dto';
