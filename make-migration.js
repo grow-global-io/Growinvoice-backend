@@ -5,14 +5,13 @@ const { exec } = require('child_process');
 const args = process.argv.slice(2);
 const nameArg = args.find((arg) => arg.startsWith('--name='));
 const migrationName = nameArg ? nameArg.split('=')[1] : 'default';
-const timeStamp = new Date().toISOString().replace(/[^0-9]/g, '');
 
 const commands = [
   'zenstack format',
   'yarn run generate',
   'npx prisma format',
   'npx prisma generate',
-  `npx prisma migrate dev --name ${timeStamp ?? migrationName}`,
+  `npx prisma migrate dev --name ${migrationName}`,
 ];
 
 commands.forEach((cmd) => {
