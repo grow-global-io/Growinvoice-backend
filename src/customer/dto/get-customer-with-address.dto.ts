@@ -7,8 +7,8 @@ import { Type } from 'class-transformer';
 
 export class GetCustomerWithAddressDto extends CustomerDto {
   @Type(() => BillingAddressDto)
-  billingDetails?: BillingAddressDto;
+  billingAddress?: BillingAddressDto;
 
   @Type(() => ShippingAddressDto)
-  shippingDetails?: ShippingAddressDto;
+  shippingAddress?: ShippingAddressDto;
 }
