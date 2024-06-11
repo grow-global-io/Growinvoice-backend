@@ -28,6 +28,7 @@ export class UploadService {
     });
     return plainToInstance(UploadResponseDto, {
       link: blockBlobClient.url,
+      message: 'File uploaded successfully',
     });
   }
 }
