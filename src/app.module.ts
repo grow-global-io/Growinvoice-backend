@@ -13,6 +13,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TaskserviceService } from './taskservice/taskservice.service';
 import { CurrencyModule } from './currency/currency.module';
 import { CustomerModule } from './customer/customer.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CustomerModule } from './customer/customer.module';
     ScheduleModule.forRoot(),
     CurrencyModule,
     CustomerModule,
+    UploadModule,
   ],
   controllers: [],
   providers: [MailService, TaskserviceService],

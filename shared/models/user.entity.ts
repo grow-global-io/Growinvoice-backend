@@ -6,6 +6,8 @@ import { HSNCode } from './hSNCode.entity';
 import { Tax } from './tax.entity';
 import { ProductUnit } from './productUnit.entity';
 import { Customer } from './customer.entity';
+import { Invoice } from './invoice.entity';
+import { PaymentDetails } from './paymentDetails.entity';
 
 export class User {
   @ApiProperty({
@@ -79,4 +81,8 @@ export class User {
   productUnit?: ProductUnit[];
   @ApiHideProperty()
   customer?: Customer[];
+  @ApiHideProperty()
+  invoice?: Invoice[];
+  @ApiHideProperty()
+  paymentDetails?: PaymentDetails[];
 }

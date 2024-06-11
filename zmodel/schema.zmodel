@@ -47,22 +47,46 @@ enum CustomerOption {
     BusinessWithoutGST
 }
 
+enum InvoiceRecurring {
+    Daily
+    Weekly
+    Monthly
+    Quarterly
+    HalfYearly
+    Yearly
+}
+
+enum PaymentType {
+    UPI
+    EuropeanBank
+    IndianBank
+    SwiftCode
+    Paypal
+    Stripe
+    Razorpay
+    Mollie
+    Cash
+    Cheque
+}
+
 model User extends Base {
-    id               String        @id @default(cuid())
-    email            String        @unique
+    id               String           @id @default(cuid())
+    email            String           @unique
     name             String?
     phone            String?
     password         String
-    resetToken       String?       @DtoCreateHidden @DtoUpdateHidden
-    resetTokenExpiry DateTime?     @DtoCreateHidden @DtoUpdateHidden
-    currency_id      String?       @DtoRelationIncludeId @DtoCreateHidden @DtoUpdateHidden
-    currency         Currencies?   @relation(fields: [currency_id], references: [id], onDelete: SetNull)
-    company          Company[]     @DtoApiHidden
-    product          Product[]     @DtoApiHidden
-    hsnCode          HSNCode[]     @DtoApiHidden
-    tax              Tax[]         @DtoApiHidden
-    productUnit      ProductUnit[] @DtoApiHidden
-    customer         Customer[]    @DtoApiHidden
+    resetToken       String?          @DtoCreateHidden @DtoUpdateHidden
+    resetTokenExpiry DateTime?        @DtoCreateHidden @DtoUpdateHidden
+    currency_id      String?          @DtoRelationIncludeId @DtoCreateHidden @DtoUpdateHidden
+    currency         Currencies?      @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+    company          Company[]        @DtoApiHidden
+    product          Product[]        @DtoApiHidden
+    hsnCode          HSNCode[]        @DtoApiHidden
+    tax              Tax[]            @DtoApiHidden
+    productUnit      ProductUnit[]    @DtoApiHidden
+    customer         Customer[]       @DtoApiHidden
+    invoice          Invoice[]        @DtoApiHidden
+    paymentDetails   PaymentDetails[] @DtoApiHidden
 }
 
 model Company extends Base {
@@ -96,6 +120,7 @@ model Tax extends Base {
     user_id     String    @DtoRelationIncludeId
     user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
     Product     Product[] @DtoApiHidden
+    Invoice     Invoice[] @DtoApiHidden
 }
 
 model ProductUnit extends Base {
@@ -107,21 +132,22 @@ model ProductUnit extends Base {
 }
 
 model Product extends Base {
-    id          String      @id @default(cuid())
+    id          String            @id @default(cuid())
     name        String
     description String?
     price       Float
     type        ProductType
-    currency_id String      @DtoRelationIncludeId
-    currency    Currencies  @relation(fields: [currency_id], references: [id], onDelete: Cascade)
-    unit_id     String      @DtoRelationIncludeId
-    unit        ProductUnit @relation(fields: [unit_id], references: [id], onDelete: Cascade)
-    hsnCode_id  String      @DtoRelationIncludeId
-    hsnCode     HSNCode     @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
-    tax_id      String      @DtoRelationIncludeId
-    tax         Tax         @relation(fields: [tax_id], references: [id], onDelete: Cascade)
-    user_id     String      @DtoRelationIncludeId
-    user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    currency_id String            @DtoRelationIncludeId
+    currency    Currencies        @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+    unit_id     String            @DtoRelationIncludeId
+    unit        ProductUnit       @relation(fields: [unit_id], references: [id], onDelete: Cascade)
+    hsnCode_id  String            @DtoRelationIncludeId
+    hsnCode     HSNCode           @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+    tax_id      String            @DtoRelationIncludeId
+    tax         Tax               @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+    user_id     String            @DtoRelationIncludeId
+    user        User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    invoice     InvoiceProducts[] @DtoApiHidden
 }
 
 
@@ -196,10 +222,59 @@ model Customer extends Base {
     shippingAddress    ShippingAddress @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
     user_id            String          @DtoRelationIncludeId
     user               User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    invoice            Invoice[]       @DtoApiHidden
 }
 
-model Post extends Base {
-    id      String @id @default(cuid())
-    title   String
-    content String
+model PaymentDetails extends Base {
+    id          String      @id @default(cuid())
+    paymentType PaymentType
+    ibanNumber  String?     @DtoCreateOptional @DtoUpdateOptional
+    bicNumber   String?     @DtoCreateOptional @DtoUpdateOptional
+    upiId       String?     @DtoCreateOptional @DtoUpdateOptional
+    ifscCode    String?     @DtoCreateOptional @DtoUpdateOptional
+    account_no  String?     @DtoCreateOptional @DtoUpdateOptional
+    swiftCode   String?     @DtoCreateOptional @DtoUpdateOptional
+    paypalId    String?     @DtoCreateOptional @DtoUpdateOptional
+    stripeId    String?     @DtoCreateOptional @DtoUpdateOptional
+    razorpayId  String?     @DtoCreateOptional @DtoUpdateOptional
+    mollieId    String?     @DtoCreateOptional @DtoUpdateOptional
+    user_id     String      @DtoRelationIncludeId
+    user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    invoice     Invoice[]   @DtoApiHidden
+}
+
+model InvoiceProducts extends Base {
+    id         String  @id @default(cuid())
+    invoice_id String  @DtoRelationIncludeId
+    invoice    Invoice @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+    product_id String  @DtoRelationIncludeId
+    product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    quantity   Float
+    tax        Float
+    hsnCode    Float
+    price      Float
+    total      Float
+}
+
+model Invoice extends Base {
+    id                 String            @id @default(cuid())
+    customer_id        String            @DtoRelationIncludeId
+    customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+    user_id            String            @DtoRelationIncludeId
+    user               User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    invoice_number     String
+    reference_number   String?           @DtoCreateOptional @DtoUpdateOptional
+    date               DateTime
+    due_date           DateTime
+    is_recurring       Boolean
+    recurring          InvoiceRecurring? @DtoCreateOptional @DtoUpdateOptional
+    paymentId          String            @DtoRelationIncludeId
+    payment            PaymentDetails    @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+    product            InvoiceProducts[] @DtoApiHidden
+    notes              String?           @DtoCreateOptional @DtoUpdateOptional
+    sub_total          Float
+    tax_id             String            @DtoRelationIncludeId
+    tax                Tax               @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+    discountPercentage Float?            @DtoCreateOptional @DtoUpdateOptional
+    total              Float
 }

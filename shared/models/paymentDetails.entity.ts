@@ -1,13 +1,9 @@
-import { ProductType } from '@prisma/client';
+import { PaymentType } from '@prisma/client';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { Currencies } from './currencies.entity';
-import { ProductUnit } from './productUnit.entity';
-import { HSNCode } from './hSNCode.entity';
-import { Tax } from './tax.entity';
 import { User } from './user.entity';
-import { InvoiceProducts } from './invoiceProducts.entity';
+import { Invoice } from './invoice.entity';
 
-export class Product {
+export class PaymentDetails {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -28,59 +24,59 @@ export class Product {
   })
   id: string;
   @ApiProperty({
-    type: 'string',
+    enum: PaymentType,
   })
-  name: string;
+  paymentType: PaymentType;
   @ApiProperty({
     type: 'string',
     nullable: true,
   })
-  description: string | null;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  price: number;
-  @ApiProperty({
-    enum: ProductType,
-  })
-  type: ProductType;
+  ibanNumber: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  currency_id: string;
-  @ApiProperty({
-    type: () => Currencies,
-    required: false,
-  })
-  currency?: Currencies;
+  bicNumber: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  unit_id: string;
-  @ApiProperty({
-    type: () => ProductUnit,
-    required: false,
-  })
-  unit?: ProductUnit;
+  upiId: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  hsnCode_id: string;
-  @ApiProperty({
-    type: () => HSNCode,
-    required: false,
-  })
-  hsnCode?: HSNCode;
+  ifscCode: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  tax_id: string;
+  account_no: string | null;
   @ApiProperty({
-    type: () => Tax,
-    required: false,
+    type: 'string',
+    nullable: true,
   })
-  tax?: Tax;
+  swiftCode: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  paypalId: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  stripeId: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  razorpayId: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  mollieId: string | null;
   @ApiProperty({
     type: 'string',
   })
@@ -91,5 +87,5 @@ export class Product {
   })
   user?: User;
   @ApiHideProperty()
-  invoice?: InvoiceProducts[];
+  invoice?: Invoice[];
 }

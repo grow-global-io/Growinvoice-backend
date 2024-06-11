@@ -1,9 +1,10 @@
 import { CustomerOption } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Currencies } from './currencies.entity';
 import { BillingAddress } from './billingAddress.entity';
 import { ShippingAddress } from './shippingAddress.entity';
 import { User } from './user.entity';
+import { Invoice } from './invoice.entity';
 
 export class Customer {
   @ApiProperty({
@@ -89,4 +90,6 @@ export class Customer {
     required: false,
   })
   user?: User;
+  @ApiHideProperty()
+  invoice?: Invoice[];
 }

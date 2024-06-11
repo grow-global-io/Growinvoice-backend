@@ -44,19 +44,41 @@ enum CustomerOption {
   BusinessWithoutGST
 }
 
+enum InvoiceRecurring {
+  Daily
+  Weekly
+  Monthly
+  Quarterly
+  HalfYearly
+  Yearly
+}
+
+enum PaymentType {
+  UPI
+  EuropeanBank
+  IndianBank
+  SwiftCode
+  Paypal
+  Stripe
+  Razorpay
+  Mollie
+  Cash
+  Cheque
+}
+
 /// @@deny('read', isExist == false)
 model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt        DateTime      @default(now())
+  createdAt        DateTime         @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt        DateTime?     @updatedAt()
+  updatedAt        DateTime?        @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist          Boolean       @default(true)
-  id               String        @id() @default(cuid())
-  email            String        @unique()
+  isExist          Boolean          @default(true)
+  id               String           @id() @default(cuid())
+  email            String           @unique()
   name             String?
   phone            String?
   password         String
@@ -70,7 +92,7 @@ model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
   currency_id      String?
-  currency         Currencies?   @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+  currency         Currencies?      @relation(fields: [currency_id], references: [id], onDelete: SetNull)
   /// @DtoApiHidden
   company          Company[]
   /// @DtoApiHidden
@@ -83,6 +105,10 @@ model User {
   productUnit      ProductUnit[]
   /// @DtoApiHidden
   customer         Customer[]
+  /// @DtoApiHidden
+  invoice          Invoice[]
+  /// @DtoApiHidden
+  paymentDetails   PaymentDetails[]
 }
 
 /// @@deny('read', isExist == false)
@@ -151,6 +177,8 @@ model Tax {
   user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
   Product     Product[]
+  /// @DtoApiHidden
+  Invoice     Invoice[]
 }
 
 /// @@deny('read', isExist == false)
@@ -177,33 +205,35 @@ model ProductUnit {
 model Product {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime          @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt   DateTime?   @updatedAt()
+  updatedAt   DateTime?         @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist     Boolean     @default(true)
-  id          String      @id() @default(cuid())
+  isExist     Boolean           @default(true)
+  id          String            @id() @default(cuid())
   name        String
   description String?
   price       Float
   type        ProductType
   /// @DtoRelationIncludeId
   currency_id String
-  currency    Currencies  @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+  currency    Currencies        @relation(fields: [currency_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   unit_id     String
-  unit        ProductUnit @relation(fields: [unit_id], references: [id], onDelete: Cascade)
+  unit        ProductUnit       @relation(fields: [unit_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   hsnCode_id  String
-  hsnCode     HSNCode     @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+  hsnCode     HSNCode           @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   tax_id      String
-  tax         Tax         @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+  tax         Tax               @relation(fields: [tax_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   user_id     String
-  user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  invoice     InvoiceProducts[]
 }
 
 /// @@deny('read', isExist == false)
@@ -355,20 +385,127 @@ model Customer {
   /// @DtoRelationIncludeId
   user_id            String
   user               User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  invoice            Invoice[]
 }
 
 /// @@deny('read', isExist == false)
-model Post {
+model PaymentDetails {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt DateTime  @default(now())
+  createdAt   DateTime    @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt DateTime? @updatedAt()
+  updatedAt   DateTime?   @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist   Boolean   @default(true)
-  id        String    @id() @default(cuid())
-  title     String
-  content   String
+  isExist     Boolean     @default(true)
+  id          String      @id() @default(cuid())
+  paymentType PaymentType
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  ibanNumber  String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  bicNumber   String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  upiId       String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  ifscCode    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  account_no  String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  swiftCode   String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  paypalId    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  stripeId    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  razorpayId  String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  mollieId    String?
+  /// @DtoRelationIncludeId
+  user_id     String
+  user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  invoice     Invoice[]
+}
+
+/// @@deny('read', isExist == false)
+model InvoiceProducts {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  invoice_id String
+  invoice    Invoice   @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  product_id String
+  product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  quantity   Float
+  tax        Float
+  hsnCode    Float
+  price      Float
+  total      Float
+}
+
+/// @@deny('read', isExist == false)
+model Invoice {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt          DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt          DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist            Boolean           @default(true)
+  id                 String            @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  customer_id        String
+  customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id            String
+  user               User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  invoice_number     String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reference_number   String?
+  date               DateTime
+  due_date           DateTime
+  is_recurring       Boolean
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  recurring          InvoiceRecurring?
+  /// @DtoRelationIncludeId
+  paymentId          String
+  payment            PaymentDetails    @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  /// @DtoApiHidden
+  product            InvoiceProducts[]
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes              String?
+  sub_total          Float
+  /// @DtoRelationIncludeId
+  tax_id             String
+  tax                Tax               @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  discountPercentage Float?
+  total              Float
 }
