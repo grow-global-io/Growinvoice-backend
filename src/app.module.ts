@@ -14,6 +14,8 @@ import { TaskserviceService } from './taskservice/taskservice.service';
 import { CurrencyModule } from './currency/currency.module';
 import { CustomerModule } from './customer/customer.module';
 import { UploadModule } from './upload/upload.module';
+import { PaymentdetailsModule } from './paymentdetails/paymentdetails.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { UploadModule } from './upload/upload.module';
     CurrencyModule,
     CustomerModule,
     UploadModule,
+    PaymentdetailsModule,
+    InvoiceModule,
   ],
   controllers: [],
   providers: [MailService, TaskserviceService],
