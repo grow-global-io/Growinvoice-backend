@@ -18,8 +18,10 @@ export class PaymentdetailsService {
     return plainToInstance(PaymentDetailsDto, paymentdetail);
   }
 
-  async findAll() {
-    const paymentdetails = await this.prismaService.paymentDetails.findMany();
+  async findAll(user_id: string) {
+    const paymentdetails = await this.prismaService.paymentDetails.findMany({
+      where: { user_id },
+    });
     return plainToInstance(PaymentDetailsDto, paymentdetails);
   }
 
