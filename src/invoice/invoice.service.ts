@@ -1,6 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { InvoiceDto, UpdateInvoiceDto } from '@shared/models';
+import { Invoice, InvoiceDto, UpdateInvoiceDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import { CreateInvoiceWithProducts } from './dto/create-invoice-with-products.dto';
 
@@ -11,6 +11,7 @@ export class InvoiceService {
     const invoiceDetails = await this.prismaService.invoice.create({
       data: {
         ...createInvoiceDto,
+        invoice_number: 'INV-' + createInvoiceDto.invoice_number,
         tax_id: createInvoiceDto.tax_id ? createInvoiceDto.tax_id : null,
         product: {
           createMany: {
@@ -35,10 +36,10 @@ export class InvoiceService {
     const invoices = await this.prismaService.invoice.findMany({
       where: { user_id },
       include: {
-        product: true,
+        customer: true,
       },
     });
-    return plainToInstance(InvoiceDto, invoices);
+    return plainToInstance(Invoice, invoices);
   }
 
   async findOne(id: string) {

@@ -1,4 +1,4 @@
-import { InvoiceRecurring } from '@prisma/client';
+import { InvoiceRecurring, paidStatus } from '@prisma/client';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Customer } from './customer.entity';
 import { User } from './user.entity';
@@ -113,4 +113,8 @@ export class Invoice {
     format: 'float',
   })
   total: number;
+  @ApiProperty({
+    enum: paidStatus,
+  })
+  paid_status: paidStatus;
 }

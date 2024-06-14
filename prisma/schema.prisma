@@ -66,6 +66,11 @@ enum PaymentType {
   Cheque
 }
 
+enum paidStatus {
+  Paid
+  Unpaid
+}
+
 /// @@deny('read', isExist == false)
 model User {
   /// @DtoCreateHidden
@@ -512,4 +517,5 @@ model Invoice {
   /// @DtoUpdateOptional
   discountPercentage Float?
   total              Float
+  paid_status        paidStatus        @default(Unpaid)
 }

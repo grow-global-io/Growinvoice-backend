@@ -69,6 +69,11 @@ enum PaymentType {
     Cheque
 }
 
+enum paidStatus {
+    Paid
+    Unpaid
+}
+
 model User extends Base {
     id               String           @id @default(cuid())
     email            String           @unique
@@ -277,4 +282,5 @@ model Invoice extends Base {
     tax                Tax?              @relation(fields: [tax_id], references: [id], onDelete: SetNull)
     discountPercentage Float?            @DtoCreateOptional @DtoUpdateOptional
     total              Float
+    paid_status        paidStatus        @default(Unpaid)
 }
