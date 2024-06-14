@@ -28,18 +28,20 @@ export class UpdateInvoiceProductsDto {
     type: 'number',
     format: 'float',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsNumber()
-  tax?: number;
+  tax?: number | null;
   @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsNumber()
-  hsnCode?: number;
+  hsnCode?: number | null;
   @ApiProperty({
     type: 'number',
     format: 'float',

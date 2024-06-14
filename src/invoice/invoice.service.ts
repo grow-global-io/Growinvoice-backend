@@ -1,14 +1,22 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateInvoiceDto, InvoiceDto, UpdateInvoiceDto } from '@shared/models';
+import { InvoiceDto, UpdateInvoiceDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
+import { CreateInvoiceWithProducts } from './dto/create-invoice-with-products.dto';
 
 @Injectable()
 export class InvoiceService {
   constructor(private prismaService: PrismaService) {}
-  async create(createInvoiceDto: CreateInvoiceDto) {
+  async create(createInvoiceDto: CreateInvoiceWithProducts) {
     const invoiceDetails = await this.prismaService.invoice.create({
-      data: createInvoiceDto,
+      data: {
+        ...createInvoiceDto,
+        product: {
+          createMany: {
+            data: createInvoiceDto.products,
+          },
+        },
+      },
     });
     return plainToInstance(InvoiceDto, invoiceDetails);
   }

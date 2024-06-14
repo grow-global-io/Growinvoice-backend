@@ -250,8 +250,8 @@ model InvoiceProducts extends Base {
     product_id String  @DtoRelationIncludeId
     product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
     quantity   Float
-    tax        Float
-    hsnCode    Float
+    tax        Float?  @DtoCreateOptional @DtoUpdateOptional
+    hsnCode    Float?  @DtoCreateOptional @DtoUpdateOptional
     price      Float
     total      Float
 }

@@ -8,10 +8,11 @@ import {
   Delete,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
-import { CreateInvoiceDto, InvoiceDto, UpdateInvoiceDto } from '@shared/models';
+import { InvoiceDto, UpdateInvoiceDto } from '@shared/models';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
+import { CreateInvoiceWithProducts } from './dto/create-invoice-with-products.dto';
 
 @ApiTags('invoice')
 @Controller('invoice')
@@ -21,7 +22,7 @@ export class InvoiceController {
   @Post()
   @ApiSuccessResponse(InvoiceDto, { status: 201 })
   async create(
-    @Body() createInvoiceDto: CreateInvoiceDto,
+    @Body() createInvoiceDto: CreateInvoiceWithProducts,
   ): Promise<SuccessResponseDto<InvoiceDto>> {
     const invoice = await this.invoiceService.create(createInvoiceDto);
     return {

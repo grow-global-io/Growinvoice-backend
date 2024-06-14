@@ -458,8 +458,12 @@ model InvoiceProducts {
   product_id String
   product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
   quantity   Float
-  tax        Float
-  hsnCode    Float
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  tax        Float?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  hsnCode    Float?
   price      Float
   total      Float
 }

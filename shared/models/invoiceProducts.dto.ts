@@ -36,13 +36,15 @@ export class InvoiceProductsDto {
   @ApiProperty({
     type: 'number',
     format: 'float',
+    nullable: true,
   })
-  tax: number;
+  tax: number | null;
   @ApiProperty({
     type: 'number',
     format: 'float',
+    nullable: true,
   })
-  hsnCode: number;
+  hsnCode: number | null;
   @ApiProperty({
     type: 'number',
     format: 'float',
