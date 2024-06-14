@@ -490,8 +490,8 @@ model Invoice {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   reference_number   String?
-  date               DateTime
-  due_date           DateTime
+  date               String
+  due_date           String
   is_recurring       Boolean
   /// @DtoCreateOptional
   /// @DtoUpdateOptional

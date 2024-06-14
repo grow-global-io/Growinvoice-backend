@@ -264,8 +264,8 @@ model Invoice extends Base {
     user               User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
     invoice_number     String
     reference_number   String?           @DtoCreateOptional @DtoUpdateOptional
-    date               DateTime
-    due_date           DateTime
+    date               String
+    due_date           String
     is_recurring       Boolean
     recurring          InvoiceRecurring? @DtoCreateOptional @DtoUpdateOptional
     paymentId          String            @DtoRelationIncludeId
