@@ -13,7 +13,16 @@ export class InvoiceService {
         ...createInvoiceDto,
         product: {
           createMany: {
-            data: createInvoiceDto.products,
+            data: createInvoiceDto.products.map((product) => {
+              return {
+                product_id: product.product_id,
+                quantity: product.quantity,
+                tax: product.tax,
+                hsnCode: product.hsnCode,
+                price: product.price,
+                total: product.total,
+              };
+            }),
           },
         },
       },
