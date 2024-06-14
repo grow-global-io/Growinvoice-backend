@@ -95,13 +95,15 @@ export class Invoice {
   sub_total: number;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  tax_id: string;
+  tax_id: string | null;
   @ApiProperty({
     type: () => Tax,
     required: false,
+    nullable: true,
   })
-  tax?: Tax;
+  tax?: Tax | null;
   @ApiProperty({
     type: 'number',
     format: 'float',

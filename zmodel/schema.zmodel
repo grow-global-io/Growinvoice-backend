@@ -273,8 +273,8 @@ model Invoice extends Base {
     product            InvoiceProducts[] @DtoApiHidden
     notes              String?           @DtoCreateOptional @DtoUpdateOptional
     sub_total          Float
-    tax_id             String            @DtoRelationIncludeId
-    tax                Tax               @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+    tax_id             String?           @DtoRelationIncludeId
+    tax                Tax?              @relation(fields: [tax_id], references: [id], onDelete: SetNull)
     discountPercentage Float?            @DtoCreateOptional @DtoUpdateOptional
     total              Float
 }

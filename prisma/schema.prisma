@@ -506,8 +506,8 @@ model Invoice {
   notes              String?
   sub_total          Float
   /// @DtoRelationIncludeId
-  tax_id             String
-  tax                Tax               @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+  tax_id             String?
+  tax                Tax?              @relation(fields: [tax_id], references: [id], onDelete: SetNull)
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   discountPercentage Float?

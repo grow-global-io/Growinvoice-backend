@@ -73,8 +73,9 @@ export class InvoiceDto {
   sub_total: number;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  tax_id: string;
+  tax_id: string | null;
   @ApiProperty({
     type: 'number',
     format: 'float',

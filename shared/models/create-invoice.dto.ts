@@ -86,10 +86,12 @@ export class CreateInvoiceDto {
   sub_total: number;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  tax_id: string;
+  tax_id?: string | null;
   @ApiProperty({
     type: 'number',
     format: 'float',

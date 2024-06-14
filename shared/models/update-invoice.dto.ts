@@ -94,10 +94,11 @@ export class UpdateInvoiceDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  tax_id?: string;
+  tax_id?: string | null;
   @ApiProperty({
     type: 'number',
     format: 'float',
