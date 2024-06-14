@@ -8,5 +8,5 @@ class OmitCreateInvoiceProductsDto extends OmitType(CreateInvoiceProductsDto, [
 
 export class CreateInvoiceWithProducts extends CreateInvoiceDto {
   @Type(() => OmitCreateInvoiceProductsDto)
-  products: OmitCreateInvoiceProductsDto[];
+  product: OmitCreateInvoiceProductsDto[];
 }

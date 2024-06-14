@@ -11,9 +11,10 @@ export class InvoiceService {
     const invoiceDetails = await this.prismaService.invoice.create({
       data: {
         ...createInvoiceDto,
+        tax_id: createInvoiceDto.tax_id ? createInvoiceDto.tax_id : null,
         product: {
           createMany: {
-            data: createInvoiceDto.products.map((product) => {
+            data: createInvoiceDto.product.map((product) => {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,
@@ -31,7 +32,11 @@ export class InvoiceService {
   }
 
   async findAll() {
-    const invoices = await this.prismaService.invoice.findMany();
+    const invoices = await this.prismaService.invoice.findMany({
+      include: {
+        product: true,
+      },
+    });
     return plainToInstance(InvoiceDto, invoices);
   }
 
