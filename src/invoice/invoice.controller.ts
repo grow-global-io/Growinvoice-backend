@@ -13,6 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { CreateInvoiceWithProducts } from './dto/create-invoice-with-products.dto';
+import { GetUser, User } from '@shared/decorators/user.decorator';
 
 @ApiTags('invoice')
 @Controller('invoice')
@@ -32,8 +33,8 @@ export class InvoiceController {
   }
 
   @Get()
-  async findAll() {
-    return await this.invoiceService.findAll();
+  async findAll(@GetUser() user: User) {
+    return await this.invoiceService.findAll(user.sub);
   }
 
   @Get(':id')

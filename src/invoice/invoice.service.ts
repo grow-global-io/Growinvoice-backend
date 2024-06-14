@@ -31,8 +31,9 @@ export class InvoiceService {
     return plainToInstance(InvoiceDto, invoiceDetails);
   }
 
-  async findAll() {
+  async findAll(user_id: string) {
     const invoices = await this.prismaService.invoice.findMany({
+      where: { user_id },
       include: {
         product: true,
       },
