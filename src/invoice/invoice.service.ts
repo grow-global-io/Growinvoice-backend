@@ -6,6 +6,7 @@ import {
   CreateInvoiceWithProducts,
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
+import { InvoiceWithAllDataDto } from './dto/invoice-with-all-data.dto';
 
 @Injectable()
 export class InvoiceService {
@@ -53,7 +54,7 @@ export class InvoiceService {
         customer: true,
       },
     });
-    return plainToInstance(Invoice, invoice);
+    return plainToInstance(InvoiceWithAllDataDto, invoice);
   }
 
   async update(id: string, updateInvoiceDto: UpdateInvoiceWithProducts) {
