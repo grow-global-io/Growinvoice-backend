@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { InvoiceDto } from '@shared/models';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import {
@@ -18,6 +18,7 @@ import {
 } from './dto/create-invoice-with-products.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 
+@ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
 @Controller('invoice')
 export class InvoiceController {

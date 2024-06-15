@@ -51,7 +51,6 @@ export class InvoiceService {
       include: {
         product: true,
         customer: true,
-        payment: true,
       },
     });
     return plainToInstance(Invoice, invoice);
