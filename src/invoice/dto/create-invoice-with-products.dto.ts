@@ -1,5 +1,9 @@
 import { OmitType } from '@nestjs/swagger';
-import { CreateInvoiceDto, CreateInvoiceProductsDto } from '@shared/models';
+import {
+  CreateInvoiceDto,
+  CreateInvoiceProductsDto,
+  UpdateInvoiceDto,
+} from '@shared/models';
 import { Type } from 'class-transformer';
 
 class OmitCreateInvoiceProductsDto extends OmitType(CreateInvoiceProductsDto, [
@@ -7,6 +11,11 @@ class OmitCreateInvoiceProductsDto extends OmitType(CreateInvoiceProductsDto, [
 ] as const) {}
 
 export class CreateInvoiceWithProducts extends CreateInvoiceDto {
+  @Type(() => OmitCreateInvoiceProductsDto)
+  product: OmitCreateInvoiceProductsDto[];
+}
+
+export class UpdateInvoiceWithProducts extends UpdateInvoiceDto {
   @Type(() => OmitCreateInvoiceProductsDto)
   product: OmitCreateInvoiceProductsDto[];
 }

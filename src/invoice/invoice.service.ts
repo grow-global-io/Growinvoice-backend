@@ -1,8 +1,11 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Invoice, InvoiceDto, UpdateInvoiceDto } from '@shared/models';
+import { Invoice, InvoiceDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
-import { CreateInvoiceWithProducts } from './dto/create-invoice-with-products.dto';
+import {
+  CreateInvoiceWithProducts,
+  UpdateInvoiceWithProducts,
+} from './dto/create-invoice-with-products.dto';
 
 @Injectable()
 export class InvoiceService {
@@ -45,14 +48,36 @@ export class InvoiceService {
   async findOne(id: string) {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },
+      include: {
+        product: true,
+        customer: true,
+        payment: true,
+      },
     });
-    return plainToInstance(InvoiceDto, invoice);
+    return plainToInstance(Invoice, invoice);
   }
 
-  async update(id: string, updateInvoiceDto: UpdateInvoiceDto) {
+  async update(id: string, updateInvoiceDto: UpdateInvoiceWithProducts) {
     const invoice = await this.prismaService.invoice.update({
       where: { id },
-      data: updateInvoiceDto,
+      data: {
+        ...updateInvoiceDto,
+        product: {
+          deleteMany: {},
+          createMany: {
+            data: updateInvoiceDto.product.map((product) => {
+              return {
+                product_id: product.product_id,
+                quantity: product.quantity,
+                tax: product.tax,
+                hsnCode: product.hsnCode,
+                price: product.price,
+                total: product.total,
+              };
+            }),
+          },
+        },
+      },
     });
     return plainToInstance(InvoiceDto, invoice);
   }
