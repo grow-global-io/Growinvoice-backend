@@ -37,6 +37,16 @@ export class InvoiceController {
     return await this.invoiceService.findAll(user.sub);
   }
 
+  @Get('due')
+  async findDueInvoices(@GetUser() user: User) {
+    return await this.invoiceService.findDueInvoices(user.sub);
+  }
+
+  @Get('paid')
+  async findPaidInvoices(@GetUser() user: User) {
+    return await this.invoiceService.findPaidInvoices(user.sub);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.invoiceService.findOne(id);

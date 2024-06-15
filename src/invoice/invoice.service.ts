@@ -63,4 +63,24 @@ export class InvoiceService {
     });
     return plainToInstance(InvoiceDto, invoice);
   }
+
+  async findDueInvoices(user_id: string) {
+    const invoices = await this.prismaService.invoice.findMany({
+      where: { user_id, paid_status: 'Unpaid' },
+      include: {
+        customer: true,
+      },
+    });
+    return plainToInstance(Invoice, invoices);
+  }
+
+  async findPaidInvoices(user_id: string) {
+    const invoices = await this.prismaService.invoice.findMany({
+      where: { user_id, paid_status: 'Paid' },
+      include: {
+        customer: true,
+      },
+    });
+    return plainToInstance(Invoice, invoices);
+  }
 }
