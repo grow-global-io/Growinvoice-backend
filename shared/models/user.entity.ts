@@ -8,6 +8,7 @@ import { ProductUnit } from './productUnit.entity';
 import { Customer } from './customer.entity';
 import { Invoice } from './invoice.entity';
 import { PaymentDetails } from './paymentDetails.entity';
+import { Quotation } from './quotation.entity';
 
 export class User {
   @ApiProperty({
@@ -85,4 +86,6 @@ export class User {
   invoice?: Invoice[];
   @ApiHideProperty()
   paymentDetails?: PaymentDetails[];
+  @ApiHideProperty()
+  quotation?: Quotation[];
 }

@@ -6,6 +6,7 @@ import { HSNCode } from './hSNCode.entity';
 import { Tax } from './tax.entity';
 import { User } from './user.entity';
 import { InvoiceProducts } from './invoiceProducts.entity';
+import { QuotationProducts } from './quotationProducts.entity';
 
 export class Product {
   @ApiProperty({
@@ -92,4 +93,6 @@ export class Product {
   user?: User;
   @ApiHideProperty()
   invoice?: InvoiceProducts[];
+  @ApiHideProperty()
+  Quatation?: QuotationProducts[];
 }

@@ -16,6 +16,7 @@ import { CustomerModule } from './customer/customer.module';
 import { UploadModule } from './upload/upload.module';
 import { PaymentdetailsModule } from './paymentdetails/paymentdetails.module';
 import { InvoiceModule } from './invoice/invoice.module';
+import { QuotationModule } from './quotation/quotation.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { InvoiceModule } from './invoice/invoice.module';
     UploadModule,
     PaymentdetailsModule,
     InvoiceModule,
+    QuotationModule,
   ],
   controllers: [],
   providers: [MailService, TaskserviceService],

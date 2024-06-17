@@ -5,6 +5,7 @@ import { BillingAddress } from './billingAddress.entity';
 import { ShippingAddress } from './shippingAddress.entity';
 import { User } from './user.entity';
 import { Invoice } from './invoice.entity';
+import { Quotation } from './quotation.entity';
 
 export class Customer {
   @ApiProperty({
@@ -92,4 +93,6 @@ export class Customer {
   user?: User;
   @ApiHideProperty()
   invoice?: Invoice[];
+  @ApiHideProperty()
+  Quatation?: Quotation[];
 }

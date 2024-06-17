@@ -2,6 +2,7 @@ import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { Product } from './product.entity';
 import { Invoice } from './invoice.entity';
+import { Quotation } from './quotation.entity';
 
 export class Tax {
   @ApiProperty({
@@ -46,4 +47,6 @@ export class Tax {
   Product?: Product[];
   @ApiHideProperty()
   Invoice?: Invoice[];
+  @ApiHideProperty()
+  Quatation?: Quotation[];
 }

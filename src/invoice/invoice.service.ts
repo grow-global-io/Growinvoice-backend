@@ -62,7 +62,7 @@ export class InvoiceService {
       where: { id },
       data: {
         ...updateInvoiceDto,
-        invoice_number: 'INV-' + updateInvoiceDto.invoice_number,
+        invoice_number: 'INV-' + updateInvoiceDto.invoice_number.split('-')[1],
         tax_id: updateInvoiceDto.tax_id ? updateInvoiceDto.tax_id : null,
         product: {
           deleteMany: {},

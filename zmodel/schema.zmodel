@@ -92,6 +92,7 @@ model User extends Base {
     customer         Customer[]       @DtoApiHidden
     invoice          Invoice[]        @DtoApiHidden
     paymentDetails   PaymentDetails[] @DtoApiHidden
+    quotation        Quotation[]      @DtoApiHidden
 }
 
 model Company extends Base {
@@ -119,13 +120,14 @@ model HSNCode extends Base {
 }
 
 model Tax extends Base {
-    id          String    @id @default(cuid())
+    id          String      @id @default(cuid())
     percentage  Float
     description String?
-    user_id     String    @DtoRelationIncludeId
-    user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    Product     Product[] @DtoApiHidden
-    Invoice     Invoice[] @DtoApiHidden
+    user_id     String      @DtoRelationIncludeId
+    user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    Product     Product[]   @DtoApiHidden
+    Invoice     Invoice[]   @DtoApiHidden
+    Quatation   Quotation[] @DtoApiHidden
 }
 
 model ProductUnit extends Base {
@@ -137,22 +139,23 @@ model ProductUnit extends Base {
 }
 
 model Product extends Base {
-    id          String            @id @default(cuid())
+    id          String              @id @default(cuid())
     name        String
     description String?
     price       Float
     type        ProductType
-    currency_id String            @DtoRelationIncludeId
-    currency    Currencies        @relation(fields: [currency_id], references: [id], onDelete: Cascade)
-    unit_id     String            @DtoRelationIncludeId
-    unit        ProductUnit       @relation(fields: [unit_id], references: [id], onDelete: Cascade)
-    hsnCode_id  String            @DtoRelationIncludeId
-    hsnCode     HSNCode           @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
-    tax_id      String            @DtoRelationIncludeId
-    tax         Tax               @relation(fields: [tax_id], references: [id], onDelete: Cascade)
-    user_id     String            @DtoRelationIncludeId
-    user        User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    invoice     InvoiceProducts[] @DtoApiHidden
+    currency_id String              @DtoRelationIncludeId
+    currency    Currencies          @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+    unit_id     String              @DtoRelationIncludeId
+    unit        ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
+    hsnCode_id  String              @DtoRelationIncludeId
+    hsnCode     HSNCode             @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+    tax_id      String              @DtoRelationIncludeId
+    tax         Tax                 @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+    user_id     String              @DtoRelationIncludeId
+    user        User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    invoice     InvoiceProducts[]   @DtoApiHidden
+    Quatation   QuotationProducts[] @DtoApiHidden
 }
 
 
@@ -228,6 +231,7 @@ model Customer extends Base {
     user_id            String          @DtoRelationIncludeId
     user               User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
     invoice            Invoice[]       @DtoApiHidden
+    Quatation          Quotation[]     @DtoApiHidden
 }
 
 model PaymentDetails extends Base {
@@ -283,4 +287,37 @@ model Invoice extends Base {
     discountPercentage Float?            @DtoCreateOptional @DtoUpdateOptional
     total              Float
     paid_status        paidStatus        @default(Unpaid)
+}
+
+model QuotationProducts extends Base {
+    id           String    @id @default(cuid())
+    quotation_id String    @DtoRelationIncludeId
+    quotation    Quotation @relation(fields: [quotation_id], references: [id], onDelete: Cascade)
+    product_id   String    @DtoRelationIncludeId
+    product      Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    quantity     Float
+    tax          Float?    @DtoCreateOptional @DtoUpdateOptional
+    hsnCode      Float?    @DtoCreateOptional @DtoUpdateOptional
+    price        Float
+    total        Float
+}
+
+model Quotation extends Base {
+    id                 String              @id @default(cuid())
+    customer_id        String              @DtoRelationIncludeId
+    customer           Customer            @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+    user_id            String              @DtoRelationIncludeId
+    user               User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    quatation_number   String
+    reference_number   String?             @DtoCreateOptional @DtoUpdateOptional
+    date               String
+    expiry_at          String
+    quotation          QuotationProducts[] @DtoApiHidden
+    notes              String?             @DtoCreateOptional @DtoUpdateOptional
+    private_notes      String?             @DtoCreateOptional @DtoUpdateOptional
+    sub_total          Float
+    tax_id             String?             @DtoRelationIncludeId
+    tax                Tax?                @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+    discountPercentage Float?              @DtoCreateOptional @DtoUpdateOptional
+    total              Float
 }
