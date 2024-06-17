@@ -6,10 +6,11 @@ import {
   Patch,
   Param,
   Delete,
+  Render,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { InvoiceDto } from '@shared/models';
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiHideProperty, ApiTags } from '@nestjs/swagger';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import {
@@ -17,6 +18,7 @@ import {
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
+import { IsPublic } from '@shared/decorators/public.decorator';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
@@ -76,5 +78,15 @@ export class InvoiceController {
     return {
       message: 'Invoice deleted successfully',
     };
+  }
+
+  @IsPublic()
+  @ApiHideProperty()
+  @Get('test/:id')
+  @Render('index')
+  async test(@Param('id') id: string) {
+    return this.invoiceService.findInvoiceTest(id).then((invoice) => {
+      return { invoice };
+    });
   }
 }

@@ -13,7 +13,20 @@
           "dtoFileNameSuffix": [".dto.ts", ".entity.ts", ".enum.ts"]
         }
       }
-    ]
+    ],
+    "assets": [
+      {
+        "include": "../views",
+        "outDir": "dist/views",
+        "watchAssets": true
+      },
+      {
+        "include": "../public",
+        "outDir": "dist/public",
+        "watchAssets": true
+      }
+    ],
+    "watchAssets": true
   },
   "generateOptions": {
     "spec": false

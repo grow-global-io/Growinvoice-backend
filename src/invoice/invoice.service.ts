@@ -110,4 +110,20 @@ export class InvoiceService {
     });
     return plainToInstance(Invoice, invoices);
   }
+
+  async findInvoiceTest(id: string) {
+    const invoice = await this.prismaService.invoice.findUnique({
+      where: { id },
+      include: {
+        product: {
+          include: {
+            product: true,
+          },
+        },
+        customer: true,
+      },
+    });
+    console.log(invoice.product[0]?.product);
+    return plainToInstance(InvoiceWithAllDataDto, invoice);
+  }
 }
