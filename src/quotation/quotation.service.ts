@@ -16,7 +16,7 @@ export class QuotationService {
     const quotationDetails = await this.prismaService.quotation.create({
       data: {
         ...createQuotationDto,
-        quatation_number: 'QUO-' + createQuotationDto.quatation_number,
+        quatation_number: createQuotationDto.quatation_number,
         tax_id: createQuotationDto.tax_id ? createQuotationDto.tax_id : null,
         quotation: {
           createMany: {
@@ -63,8 +63,7 @@ export class QuotationService {
       where: { id },
       data: {
         ...updateQuotationDto,
-        quatation_number:
-          'QUO-' + updateQuotationDto.quatation_number.split('-')[1],
+        quatation_number: updateQuotationDto.quatation_number,
         tax_id: updateQuotationDto.tax_id ? updateQuotationDto.tax_id : null,
         quotation: {
           deleteMany: {},

@@ -15,7 +15,7 @@ export class InvoiceService {
     const invoiceDetails = await this.prismaService.invoice.create({
       data: {
         ...createInvoiceDto,
-        invoice_number: 'INV-' + createInvoiceDto.invoice_number,
+        invoice_number: createInvoiceDto.invoice_number,
         tax_id: createInvoiceDto.tax_id ? createInvoiceDto.tax_id : null,
         product: {
           createMany: {
@@ -62,7 +62,7 @@ export class InvoiceService {
       where: { id },
       data: {
         ...updateInvoiceDto,
-        invoice_number: 'INV-' + updateInvoiceDto.invoice_number.split('-')[1],
+        invoice_number: updateInvoiceDto.invoice_number,
         tax_id: updateInvoiceDto.tax_id ? updateInvoiceDto.tax_id : null,
         product: {
           deleteMany: {},
