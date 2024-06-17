@@ -67,8 +67,7 @@ export class QuotationService {
         tax_id: updateQuotationDto.tax_id ? updateQuotationDto.tax_id : null,
         quotation: {
           deleteMany: {},
-          updateMany: {
-            where: { id },
+          createMany: {
             data: updateQuotationDto.quotation.map((product) => {
               return {
                 product_id: product.product_id,
