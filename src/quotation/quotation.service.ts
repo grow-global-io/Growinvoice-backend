@@ -48,10 +48,10 @@ export class QuotationService {
   }
 
   async findOne(id: string) {
-    const invoice = await this.prismaService.invoice.findUnique({
+    const invoice = await this.prismaService.quotation.findUnique({
       where: { id },
       include: {
-        product: true,
+        quotation: true,
         customer: true,
       },
     });
