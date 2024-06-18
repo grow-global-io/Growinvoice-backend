@@ -7,7 +7,6 @@ import {
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
 import { InvoiceWithAllDataDto } from './dto/invoice-with-all-data.dto';
-import * as puppeteer from 'puppeteer';
 
 @Injectable()
 export class InvoiceService {
