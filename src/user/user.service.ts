@@ -154,8 +154,8 @@ export class UserService {
             data: {
               name: data.companyName,
               phone: data.phoneNumber,
-              country: data.country,
-              state: data.state,
+              country_id: data.country,
+              state_id: data.state,
               city: data.city,
               address: data.address,
               zip: data.zipCode,
