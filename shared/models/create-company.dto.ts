@@ -26,20 +26,16 @@ export class CreateCompanyDto {
   phone?: string | null;
   @ApiProperty({
     type: 'string',
-    required: false,
-    nullable: true,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  country?: string | null;
+  country_id: string;
   @ApiProperty({
     type: 'string',
-    required: false,
-    nullable: true,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  state?: string | null;
+  state_id: string;
   @ApiProperty({
     type: 'string',
     required: false,

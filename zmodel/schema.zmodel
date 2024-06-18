@@ -74,6 +74,27 @@ enum paidStatus {
     Unpaid
 }
 
+model Country extends Base {
+    id              String            @id @default(cuid())
+    name            String
+    code            String
+    phone_code      String
+    state           State[]           @DtoApiHidden
+    BillingAddress  BillingAddress[]  @DtoApiHidden
+    ShippingAddress ShippingAddress[] @DtoApiHidden
+    Company         Company[]         @DtoApiHidden
+}
+
+model State extends Base {
+    id              String            @id @default(cuid())
+    name            String
+    country_id      String            @DtoRelationIncludeId
+    country         Country           @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    BillingAddress  BillingAddress[]  @DtoApiHidden
+    ShippingAddress ShippingAddress[] @DtoApiHidden
+    Company         Company[]         @DtoApiHidden
+}
+
 model User extends Base {
     id               String           @id @default(cuid())
     email            String           @unique
@@ -96,18 +117,20 @@ model User extends Base {
 }
 
 model Company extends Base {
-    id      String  @id @default(cuid())
-    name    String
-    address String?
-    phone   String?
-    country String?
-    state   String?
-    city    String?
-    zip     String?
-    vat     String?
-    logo    String?
-    user_id String  @unique @DtoRelationIncludeId
-    user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    id         String  @id @default(cuid())
+    name       String
+    address    String?
+    phone      String?
+    country_id String  @DtoRelationIncludeId
+    country    Country @relation(fields: [country_id], references: [id])
+    state_id   String  @DtoRelationIncludeId
+    state      State   @relation(fields: [state_id], references: [id])
+    city       String?
+    zip        String?
+    vat        String?
+    logo       String?
+    user_id    String  @unique @DtoRelationIncludeId
+    user       User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model HSNCode extends Base {
@@ -195,24 +218,7 @@ model Currencies extends Base {
     product    Product[]  @DtoApiHidden
 }
 
-model Country extends Base {
-    id              String            @id @default(cuid())
-    name            String
-    code            String
-    phone_code      String
-    state           State[]           @DtoApiHidden
-    BillingAddress  BillingAddress[]  @DtoApiHidden
-    ShippingAddress ShippingAddress[] @DtoApiHidden
-}
 
-model State extends Base {
-    id              String            @id @default(cuid())
-    name            String
-    country_id      String            @DtoRelationIncludeId
-    country         Country           @relation(fields: [country_id], references: [id], onDelete: Cascade)
-    BillingAddress  BillingAddress[]  @DtoApiHidden
-    ShippingAddress ShippingAddress[] @DtoApiHidden
-}
 
 model Customer extends Base {
     id                 String          @id @default(cuid())

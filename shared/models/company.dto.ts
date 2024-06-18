@@ -36,14 +36,12 @@ export class CompanyDto {
   phone: string | null;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  country: string | null;
+  country_id: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  state: string | null;
+  state_id: string;
   @ApiProperty({
     type: 'string',
     nullable: true,

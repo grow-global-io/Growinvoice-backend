@@ -89,4 +89,10 @@ export class InvoiceController {
       return { invoice };
     });
   }
+
+  @IsPublic()
+  @Get('test1/:id')
+  async test1(@Param('id') id: string) {
+    return this.invoiceService.findInvoiceTest(id);
+  }
 }

@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Country } from './country.entity';
+import { State } from './state.entity';
 import { User } from './user.entity';
 
 export class Company {
@@ -37,14 +39,22 @@ export class Company {
   phone: string | null;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  country: string | null;
+  country_id: string;
+  @ApiProperty({
+    type: () => Country,
+    required: false,
+  })
+  country?: Country;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  state: string | null;
+  state_id: string;
+  @ApiProperty({
+    type: () => State,
+    required: false,
+  })
+  state?: State;
   @ApiProperty({
     type: 'string',
     nullable: true,

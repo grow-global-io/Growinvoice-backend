@@ -72,6 +72,55 @@ enum paidStatus {
 }
 
 /// @@deny('read', isExist == false)
+model Country {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt       DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt       DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist         Boolean           @default(true)
+  id              String            @id() @default(cuid())
+  name            String
+  code            String
+  phone_code      String
+  /// @DtoApiHidden
+  state           State[]
+  /// @DtoApiHidden
+  BillingAddress  BillingAddress[]
+  /// @DtoApiHidden
+  ShippingAddress ShippingAddress[]
+  /// @DtoApiHidden
+  Company         Company[]
+}
+
+/// @@deny('read', isExist == false)
+model State {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt       DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt       DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist         Boolean           @default(true)
+  id              String            @id() @default(cuid())
+  name            String
+  /// @DtoRelationIncludeId
+  country_id      String
+  country         Country           @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  BillingAddress  BillingAddress[]
+  /// @DtoApiHidden
+  ShippingAddress ShippingAddress[]
+  /// @DtoApiHidden
+  Company         Company[]
+}
+
+/// @@deny('read', isExist == false)
 model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -122,26 +171,30 @@ model User {
 model Company {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt DateTime  @default(now())
+  createdAt  DateTime  @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt DateTime? @updatedAt()
+  updatedAt  DateTime? @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist   Boolean   @default(true)
-  id        String    @id() @default(cuid())
-  name      String
-  address   String?
-  phone     String?
-  country   String?
-  state     String?
-  city      String?
-  zip       String?
-  vat       String?
-  logo      String?
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  name       String
+  address    String?
+  phone      String?
   /// @DtoRelationIncludeId
-  user_id   String    @unique()
-  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  country_id String
+  country    Country   @relation(fields: [country_id], references: [id])
+  /// @DtoRelationIncludeId
+  state_id   String
+  state      State     @relation(fields: [state_id], references: [id])
+  city       String?
+  zip        String?
+  vat        String?
+  logo       String?
+  /// @DtoRelationIncludeId
+  user_id    String    @unique()
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 /// @@deny('read', isExist == false)
@@ -319,51 +372,6 @@ model Currencies {
   user       User[]
   /// @DtoApiHidden
   product    Product[]
-}
-
-/// @@deny('read', isExist == false)
-model Country {
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
-  createdAt       DateTime          @default(now())
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
-  updatedAt       DateTime?         @updatedAt()
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
-  isExist         Boolean           @default(true)
-  id              String            @id() @default(cuid())
-  name            String
-  code            String
-  phone_code      String
-  /// @DtoApiHidden
-  state           State[]
-  /// @DtoApiHidden
-  BillingAddress  BillingAddress[]
-  /// @DtoApiHidden
-  ShippingAddress ShippingAddress[]
-}
-
-/// @@deny('read', isExist == false)
-model State {
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
-  createdAt       DateTime          @default(now())
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
-  updatedAt       DateTime?         @updatedAt()
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
-  isExist         Boolean           @default(true)
-  id              String            @id() @default(cuid())
-  name            String
-  /// @DtoRelationIncludeId
-  country_id      String
-  country         Country           @relation(fields: [country_id], references: [id], onDelete: Cascade)
-  /// @DtoApiHidden
-  BillingAddress  BillingAddress[]
-  /// @DtoApiHidden
-  ShippingAddress ShippingAddress[]
 }
 
 /// @@deny('read', isExist == false)

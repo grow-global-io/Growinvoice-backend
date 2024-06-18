@@ -28,19 +28,17 @@ export class UpdateCompanyDto {
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  country?: string | null;
+  country_id?: string;
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  state?: string | null;
+  state_id?: string;
   @ApiProperty({
     type: 'string',
     required: false,

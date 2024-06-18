@@ -7,6 +7,7 @@ import {
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
 import { InvoiceWithAllDataDto } from './dto/invoice-with-all-data.dto';
+import * as puppeteer from 'puppeteer';
 
 @Injectable()
 export class InvoiceService {
@@ -111,19 +112,38 @@ export class InvoiceService {
     return plainToInstance(Invoice, invoices);
   }
 
+  async generatePdf(html: string): Promise<Buffer> {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(html);
+    const pdfBuffer = await page.pdf();
+    await browser.close();
+    return pdfBuffer;
+  }
+
   async findInvoiceTest(id: string) {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },
       include: {
+        payment: true,
         product: {
           include: {
             product: true,
           },
         },
-        customer: true,
+        customer: {
+          include: {
+            billingAddress: true,
+            shippingAddress: true,
+          },
+        },
+        user: {
+          include: {
+            company: true,
+          },
+        },
       },
     });
-    console.log(invoice.product[0]?.product);
     return plainToInstance(InvoiceWithAllDataDto, invoice);
   }
 }
