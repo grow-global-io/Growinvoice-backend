@@ -115,21 +115,42 @@ export class InvoiceService {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },
       include: {
+        tax: true,
         payment: true,
         product: {
           include: {
-            product: true,
+            product: {
+              include: {
+                currency: true,
+              },
+            },
           },
         },
         customer: {
           include: {
-            billingAddress: true,
-            shippingAddress: true,
+            billingAddress: {
+              include: {
+                country: true,
+                state: true,
+              },
+            },
+            shippingAddress: {
+              include: {
+                country: true,
+                state: true,
+              },
+            },
           },
         },
         user: {
           include: {
-            company: true,
+            currency: true,
+            company: {
+              include: {
+                country: true,
+                state: true,
+              },
+            },
           },
         },
       },
