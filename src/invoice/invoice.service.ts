@@ -111,15 +111,6 @@ export class InvoiceService {
     return plainToInstance(Invoice, invoices);
   }
 
-  async generatePdf(html: string): Promise<Buffer> {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(html);
-    const pdfBuffer = await page.pdf();
-    await browser.close();
-    return pdfBuffer;
-  }
-
   async findInvoiceTest(id: string) {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },

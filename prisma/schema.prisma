@@ -183,11 +183,11 @@ model Company {
   address    String?
   phone      String?
   /// @DtoRelationIncludeId
-  country_id String
-  country    Country   @relation(fields: [country_id], references: [id])
+  country_id String?
+  country    Country?  @relation(fields: [country_id], references: [id])
   /// @DtoRelationIncludeId
-  state_id   String
-  state      State     @relation(fields: [state_id], references: [id])
+  state_id   String?
+  state      State?    @relation(fields: [state_id], references: [id])
   city       String?
   zip        String?
   vat        String?
