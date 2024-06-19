@@ -83,8 +83,18 @@ export class InvoiceController {
   @IsPublic()
   @ApiHideProperty()
   @Get('test/:id')
-  @Render('index')
+  @Render('general-11')
   async test(@Param('id') id: string) {
+    return this.invoiceService.findInvoiceTest(id).then((invoice) => {
+      return { invoice };
+    });
+  }
+
+  @IsPublic()
+  @ApiHideProperty()
+  @Get('testa/:id')
+  @Render('general-3')
+  async testa(@Param('id') id: string) {
     return this.invoiceService.findInvoiceTest(id).then((invoice) => {
       return { invoice };
     });
