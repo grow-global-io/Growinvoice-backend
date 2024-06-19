@@ -114,7 +114,7 @@ export class InvoiceController {
 
   @IsPublic()
   @Post('invoicePreviewFromBody')
-  @Render('index')
+  @Render('general-3')
   async invoicePreviewFromBody(
     @Body() createInvoiceDto: CreateInvoiceWithProducts,
   ) {
