@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Render,
   Query,
   Res,
 } from '@nestjs/common';
@@ -109,15 +108,14 @@ export class InvoiceController {
 
   @IsPublic()
   @Post('invoicePreviewFromBody')
-  @Render('general-3')
   @ApiResponse({ status: 200, type: String })
   async invoicePreviewFromBody(
     @Body() createInvoiceDto: CreateInvoiceWithProducts,
+    @Query('template') template?: string,
+    @Res() res?: Response,
   ) {
-    return this.invoiceService
-      .createInvoicePreview(createInvoiceDto)
-      .then((invoice) => {
-        return { invoice };
-      });
+    const invoice =
+      await this.invoiceService.createInvoicePreview(createInvoiceDto);
+    return res.render(template ?? 'template1', { invoice });
   }
 }
