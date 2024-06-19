@@ -128,7 +128,7 @@
                         <%= invoice?.sub_total %>
                       </td>
                     </tr>
-                    <% if(invoice?.tax_id !==null ){ %>
+                    <% if(invoice?.tax_id !==null || invoice?.tax || invoice?.tax_id !=="" ){ %>
 
                     <tr class="tm_gray_bg">
                       <td class="tm_width_3 tm_primary_color">Tax <span class="tm_ternary_color">(<%=
