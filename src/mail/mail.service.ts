@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
+import { SendMailDto } from './dto/send-mail.dto';
 
 @Injectable()
 export class MailService {
@@ -23,6 +24,14 @@ export class MailService {
       to: email,
       subject: 'Password Reset',
       html: `Click <a href="${url}">here</a> to reset your password`,
+    });
+  }
+
+  async sendMail(sendMailDto: SendMailDto) {
+    await this.transporter.sendMail({
+      to: sendMailDto.email,
+      subject: sendMailDto.subject,
+      html: sendMailDto.body,
     });
   }
 }

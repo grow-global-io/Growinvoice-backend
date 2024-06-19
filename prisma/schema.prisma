@@ -143,8 +143,6 @@ model User {
   /// @DtoUpdateHidden
   resetTokenExpiry DateTime?
   /// @DtoRelationIncludeId
-  /// @DtoCreateHidden
-  /// @DtoUpdateHidden
   currency_id      String?
   currency         Currencies?      @relation(fields: [currency_id], references: [id], onDelete: SetNull)
   /// @DtoApiHidden

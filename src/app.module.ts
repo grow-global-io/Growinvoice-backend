@@ -17,6 +17,7 @@ import { UploadModule } from './upload/upload.module';
 import { PaymentdetailsModule } from './paymentdetails/paymentdetails.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { QuotationModule } from './quotation/quotation.module';
+import { MailController } from './mail/mail.controller';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { QuotationModule } from './quotation/quotation.module';
     InvoiceModule,
     QuotationModule,
   ],
-  controllers: [],
+  controllers: [MailController],
   providers: [MailService, TaskserviceService],
 })
 export class AppModule {}

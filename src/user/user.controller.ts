@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put } from '@nestjs/common';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { ErrorMessageDto } from '@shared/dto/errorMessage.dto';
@@ -10,7 +10,7 @@ import { CreateUserCompany } from './dto/create-user-company.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
-import { User } from '@shared/models';
+import { UpdateUserDto, User, UserDto } from '@shared/models';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { updateCurrencyCompanyDto } from './dto/update-currency-company.dto';
 import {
@@ -86,6 +86,19 @@ export class UserController {
     const result = await this.userService.updateCurrencyCompany(body, user);
     return {
       message: 'Currency and company updated successfully',
+      result,
+    };
+  }
+
+  @Put('updateUser/:id')
+  @ApiSuccessResponse(UserDto, { status: 201 })
+  async updateUser(
+    @Body() body: UpdateUserDto,
+    @Param('id') id: string,
+  ): Promise<SuccessResponseDto<UserDto>> {
+    const result = await this.userService.updateUser(body, id);
+    return {
+      message: 'User updated successfully',
       result,
     };
   }

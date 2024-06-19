@@ -1,6 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto, User } from '@shared/models';
+import { CreateUserDto, UpdateUserDto, User, UserDto } from '@shared/models';
 import * as bcrypt from 'bcrypt';
 import { CreateUserCompany } from './dto/create-user-company.dto';
 import { MailService } from '@/mail/mail.service';
@@ -167,5 +167,19 @@ export class UserService {
       },
     });
     return plainToInstance(User, result);
+  }
+
+  async updateUser(data: UpdateUserDto, id: string) {
+    const result = await this.prismaService.user.update({
+      where: { id },
+      data: {
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        currency_id: data.currency_id,
+        password: data.password,
+      },
+    });
+    return plainToInstance(UserDto, result);
   }
 }
