@@ -10,7 +10,12 @@ import {
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { InvoiceDto } from '@shared/models';
-import { ApiExtraModels, ApiHideProperty, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiHideProperty,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import {
@@ -115,6 +120,7 @@ export class InvoiceController {
   @IsPublic()
   @Post('invoicePreviewFromBody')
   @Render('general-3')
+  @ApiResponse({ status: 200, type: String })
   async invoicePreviewFromBody(
     @Body() createInvoiceDto: CreateInvoiceWithProducts,
   ) {
