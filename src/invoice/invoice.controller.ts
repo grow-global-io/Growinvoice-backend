@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
   Res,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
