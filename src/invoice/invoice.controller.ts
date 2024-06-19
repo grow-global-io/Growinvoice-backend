@@ -95,4 +95,10 @@ export class InvoiceController {
   async test1(@Param('id') id: string) {
     return this.invoiceService.findInvoiceTest(id);
   }
+
+  @IsPublic()
+  @Get('invoicePublicFindOne/:id')
+  async invoicePublicFindOne(@Param('id') id: string) {
+    return await this.invoiceService.findOne(id);
+  }
 }
