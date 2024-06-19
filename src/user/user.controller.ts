@@ -6,11 +6,14 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { LoginSuccessDto } from './dto/login-success.dto';
 import { AuthService } from '@/auth/auth.service';
 import { IsPublic } from '@shared/decorators/public.decorator';
-import { CreateUserCompany } from './dto/create-user-company.dto';
+import {
+  CreateUserCompany,
+  UpdateUserCompany,
+} from './dto/create-user-company.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
-import { UpdateUserDto, User, UserDto } from '@shared/models';
+import { User, UserDto } from '@shared/models';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { updateCurrencyCompanyDto } from './dto/update-currency-company.dto';
 import {
@@ -93,7 +96,7 @@ export class UserController {
   @Put('updateUser/:id')
   @ApiSuccessResponse(UserDto, { status: 201 })
   async updateUser(
-    @Body() body: UpdateUserDto,
+    @Body() body: UpdateUserCompany,
     @Param('id') id: string,
   ): Promise<SuccessResponseDto<UserDto>> {
     const result = await this.userService.updateUser(body, id);

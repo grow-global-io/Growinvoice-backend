@@ -1,7 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateUserDto } from '@shared/models';
+import { CreateUserDto, UpdateUserDto } from '@shared/models';
 
 export class CreateUserCompany extends CreateUserDto {
   @ApiProperty()
   companyName: string;
+}
+
+export class UpdateUserCompany extends UpdateUserDto {
+  old_password: string;
 }

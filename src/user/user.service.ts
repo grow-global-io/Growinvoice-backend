@@ -1,8 +1,11 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto, User, UserDto } from '@shared/models';
+import { CreateUserDto, User, UserDto } from '@shared/models';
 import * as bcrypt from 'bcrypt';
-import { CreateUserCompany } from './dto/create-user-company.dto';
+import {
+  CreateUserCompany,
+  UpdateUserCompany,
+} from './dto/create-user-company.dto';
 import { MailService } from '@/mail/mail.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
@@ -169,7 +172,25 @@ export class UserService {
     return plainToInstance(User, result);
   }
 
-  async updateUser(data: UpdateUserDto, id: string) {
+  async updateUser(data: UpdateUserCompany, id: string) {
+    const checkPassword = await this.prismaService.user.findUnique({
+      where: { id },
+      select: { password: true },
+    });
+
+    if (!checkPassword) {
+      throw new BadRequestException('User not found');
+    }
+
+    const passwordMatch = await bcrypt.compare(
+      data.old_password,
+      checkPassword.password,
+    );
+
+    if (!passwordMatch) {
+      throw new BadRequestException('Invalid password');
+    }
+
     const result = await this.prismaService.user.update({
       where: { id },
       data: {
