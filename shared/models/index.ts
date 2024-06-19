@@ -83,3 +83,8 @@ export * from './create-quotation.dto';
 export * from './update-quotation.dto';
 export * from './quotation.entity';
 export * from './quotation.dto';
+export * from './connect-invoiceTemplate.dto';
+export * from './create-invoiceTemplate.dto';
+export * from './update-invoiceTemplate.dto';
+export * from './invoiceTemplate.entity';
+export * from './invoiceTemplate.dto';

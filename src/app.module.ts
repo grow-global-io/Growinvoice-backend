@@ -18,6 +18,7 @@ import { PaymentdetailsModule } from './paymentdetails/paymentdetails.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { QuotationModule } from './quotation/quotation.module';
 import { MailController } from './mail/mail.controller';
+import { InvoicetemplateModule } from './invoicetemplate/invoicetemplate.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { MailController } from './mail/mail.controller';
     PaymentdetailsModule,
     InvoiceModule,
     QuotationModule,
+    InvoicetemplateModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],

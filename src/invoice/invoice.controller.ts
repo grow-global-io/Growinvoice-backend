@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Render,
+  Query,
+  Res,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { InvoiceDto } from '@shared/models';
@@ -24,6 +26,7 @@ import {
 } from './dto/create-invoice-with-products.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import { IsPublic } from '@shared/decorators/public.decorator';
+import { Response } from 'express';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
@@ -88,27 +91,14 @@ export class InvoiceController {
   @IsPublic()
   @ApiHideProperty()
   @Get('test/:id')
-  @Render('general-11')
-  async test(@Param('id') id: string) {
-    return this.invoiceService.findInvoiceTest(id).then((invoice) => {
-      return { invoice };
-    });
-  }
-
-  @IsPublic()
-  @ApiHideProperty()
-  @Get('testa/:id')
-  @Render('general-3')
-  async testa(@Param('id') id: string) {
-    return this.invoiceService.findInvoiceTest(id).then((invoice) => {
-      return { invoice };
-    });
-  }
-
-  @IsPublic()
-  @Get('test1/:id')
-  async test1(@Param('id') id: string) {
-    return this.invoiceService.findInvoiceTest(id);
+  @ApiResponse({ status: 200, type: String })
+  async test(
+    @Param('id') id: string,
+    @Query('template') template?: string,
+    @Res() res?: Response,
+  ) {
+    const invoice = await this.invoiceService.findInvoiceTest(id);
+    return res.render(template ?? 'template1', { invoice });
   }
 
   @IsPublic()

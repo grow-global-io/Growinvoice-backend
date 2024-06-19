@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Template 1",
+    "view": "template1"
+  },
+  {
+    "name": "Template 2",
+    "view": "template2"
+  },
+  {
+    "name": "Template 3",
+    "view": "template3"
+  },
+  {
+    "name": "Template 4",
+    "view": "template4"
+  },
+  {
+    "name": "Template 5",
+    "view": "template5"
+  }
+]

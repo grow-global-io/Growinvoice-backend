@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "InvoiceProducts" ALTER COLUMN "tax" DROP NOT NULL,
-ALTER COLUMN "hsnCode" DROP NOT NULL;

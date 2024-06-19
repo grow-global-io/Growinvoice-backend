@@ -327,3 +327,10 @@ model Quotation extends Base {
     discountPercentage Float?              @DtoCreateOptional @DtoUpdateOptional
     total              Float
 }
+
+model invoiceTemplate extends Base {
+    id   String  @id @default(cuid())
+    name String
+    view String
+    path String? @DtoCreateOptional @DtoUpdateOptional
+}

@@ -604,3 +604,22 @@ model Quotation {
   discountPercentage Float?
   total              Float
 }
+
+/// @@deny('read', isExist == false)
+model invoiceTemplate {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  name      String
+  view      String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  path      String?
+}
