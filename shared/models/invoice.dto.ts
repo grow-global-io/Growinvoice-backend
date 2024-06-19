@@ -89,4 +89,9 @@ export class InvoiceDto {
     enum: paidStatus,
   })
   paid_status: paidStatus;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  template_id: string | null;
 }

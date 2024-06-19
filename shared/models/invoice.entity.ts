@@ -5,6 +5,7 @@ import { User } from './user.entity';
 import { PaymentDetails } from './paymentDetails.entity';
 import { InvoiceProducts } from './invoiceProducts.entity';
 import { Tax } from './tax.entity';
+import { InvoiceTemplate } from './invoiceTemplate.entity';
 
 export class Invoice {
   @ApiProperty({
@@ -117,4 +118,15 @@ export class Invoice {
     enum: paidStatus,
   })
   paid_status: paidStatus;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  template_id: string | null;
+  @ApiProperty({
+    type: () => InvoiceTemplate,
+    required: false,
+    nullable: true,
+  })
+  template?: InvoiceTemplate | null;
 }

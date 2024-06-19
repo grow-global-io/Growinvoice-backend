@@ -532,6 +532,9 @@ model Invoice {
   discountPercentage Float?
   total              Float
   paid_status        paidStatus        @default(Unpaid)
+  /// @DtoRelationIncludeId
+  template_id        String?
+  template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
 }
 
 /// @@deny('read', isExist == false)
@@ -622,4 +625,6 @@ model invoiceTemplate {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   path      String?
+  /// @DtoApiHidden
+  invoice   Invoice[]
 }

@@ -108,4 +108,12 @@ export class UpdateInvoiceDto {
   @IsOptional()
   @IsNumber()
   total?: number;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  template_id?: string | null;
 }

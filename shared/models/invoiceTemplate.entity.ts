@@ -1,4 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Invoice } from './invoice.entity';
 
 export class InvoiceTemplate {
   @ApiProperty({
@@ -33,4 +34,6 @@ export class InvoiceTemplate {
     nullable: true,
   })
   path: string | null;
+  @ApiHideProperty()
+  invoice?: Invoice[];
 }

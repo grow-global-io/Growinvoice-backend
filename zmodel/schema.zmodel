@@ -293,6 +293,8 @@ model Invoice extends Base {
     discountPercentage Float?            @DtoCreateOptional @DtoUpdateOptional
     total              Float
     paid_status        paidStatus        @default(Unpaid)
+    template_id        String            @DtoRelationIncludeId
+    template           invoiceTemplate   @relation(fields: [template_id], references: [id], onDelete: SetNull)
 }
 
 model QuotationProducts extends Base {
@@ -329,8 +331,9 @@ model Quotation extends Base {
 }
 
 model invoiceTemplate extends Base {
-    id   String  @id @default(cuid())
-    name String
-    view String
-    path String? @DtoCreateOptional @DtoUpdateOptional
+    id      String    @id @default(cuid())
+    name    String
+    view    String
+    path    String?   @DtoCreateOptional @DtoUpdateOptional
+    invoice Invoice[] @DtoApiHidden
 }
