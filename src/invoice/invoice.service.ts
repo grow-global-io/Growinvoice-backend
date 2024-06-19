@@ -157,4 +157,73 @@ export class InvoiceService {
     });
     return plainToInstance(InvoiceWithAllDataDto, invoice);
   }
+
+  async createInvoicePreview(createInvoiceDto: CreateInvoiceWithProducts) {
+    const invoiceDetails: any = {
+      ...createInvoiceDto,
+    };
+    if (createInvoiceDto.tax_id) {
+      invoiceDetails.tax = await this.prismaService.tax.findUnique({
+        where: { id: createInvoiceDto.tax_id },
+      });
+    }
+    if (createInvoiceDto?.paymentId) {
+      invoiceDetails.payment =
+        await this.prismaService.paymentDetails.findUnique({
+          where: { id: createInvoiceDto.paymentId },
+        });
+    }
+    if (createInvoiceDto?.product?.length > 0) {
+      invoiceDetails.product = await Promise.all(
+        createInvoiceDto.product.map(async (product) => {
+          const productDetails = await this.prismaService.product.findUnique({
+            where: { id: product.product_id },
+            include: {
+              currency: true,
+            },
+          });
+          return {
+            ...product,
+            product: {
+              ...productDetails,
+            },
+          };
+        }),
+      );
+    }
+    if (createInvoiceDto?.customer_id) {
+      invoiceDetails.customer = await this.prismaService.customer.findUnique({
+        where: { id: createInvoiceDto.customer_id },
+        include: {
+          billingAddress: {
+            include: {
+              country: true,
+              state: true,
+            },
+          },
+          shippingAddress: {
+            include: {
+              country: true,
+              state: true,
+            },
+          },
+        },
+      });
+    }
+    if (createInvoiceDto?.user_id) {
+      invoiceDetails.user = await this.prismaService.user.findUnique({
+        where: { id: createInvoiceDto.user_id },
+        include: {
+          currency: true,
+          company: {
+            include: {
+              country: true,
+              state: true,
+            },
+          },
+        },
+      });
+    }
+    return invoiceDetails;
+  }
 }

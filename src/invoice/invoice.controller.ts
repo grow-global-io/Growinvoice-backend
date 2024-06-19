@@ -101,4 +101,17 @@ export class InvoiceController {
   async invoicePublicFindOne(@Param('id') id: string) {
     return await this.invoiceService.findOne(id);
   }
+
+  @IsPublic()
+  @Post('invoicePreviewFromBody')
+  @Render('index')
+  async invoicePreviewFromBody(
+    @Body() createInvoiceDto: CreateInvoiceWithProducts,
+  ) {
+    return this.invoiceService
+      .createInvoicePreview(createInvoiceDto)
+      .then((invoice) => {
+        return { invoice };
+      });
+  }
 }
