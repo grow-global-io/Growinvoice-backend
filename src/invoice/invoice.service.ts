@@ -116,6 +116,7 @@ export class InvoiceService {
       where: { id },
       include: {
         tax: true,
+        template: true,
         payment: true,
         product: {
           include: {
@@ -223,6 +224,12 @@ export class InvoiceService {
           },
         },
       });
+    }
+    if (createInvoiceDto?.template_id) {
+      invoiceDetails.template =
+        await this.prismaService.invoiceTemplate.findUnique({
+          where: { id: createInvoiceDto.template_id },
+        });
     }
     return invoiceDetails;
   }

@@ -111,9 +111,8 @@ export class UpdateInvoiceDto {
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  template_id?: string | null;
+  template_id?: string;
 }

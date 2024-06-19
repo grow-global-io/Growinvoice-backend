@@ -107,10 +107,8 @@ export class CreateInvoiceDto {
   total: number;
   @ApiProperty({
     type: 'string',
-    required: false,
-    nullable: true,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  template_id?: string | null;
+  template_id: string;
 }

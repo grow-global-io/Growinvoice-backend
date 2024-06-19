@@ -533,8 +533,8 @@ model Invoice {
   total              Float
   paid_status        paidStatus        @default(Unpaid)
   /// @DtoRelationIncludeId
-  template_id        String?
-  template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+  template_id        String
+  template           invoiceTemplate   @relation(fields: [template_id], references: [id], onDelete: SetNull)
 }
 
 /// @@deny('read', isExist == false)

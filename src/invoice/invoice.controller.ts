@@ -91,13 +91,9 @@ export class InvoiceController {
   @ApiHideProperty()
   @Get('test/:id')
   @ApiResponse({ status: 200, type: String })
-  async test(
-    @Param('id') id: string,
-    @Query('template') template?: string,
-    @Res() res?: Response,
-  ) {
+  async test(@Param('id') id: string, @Res() res?: Response) {
     const invoice = await this.invoiceService.findInvoiceTest(id);
-    return res.render(template ?? 'template1', { invoice });
+    return res.render(invoice?.template?.view ?? 'template1', { invoice });
   }
 
   @IsPublic()
@@ -111,11 +107,10 @@ export class InvoiceController {
   @ApiResponse({ status: 200, type: String })
   async invoicePreviewFromBody(
     @Body() createInvoiceDto: CreateInvoiceWithProducts,
-    @Query('template') template?: string,
     @Res() res?: Response,
   ) {
     const invoice =
       await this.invoiceService.createInvoicePreview(createInvoiceDto);
-    return res.render(template ?? 'template1', { invoice });
+    return res.render(invoice?.template?.view ?? 'template1', { invoice });
   }
 }

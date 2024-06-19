@@ -120,13 +120,11 @@ export class Invoice {
   paid_status: paidStatus;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  template_id: string | null;
+  template_id: string;
   @ApiProperty({
     type: () => InvoiceTemplate,
     required: false,
-    nullable: true,
   })
-  template?: InvoiceTemplate | null;
+  template?: InvoiceTemplate;
 }

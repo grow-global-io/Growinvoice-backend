@@ -91,7 +91,6 @@ export class InvoiceDto {
   paid_status: paidStatus;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  template_id: string | null;
+  template_id: string;
 }
