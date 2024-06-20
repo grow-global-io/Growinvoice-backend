@@ -66,22 +66,26 @@ export class Product {
   unit?: ProductUnit;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  hsnCode_id: string;
+  hsnCode_id: string | null;
   @ApiProperty({
     type: () => HSNCode,
     required: false,
+    nullable: true,
   })
-  hsnCode?: HSNCode;
+  hsnCode?: HSNCode | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  tax_id: string;
+  tax_id: string | null;
   @ApiProperty({
     type: () => Tax,
     required: false,
+    nullable: true,
   })
-  tax?: Tax;
+  tax?: Tax | null;
   @ApiProperty({
     type: 'string',
   })

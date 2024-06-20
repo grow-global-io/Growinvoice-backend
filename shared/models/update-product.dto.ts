@@ -49,17 +49,19 @@ export class UpdateProductDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  hsnCode_id?: string;
+  hsnCode_id?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  tax_id?: string;
+  tax_id?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,

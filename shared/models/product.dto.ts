@@ -49,12 +49,14 @@ export class ProductDto {
   unit_id: string;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  hsnCode_id: string;
+  hsnCode_id: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  tax_id: string;
+  tax_id: string | null;
   @ApiProperty({
     type: 'string',
   })

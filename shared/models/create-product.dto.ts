@@ -43,16 +43,20 @@ export class CreateProductDto {
   unit_id: string;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  hsnCode_id: string;
+  hsnCode_id?: string | null;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  tax_id: string;
+  tax_id?: string | null;
   @ApiProperty({
     type: 'string',
   })

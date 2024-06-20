@@ -284,11 +284,15 @@ model Product {
   unit_id     String
   unit        ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  hsnCode_id  String
-  hsnCode     HSNCode             @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  hsnCode_id  String?
+  hsnCode     HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  tax_id      String
-  tax         Tax                 @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  tax_id      String?
+  tax         Tax?                @relation(fields: [tax_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   user_id     String
   user        User                @relation(fields: [user_id], references: [id], onDelete: Cascade)

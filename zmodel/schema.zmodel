@@ -171,10 +171,10 @@ model Product extends Base {
     currency    Currencies          @relation(fields: [currency_id], references: [id], onDelete: Cascade)
     unit_id     String              @DtoRelationIncludeId
     unit        ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
-    hsnCode_id  String              @DtoRelationIncludeId
-    hsnCode     HSNCode             @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
-    tax_id      String              @DtoRelationIncludeId
-    tax         Tax                 @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+    hsnCode_id  String?             @DtoRelationIncludeId @DtoCreateOptional @DtoUpdateOptional
+    hsnCode     HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+    tax_id      String?             @DtoRelationIncludeId @DtoCreateOptional @DtoUpdateOptional
+    tax         Tax?                @relation(fields: [tax_id], references: [id], onDelete: Cascade)
     user_id     String              @DtoRelationIncludeId
     user        User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
     invoice     InvoiceProducts[]   @DtoApiHidden
