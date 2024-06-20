@@ -7,6 +7,7 @@ import {
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
 import { InvoiceWithAllDataDto } from './dto/invoice-with-all-data.dto';
+import moment from 'moment';
 
 @Injectable()
 export class InvoiceService {
@@ -232,5 +233,50 @@ export class InvoiceService {
         });
     }
     return invoiceDetails;
+  }
+
+  async outstandingReceivable(user_id: string) {
+    const invoices = await this.prismaService.invoice.findMany({
+      where: { user_id, paid_status: 'Unpaid' },
+      select: {
+        total: true,
+      },
+    });
+    return invoices.reduce((acc, curr) => acc + curr.total, 0);
+  }
+
+  async findDueToday(user_id: string, date: string) {
+    const invoices = await this.prismaService.invoice.findMany({
+      where: {
+        user_id,
+        due_date: {
+          equals: date,
+        },
+      },
+      select: {
+        total: true,
+      },
+    });
+    return invoices.reduce((acc, curr) => acc + curr.total, 0);
+  }
+
+  async findDueMonth(user_id: string, date: string) {
+    const formData = moment(date).format('YYYY-MM-DD');
+    const toDate = moment(formData).add(30, 'days').format('YYYY-MM-DD');
+
+    const invoices = await this.prismaService.invoice.findMany({
+      where: {
+        user_id,
+        // date is string
+        due_date: {
+          gte: formData,
+          lte: toDate,
+        },
+      },
+      select: {
+        total: true,
+      },
+    });
+    return invoices.reduce((acc, curr) => acc + curr.total, 0);
   }
 }

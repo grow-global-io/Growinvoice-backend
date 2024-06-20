@@ -3,10 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Res,
+  Put,
+  Query,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { InvoiceDto } from '@shared/models';
@@ -44,6 +45,21 @@ export class InvoiceController {
     };
   }
 
+  @Get('outstandingReceivable')
+  async outstandingReceivable(@GetUser() user: User) {
+    return await this.invoiceService.outstandingReceivable(user.sub);
+  }
+
+  @Get('dueToday')
+  async findDueToday(@GetUser() user: User, @Query('date') date: string) {
+    return await this.invoiceService.findDueToday(user.sub, date);
+  }
+
+  @Get('dueMonth')
+  async findDueMonth(@GetUser() user: User, @Query('date') date: string) {
+    return await this.invoiceService.findDueMonth(user.sub, date);
+  }
+
   @Get()
   async findAll(@GetUser() user: User) {
     return await this.invoiceService.findAll(user.sub);
@@ -64,7 +80,7 @@ export class InvoiceController {
     return await this.invoiceService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiSuccessResponse(InvoiceDto, { status: 200 })
   async update(
     @Param('id') id: string,

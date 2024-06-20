@@ -1,6 +1,12 @@
 import { InvoiceRecurring } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UpdateInvoiceDto {
   @ApiProperty({
@@ -34,18 +40,20 @@ export class UpdateInvoiceDto {
   reference_number?: string | null;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
     required: false,
   })
   @IsOptional()
-  @IsString()
-  date?: string;
+  @IsDateString()
+  date?: Date;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
     required: false,
   })
   @IsOptional()
-  @IsString()
-  due_date?: string;
+  @IsDateString()
+  due_date?: Date;
   @ApiProperty({
     type: 'boolean',
     required: false,

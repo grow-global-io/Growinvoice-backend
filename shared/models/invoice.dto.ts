@@ -40,12 +40,14 @@ export class InvoiceDto {
   reference_number: string | null;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
-  date: string;
+  date: Date;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
-  due_date: string;
+  due_date: Date;
   @ApiProperty({
     type: 'boolean',
   })
