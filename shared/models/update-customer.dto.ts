@@ -13,19 +13,17 @@ export class UpdateCustomerDto {
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  display_name?: string | null;
+  display_name?: string;
   @ApiProperty({
     type: 'string',
     required: false,
-    nullable: true,
   })
   @IsOptional()
   @IsString()
-  email?: string | null;
+  email?: string;
   @ApiProperty({
     type: 'string',
     required: false,

@@ -389,8 +389,8 @@ model Customer {
   isExist            Boolean         @default(true)
   id                 String          @id() @default(cuid())
   name               String
-  display_name       String?
-  email              String?
+  display_name       String
+  email              String
   phone              String?
   website            String?
   option             CustomerOption

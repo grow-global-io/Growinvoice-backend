@@ -27,14 +27,12 @@ export class CustomerDto {
   name: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  display_name: string | null;
+  display_name: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  email: string | null;
+  email: string;
   @ApiProperty({
     type: 'string',
     nullable: true,
