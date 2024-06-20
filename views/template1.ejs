@@ -42,7 +42,7 @@
             <div class="tm_invoice_info_list tm_white_color">
               <p class="tm_invoice_number tm_m0">Invoice No: <b>#INV-<%= invoice?.invoice_number %></b></p>
               <p class="tm_invoice_date tm_m0">Date: <b>
-                  <%= invoice?.date %>
+                  <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %>
                 </b></p>
             </div>
             <div class="tm_invoice_seperator tm_accent_bg"></div>

@@ -7,7 +7,6 @@ import {
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
 import { InvoiceWithAllDataDto } from './dto/invoice-with-all-data.dto';
-import moment from 'moment';
 
 @Injectable()
 export class InvoiceService {
@@ -261,16 +260,20 @@ export class InvoiceService {
   }
 
   async findDueMonth(user_id: string, date: string) {
-    const formData = moment(date).format('YYYY-MM-DD');
-    const toDate = moment(formData).add(30, 'days').format('YYYY-MM-DD');
+    const fromDate = new Date(date);
+    const toDate = new Date(fromDate);
+    toDate.setDate(toDate.getDate() + 30);
+
+    const fromDateISO = fromDate.toISOString();
+    const toDateISO = toDate.toISOString();
 
     const invoices = await this.prismaService.invoice.findMany({
       where: {
         user_id,
         // date is string
         due_date: {
-          gte: formData,
-          lte: toDate,
+          gte: fromDateISO,
+          lte: toDateISO,
         },
       },
       select: {
