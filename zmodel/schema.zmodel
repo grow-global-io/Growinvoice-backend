@@ -223,8 +223,8 @@ model Currencies extends Base {
 model Customer extends Base {
     id                 String          @id @default(cuid())
     name               String
-    display_name       String?
-    email              String?
+    display_name       String
+    email              String
     phone              String?
     website            String?
     option             CustomerOption
