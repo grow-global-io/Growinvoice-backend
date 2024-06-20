@@ -191,6 +191,8 @@ export class UserService {
       throw new BadRequestException('Invalid password');
     }
 
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
     const result = await this.prismaService.user.update({
       where: { id },
       data: {
@@ -198,7 +200,7 @@ export class UserService {
         name: data.name,
         phone: data.phone,
         currency_id: data.currency_id,
-        password: data.password,
+        password: hashedPassword,
       },
     });
     return plainToInstance(UserDto, result);
