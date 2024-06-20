@@ -60,6 +60,11 @@ export class InvoiceController {
     return await this.invoiceService.findDueMonth(user.sub, date);
   }
 
+  @Get('totalDue')
+  async totalDue(@GetUser() user: User) {
+    return await this.invoiceService.totalDue(user.sub);
+  }
+
   @Get()
   async findAll(@GetUser() user: User) {
     return await this.invoiceService.findAll(user.sub);

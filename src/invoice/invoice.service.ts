@@ -282,4 +282,14 @@ export class InvoiceService {
     });
     return invoices.reduce((acc, curr) => acc + curr.total, 0);
   }
+
+  async totalDue(user_id: string) {
+    const invoices = await this.prismaService.invoice.findMany({
+      where: { user_id },
+      select: {
+        total: true,
+      },
+    });
+    return invoices.reduce((acc, curr) => acc + curr.total, 0);
+  }
 }
