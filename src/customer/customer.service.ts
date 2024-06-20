@@ -108,4 +108,12 @@ export class CustomerService {
       },
     });
   }
+
+  async customerCount(userId: string) {
+    return await this.prismaServie.customer.count({
+      where: {
+        user_id: userId,
+      },
+    });
+  }
 }

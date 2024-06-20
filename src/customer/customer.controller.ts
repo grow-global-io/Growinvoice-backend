@@ -40,6 +40,11 @@ export class CustomerController {
     return await this.customerService.findAll(user?.sub);
   }
 
+  @Get('customerCount')
+  async customerCount(@GetUser() user: User) {
+    return await this.customerService.customerCount(user?.sub);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.customerService.findOne(id);

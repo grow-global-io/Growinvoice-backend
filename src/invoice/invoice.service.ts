@@ -292,4 +292,10 @@ export class InvoiceService {
     });
     return invoices.reduce((acc, curr) => acc + curr.total, 0);
   }
+
+  async invoiceCount(user_id: string) {
+    return await this.prismaService.invoice.count({
+      where: { user_id },
+    });
+  }
 }

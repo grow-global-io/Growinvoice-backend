@@ -65,6 +65,11 @@ export class InvoiceController {
     return await this.invoiceService.totalDue(user.sub);
   }
 
+  @Get('invoiceCount')
+  async invoiceCount(@GetUser() user: User) {
+    return await this.invoiceService.invoiceCount(user.sub);
+  }
+
   @Get()
   async findAll(@GetUser() user: User) {
     return await this.invoiceService.findAll(user.sub);
