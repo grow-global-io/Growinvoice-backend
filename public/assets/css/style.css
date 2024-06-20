@@ -8,12 +8,12 @@
 /*--------------------------------------------------------------
 2. Normalize
 ----------------------------------------------------------------*/
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap");
 *,
 ::after,
 ::before {
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 html {
@@ -54,7 +54,7 @@ h1 {
  */
 hr {
   -webkit-box-sizing: content-box;
-  box-sizing: content-box; /* 1 */
+          box-sizing: content-box; /* 1 */
   height: 0; /* 1 */
   overflow: visible; /* 2 */
 }
@@ -85,7 +85,7 @@ abbr[title] {
   border-bottom: none; /* 1 */
   text-decoration: underline; /* 2 */
   -webkit-text-decoration: underline dotted;
-  text-decoration: underline dotted; /* 2 */
+          text-decoration: underline dotted; /* 2 */
 }
 
 /**
@@ -184,9 +184,9 @@ select {
  * Correct the inability to style clickable types in iOS and Safari.
  */
 button,
-[type='button'],
-[type='reset'],
-[type='submit'] {
+[type=button],
+[type=reset],
+[type=submit] {
   -webkit-appearance: button;
 }
 
@@ -194,9 +194,9 @@ button,
  * Remove the inner border and padding in Firefox.
  */
 button::-moz-focus-inner,
-[type='button']::-moz-focus-inner,
-[type='reset']::-moz-focus-inner,
-[type='submit']::-moz-focus-inner {
+[type=button]::-moz-focus-inner,
+[type=reset]::-moz-focus-inner,
+[type=submit]::-moz-focus-inner {
   border-style: none;
   padding: 0;
 }
@@ -205,9 +205,9 @@ button::-moz-focus-inner,
  * Restore the focus styles unset by the previous rule.
  */
 button:-moz-focusring,
-[type='button']:-moz-focusring,
-[type='reset']:-moz-focusring,
-[type='submit']:-moz-focusring {
+[type=button]:-moz-focusring,
+[type=reset]:-moz-focusring,
+[type=submit]:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
 
@@ -226,7 +226,7 @@ fieldset {
  */
 legend {
   -webkit-box-sizing: border-box;
-  box-sizing: border-box; /* 1 */
+          box-sizing: border-box; /* 1 */
   color: inherit; /* 2 */
   display: table; /* 1 */
   max-width: 100%; /* 1 */
@@ -252,18 +252,18 @@ textarea {
  * 1. Add the correct box sizing in IE 10.
  * 2. Remove the padding in IE 10.
  */
-[type='checkbox'],
-[type='radio'] {
+[type=checkbox],
+[type=radio] {
   -webkit-box-sizing: border-box;
-  box-sizing: border-box; /* 1 */
+          box-sizing: border-box; /* 1 */
   padding: 0; /* 2 */
 }
 
 /**
  * Correct the cursor style of increment and decrement buttons in Chrome.
  */
-[type='number']::-webkit-inner-spin-button,
-[type='number']::-webkit-outer-spin-button {
+[type=number]::-webkit-inner-spin-button,
+[type=number]::-webkit-outer-spin-button {
   height: auto;
 }
 
@@ -271,7 +271,7 @@ textarea {
  * 1. Correct the odd appearance in Chrome and Safari.
  * 2. Correct the outline style in Safari.
  */
-[type='search'] {
+[type=search] {
   -webkit-appearance: textfield; /* 1 */
   outline-offset: -2px; /* 2 */
 }
@@ -279,7 +279,7 @@ textarea {
 /**
  * Remove the inner padding in Chrome and Safari on macOS.
  */
-[type='search']::-webkit-search-decoration {
+[type=search]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
@@ -330,7 +330,7 @@ template {
 body,
 html {
   color: #666;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.6em;
@@ -998,8 +998,8 @@ ul {
 
 .tm_align_center {
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .tm_border_bottom_0 {
@@ -1026,14 +1026,14 @@ ul {
 
 .tm_justify_between {
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .tm__align_center {
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .tm_border_left_none {
@@ -1054,8 +1054,8 @@ ul {
 .tm_50_col > * {
   width: 50%;
   -webkit-box-flex: 0;
-  -ms-flex: none;
-  flex: none;
+      -ms-flex: none;
+          flex: none;
 }
 
 .tm_no_border {
@@ -1114,8 +1114,8 @@ hr {
   width: 58%;
   padding: 10px 15px;
   -webkit-box-flex: 0;
-  -ms-flex: none;
-  flex: none;
+      -ms-flex: none;
+          flex: none;
 }
 .tm_invoice_footer .tm_right_footer {
   width: 42%;
@@ -1141,7 +1141,7 @@ hr {
   top: 40px;
   left: 50%;
   -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
+          transform: translateX(-50%);
 }
 .tm_coffee_shop_img img {
   max-height: 100%;
@@ -1149,8 +1149,8 @@ hr {
 
 .tm_invoice.tm_style1 .tm_invoice_right {
   -webkit-box-flex: 0;
-  -ms-flex: none;
-  flex: none;
+      -ms-flex: none;
+          flex: none;
   width: 60%;
 }
 .tm_invoice.tm_style1 .tm_invoice_table {
@@ -1166,8 +1166,8 @@ hr {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 .tm_invoice.tm_style1 .tm_invoice_head .tm_invoice_right div {
   line-height: 1em;
@@ -1177,19 +1177,19 @@ hr {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 .tm_invoice.tm_style1 .tm_invoice_info_2 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   border-top: 1px solid #dbdfea;
   border-bottom: 1px solid #dbdfea;
   padding: 11px 0;
@@ -1198,8 +1198,8 @@ hr {
   min-height: 18px;
   border-radius: 1.6em;
   -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   margin-right: 20px;
 }
 .tm_invoice.tm_style1 .tm_invoice_info_list {
@@ -1229,8 +1229,8 @@ hr {
 }
 .tm_invoice.tm_style1 .tm_box_3 > * {
   -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
 .tm_invoice.tm_style1 .tm_box_3 ul {
   margin: 0;
@@ -1247,16 +1247,16 @@ hr {
 }
 .tm_invoice.tm_style1 .tm_box_3 ul span {
   -webkit-box-flex: 0;
-  -ms-flex: none;
-  flex: none;
+      -ms-flex: none;
+          flex: none;
 }
 .tm_invoice.tm_style1 .tm_box_3 ul span:first-child {
   margin-right: 5px;
 }
 .tm_invoice.tm_style1 .tm_box_3 ul span:last-child {
   -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
 
 .tm_invoice.tm_style2 .tm_invoice_head {
@@ -1264,8 +1264,8 @@ hr {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   border-bottom: 1px solid #dbdfea;
   padding-bottom: 15px;
   position: relative;
@@ -1273,14 +1273,14 @@ hr {
 .tm_invoice.tm_style2 .tm_invoice_left {
   width: 30%;
   -webkit-box-flex: 0;
-  -ms-flex: none;
-  flex: none;
+      -ms-flex: none;
+          flex: none;
 }
 .tm_invoice.tm_style2 .tm_invoice_right {
   width: 70%;
   -webkit-box-flex: 0;
-  -ms-flex: none;
-  flex: none;
+      -ms-flex: none;
+          flex: none;
 }
 .tm_invoice.tm_style2 .tm_invoice_info {
   display: -webkit-box;
@@ -1290,14 +1290,14 @@ hr {
 .tm_invoice.tm_style2 .tm_invoice_info_left {
   width: 30%;
   -webkit-box-flex: 0;
-  -ms-flex: none;
-  flex: none;
+      -ms-flex: none;
+          flex: none;
 }
 .tm_invoice.tm_style2 .tm_invoice_info_right {
   width: 70%;
   -webkit-box-flex: 0;
-  -ms-flex: none;
-  flex: none;
+      -ms-flex: none;
+          flex: none;
 }
 .tm_invoice.tm_style2 .tm_logo img {
   max-height: 60px;
@@ -1333,9 +1333,9 @@ hr {
 .tm_invoice.tm_style1.tm_type1 .tm_shape_bg {
   position: absolute;
   height: 100%;
-  width: 78%;
+  width: 70%;
   -webkit-transform: skewX(35deg);
-  transform: skewX(35deg);
+          transform: skewX(35deg);
   top: 0px;
   right: -100px;
   overflow: hidden;
@@ -1344,9 +1344,9 @@ hr {
   height: 100%;
   width: 100%;
   -o-object-fit: cover;
-  object-fit: cover;
+     object-fit: cover;
   -webkit-transform: skewX(-35deg) translateX(-45px);
-  transform: skewX(-35deg) translateX(-45px);
+          transform: skewX(-35deg) translateX(-45px);
 }
 .tm_invoice.tm_style1.tm_type1 .tm_invoice_right {
   position: relative;
@@ -1359,10 +1359,10 @@ hr {
   margin-right: 0;
   border-radius: 0;
   -webkit-transform: skewX(35deg);
-  transform: skewX(35deg);
+          transform: skewX(35deg);
   position: absolute;
   height: 100%;
-  width: 65%;
+  width: 57.5%;
   right: -60px;
   overflow: hidden;
   border: none;
@@ -1371,11 +1371,11 @@ hr {
   height: 100%;
   width: 100%;
   -o-object-fit: cover;
-  object-fit: cover;
+     object-fit: cover;
   -webkit-transform: skewX(-35deg);
-  transform: skewX(-35deg);
+          transform: skewX(-35deg);
   -webkit-transform: skewX(-35deg) translateX(-10px);
-  transform: skewX(-35deg) translateX(-10px);
+          transform: skewX(-35deg) translateX(-10px);
 }
 .tm_invoice.tm_style1.tm_type1 .tm_invoice_info {
   position: relative;
@@ -1397,8 +1397,8 @@ hr {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   border-radius: 10px 10px 0 0;
 }
 .tm_invoice.tm_style3 .tm_head_address {
@@ -1426,11 +1426,11 @@ hr {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-align: end;
-  -ms-flex-align: end;
-  align-items: flex-end;
+      -ms-flex-align: end;
+          align-items: flex-end;
   padding: 0 50px;
   margin-top: -25px;
   padding-bottom: 40px;
@@ -1471,7 +1471,7 @@ hr {
     top: 0px;
     left: 50%;
     -webkit-transform: translateX(-50%);
-    transform: translateX(-50%);
+            transform: translateX(-50%);
     overflow: hidden;
     padding: 0 15px;
   }
@@ -1481,7 +1481,7 @@ hr {
     display: block;
     margin: -15px 20px 0;
     -webkit-transform: rotate(-40deg);
-    transform: rotate(-40deg);
+            transform: rotate(-40deg);
   }
   .tm_invoice.tm_style1.tm_type2 .tm_bars.tm_type1 {
     top: initial;
@@ -1505,7 +1505,7 @@ hr {
     height: 350px;
     width: 350px;
     -webkit-transform: rotate(40deg);
-    transform: rotate(40deg);
+            transform: rotate(40deg);
     top: -199px;
     left: 67px;
     overflow: hidden;
@@ -1529,7 +1529,7 @@ hr {
     bottom: -30px;
     right: 77px;
     -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
+            transform: rotate(45deg);
   }
   .tm_invoice.tm_style1.tm_type2 .tm_shape_2 .tm_shape_2_in {
     height: 100%;
@@ -1571,7 +1571,7 @@ hr {
     height: 100%;
     width: calc(100% + 150px);
     -webkit-transform: skewX(35deg);
-    transform: skewX(35deg);
+            transform: skewX(35deg);
   }
   .tm_invoice.tm_style1.tm_type2 .tm_shape_4 {
     position: absolute;
@@ -1617,7 +1617,7 @@ hr {
   left: 0;
   border-radius: 20px 0 0 0px;
   -webkit-transform: skewX(-35deg);
-  transform: skewX(-35deg);
+          transform: skewX(-35deg);
 }
 
 .tm_invoice.tm_style2.tm_type1 {
@@ -1636,7 +1636,7 @@ hr {
   height: 100%;
   width: 42%;
   -webkit-transform: skewX(-35deg);
-  transform: skewX(-35deg);
+          transform: skewX(-35deg);
   top: 0px;
   left: -100px;
 }
@@ -1656,11 +1656,11 @@ hr {
   padding: 15px 50px 20px;
   border-top: 1px solid #dbdfea;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   margin: 30px -50px 0;
 }
 
@@ -1753,14 +1753,14 @@ hr {
 
 .tm_curve_35 {
   -webkit-transform: skewX(-35deg);
-  transform: skewX(-35deg);
+          transform: skewX(-35deg);
   padding: 12px 20px 12px 30px;
   margin-left: 22px;
   margin-right: 22px;
 }
 .tm_curve_35 > * {
   -webkit-transform: skewX(35deg);
-  transform: skewX(35deg);
+          transform: skewX(35deg);
 }
 
 .tm_dark_invoice_body {
@@ -1803,18 +1803,18 @@ hr {
     display: flex;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
     -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin-top: 0px;
     margin-left: 20px;
     position: absolute;
     left: 100%;
     top: 0;
     -webkit-box-shadow: -2px 0 24px -2px rgba(43, 55, 72, 0.05);
-    box-shadow: -2px 0 24px -2px rgba(43, 55, 72, 0.05);
+            box-shadow: -2px 0 24px -2px rgba(43, 55, 72, 0.05);
     border: 3px solid #fff;
     border-radius: 6px;
     background-color: #fff;
@@ -1824,8 +1824,8 @@ hr {
     display: -ms-inline-flexbox;
     display: inline-flex;
     -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
     border: none;
     font-weight: 600;
     cursor: pointer;
@@ -1844,11 +1844,11 @@ hr {
     height: 42px;
     width: 42px;
     -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
     -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
   }
   .tm_invoice_btn .tm_btn_text {
     position: absolute;
@@ -1861,26 +1861,26 @@ hr {
     border-radius: 5px;
     top: 50%;
     -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
+            transform: translateY(-50%);
     font-weight: 500;
     min-height: 28px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
     opacity: 0;
     visibility: hidden;
   }
   .tm_invoice_btn .tm_btn_text:before {
-    content: '';
+    content: "";
     height: 10px;
     width: 10px;
     position: absolute;
     background-color: #111;
     -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
+            transform: rotate(45deg);
     left: -3px;
     top: 50%;
     margin-top: -6px;
@@ -1916,27 +1916,27 @@ hr {
     display: -ms-inline-flexbox;
     display: inline-flex;
     -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin-top: 0px;
     margin-top: 20px;
     -webkit-box-shadow: -2px 0 24px -2px rgba(43, 55, 72, 0.05);
-    box-shadow: -2px 0 24px -2px rgba(43, 55, 72, 0.05);
+            box-shadow: -2px 0 24px -2px rgba(43, 55, 72, 0.05);
     border: 3px solid #fff;
     border-radius: 6px;
     background-color: #fff;
     position: relative;
     left: 50%;
     -webkit-transform: translateX(-50%);
-    transform: translateX(-50%);
+            transform: translateX(-50%);
   }
   .tm_invoice_btn {
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
     display: inline-flex;
     -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
     border: none;
     font-weight: 600;
     cursor: pointer;
@@ -1955,11 +1955,11 @@ hr {
     display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
     -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     margin-right: 8px;
   }
   .tm_invoice_btn:not(:last-child) {
@@ -1980,7 +1980,7 @@ hr {
     background-color: rgba(52, 199, 89, 0.2);
   }
 }
-/* @media (max-width: 767px) {
+@media (max-width: 767px) {
   .tm_col_4 {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -2011,8 +2011,8 @@ hr {
   .tm_invoice_footer {
     -webkit-box-orient: vertical;
     -webkit-box-direction: reverse;
-    -ms-flex-direction: column-reverse;
-    flex-direction: column-reverse;
+        -ms-flex-direction: column-reverse;
+            flex-direction: column-reverse;
   }
   .tm_invoice_footer .tm_left_footer {
     width: 100%;
@@ -2032,14 +2032,14 @@ hr {
   .tm_invoice_footer.tm_type1 {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .tm_invoice.tm_style2 .tm_invoice_head {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .tm_invoice.tm_style2 .tm_invoice_head > * {
     width: 100%;
@@ -2053,8 +2053,8 @@ hr {
   .tm_invoice.tm_style2 .tm_invoice_info {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .tm_invoice.tm_style2 .tm_invoice_info > * {
     width: 100%;
@@ -2068,18 +2068,18 @@ hr {
   .tm_invoice.tm_style1.tm_type1 .tm_invoice_info {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
     -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-items: flex-start;
+        -ms-flex-align: start;
+            align-items: flex-start;
     padding-left: 15px;
     padding-right: 15px;
   }
   .tm_invoice.tm_style1.tm_type1 .tm_invoice_seperator {
     width: 100%;
     -webkit-transform: initial;
-    transform: initial;
+            transform: initial;
     right: 0;
     top: 0;
   }
@@ -2120,18 +2120,18 @@ hr {
   }
   .tm_curve_35 {
     -webkit-transform: skewX(0deg);
-    transform: skewX(0deg);
+            transform: skewX(0deg);
     margin-left: 0;
     margin-right: 0;
   }
   .tm_curve_35 > * {
     -webkit-transform: inherit;
-    transform: inherit;
+            transform: inherit;
   }
   .tm_invoice.tm_style1.tm_type1 .tm_invoice_seperator,
   .tm_invoice.tm_style1.tm_type1 .tm_invoice_seperator img {
     -webkit-transform: initial;
-    transform: initial;
+            transform: initial;
   }
   .tm_section_heading .tm_curve_35 {
     margin-left: 0;
@@ -2154,24 +2154,24 @@ hr {
     padding: 27px 20px;
     top: 50%;
     -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
+            transform: translateY(-50%);
     line-height: 1em;
   }
-} */
-/* @media (max-width: 500px) {
+}
+@media (max-width: 500px) {
   .tm_border_none_sm {
     border: none !important;
   }
   .tm_flex_column_sm {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .tm_align_start_sm {
     -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-items: flex-start;
+        -ms-flex-align: start;
+            align-items: flex-start;
   }
   .tm_m0_sm {
     margin-bottom: 0;
@@ -2182,8 +2182,8 @@ hr {
   .tm_invoice.tm_style1 .tm_invoice_head {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .tm_invoice.tm_style1 .tm_invoice_head .tm_invoice_left,
   .tm_invoice.tm_style1 .tm_invoice_head .tm_invoice_right {
@@ -2195,8 +2195,8 @@ hr {
   .tm_list.tm_style2 li {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .tm_list.tm_style2 li > * {
     padding: 5px 20px;
@@ -2227,13 +2227,13 @@ hr {
   .tm_invoice.tm_style1 .tm_invoice_info {
     -webkit-box-orient: vertical;
     -webkit-box-direction: reverse;
-    -ms-flex-direction: column-reverse;
-    flex-direction: column-reverse;
+        -ms-flex-direction: column-reverse;
+            flex-direction: column-reverse;
   }
   .tm_invoice.tm_style1 .tm_invoice_seperator {
     -webkit-box-flex: 0;
-    -ms-flex: none;
-    flex: none;
+        -ms-flex: none;
+            flex: none;
     width: 100%;
     margin-right: 0;
     min-height: 5px;
@@ -2241,7 +2241,7 @@ hr {
   .tm_invoice.tm_style1 .tm_invoice_info_list {
     width: 100%;
     -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
+        flex-wrap: wrap;
   }
   .tm_invoice.tm_style1 .tm_invoice_seperator + .tm_invoice_info_list {
     margin-bottom: 5px;
@@ -2252,8 +2252,8 @@ hr {
   .tm_invoice.tm_style1 .tm_box_3 {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .tm_invoice.tm_style1 .tm_box_3 span br {
     display: none;
@@ -2264,8 +2264,8 @@ hr {
   .tm_invoice.tm_style1 .tm_box_3 ul li {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .tm_invoice.tm_style1 .tm_box_3 ul li:not(:last-child) {
     margin-bottom: 5px;
@@ -2275,18 +2275,18 @@ hr {
     padding: 10px 15px;
     top: 0;
     -webkit-transform: initial;
-    transform: initial;
+            transform: initial;
     line-height: 1em;
   }
   .tm_invoice.tm_style3 .tm_invoice_head,
   .tm_invoice.tm_style3 .tm_invoice_info {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
     -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-items: flex-start;
+        -ms-flex-align: start;
+            align-items: flex-start;
   }
   .tm_invoice.tm_style3 .tm_invoice_right {
     margin-top: 30px;
@@ -2300,7 +2300,7 @@ hr {
   .tm_invoice.tm_style3 .tm_table.tm_style1 {
     margin-bottom: 10px;
   }
-} */
+}
 /*--------------------------------------------------------------
   Will apply only print window
 ----------------------------------------------------------------*/
@@ -2477,15 +2477,15 @@ hr {
   .tm_invoice_footer {
     -webkit-box-orient: initial;
     -webkit-box-direction: initial;
-    -ms-flex-direction: initial;
-    flex-direction: initial;
+        -ms-flex-direction: initial;
+            flex-direction: initial;
   }
   .tm_invoice_footer .tm_left_footer {
     width: 58%;
     padding: 10px 15px;
     -webkit-box-flex: 0;
-    -ms-flex: none;
-    flex: none;
+        -ms-flex: none;
+            flex: none;
     border-top: none;
     margin-top: 0px;
   }
@@ -2501,14 +2501,14 @@ hr {
   .tm_invoice_footer.tm_type1 {
     -webkit-box-orient: initial;
     -webkit-box-direction: initial;
-    -ms-flex-direction: initial;
-    flex-direction: initial;
+        -ms-flex-direction: initial;
+            flex-direction: initial;
   }
   .tm_invoice.tm_style2 .tm_invoice_head {
     -webkit-box-orient: initial;
     -webkit-box-direction: initial;
-    -ms-flex-direction: initial;
-    flex-direction: initial;
+        -ms-flex-direction: initial;
+            flex-direction: initial;
   }
   .tm_invoice.tm_style2 .tm_invoice_head > .tm_invoice_left {
     width: 30%;
@@ -2525,8 +2525,8 @@ hr {
   .tm_invoice.tm_style2 .tm_invoice_info {
     -webkit-box-orient: initial;
     -webkit-box-direction: initial;
-    -ms-flex-direction: initial;
-    flex-direction: initial;
+        -ms-flex-direction: initial;
+            flex-direction: initial;
   }
   .tm_invoice.tm_style2 .tm_invoice_info > .tm_invoice_info_left {
     width: 30%;
@@ -2544,18 +2544,18 @@ hr {
     padding: 4px 0;
     -webkit-box-orient: initial;
     -webkit-box-direction: initial;
-    -ms-flex-direction: initial;
-    flex-direction: initial;
+        -ms-flex-direction: initial;
+            flex-direction: initial;
     -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
   }
   .tm_invoice.tm_style1.tm_type1 .tm_invoice_seperator {
     top: initial;
     margin-right: 0;
     border-radius: 0;
     -webkit-transform: skewX(35deg);
-    transform: skewX(35deg);
+            transform: skewX(35deg);
     position: absolute;
     height: 100%;
     width: 57.5%;
@@ -2588,21 +2588,21 @@ hr {
   }
   .tm_curve_35 {
     -webkit-transform: skewX(-35deg);
-    transform: skewX(-35deg);
+            transform: skewX(-35deg);
     margin-left: 22px;
     margin-right: 22px;
   }
   .tm_curve_35 > * {
     -webkit-transform: skewX(35deg);
-    transform: skewX(35deg);
+            transform: skewX(35deg);
   }
   .tm_invoice.tm_style1.tm_type1 .tm_invoice_seperator {
     -webkit-transform: skewX(35deg);
-    transform: skewX(35deg);
+            transform: skewX(35deg);
   }
   .tm_invoice.tm_style1.tm_type1 .tm_invoice_seperator img {
     -webkit-transform: skewX(-35deg) translateX(-45px);
-    transform: skewX(-35deg) translateX(-45px);
+            transform: skewX(-35deg) translateX(-45px);
   }
   .tm_section_heading .tm_curve_35 {
     margin-left: 12px;
@@ -2639,11 +2639,4 @@ hr {
     font-size: 150px;
     padding: 27px 15px 27px 15px;
   }
-} /*# sourceMappingURL=style.css.map */
-
-@media screen and (max-width: 797px) {
-  .tm_container {
-    width: 800px;
-    padding: 0px 0px;
-  }
-}
+}/*# sourceMappingURL=style.css.map */
