@@ -128,7 +128,7 @@
                         <%= invoice?.sub_total %>
                       </td>
                     </tr>
-                    <% if(invoice?.tax_id !==null || invoice?.tax || invoice?.tax_id !=="" ){ %>
+                    <% if(invoice?.tax_id !==null ){ %>
 
                     <tr class="tm_gray_bg">
                       <td class="tm_width_3 tm_primary_color">Tax <span class="tm_ternary_color">(<%=
@@ -139,8 +139,7 @@
                       </td>
                     </tr>
                     <% } %>
-                    <% if(invoice?.discountPercentage !==0 ){ %>
-
+                    <% if(invoice?.discountPercentage !==null || invoice?.discountPercentage >0 ){ %>
                     <tr class="tm_gray_bg">
                       <td class="tm_width_3 tm_primary_color">Discount <span class="tm_ternary_color">(<%=
                                   invoice?.discountPercentage %>%)</span></td>
@@ -346,7 +345,7 @@
                       <tr>
                         <td>Due Date</td>
                         <td>
-                          <%= invoice?.due_date %>
+                          <%= new Date(invoice?.due_date)?.toISOString()?.split('T')[0] %>
                         </td>
                         <td>
                           <%= invoice?.user?.currency?.symbol %>

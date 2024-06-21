@@ -35,7 +35,7 @@
                 <b class="tm_f30 tm_medium tm_primary_color">Invoice</b>
                 <p class="tm_m0"><b class="tm_medium tm_primary_color">Invoice No:</b> #INV-<%=
                                         invoice?.invoice_number %></p>
-                <p class="tm_m0"><b class="tm_medium tm_primary_color">Date:</b> <%= invoice?.date %></p>
+                <p class="tm_m0"><b class="tm_medium tm_primary_color">Date:</b> <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %></p>
               </div>
             </div>
             <div class="tm_grid_row tm_col_2 tm_invoice_info_in tm_round_border tm_mb30">
@@ -130,7 +130,7 @@
                         </td>
                       </tr>
                       <% } %>
-                      <% if(invoice?.discountPercentage !==0 ){ %>
+                      <% if(invoice?.discountPercentage !==null || invoice?.discountPercentage >0 ){ %>
                       <tr>
                         <td class="tm_width_3 tm_danger_color tm_border_none tm_pt0">Discount <%=
                                                                     invoice?.discountPercentage %>%</td>
@@ -338,7 +338,7 @@
                         <tr>
                           <td>Due Date</td>
                           <td>
-                            <%= invoice?.due_date %>
+                            <%= new Date(invoice?.due_date)?.toISOString()?.split('T')[0] %>
                           </td>
                           <td>
                             <%= invoice?.user?.currency?.symbol %>

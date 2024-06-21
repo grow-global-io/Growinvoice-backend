@@ -61,7 +61,7 @@
           <div class="tm_invoice_info tm_mb20">
             <div class="tm_invoice_info_list">
               <p class="tm_invoice_date tm_m0">Date: <b class="tm_primary_color">
-                  <%= invoice?.date %>
+                  <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %>
                 </b></p>
               <p class="tm_invoice_number tm_m0">Invoice No: <b class="tm_primary_color">#INV-<%=
                                         invoice?.invoice_number %></b></p>
@@ -161,7 +161,7 @@
                       </td>
                     </tr>
                     <% } %>
-                    <% if(invoice?.discountPercentage !==0 ){ %>
+                    <% if(invoice?.discountPercentage !==null || invoice?.discountPercentage >0 ){ %>
 
                     <tr class="tm_gray_bg">
                       <td class="tm_width_3 tm_primary_color">Discount <span class="tm_ternary_color">(<%=
@@ -383,7 +383,7 @@
                     <tr>
                       <td>Due Date</td>
                       <td>
-                        <%= invoice?.due_date %>
+                        <%= new Date(invoice?.due_date)?.toISOString()?.split('T')[0] %>
                       </td>
                       <td>
                         <%= invoice?.user?.currency?.symbol %>
