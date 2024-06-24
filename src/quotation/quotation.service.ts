@@ -18,7 +18,7 @@ export class QuotationService {
         ...createQuotationDto,
         quatation_number: createQuotationDto.quatation_number,
         tax_id: createQuotationDto.tax_id ? createQuotationDto.tax_id : null,
-        quotation: {
+        product: {
           createMany: {
             data: createQuotationDto.quotation.map((product) => {
               return {
@@ -51,7 +51,7 @@ export class QuotationService {
     const invoice = await this.prismaService.quotation.findUnique({
       where: { id },
       include: {
-        quotation: true,
+        product: true,
         customer: true,
       },
     });
@@ -65,7 +65,7 @@ export class QuotationService {
         ...updateQuotationDto,
         quatation_number: updateQuotationDto.quatation_number,
         tax_id: updateQuotationDto.tax_id ? updateQuotationDto.tax_id : null,
-        quotation: {
+        product: {
           deleteMany: {},
           createMany: {
             data: updateQuotationDto.quotation.map((product) => {
