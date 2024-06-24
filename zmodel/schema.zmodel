@@ -320,7 +320,7 @@ model Quotation extends Base {
     reference_number   String?             @DtoCreateOptional @DtoUpdateOptional
     date               DateTime
     expiry_at          DateTime
-    quotation          QuotationProducts[] @DtoApiHidden
+    product            QuotationProducts[] @DtoApiHidden
     notes              String?             @DtoCreateOptional @DtoUpdateOptional
     private_notes      String?             @DtoCreateOptional @DtoUpdateOptional
     sub_total          Float

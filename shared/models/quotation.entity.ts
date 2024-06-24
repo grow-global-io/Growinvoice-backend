@@ -53,14 +53,16 @@ export class Quotation {
   reference_number: string | null;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
-  date: string;
+  date: Date;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
-  expiry_at: string;
+  expiry_at: Date;
   @ApiHideProperty()
-  quotation?: QuotationProducts[];
+  product?: QuotationProducts[];
   @ApiProperty({
     type: 'string',
     nullable: true,

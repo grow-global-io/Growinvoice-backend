@@ -39,12 +39,14 @@ export class QuotationDto {
   reference_number: string | null;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
-  date: string;
+  date: Date;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
-  expiry_at: string;
+  expiry_at: Date;
   @ApiProperty({
     type: 'string',
     nullable: true,

@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateQuotationDto {
   @ApiProperty({
@@ -30,16 +36,18 @@ export class CreateQuotationDto {
   reference_number?: string | null;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
   @IsNotEmpty()
-  @IsString()
-  date: string;
+  @IsDateString()
+  date: Date;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
   @IsNotEmpty()
-  @IsString()
-  expiry_at: string;
+  @IsDateString()
+  expiry_at: Date;
   @ApiProperty({
     type: 'string',
     required: false,

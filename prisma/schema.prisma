@@ -592,10 +592,10 @@ model Quotation {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   reference_number   String?
-  date               String
-  expiry_at          String
+  date               DateTime
+  expiry_at          DateTime
   /// @DtoApiHidden
-  quotation          QuotationProducts[]
+  product            QuotationProducts[]
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   notes              String?
