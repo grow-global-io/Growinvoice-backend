@@ -20,7 +20,7 @@ export class QuotationService {
         tax_id: createQuotationDto.tax_id ? createQuotationDto.tax_id : null,
         product: {
           createMany: {
-            data: createQuotationDto.quotation.map((product) => {
+            data: createQuotationDto.product.map((product) => {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,
@@ -68,7 +68,7 @@ export class QuotationService {
         product: {
           deleteMany: {},
           createMany: {
-            data: updateQuotationDto.quotation.map((product) => {
+            data: updateQuotationDto.product.map((product) => {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,

@@ -13,10 +13,10 @@ class OmitCreateQuotationProductsDto extends OmitType(
 
 export class CreateQuotationWithProducts extends CreateQuotationDto {
   @Type(() => OmitCreateQuotationProductsDto)
-  quotation: OmitCreateQuotationProductsDto[];
+  product: OmitCreateQuotationProductsDto[];
 }
 
 export class UpdateQuotationWithProducts extends UpdateQuotationDto {
   @Type(() => OmitCreateQuotationProductsDto)
-  quotation: OmitCreateQuotationProductsDto[];
+  product: OmitCreateQuotationProductsDto[];
 }
