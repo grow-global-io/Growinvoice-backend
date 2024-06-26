@@ -26,6 +26,7 @@ import {
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { Response } from 'express';
+import axios from 'axios';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
@@ -118,7 +119,48 @@ export class InvoiceController {
   @ApiResponse({ status: 200, type: String })
   async test(@Param('id') id: string, @Res() res?: Response) {
     const invoice = await this.invoiceService.findInvoiceTest(id);
-    return res.render(invoice?.template?.view ?? 'template1', { invoice });
+    const a = invoice;
+    if (invoice?.user?.company[0]?.logo) {
+      try {
+        const imageUrl = invoice.user.company[0].logo;
+        const image = await axios.get(imageUrl, {
+          responseType: 'arraybuffer',
+        });
+        const base64Image = Buffer.from(image.data, 'binary').toString(
+          'base64',
+        );
+        invoice.user.company[0].logo = `data:image/webp;base64,${base64Image}`;
+        a.user.company[0].logo = `data:image/webp;base64,${base64Image}`;
+      } catch (error) {
+        console.error('Error fetching or converting image:', error);
+      }
+    }
+    return res.render(invoice?.template?.view ?? 'template1', { invoice: a });
+    // return res.render(invoice?.template?.view ?? 'template1', { invoice });
+  }
+
+  @IsPublic()
+  @Get('testaa/:id')
+  @ApiResponse({ status: 200, type: String })
+  async testaa(@Param('id') id: string) {
+    const invoice = await this.invoiceService.findInvoiceTest(id);
+    const a = invoice;
+    if (invoice?.user?.company[0]?.logo) {
+      try {
+        const imageUrl = invoice.user.company[0].logo;
+        const image = await axios.get(imageUrl, {
+          responseType: 'arraybuffer',
+        });
+        const base64Image = Buffer.from(image.data, 'binary').toString(
+          'base64',
+        );
+        invoice.user.company[0].logo = `data:image/webp;base64,${base64Image}`;
+        a.user.company[0].logo = `data:image/webp;base64,${base64Image}`;
+      } catch (error) {
+        console.error('Error fetching or converting image:', error);
+      }
+    }
+    return a;
   }
 
   @IsPublic()
