@@ -173,36 +173,49 @@ export class UserService {
   }
 
   async updateUser(data: UpdateUserCompany, id: string) {
-    const checkPassword = await this.prismaService.user.findUnique({
-      where: { id },
-      select: { password: true },
-    });
+    if (data?.old_password === '' && data.password === '') {
+      const result = await this.prismaService.user.update({
+        where: { id },
+        data: {
+          email: data.email,
+          name: data.name,
+          phone: data.phone,
+          currency_id: data.currency_id,
+        },
+      });
+      return plainToInstance(UserDto, result);
+    } else {
+      const checkPassword = await this.prismaService.user.findUnique({
+        where: { id },
+        select: { password: true },
+      });
 
-    if (!checkPassword) {
-      throw new BadRequestException('User not found');
+      if (!checkPassword) {
+        throw new BadRequestException('User not found');
+      }
+
+      const passwordMatch = await bcrypt.compare(
+        data.old_password,
+        checkPassword.password,
+      );
+
+      if (!passwordMatch) {
+        throw new BadRequestException('Invalid password');
+      }
+
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+
+      const result = await this.prismaService.user.update({
+        where: { id },
+        data: {
+          email: data.email,
+          name: data.name,
+          phone: data.phone,
+          currency_id: data.currency_id,
+          password: hashedPassword,
+        },
+      });
+      return plainToInstance(UserDto, result);
     }
-
-    const passwordMatch = await bcrypt.compare(
-      data.old_password,
-      checkPassword.password,
-    );
-
-    if (!passwordMatch) {
-      throw new BadRequestException('Invalid password');
-    }
-
-    const hashedPassword = await bcrypt.hash(data.password, 10);
-
-    const result = await this.prismaService.user.update({
-      where: { id },
-      data: {
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        currency_id: data.currency_id,
-        password: hashedPassword,
-      },
-    });
-    return plainToInstance(UserDto, result);
   }
 }
