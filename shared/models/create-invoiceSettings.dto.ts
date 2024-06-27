@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateInvoiceSettingsDto {
   @ApiProperty({
@@ -21,23 +21,21 @@ export class CreateInvoiceSettingsDto {
   @IsString()
   invoicePrefix: string;
   @ApiProperty({
-    type: 'boolean',
+    type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
-  @IsBoolean()
-  autoArchive: boolean;
+  @IsOptional()
+  @IsString()
+  footer?: string | null;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  footer: string;
-  @ApiProperty({
-    type: 'string',
-  })
-  @IsNotEmpty()
-  @IsString()
-  notes: string;
+  notes?: string | null;
   @ApiProperty({
     type: 'integer',
     format: 'int32',

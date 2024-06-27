@@ -50,12 +50,14 @@ export class InvoiceSettings {
   autoArchive: boolean;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  footer: string;
+  footer: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  notes: string;
+  notes: string | null;
   @ApiProperty({
     type: 'integer',
     format: 'int32',
