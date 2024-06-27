@@ -16,7 +16,9 @@ import {
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('invoicesettings')
 @Controller('invoicesettings')
 export class InvoicesettingsController {
   constructor(
