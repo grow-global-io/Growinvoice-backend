@@ -42,6 +42,11 @@ export class InvoicesettingsController {
     return this.invoicesettingsService.findAll(user?.sub);
   }
 
+  @Get('first')
+  async findFirst(@GetUser() user: User) {
+    return this.invoicesettingsService.findFirst(user?.sub);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.invoicesettingsService.findOne(id);

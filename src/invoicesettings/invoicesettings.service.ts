@@ -27,6 +27,15 @@ export class InvoicesettingsService {
     return plainToInstance(InvoiceSettingsDto, settings);
   }
 
+  async findFirst(user_id: string) {
+    const setting = await this.prismaService.invoiceSettings.findFirst({
+      where: {
+        user_id,
+      },
+    });
+    return plainToInstance(InvoiceSettingsDto, setting);
+  }
+
   async findOne(id: string) {
     const setting = await this.prismaService.invoiceSettings.findUnique({
       where: {
