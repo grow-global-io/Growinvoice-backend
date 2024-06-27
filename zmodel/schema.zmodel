@@ -347,7 +347,7 @@ model InvoiceSettings extends Base {
     invoiceTemplateId               String          @DtoRelationIncludeId
     invoiceTemplate                 invoiceTemplate @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
     invoicePrefix                   String
-    autoArchive                     Boolean         @default(false)
+    autoArchive                     Boolean         @default(false) @DtoCreateOptional @DtoUpdateOptional
     footer                          String?         @DtoCreateOptional @DtoUpdateOptional
     notes                           String?         @DtoCreateOptional @DtoUpdateOptional
     dueNotice                       Int

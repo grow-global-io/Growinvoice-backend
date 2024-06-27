@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateInvoiceSettingsDto {
   @ApiProperty({
@@ -20,6 +26,13 @@ export class CreateInvoiceSettingsDto {
   @IsNotEmpty()
   @IsString()
   invoicePrefix: string;
+  @ApiProperty({
+    type: 'boolean',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  autoArchive?: boolean;
   @ApiProperty({
     type: 'string',
     required: false,

@@ -656,6 +656,8 @@ model InvoiceSettings {
   invoiceTemplateId               String
   invoiceTemplate                 invoiceTemplate @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
   invoicePrefix                   String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
   autoArchive                     Boolean         @default(false)
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
