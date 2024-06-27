@@ -88,3 +88,8 @@ export * from './create-invoiceTemplate.dto';
 export * from './update-invoiceTemplate.dto';
 export * from './invoiceTemplate.entity';
 export * from './invoiceTemplate.dto';
+export * from './connect-invoiceSettings.dto';
+export * from './create-invoiceSettings.dto';
+export * from './update-invoiceSettings.dto';
+export * from './invoiceSettings.entity';
+export * from './invoiceSettings.dto';

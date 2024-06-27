@@ -96,24 +96,25 @@ model State extends Base {
 }
 
 model User extends Base {
-    id               String           @id @default(cuid())
-    email            String           @unique
+    id               String            @id @default(cuid())
+    email            String            @unique
     name             String?
     phone            String?
     password         String
-    resetToken       String?          @DtoCreateHidden @DtoUpdateHidden
-    resetTokenExpiry DateTime?        @DtoCreateHidden @DtoUpdateHidden
-    currency_id      String?          @DtoRelationIncludeId
-    currency         Currencies?      @relation(fields: [currency_id], references: [id], onDelete: SetNull)
-    company          Company[]        @DtoApiHidden
-    product          Product[]        @DtoApiHidden
-    hsnCode          HSNCode[]        @DtoApiHidden
-    tax              Tax[]            @DtoApiHidden
-    productUnit      ProductUnit[]    @DtoApiHidden
-    customer         Customer[]       @DtoApiHidden
-    invoice          Invoice[]        @DtoApiHidden
-    paymentDetails   PaymentDetails[] @DtoApiHidden
-    quotation        Quotation[]      @DtoApiHidden
+    resetToken       String?           @DtoCreateHidden @DtoUpdateHidden
+    resetTokenExpiry DateTime?         @DtoCreateHidden @DtoUpdateHidden
+    currency_id      String?           @DtoRelationIncludeId
+    currency         Currencies?       @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+    company          Company[]         @DtoApiHidden
+    product          Product[]         @DtoApiHidden
+    hsnCode          HSNCode[]         @DtoApiHidden
+    tax              Tax[]             @DtoApiHidden
+    productUnit      ProductUnit[]     @DtoApiHidden
+    customer         Customer[]        @DtoApiHidden
+    invoice          Invoice[]         @DtoApiHidden
+    paymentDetails   PaymentDetails[]  @DtoApiHidden
+    quotation        Quotation[]       @DtoApiHidden
+    InvoiceSettings  InvoiceSettings[] @DtoApiHidden
 }
 
 model Company extends Base {
@@ -331,9 +332,27 @@ model Quotation extends Base {
 }
 
 model invoiceTemplate extends Base {
-    id      String    @id @default(cuid())
-    name    String
-    view    String
-    path    String?   @DtoCreateOptional @DtoUpdateOptional
-    invoice Invoice[] @DtoApiHidden
+    id              String            @id @default(cuid())
+    name            String
+    view            String
+    path            String?           @DtoCreateOptional @DtoUpdateOptional
+    invoice         Invoice[]         @DtoApiHidden
+    InvoiceSettings InvoiceSettings[] @DtoApiHidden
+}
+
+model InvoiceSettings extends Base {
+    id                              String          @id @default(cuid())
+    user_id                         String          @DtoRelationIncludeId
+    user                            User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    invoiceTemplateId               String          @DtoRelationIncludeId
+    invoiceTemplate                 invoiceTemplate @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
+    invoicePrefix                   String
+    autoArchive                     Boolean
+    footer                          String
+    notes                           String
+    dueNotice                       Int
+    overDueNotice                   Int
+    companyAddressTemplate          String
+    customerBillingAddressTemplate  String
+    customerShippingAddressTemplate String
 }
