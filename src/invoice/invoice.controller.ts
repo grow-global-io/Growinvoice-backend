@@ -27,12 +27,17 @@ import { GetUser, User } from '@shared/decorators/user.decorator';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { Response } from 'express';
 import axios from 'axios';
+import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
+import { formatCompanyAddress } from '@shared/utils/formatAddress';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
 @Controller('invoice')
 export class InvoiceController {
-  constructor(private readonly invoiceService: InvoiceService) {}
+  constructor(
+    private readonly invoiceService: InvoiceService,
+    private readonly invoiceSettings: InvoicesettingsService,
+  ) {}
 
   @Post()
   @ApiSuccessResponse(InvoiceDto, { status: 201 })
@@ -134,6 +139,18 @@ export class InvoiceController {
       } catch (error) {
         console.error('Error fetching or converting image:', error);
       }
+    }
+    const invoiceSettings = await this.invoiceSettings?.findFirst(
+      invoice?.user?.id,
+    );
+    if (invoiceSettings === null) {
+      a.companyAddress = '';
+    } else {
+      const companyAddress = formatCompanyAddress(
+        invoice,
+        invoiceSettings?.companyAddressTemplate,
+      );
+      a.companyAddress = companyAddress;
     }
     return res.render(invoice?.template?.view ?? 'template1', { invoice: a });
     // return res.render(invoice?.template?.view ?? 'template1', { invoice });
