@@ -152,32 +152,10 @@ export class InvoiceController {
       );
       a.companyAddress = companyAddress;
     }
-    return res.render(invoice?.template?.view ?? 'template1', { invoice: a });
-    // return res.render(invoice?.template?.view ?? 'template1', { invoice });
-  }
-
-  @IsPublic()
-  @Get('testaa/:id')
-  @ApiResponse({ status: 200, type: String })
-  async testaa(@Param('id') id: string) {
-    const invoice = await this.invoiceService.findInvoiceTest(id);
-    const a = invoice;
-    if (invoice?.user?.company[0]?.logo) {
-      try {
-        const imageUrl = invoice.user.company[0].logo;
-        const image = await axios.get(imageUrl, {
-          responseType: 'arraybuffer',
-        });
-        const base64Image = Buffer.from(image.data, 'binary').toString(
-          'base64',
-        );
-        invoice.user.company[0].logo = `data:image/webp;base64,${base64Image}`;
-        a.user.company[0].logo = `data:image/webp;base64,${base64Image}`;
-      } catch (error) {
-        console.error('Error fetching or converting image:', error);
-      }
-    }
-    return a;
+    return res.render(invoice?.template?.view ?? 'template1', {
+      invoice: a,
+      invoiceSettings,
+    });
   }
 
   @IsPublic()
@@ -195,6 +173,7 @@ export class InvoiceController {
   ) {
     const invoice =
       await this.invoiceService.createInvoicePreview(createInvoiceDto);
+
     return res.render(invoice?.template?.view ?? 'template1', { invoice });
   }
 }

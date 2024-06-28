@@ -40,7 +40,7 @@
               <%= invoice?.payment?.paymentType %>
             </div>
             <div class="tm_invoice_info_list tm_white_color">
-              <p class="tm_invoice_number tm_m0">Invoice No: <b>#INV-<%= invoice?.invoice_number %></b></p>
+              <p class="tm_invoice_number tm_m0">Invoice No: <b>#<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %></b></p>
               <p class="tm_invoice_date tm_m0">Date: <b>
                   <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %>
                 </b></p>
@@ -368,8 +368,7 @@
             </div>
             <div class="row">
               <div class="col">
-                The payment will be cleared for the recipient in accordance with the General items for payment
-                transmission and only on the basis of the account number given by the payer.
+                <%- invoiceSettings?.footer ?? "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer." %>
               </div>
             </div>
           </div>
