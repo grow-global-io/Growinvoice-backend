@@ -28,7 +28,11 @@ import { IsPublic } from '@shared/decorators/public.decorator';
 import { Response } from 'express';
 import axios from 'axios';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
-import { formatCompanyAddress } from '@shared/utils/formatAddress';
+import {
+  formatCompanyAddress,
+  formatCustomerBillingAddress,
+  formatCustomerShippingAddress,
+} from '@shared/utils/formatAddress';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
@@ -145,12 +149,24 @@ export class InvoiceController {
     );
     if (invoiceSettings === null) {
       a.companyAddress = '';
+      a.customerBillingAddress = '';
+      a.customerShippingAddress = '';
     } else {
       const companyAddress = formatCompanyAddress(
         invoice,
         invoiceSettings?.companyAddressTemplate,
       );
       a.companyAddress = companyAddress;
+      const customerBillingAddress = formatCustomerBillingAddress(
+        invoice,
+        invoiceSettings?.customerBillingAddressTemplate,
+      );
+      a.customerBillingAddress = customerBillingAddress;
+      const customerShippingAddress = formatCustomerShippingAddress(
+        invoice,
+        invoiceSettings?.customerShippingAddressTemplate,
+      );
+      a.customerShippingAddress = customerShippingAddress;
     }
     return res.render(invoice?.template?.view ?? 'template1', {
       invoice: a,

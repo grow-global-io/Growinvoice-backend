@@ -11,6 +11,28 @@ const companyAddressExpressionsMap = {
   '{company.vat}': 'invoiceData?.user?.company[0]?.vat',
 };
 
+const customerBillingAddressExpressionsMap = {
+  '{customer.name}': 'invoiceData?.customer?.name',
+  '{customer.address}': 'invoiceData?.customer?.billingAddress?.address',
+  '{customer.phone}': 'invoiceData?.customer?.phone',
+  '{customer.country}': 'invoiceData?.customer?.billingAddress?.country?.name',
+  '{customer.state}': 'invoiceData?.customer?.billingAddress?.state?.name',
+  '{customer.city}': 'invoiceData?.customer?.billingAddress?.city',
+  '{customer.zip}': 'invoiceData?.customer?.billingAddress?.zip',
+  '{customer.vat}': 'invoiceData?.customer?.billingAddress?.vat',
+};
+
+const customerShippingAddressExpressionsMap = {
+  '{customer.name}': 'invoiceData?.customer?.name',
+  '{customer.address}': 'invoiceData?.customer?.shippingAddress?.address',
+  '{customer.phone}': 'invoiceData?.customer?.phone',
+  '{customer.country}': 'invoiceData?.customer?.shippingAddress?.country?.name',
+  '{customer.state}': 'invoiceData?.customer?.shippingAddress?.state?.name',
+  '{customer.city}': 'invoiceData?.customer?.shippingAddress?.city',
+  '{customer.zip}': 'invoiceData?.customer?.shippingAddress?.zip',
+  '{customer.vat}': 'invoiceData?.customer?.shippingAddress?.vat',
+};
+
 export function formatCompanyAddress(
   invoiceData: InvoiceWithAllDataDto,
   expressionString: string,
@@ -22,6 +44,44 @@ export function formatCompanyAddress(
     Object.entries(companyAddressExpressionsMap).forEach(([key, value]) => {
       formattedPart = formattedPart.replace(key, eval(value));
     });
+    return formattedPart;
+  });
+
+  return addressParts.join('<br>');
+}
+
+export function formatCustomerBillingAddress(
+  invoiceData: InvoiceWithAllDataDto,
+  expressionString: string,
+): string {
+  if (!invoiceData) return '';
+
+  const addressParts = expressionString.split('<br>').map((part) => {
+    let formattedPart = part;
+    Object.entries(customerBillingAddressExpressionsMap).forEach(
+      ([key, value]) => {
+        formattedPart = formattedPart.replace(key, eval(value));
+      },
+    );
+    return formattedPart;
+  });
+
+  return addressParts.join('<br>');
+}
+
+export function formatCustomerShippingAddress(
+  invoiceData: InvoiceWithAllDataDto,
+  expressionString: string,
+): string {
+  if (!invoiceData) return '';
+
+  const addressParts = expressionString.split('<br>').map((part) => {
+    let formattedPart = part;
+    Object.entries(customerShippingAddressExpressionsMap).forEach(
+      ([key, value]) => {
+        formattedPart = formattedPart.replace(key, eval(value));
+      },
+    );
     return formattedPart;
   });
 

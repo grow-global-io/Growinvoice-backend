@@ -10,4 +10,14 @@ export class InvoiceWithAllDataDto extends Invoice {
     nullable: true,
   })
   companyAddress?: string;
+
+  @ApiProperty({
+    nullable: true,
+  })
+  customerBillingAddress?: string;
+
+  @ApiProperty({
+    nullable: true,
+  })
+  customerShippingAddress?: string;
 }
