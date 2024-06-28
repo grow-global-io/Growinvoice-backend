@@ -19,7 +19,6 @@ const customerBillingAddressExpressionsMap = {
   '{customer.state}': 'invoiceData?.customer?.billingAddress?.state?.name',
   '{customer.city}': 'invoiceData?.customer?.billingAddress?.city',
   '{customer.zip}': 'invoiceData?.customer?.billingAddress?.zip',
-  '{customer.vat}': 'invoiceData?.customer?.billingAddress?.vat',
 };
 
 const customerShippingAddressExpressionsMap = {
@@ -30,7 +29,6 @@ const customerShippingAddressExpressionsMap = {
   '{customer.state}': 'invoiceData?.customer?.shippingAddress?.state?.name',
   '{customer.city}': 'invoiceData?.customer?.shippingAddress?.city',
   '{customer.zip}': 'invoiceData?.customer?.shippingAddress?.zip',
-  '{customer.vat}': 'invoiceData?.customer?.shippingAddress?.vat',
 };
 
 export function formatCompanyAddress(
