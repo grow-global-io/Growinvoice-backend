@@ -129,6 +129,11 @@ export class InvoiceController {
   async test(@Param('id') id: string, @Res() res?: Response) {
     const invoice = await this.invoiceService.findInvoiceTest(id);
     const a = invoice;
+    if (!invoice) {
+      return res.status(404).json({
+        message: 'Invoice not found',
+      });
+    }
     if (invoice?.user?.company[0]?.logo) {
       try {
         const imageUrl = invoice.user.company[0].logo;
@@ -147,7 +152,7 @@ export class InvoiceController {
     const invoiceSettings = await this.invoiceSettings?.findFirst(
       invoice?.user?.id,
     );
-    if (invoiceSettings === null) {
+    if (invoiceSettings === null || invoice?.user?.id === null) {
       a.companyAddress = '';
       a.customerBillingAddress = '';
       a.customerShippingAddress = '';
