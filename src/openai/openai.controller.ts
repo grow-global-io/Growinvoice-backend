@@ -16,7 +16,10 @@ export class OpenaiController {
     status: 200,
     description: 'Create a new openai',
     schema: {
-      type: 'any',
+      type: 'array',
+      items: {
+        type: 'object',
+      },
     },
   })
   async create(@Body() createOpenaiDto: RequestBodyOpenaiDto) {

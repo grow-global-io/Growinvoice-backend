@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 export class OpenaiService {
   private genAI: GoogleGenerativeAI;
   private genAiProModel: GenerativeModel;
+
   constructor(
     private prismaServe: PrismaService,
     private readonly configService: ConfigService,
@@ -20,9 +21,10 @@ export class OpenaiService {
       model: 'gemini-pro',
     });
   }
+
   async create(createOpenaiDto: RequestBodyOpenaiDto) {
     const schema = fs.readFileSync('./prisma/schema.prisma', 'utf8');
-    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query that will satisfy the question. and table name should be in double quotes. and if question is related to BigInt or count then count result is cast to a text`;
+    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query that will satisfy the question. and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)).`;
     const result = await this.genAiProModel.generateContent(messages);
     const response = await result?.response;
     const text = response?.text();
