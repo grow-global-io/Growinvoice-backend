@@ -161,17 +161,21 @@ export class InvoiceController {
         invoice,
         invoiceSettings?.companyAddressTemplate,
       );
-      a.companyAddress = companyAddress;
+      a.companyAddress = companyAddress === '<p><br></p>' ? '' : companyAddress;
       const customerBillingAddress = formatCustomerBillingAddress(
         invoice,
         invoiceSettings?.customerBillingAddressTemplate,
       );
-      a.customerBillingAddress = customerBillingAddress;
+      a.customerBillingAddress =
+        customerBillingAddress === '<p><br></p>' ? '' : customerBillingAddress;
       const customerShippingAddress = formatCustomerShippingAddress(
         invoice,
         invoiceSettings?.customerShippingAddressTemplate,
       );
-      a.customerShippingAddress = customerShippingAddress;
+      a.customerShippingAddress =
+        customerShippingAddress === '<p><br></p>'
+          ? ''
+          : customerShippingAddress;
     }
     return res.render(invoice?.template?.view ?? 'template1', {
       invoice: a,

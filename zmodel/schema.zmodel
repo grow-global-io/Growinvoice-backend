@@ -355,4 +355,6 @@ model InvoiceSettings extends Base {
     companyAddressTemplate          String
     customerBillingAddressTemplate  String
     customerShippingAddressTemplate String
+
+    @@unique([user_id])
 }
