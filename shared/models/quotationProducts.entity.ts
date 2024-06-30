@@ -52,11 +52,10 @@ export class QuotationProducts {
   })
   tax: number | null;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
     nullable: true,
   })
-  hsnCode: number | null;
+  hsnCode: string | null;
   @ApiProperty({
     type: 'number',
     format: 'float',

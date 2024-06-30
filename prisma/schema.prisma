@@ -573,7 +573,7 @@ model QuotationProducts {
   tax          Float?
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  hsnCode      Float?
+  hsnCode      String?
   price        Float
   total        Float
 }
