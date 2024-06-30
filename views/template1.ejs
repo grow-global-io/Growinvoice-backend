@@ -98,10 +98,10 @@
                   <thead>
                     <tr class="tm_accent_bg">
                       <th class="tm_width_3 tm_semi_bold tm_white_color">Item</th>
-                      <th class="tm_width_2 tm_semi_bold tm_white_color">Price</th>
                       <th class="tm_width_1 tm_semi_bold tm_white_color">Qty</th>
-                      <th class="tm_width_1 tm_semi_bold tm_white_color">Tax(%)</th>
                       <th class="tm_width_1 tm_semi_bold tm_white_color">HSN</th>
+                      <th class="tm_width_1 tm_semi_bold tm_white_color">Tax(%)</th>
+                      <th class="tm_width_2 tm_semi_bold tm_white_color">Price</th>
                       <th class="tm_width_2 tm_semi_bold tm_white_color tm_text_right">Total</th>
                     </tr>
                   </thead>
@@ -111,18 +111,18 @@
                       <td class="tm_width_3">
                         <%= product?.product?.name %>
                       </td>
-                      <td class="tm_width_2">
-                        <%= product?.product?.currency?.symbol %>
-                        <%= product?.product?.price %>
-                      </td>
                       <td class="tm_width_1">
                         <%= product?.quantity %>
                       </td>
                       <td class="tm_width_1">
-                        <%= product?.tax %>%
+                        <%= product?.hsnCode %>
                       </td>
                       <td class="tm_width_1">
-                        <%= product?.hsnCode %>
+                        <%= product?.tax %>%
+                      </td>
+                      <td class="tm_width_2">
+                        <%= product?.product?.currency?.symbol %>
+                        <%= product?.product?.price %>
                       </td>
                       <td class="tm_width_2 tm_text_right">
                         <%= product?.product?.currency?.symbol %>
