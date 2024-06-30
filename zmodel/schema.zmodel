@@ -357,7 +357,7 @@ model InvoiceSettings extends Base {
     customerBillingAddressTemplate  String
     customerShippingAddressTemplate String
 
-    @@unique([user_id])
+    @@unique([user_id, id])
 }
 
 model OpenAiHistory extends Base {

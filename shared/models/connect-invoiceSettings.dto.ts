@@ -7,16 +7,23 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class InvoiceSettingsUserIdUniqueInputDto {
+export class InvoiceSettingsUserIdIdUniqueInputDto {
   @ApiProperty({
     type: 'string',
   })
   @IsNotEmpty()
   @IsString()
   user_id: string;
+  @ApiProperty({
+    type: 'string',
+    default: 'cuid',
+  })
+  @IsNotEmpty()
+  @IsString()
+  id: string;
 }
 
-@ApiExtraModels(InvoiceSettingsUserIdUniqueInputDto)
+@ApiExtraModels(InvoiceSettingsUserIdIdUniqueInputDto)
 export class ConnectInvoiceSettingsDto {
   @ApiProperty({
     type: 'string',
@@ -27,20 +34,12 @@ export class ConnectInvoiceSettingsDto {
   @IsString()
   id?: string;
   @ApiProperty({
-    type: 'string',
-    required: false,
-    nullable: true,
-  })
-  @IsOptional()
-  @IsString()
-  user_id?: string;
-  @ApiProperty({
-    type: InvoiceSettingsUserIdUniqueInputDto,
+    type: InvoiceSettingsUserIdIdUniqueInputDto,
     required: false,
     nullable: true,
   })
   @IsOptional()
   @ValidateNested()
-  @Type(() => InvoiceSettingsUserIdUniqueInputDto)
-  user_id?: InvoiceSettingsUserIdUniqueInputDto;
+  @Type(() => InvoiceSettingsUserIdIdUniqueInputDto)
+  user_id_id?: InvoiceSettingsUserIdIdUniqueInputDto;
 }
