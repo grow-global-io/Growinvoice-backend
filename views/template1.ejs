@@ -98,9 +98,10 @@
                   <thead>
                     <tr class="tm_accent_bg">
                       <th class="tm_width_3 tm_semi_bold tm_white_color">Item</th>
-                      <th class="tm_width_4 tm_semi_bold tm_white_color">Description</th>
                       <th class="tm_width_2 tm_semi_bold tm_white_color">Price</th>
                       <th class="tm_width_1 tm_semi_bold tm_white_color">Qty</th>
+                      <th class="tm_width_1 tm_semi_bold tm_white_color">Tax(%)</th>
+                      <th class="tm_width_1 tm_semi_bold tm_white_color">HSN</th>
                       <th class="tm_width_2 tm_semi_bold tm_white_color tm_text_right">Total</th>
                     </tr>
                   </thead>
@@ -110,15 +111,18 @@
                       <td class="tm_width_3">
                         <%= product?.product?.name %>
                       </td>
-                      <td class="tm_width_4">
-                        <%= product?.product?.description %>
-                      </td>
                       <td class="tm_width_2">
                         <%= product?.product?.currency?.symbol %>
                         <%= product?.product?.price %>
                       </td>
                       <td class="tm_width_1">
                         <%= product?.quantity %>
+                      </td>
+                      <td class="tm_width_1">
+                        <%= product?.tax %>%
+                      </td>
+                      <td class="tm_width_1">
+                        <%= product?.hsnCode %>
                       </td>
                       <td class="tm_width_2 tm_text_right">
                         <%= product?.product?.currency?.symbol %>
@@ -153,7 +157,7 @@
                               invoice?.tax?.percentage %>%)</span></td>
                       <td class="tm_width_3 tm_primary_color tm_text_right">
                         <%= invoice?.user?.currency?.symbol %>
-                        <%= (invoice?.tax?.percentage / 100) * invoice?.sub_total %>
+                        <%= ((invoice?.tax?.percentage / 100) * invoice?.sub_total).toFixed(2) %>
                       </td>
                     </tr>
                     <% } %>
@@ -163,7 +167,7 @@
                                   invoice?.discountPercentage %>%)</span></td>
                       <td class="tm_width_3 tm_primary_color tm_text_right">
                         <%= invoice?.user?.currency?.symbol %>
-                        <%= (invoice?.discountPercentage / 100) * invoice?.sub_total %>
+                        <%= ((invoice?.discountPercentage / 100) * invoice?.sub_total).toFixed(2) %>
                       </td>
                     </tr>
                     <% } %>
