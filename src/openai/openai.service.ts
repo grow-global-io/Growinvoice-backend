@@ -19,6 +19,12 @@ export class OpenaiService {
     );
     this.genAiProModel = this.genAI.getGenerativeModel({
       model: 'gemini-pro',
+      generationConfig: {
+        temperature: 0.4,
+        topP: 1,
+        topK: 32,
+        maxOutputTokens: 4096,
+      },
     });
   }
 
