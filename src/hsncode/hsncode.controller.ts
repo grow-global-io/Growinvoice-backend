@@ -8,11 +8,12 @@ import {
   Put,
 } from '@nestjs/common';
 import { HsncodeService } from './hsncode.service';
-import { CreateHSNCodeDto, HSNCodeDto, UpdateHSNCodeDto } from '@shared/models';
+import { HSNCodeDto, UpdateHSNCodeDto } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { GetUser, User } from '@shared/decorators/user.decorator';
+import { CreateHSNCodeTaxDto } from './dto/create-hsn-code-tax.dto';
 
 @ApiTags('hsncode')
 @Controller('hsncode')
@@ -22,7 +23,7 @@ export class HsncodeController {
   @Post()
   @ApiSuccessResponse(HSNCodeDto, { status: 201 })
   async create(
-    @Body() createHsncodeDto: CreateHSNCodeDto,
+    @Body() createHsncodeDto: CreateHSNCodeTaxDto,
   ): Promise<SuccessResponseDto<HSNCodeDto>> {
     const hsncode = await this.hsncodeService.create(createHsncodeDto);
     return {
