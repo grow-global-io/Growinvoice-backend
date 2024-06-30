@@ -165,6 +165,8 @@ model User {
   quotation        Quotation[]
   /// @DtoApiHidden
   InvoiceSettings  InvoiceSettings[]
+  /// @DtoApiHidden
+  OpenAiHistory    OpenAiHistory[]
 }
 
 /// @@deny('read', isExist == false)
@@ -670,4 +672,25 @@ model InvoiceSettings {
   companyAddressTemplate          String
   customerBillingAddressTemplate  String
   customerShippingAddressTemplate String
+
+  @@unique([user_id])
+}
+
+/// @@deny('read', isExist == false)
+model OpenAiHistory {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  query     String
+  result    String
 }

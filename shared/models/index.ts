@@ -93,3 +93,8 @@ export * from './create-invoiceSettings.dto';
 export * from './update-invoiceSettings.dto';
 export * from './invoiceSettings.entity';
 export * from './invoiceSettings.dto';
+export * from './connect-openAiHistory.dto';
+export * from './create-openAiHistory.dto';
+export * from './update-openAiHistory.dto';
+export * from './openAiHistory.entity';
+export * from './openAiHistory.dto';

@@ -115,6 +115,7 @@ model User extends Base {
     paymentDetails   PaymentDetails[]  @DtoApiHidden
     quotation        Quotation[]       @DtoApiHidden
     InvoiceSettings  InvoiceSettings[] @DtoApiHidden
+    OpenAiHistory    OpenAiHistory[]   @DtoApiHidden
 }
 
 model Company extends Base {
@@ -357,4 +358,12 @@ model InvoiceSettings extends Base {
     customerShippingAddressTemplate String
 
     @@unique([user_id])
+}
+
+model OpenAiHistory extends Base {
+    id      String @id @default(cuid())
+    user_id String @DtoRelationIncludeId
+    user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    query   String
+    result  String
 }
