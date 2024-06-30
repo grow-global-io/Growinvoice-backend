@@ -1,7 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { OpenaiService } from './openai.service';
 import { RequestBodyOpenaiDto } from './dto/request-body-openai.dto';
-import { IsPublic } from '@shared/decorators/public.decorator';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 
@@ -10,7 +9,6 @@ import { GetUser, User } from '@shared/decorators/user.decorator';
 export class OpenaiController {
   constructor(private readonly openaiService: OpenaiService) {}
 
-  @IsPublic()
   @Post()
   // ApiResponse Any
   @ApiResponse({
