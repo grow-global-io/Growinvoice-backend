@@ -65,10 +65,12 @@ export class CreateInvoiceDto {
   recurring?: InvoiceRecurring | null;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  paymentId: string;
+  paymentId?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
@@ -110,8 +112,10 @@ export class CreateInvoiceDto {
   total: number;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  template_id: string;
+  template_id?: string | null;
 }

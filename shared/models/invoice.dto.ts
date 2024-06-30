@@ -59,8 +59,9 @@ export class InvoiceDto {
   recurring: InvoiceRecurring | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  paymentId: string;
+  paymentId: string | null;
   @ApiProperty({
     type: 'string',
     nullable: true,
@@ -93,6 +94,7 @@ export class InvoiceDto {
   paid_status: paidStatus;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  template_id: string;
+  template_id: string | null;
 }

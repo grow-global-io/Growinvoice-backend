@@ -212,7 +212,9 @@ model HSNCode {
   isExist   Boolean   @default(true)
   id        String    @id() @default(cuid())
   code      String
-  tax       Float
+  /// @DtoRelationIncludeId
+  tax_id    String
+  tax       Tax       @relation(fields: [tax_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   user_id   String
   user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -243,6 +245,8 @@ model Tax {
   Invoice     Invoice[]
   /// @DtoApiHidden
   Quatation   Quotation[]
+  /// @DtoApiHidden
+  hsnCode     HSNCode[]
 }
 
 /// @@deny('read', isExist == false)
@@ -524,8 +528,8 @@ model Invoice {
   /// @DtoUpdateOptional
   recurring          InvoiceRecurring?
   /// @DtoRelationIncludeId
-  paymentId          String
-  payment            PaymentDetails    @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  paymentId          String?
+  payment            PaymentDetails?   @relation(fields: [paymentId], references: [id], onDelete: SetNull)
   /// @DtoApiHidden
   product            InvoiceProducts[]
   /// @DtoCreateOptional
@@ -541,8 +545,8 @@ model Invoice {
   total              Float
   paid_status        paidStatus        @default(Unpaid)
   /// @DtoRelationIncludeId
-  template_id        String
-  template           invoiceTemplate   @relation(fields: [template_id], references: [id], onDelete: SetNull)
+  template_id        String?
+  template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
 }
 
 /// @@deny('read', isExist == false)

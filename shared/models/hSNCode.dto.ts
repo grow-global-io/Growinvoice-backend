@@ -25,10 +25,9 @@ export class HSNCodeDto {
   })
   code: string;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
   })
-  tax: number;
+  tax_id: string;
   @ApiProperty({
     type: 'string',
   })

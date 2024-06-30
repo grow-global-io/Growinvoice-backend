@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateHSNCodeDto {
   @ApiProperty({
@@ -10,13 +10,12 @@ export class UpdateHSNCodeDto {
   @IsString()
   code?: string;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
     required: false,
   })
   @IsOptional()
-  @IsNumber()
-  tax?: number;
+  @IsString()
+  tax_id?: string;
   @ApiProperty({
     type: 'string',
     required: false,

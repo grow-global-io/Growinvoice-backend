@@ -75,13 +75,15 @@ export class Invoice {
   recurring: InvoiceRecurring | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  paymentId: string;
+  paymentId: string | null;
   @ApiProperty({
     type: () => PaymentDetails,
     required: false,
+    nullable: true,
   })
-  payment?: PaymentDetails;
+  payment?: PaymentDetails | null;
   @ApiHideProperty()
   product?: InvoiceProducts[];
   @ApiProperty({
@@ -122,11 +124,13 @@ export class Invoice {
   paid_status: paidStatus;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  template_id: string;
+  template_id: string | null;
   @ApiProperty({
     type: () => InvoiceTemplate,
     required: false,
+    nullable: true,
   })
-  template?: InvoiceTemplate;
+  template?: InvoiceTemplate | null;
 }

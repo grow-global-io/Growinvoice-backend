@@ -1,4 +1,5 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Tax } from './tax.entity';
 import { User } from './user.entity';
 import { Product } from './product.entity';
 
@@ -27,10 +28,14 @@ export class HSNCode {
   })
   code: string;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
   })
-  tax: number;
+  tax_id: string;
+  @ApiProperty({
+    type: () => Tax,
+    required: false,
+  })
+  tax?: Tax;
   @ApiProperty({
     type: 'string',
   })

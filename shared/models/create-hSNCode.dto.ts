@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateHSNCodeDto {
   @ApiProperty({
@@ -9,12 +9,11 @@ export class CreateHSNCodeDto {
   @IsString()
   code: string;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
   })
   @IsNotEmpty()
-  @IsNumber()
-  tax: number;
+  @IsString()
+  tax_id: string;
   @ApiProperty({
     type: 'string',
   })

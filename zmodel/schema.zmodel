@@ -138,7 +138,8 @@ model Company extends Base {
 model HSNCode extends Base {
     id      String    @id @default(cuid())
     code    String
-    tax     Float
+    tax_id  String    @DtoRelationIncludeId
+    tax     Tax       @relation(fields: [tax_id], references: [id], onDelete: Cascade)
     user_id String    @DtoRelationIncludeId
     user    User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
     Product Product[] @DtoApiHidden
@@ -153,6 +154,7 @@ model Tax extends Base {
     Product     Product[]   @DtoApiHidden
     Invoice     Invoice[]   @DtoApiHidden
     Quatation   Quotation[] @DtoApiHidden
+    hsnCode     HSNCode[]   @DtoApiHidden
 }
 
 model ProductUnit extends Base {
@@ -285,8 +287,8 @@ model Invoice extends Base {
     due_date           DateTime
     is_recurring       Boolean
     recurring          InvoiceRecurring? @DtoCreateOptional @DtoUpdateOptional
-    paymentId          String            @DtoRelationIncludeId
-    payment            PaymentDetails    @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+    paymentId          String?           @DtoRelationIncludeId
+    payment            PaymentDetails?   @relation(fields: [paymentId], references: [id], onDelete: SetNull)
     product            InvoiceProducts[] @DtoApiHidden
     notes              String?           @DtoCreateOptional @DtoUpdateOptional
     sub_total          Float
@@ -295,8 +297,8 @@ model Invoice extends Base {
     discountPercentage Float?            @DtoCreateOptional @DtoUpdateOptional
     total              Float
     paid_status        paidStatus        @default(Unpaid)
-    template_id        String            @DtoRelationIncludeId
-    template           invoiceTemplate   @relation(fields: [template_id], references: [id], onDelete: SetNull)
+    template_id        String?           @DtoRelationIncludeId
+    template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
 }
 
 model QuotationProducts extends Base {

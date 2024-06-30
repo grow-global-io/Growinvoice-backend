@@ -71,10 +71,11 @@ export class UpdateInvoiceDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  paymentId?: string;
+  paymentId?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
@@ -119,8 +120,9 @@ export class UpdateInvoiceDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  template_id?: string;
+  template_id?: string | null;
 }
