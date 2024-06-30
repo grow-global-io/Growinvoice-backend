@@ -34,14 +34,13 @@ export class UpdateInvoiceProductsDto {
   @IsNumber()
   tax?: number | null;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
     required: false,
     nullable: true,
   })
   @IsOptional()
-  @IsNumber()
-  hsnCode?: number | null;
+  @IsString()
+  hsnCode?: string | null;
   @ApiProperty({
     type: 'number',
     format: 'float',
