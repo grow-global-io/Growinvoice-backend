@@ -3,6 +3,7 @@ import { OpenaiService } from './openai.service';
 import { RequestBodyOpenaiDto } from './dto/request-body-openai.dto';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { GetUser, User } from '@shared/decorators/user.decorator';
 
 @ApiTags('openai')
 @Controller('openai')
@@ -22,7 +23,10 @@ export class OpenaiController {
       },
     },
   })
-  async create(@Body() createOpenaiDto: RequestBodyOpenaiDto) {
-    return await this.openaiService.create(createOpenaiDto);
+  async create(
+    @Body() createOpenaiDto: RequestBodyOpenaiDto,
+    @GetUser() user: User,
+  ) {
+    return await this.openaiService.create(createOpenaiDto, user?.sub);
   }
 }

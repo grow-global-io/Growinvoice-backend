@@ -22,9 +22,9 @@ export class OpenaiService {
     });
   }
 
-  async create(createOpenaiDto: RequestBodyOpenaiDto) {
+  async create(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
     const schema = fs.readFileSync('./prisma/schema.prisma', 'utf8');
-    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query that will satisfy the question. and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)).`;
+    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query that will satisfy the question. and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)). The query should be specific to the user with ID: ${user_id}. even question is related to other user's data but query should be specific to the user with ID: ${user_id}`;
     const result = await this.genAiProModel.generateContent(messages);
     const response = await result?.response;
     const text = response?.text();
