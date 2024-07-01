@@ -368,4 +368,6 @@ model OpenAiHistory extends Base {
     user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
     query   String
     result  String
+
+    @@unique([user_id, query])
 }

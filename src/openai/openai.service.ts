@@ -30,26 +30,37 @@ export class OpenaiService {
 
   async create(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
     const schema = fs.readFileSync('./prisma/schema.prisma', 'utf8');
-    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query that will satisfy the question. and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)). The query should be specific to the user with ID: ${user_id}. even question is related to other user's data but query should be specific to the user with ID: ${user_id}`;
+    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query for PostgreSQL that will satisfy the question. Make sure that SQL query is only for PostgreSQL db and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)). The query should be specific to the user with ID: ${user_id}. even question is related to other user's data but query should be specific to the user with ID: ${user_id} only. Make sure that the query is safe and secure. Make sure that count result is cast to a text(like: CAST(count(*) AS TEXT)). if USER request is related to date or month or year then Make sure to use date_trunc function with format.`;
     const result = await this.genAiProModel.generateContent(messages);
     const response = await result?.response;
-    await this.prismaServe.openAiHistory.create({
-      data: {
-        query: createOpenaiDto?.prompt,
-        result: response?.text(),
-        user_id,
-      },
-    });
     const text = response?.text();
     const querySplit = text.split('```sql')[1].split('```')[0];
     const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
+    await this?.prismaServe?.openAiHistory?.upsert({
+      where: {
+        user_id_query: {
+          user_id,
+          query: createOpenaiDto?.prompt,
+        },
+      },
+
+      create: {
+        query: createOpenaiDto?.prompt,
+        result: singleLineQuery,
+        user_id,
+      },
+      update: {
+        query: createOpenaiDto?.prompt,
+        result: singleLineQuery,
+        user_id,
+      },
+    });
     console.log(singleLineQuery);
     const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
     return resulta;
   }
 
   async createGraph(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
-    const schema = fs.readFileSync('./prisma/schema.prisma', 'utf8');
     const graphSample = {
       series: [
         {
@@ -145,21 +156,10 @@ export class OpenaiService {
         },
       },
     };
-    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query for PostgreSQL that will satisfy the question. and make sure SQL Query need to be satisfy for PostgreSQL and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)). The query should be specific to the user with ID: ${user_id}. even question is related to other user's data but query should be specific to the user with ID: ${user_id}`;
-    const result = await this.genAiProModel.generateContent(messages);
-    const response = await result?.response;
-    const text = response?.text();
-    await this.prismaServe.openAiHistory.create({
-      data: {
-        query: createOpenaiDto?.prompt,
-        result: text ?? '',
-        user_id,
-      },
-    });
-    const querySplit = text.split('```sql')[1].split('```')[0];
-    const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
-    console.log(singleLineQuery);
-    const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
+
+    const resulta = await this.create(createOpenaiDto, user_id);
+    console.log(resulta);
+
     const graphGenPrompt = `i want to generate a graph json data format should be same like : ${JSON.stringify(graphSample)} and the data should be generated from the following data: ${JSON.stringify(resulta)} and respond only with a JSON data format for the graph.`;
     const graphResult =
       await this.genAiProModel.generateContent(graphGenPrompt);
@@ -167,5 +167,25 @@ export class OpenaiService {
     const graphText = graphResponse?.text();
     const graphData = JSON.parse(graphText);
     return graphData;
+  }
+
+  async suggestions(searchTerm: string, user_id: string) {
+    const fetchSuggestions = await this.prismaServe.openAiHistory.findMany({
+      where: {
+        user_id,
+        OR: searchTerm ? [{ query: { contains: searchTerm } }] : undefined,
+      },
+      take: 100,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    const results = fetchSuggestions.map((suggest) => {
+      return {
+        value: suggest.query,
+        label: suggest.query,
+      };
+    });
+    return results;
   }
 }
