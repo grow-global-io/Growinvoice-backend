@@ -22,14 +22,13 @@ export class CreateInvoiceProductsDto {
   @IsNumber()
   quantity: number;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
     required: false,
     nullable: true,
   })
   @IsOptional()
-  @IsNumber()
-  tax?: number | null;
+  @IsString()
+  tax_id?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
@@ -37,7 +36,7 @@ export class CreateInvoiceProductsDto {
   })
   @IsOptional()
   @IsString()
-  hsnCode?: string | null;
+  hsnCode_id?: string | null;
   @ApiProperty({
     type: 'number',
     format: 'float',

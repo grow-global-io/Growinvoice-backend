@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class InvoiceProductsDto {
+export class QuotationTemplateDto {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -23,34 +23,14 @@ export class InvoiceProductsDto {
   @ApiProperty({
     type: 'string',
   })
-  invoice_id: string;
+  name: string;
   @ApiProperty({
     type: 'string',
   })
-  product_id: string;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  quantity: number;
+  view: string;
   @ApiProperty({
     type: 'string',
     nullable: true,
   })
-  tax_id: string | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  hsnCode_id: string | null;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  price: number;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  total: number;
+  path: string | null;
 }

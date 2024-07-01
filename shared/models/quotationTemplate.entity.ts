@@ -1,10 +1,8 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { Tax } from './tax.entity';
-import { User } from './user.entity';
-import { Product } from './product.entity';
-import { InvoiceProducts } from './invoiceProducts.entity';
+import { Quotation } from './quotation.entity';
+import { QuotationSettings } from './quotationSettings.entity';
 
-export class HSNCode {
+export class QuotationTemplate {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -27,27 +25,18 @@ export class HSNCode {
   @ApiProperty({
     type: 'string',
   })
-  code: string;
+  name: string;
   @ApiProperty({
     type: 'string',
   })
-  tax_id: string;
-  @ApiProperty({
-    type: () => Tax,
-    required: false,
-  })
-  tax?: Tax;
+  view: string;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  user_id: string;
-  @ApiProperty({
-    type: () => User,
-    required: false,
-  })
-  user?: User;
+  path: string | null;
   @ApiHideProperty()
-  Product?: Product[];
+  quotation?: Quotation[];
   @ApiHideProperty()
-  InvoiceProducts?: InvoiceProducts[];
+  quotationSettings?: QuotationSettings[];
 }

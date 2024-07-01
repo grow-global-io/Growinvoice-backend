@@ -3,6 +3,7 @@ import { Customer } from './customer.entity';
 import { User } from './user.entity';
 import { QuotationProducts } from './quotationProducts.entity';
 import { Tax } from './tax.entity';
+import { QuotationTemplate } from './quotationTemplate.entity';
 
 export class Quotation {
   @ApiProperty({
@@ -100,4 +101,15 @@ export class Quotation {
     format: 'float',
   })
   total: number;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  template_id: string | null;
+  @ApiProperty({
+    type: () => QuotationTemplate,
+    required: false,
+    nullable: true,
+  })
+  template?: QuotationTemplate | null;
 }

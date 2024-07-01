@@ -124,49 +124,51 @@ model State {
 model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt        DateTime          @default(now())
+  createdAt         DateTime            @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt        DateTime?         @updatedAt()
+  updatedAt         DateTime?           @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist          Boolean           @default(true)
-  id               String            @id() @default(cuid())
-  email            String            @unique()
-  name             String?
-  phone            String?
-  password         String
+  isExist           Boolean             @default(true)
+  id                String              @id() @default(cuid())
+  email             String              @unique()
+  name              String?
+  phone             String?
+  password          String
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  resetToken       String?
+  resetToken        String?
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  resetTokenExpiry DateTime?
+  resetTokenExpiry  DateTime?
   /// @DtoRelationIncludeId
-  currency_id      String?
-  currency         Currencies?       @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+  currency_id       String?
+  currency          Currencies?         @relation(fields: [currency_id], references: [id], onDelete: SetNull)
   /// @DtoApiHidden
-  company          Company[]
+  company           Company[]
   /// @DtoApiHidden
-  product          Product[]
+  product           Product[]
   /// @DtoApiHidden
-  hsnCode          HSNCode[]
+  hsnCode           HSNCode[]
   /// @DtoApiHidden
-  tax              Tax[]
+  tax               Tax[]
   /// @DtoApiHidden
-  productUnit      ProductUnit[]
+  productUnit       ProductUnit[]
   /// @DtoApiHidden
-  customer         Customer[]
+  customer          Customer[]
   /// @DtoApiHidden
-  invoice          Invoice[]
+  invoice           Invoice[]
   /// @DtoApiHidden
-  paymentDetails   PaymentDetails[]
+  paymentDetails    PaymentDetails[]
   /// @DtoApiHidden
-  quotation        Quotation[]
+  quotation         Quotation[]
   /// @DtoApiHidden
-  InvoiceSettings  InvoiceSettings[]
+  InvoiceSettings   InvoiceSettings[]
   /// @DtoApiHidden
-  OpenAiHistory    OpenAiHistory[]
+  OpenAiHistory     OpenAiHistory[]
+  /// @DtoApiHidden
+  QuotationSettings QuotationSettings[]
 }
 
 /// @@deny('read', isExist == false)
@@ -203,50 +205,54 @@ model Company {
 model HSNCode {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt DateTime  @default(now())
+  createdAt       DateTime          @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt DateTime? @updatedAt()
+  updatedAt       DateTime?         @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist   Boolean   @default(true)
-  id        String    @id() @default(cuid())
-  code      String
+  isExist         Boolean           @default(true)
+  id              String            @id() @default(cuid())
+  code            String
   /// @DtoRelationIncludeId
-  tax_id    String
-  tax       Tax       @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+  tax_id          String
+  tax             Tax               @relation(fields: [tax_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  user_id   String
-  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id         String
+  user            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
-  Product   Product[]
+  Product         Product[]
+  /// @DtoApiHidden
+  InvoiceProducts InvoiceProducts[]
 }
 
 /// @@deny('read', isExist == false)
 model Tax {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt   DateTime    @default(now())
+  createdAt       DateTime          @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt   DateTime?   @updatedAt()
+  updatedAt       DateTime?         @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist     Boolean     @default(true)
-  id          String      @id() @default(cuid())
-  percentage  Float
-  description String?
+  isExist         Boolean           @default(true)
+  id              String            @id() @default(cuid())
+  percentage      Float
+  description     String?
   /// @DtoRelationIncludeId
-  user_id     String
-  user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id         String
+  user            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
-  Product     Product[]
+  Product         Product[]
   /// @DtoApiHidden
-  Invoice     Invoice[]
+  Invoice         Invoice[]
   /// @DtoApiHidden
-  Quatation   Quotation[]
+  Quatation       Quotation[]
   /// @DtoApiHidden
-  hsnCode     HSNCode[]
+  hsnCode         HSNCode[]
+  /// @DtoApiHidden
+  InvoiceProducts InvoiceProducts[]
 }
 
 /// @@deny('read', isExist == false)
@@ -489,12 +495,12 @@ model InvoiceProducts {
   product_id String
   product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
   quantity   Float
-  /// @DtoCreateOptional
-  /// @DtoUpdateOptional
-  tax        Float?
-  /// @DtoCreateOptional
-  /// @DtoUpdateOptional
-  hsnCode    String?
+  /// @DtoRelationIncludeId
+  tax_id     String?
+  tax        Tax?      @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+  /// @DtoRelationIncludeId
+  hsnCode_id String?
+  hsnCode    HSNCode?  @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
   price      Float
   total      Float
 }
@@ -547,6 +553,66 @@ model Invoice {
   /// @DtoRelationIncludeId
   template_id        String?
   template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+}
+
+/// @@deny('read', isExist == false)
+model invoiceTemplate {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt       DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt       DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist         Boolean           @default(true)
+  id              String            @id() @default(cuid())
+  name            String
+  view            String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  path            String?
+  /// @DtoApiHidden
+  invoice         Invoice[]
+  /// @DtoApiHidden
+  InvoiceSettings InvoiceSettings[]
+}
+
+/// @@deny('read', isExist == false)
+model InvoiceSettings {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt                       DateTime        @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt                       DateTime?       @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist                         Boolean         @default(true)
+  id                              String          @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id                         String
+  user                            User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  invoiceTemplateId               String
+  invoiceTemplate                 invoiceTemplate @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
+  invoicePrefix                   String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  autoArchive                     Boolean         @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  footer                          String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes                           String?
+  dueNotice                       Int
+  overDueNotice                   Int
+  companyAddressTemplate          String
+  customerBillingAddressTemplate  String
+  customerShippingAddressTemplate String
+
+  @@unique([user_id, id])
 }
 
 /// @@deny('read', isExist == false)
@@ -618,61 +684,65 @@ model Quotation {
   /// @DtoUpdateOptional
   discountPercentage Float?
   total              Float
+  /// @DtoRelationIncludeId
+  template_id        String?
+  template           QuotationTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
 }
 
 /// @@deny('read', isExist == false)
-model invoiceTemplate {
+model QuotationTemplate {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt       DateTime          @default(now())
+  createdAt         DateTime            @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt       DateTime?         @updatedAt()
+  updatedAt         DateTime?           @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist         Boolean           @default(true)
-  id              String            @id() @default(cuid())
-  name            String
-  view            String
+  isExist           Boolean             @default(true)
+  id                String              @id() @default(cuid())
+  name              String
+  view              String
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  path            String?
+  path              String?
   /// @DtoApiHidden
-  invoice         Invoice[]
+  quotation         Quotation[]
   /// @DtoApiHidden
-  InvoiceSettings InvoiceSettings[]
+  quotationSettings QuotationSettings[]
 }
 
 /// @@deny('read', isExist == false)
-model InvoiceSettings {
+model QuotationSettings {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt                       DateTime        @default(now())
+  createdAt                       DateTime          @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt                       DateTime?       @updatedAt()
+  updatedAt                       DateTime?         @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist                         Boolean         @default(true)
-  id                              String          @id() @default(cuid())
+  isExist                         Boolean           @default(true)
+  id                              String            @id() @default(cuid())
   /// @DtoRelationIncludeId
   user_id                         String
-  user                            User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user                            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  invoiceTemplateId               String
-  invoiceTemplate                 invoiceTemplate @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
-  invoicePrefix                   String
+  quotationTemplateId             String
+  quotationTemplate               QuotationTemplate @relation(fields: [quotationTemplateId], references: [id], onDelete: Cascade)
+  quotationPrefix                 String
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  autoArchive                     Boolean         @default(false)
+  autoArchive                     Boolean           @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  autoConvert                     Boolean           @default(false)
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   footer                          String?
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   notes                           String?
-  dueNotice                       Int
-  overDueNotice                   Int
   companyAddressTemplate          String
   customerBillingAddressTemplate  String
   customerShippingAddressTemplate String

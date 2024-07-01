@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class QuotationDto {
+export class QuotationSettingsDto {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -23,30 +23,28 @@ export class QuotationDto {
   @ApiProperty({
     type: 'string',
   })
-  customer_id: string;
-  @ApiProperty({
-    type: 'string',
-  })
   user_id: string;
   @ApiProperty({
     type: 'string',
   })
-  quatation_number: string;
+  quotationTemplateId: string;
+  @ApiProperty({
+    type: 'string',
+  })
+  quotationPrefix: string;
+  @ApiProperty({
+    type: 'boolean',
+  })
+  autoArchive: boolean;
+  @ApiProperty({
+    type: 'boolean',
+  })
+  autoConvert: boolean;
   @ApiProperty({
     type: 'string',
     nullable: true,
   })
-  reference_number: string | null;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-  })
-  date: Date;
-  @ApiProperty({
-    type: 'string',
-    format: 'date-time',
-  })
-  expiry_at: Date;
+  footer: string | null;
   @ApiProperty({
     type: 'string',
     nullable: true,
@@ -54,33 +52,14 @@ export class QuotationDto {
   notes: string | null;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  private_notes: string | null;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  sub_total: number;
+  companyAddressTemplate: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  tax_id: string | null;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-    nullable: true,
-  })
-  discountPercentage: number | null;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  total: number;
+  customerBillingAddressTemplate: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  template_id: string | null;
+  customerShippingAddressTemplate: string;
 }
