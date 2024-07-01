@@ -27,4 +27,23 @@ export class OpenaiController {
   ) {
     return await this.openaiService.create(createOpenaiDto, user?.sub);
   }
+
+  @Post('graph')
+  // ApiResponse Any
+  @ApiResponse({
+    status: 200,
+    description: 'Create a new openai',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+      },
+    },
+  })
+  async createGraph(
+    @Body() createOpenaiDto: RequestBodyOpenaiDto,
+    @GetUser() user: User,
+  ) {
+    return await this.openaiService.createGraph(createOpenaiDto, user?.sub);
+  }
 }
