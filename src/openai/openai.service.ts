@@ -14,6 +14,7 @@ import { ConfigService } from '@nestjs/config';
 export class OpenaiService {
   private genAI: GoogleGenerativeAI;
   private genAiProModel: GenerativeModel;
+  private genAiProJsonModel: GenerativeModel;
 
   private safetySettings = [
     {
@@ -41,13 +42,26 @@ export class OpenaiService {
     this.genAI = new GoogleGenerativeAI(
       this.configService.get('GOOGLE_API_KEY'),
     );
+
     this.genAiProModel = this.genAI.getGenerativeModel({
-      model: 'gemini-pro',
+      model: 'gemini-1.5-flash',
       generationConfig: {
         temperature: 0.4,
         topP: 1,
         topK: 32,
         maxOutputTokens: 4096,
+      },
+      safetySettings: this?.safetySettings,
+    });
+
+    this.genAiProJsonModel = this.genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      generationConfig: {
+        temperature: 0.4,
+        topP: 1,
+        topK: 32,
+        maxOutputTokens: 4096,
+        responseMimeType: 'application/json',
       },
       safetySettings: this?.safetySettings,
     });
@@ -183,14 +197,15 @@ export class OpenaiService {
     };
 
     const resulta = await this.create(createOpenaiDto, user_id);
-    console.log(resulta);
-
     const graphGenPrompt = `i want to generate a graph json data format should be same like : ${JSON.stringify(graphSample)} and the data should be generated from the following data: ${JSON.stringify(resulta)} and respond only with a JSON data format for the graph.`;
     const graphResult =
-      await this.genAiProModel.generateContent(graphGenPrompt);
+      await this.genAiProJsonModel.generateContent(graphGenPrompt);
     const graphResponse = await graphResult?.response;
     const graphText = graphResponse?.text();
-    const graphData = JSON.parse(graphText);
+    const graphSplit = graphText?.startsWith('```json')
+      ? graphText.split('```json')[1].split('```')[0]
+      : graphText;
+    const graphData = JSON.parse(graphSplit);
     return graphData;
   }
 
