@@ -24,8 +24,8 @@ export class QuotationService {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,
-                tax: product.tax,
-                hsnCode: product.hsnCode,
+                tax_id: product.tax_id,
+                hsnCode_id: product.hsnCode_id,
                 price: product.price,
                 total: product.total,
               };
@@ -72,8 +72,8 @@ export class QuotationService {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,
-                tax: product.tax,
-                hsnCode: product.hsnCode,
+                tax_id: product.tax_id,
+                hsnCode_id: product.hsnCode_id,
                 price: product.price,
                 total: product.total,
               };

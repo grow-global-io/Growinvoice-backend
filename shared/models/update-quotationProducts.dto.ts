@@ -25,14 +25,13 @@ export class UpdateQuotationProductsDto {
   @IsNumber()
   quantity?: number;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
     required: false,
     nullable: true,
   })
   @IsOptional()
-  @IsNumber()
-  tax?: number | null;
+  @IsString()
+  tax_id?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
@@ -40,7 +39,7 @@ export class UpdateQuotationProductsDto {
   })
   @IsOptional()
   @IsString()
-  hsnCode?: string | null;
+  hsnCode_id?: string | null;
   @ApiProperty({
     type: 'number',
     format: 'float',

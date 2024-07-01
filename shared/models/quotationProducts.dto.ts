@@ -34,16 +34,15 @@ export class QuotationProductsDto {
   })
   quantity: number;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
     nullable: true,
   })
-  tax: number | null;
+  tax_id: string | null;
   @ApiProperty({
     type: 'string',
     nullable: true,
   })
-  hsnCode: string | null;
+  hsnCode_id: string | null;
   @ApiProperty({
     type: 'number',
     format: 'float',

@@ -7,10 +7,19 @@ import {
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
 import { InvoiceWithAllDataDto } from './dto/invoice-with-all-data.dto';
+import {
+  formatCompanyAddress,
+  formatCustomerBillingAddress,
+  formatCustomerShippingAddress,
+} from '@shared/utils/formatAddress';
+import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 
 @Injectable()
 export class InvoiceService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private invoiceSettings: InvoicesettingsService,
+  ) {}
   async create(createInvoiceDto: CreateInvoiceWithProducts) {
     const invoiceDetails = await this.prismaService.invoice.create({
       data: {
@@ -23,8 +32,6 @@ export class InvoiceService {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,
-                // tax: product.tax,
-                // hsnCode: product.hsnCode,
                 tax_id: product.tax_id,
                 hsnCode_id: product.hsnCode_id,
                 price: product.price,
@@ -303,5 +310,41 @@ export class InvoiceService {
     return await this.prismaService.invoice.count({
       where: { user_id },
     });
+  }
+
+  async invoiceSettingsWithFormat(invoice: InvoiceWithAllDataDto) {
+    const a = invoice;
+    const invoiceSettings = await this.invoiceSettings?.findFirst(
+      invoice?.user?.id,
+    );
+    if (invoiceSettings === null || invoice?.user?.id === null) {
+      a.companyAddress = '';
+      a.customerBillingAddress = '';
+      a.customerShippingAddress = '';
+    } else {
+      const companyAddress = formatCompanyAddress(
+        invoice,
+        invoiceSettings?.companyAddressTemplate,
+      );
+      a.companyAddress = companyAddress === '<p><br></p>' ? '' : companyAddress;
+      const customerBillingAddress = formatCustomerBillingAddress(
+        invoice,
+        invoiceSettings?.customerBillingAddressTemplate,
+      );
+      a.customerBillingAddress =
+        customerBillingAddress === '<p><br></p>' ? '' : customerBillingAddress;
+      const customerShippingAddress = formatCustomerShippingAddress(
+        invoice,
+        invoiceSettings?.customerShippingAddressTemplate,
+      );
+      a.customerShippingAddress =
+        customerShippingAddress === '<p><br></p>'
+          ? ''
+          : customerShippingAddress;
+    }
+    return {
+      invoice: a,
+      invoiceSettings,
+    };
   }
 }

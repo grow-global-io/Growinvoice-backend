@@ -27,21 +27,12 @@ import { GetUser, User } from '@shared/decorators/user.decorator';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { Response } from 'express';
 import axios from 'axios';
-import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
-import {
-  formatCompanyAddress,
-  formatCustomerBillingAddress,
-  formatCustomerShippingAddress,
-} from '@shared/utils/formatAddress';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
 @Controller('invoice')
 export class InvoiceController {
-  constructor(
-    private readonly invoiceService: InvoiceService,
-    private readonly invoiceSettings: InvoicesettingsService,
-  ) {}
+  constructor(private readonly invoiceService: InvoiceService) {}
 
   @Post()
   @ApiSuccessResponse(InvoiceDto, { status: 201 })
@@ -149,38 +140,12 @@ export class InvoiceController {
         console.error('Error fetching or converting image:', error);
       }
     }
-    const invoiceSettings = await this.invoiceSettings?.findFirst(
-      invoice?.user?.id,
+    const invoiceSettingsWithFormat =
+      await this.invoiceService.invoiceSettingsWithFormat(invoice);
+    return res.render(
+      'invoice/' + invoice?.template?.view ?? 'template1',
+      invoiceSettingsWithFormat,
     );
-    if (invoiceSettings === null || invoice?.user?.id === null) {
-      a.companyAddress = '';
-      a.customerBillingAddress = '';
-      a.customerShippingAddress = '';
-    } else {
-      const companyAddress = formatCompanyAddress(
-        invoice,
-        invoiceSettings?.companyAddressTemplate,
-      );
-      a.companyAddress = companyAddress === '<p><br></p>' ? '' : companyAddress;
-      const customerBillingAddress = formatCustomerBillingAddress(
-        invoice,
-        invoiceSettings?.customerBillingAddressTemplate,
-      );
-      a.customerBillingAddress =
-        customerBillingAddress === '<p><br></p>' ? '' : customerBillingAddress;
-      const customerShippingAddress = formatCustomerShippingAddress(
-        invoice,
-        invoiceSettings?.customerShippingAddressTemplate,
-      );
-      a.customerShippingAddress =
-        customerShippingAddress === '<p><br></p>'
-          ? ''
-          : customerShippingAddress;
-    }
-    return res.render(invoice?.template?.view ?? 'template1', {
-      invoice: a,
-      invoiceSettings,
-    });
   }
 
   @IsPublic()
@@ -198,38 +163,11 @@ export class InvoiceController {
   ) {
     const invoice =
       await this.invoiceService.createInvoicePreview(createInvoiceDto);
-    const a = invoice;
-    const invoiceSettings = await this.invoiceSettings?.findFirst(
-      invoice?.user?.id,
-    );
-    if (invoiceSettings === null || invoice?.user?.id === null) {
-      a.companyAddress = '';
-      a.customerBillingAddress = '';
-      a.customerShippingAddress = '';
-    } else {
-      const companyAddress = formatCompanyAddress(
-        invoice,
-        invoiceSettings?.companyAddressTemplate,
-      );
-      a.companyAddress = companyAddress === '<p><br></p>' ? '' : companyAddress;
-      const customerBillingAddress = formatCustomerBillingAddress(
-        invoice,
-        invoiceSettings?.customerBillingAddressTemplate,
-      );
-      a.customerBillingAddress =
-        customerBillingAddress === '<p><br></p>' ? '' : customerBillingAddress;
-      const customerShippingAddress = formatCustomerShippingAddress(
-        invoice,
-        invoiceSettings?.customerShippingAddressTemplate,
-      );
-      a.customerShippingAddress =
-        customerShippingAddress === '<p><br></p>'
-          ? ''
-          : customerShippingAddress;
-    }
-    return res.render(invoice?.template?.view ?? 'template1', {
-      invoice: a,
+    const invoiceSettings =
+      await this.invoiceService?.invoiceSettingsWithFormat(invoice);
+    return res.render(
+      'invoice/' + invoice?.template?.view ?? 'template1',
       invoiceSettings,
-    });
+    );
   }
 }

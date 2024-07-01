@@ -21,6 +21,8 @@ import { MailController } from './mail/mail.controller';
 import { InvoicetemplateModule } from './invoicetemplate/invoicetemplate.module';
 import { InvoicesettingsModule } from './invoicesettings/invoicesettings.module';
 import { OpenaiModule } from './openai/openai.module';
+import { QuotationtemplateModule } from './quotationtemplate/quotationtemplate.module';
+import { QuotationsettingsModule } from './quotationsettings/quotationsettings.module';
 
 @Module({
   imports: [
@@ -45,6 +47,8 @@ import { OpenaiModule } from './openai/openai.module';
     InvoicetemplateModule,
     InvoicesettingsModule,
     OpenaiModule,
+    QuotationtemplateModule,
+    QuotationsettingsModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],

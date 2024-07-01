@@ -51,6 +51,9 @@ async function main() {
   await prisma.invoiceTemplate.createMany({
     data: invoiceData,
   });
+  await prisma?.quotationTemplate.createMany({
+    data: invoiceData,
+  });
 }
 
 main()
