@@ -198,7 +198,38 @@ export class InvoiceController {
   ) {
     const invoice =
       await this.invoiceService.createInvoicePreview(createInvoiceDto);
-
-    return res.render(invoice?.template?.view ?? 'template1', { invoice });
+    const a = invoice;
+    const invoiceSettings = await this.invoiceSettings?.findFirst(
+      invoice?.user?.id,
+    );
+    if (invoiceSettings === null || invoice?.user?.id === null) {
+      a.companyAddress = '';
+      a.customerBillingAddress = '';
+      a.customerShippingAddress = '';
+    } else {
+      const companyAddress = formatCompanyAddress(
+        invoice,
+        invoiceSettings?.companyAddressTemplate,
+      );
+      a.companyAddress = companyAddress === '<p><br></p>' ? '' : companyAddress;
+      const customerBillingAddress = formatCustomerBillingAddress(
+        invoice,
+        invoiceSettings?.customerBillingAddressTemplate,
+      );
+      a.customerBillingAddress =
+        customerBillingAddress === '<p><br></p>' ? '' : customerBillingAddress;
+      const customerShippingAddress = formatCustomerShippingAddress(
+        invoice,
+        invoiceSettings?.customerShippingAddressTemplate,
+      );
+      a.customerShippingAddress =
+        customerShippingAddress === '<p><br></p>'
+          ? ''
+          : customerShippingAddress;
+    }
+    return res.render(invoice?.template?.view ?? 'template1', {
+      invoice: a,
+      invoiceSettings,
+    });
   }
 }
