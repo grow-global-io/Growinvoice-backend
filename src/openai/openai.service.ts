@@ -2,13 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { RequestBodyOpenaiDto } from './dto/request-body-openai.dto';
 import * as fs from 'fs';
 import { PrismaService } from '@/prisma/prisma.service';
-import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
+import {
+  GenerativeModel,
+  GoogleGenerativeAI,
+  HarmBlockThreshold,
+  HarmCategory,
+} from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OpenaiService {
   private genAI: GoogleGenerativeAI;
   private genAiProModel: GenerativeModel;
+
+  private safetySettings = [
+    {
+      category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+  ];
 
   constructor(
     private prismaServe: PrismaService,
@@ -25,6 +49,7 @@ export class OpenaiService {
         topK: 32,
         maxOutputTokens: 4096,
       },
+      safetySettings: this?.safetySettings,
     });
   }
 
