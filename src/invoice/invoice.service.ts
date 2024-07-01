@@ -185,6 +185,8 @@ export class InvoiceService {
             where: { id: product.product_id },
             include: {
               currency: true,
+              tax: true,
+              hsnCode: true,
             },
           });
           return {
