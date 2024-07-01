@@ -125,6 +125,8 @@ export class InvoiceService {
             product: {
               include: {
                 currency: true,
+                tax: true,
+                hsnCode: true,
               },
             },
           },

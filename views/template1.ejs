@@ -115,10 +115,10 @@
                         <%= product?.quantity %>
                       </td>
                       <td class="tm_width_1">
-                        <%= product?.hsnCode %>
+                        <%= product?.product?.hsnCode?.code %>
                       </td>
                       <td class="tm_width_1">
-                        <%= product?.tax %>%
+                        <%= product?.product?.tax?.percentage %>%
                       </td>
                       <td class="tm_width_2">
                         <%= product?.product?.currency?.symbol %>
