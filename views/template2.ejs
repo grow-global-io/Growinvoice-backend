@@ -77,33 +77,35 @@
                   <thead>
                     <tr>
                       <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg">Item</th>
-                      <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg">Description
+                      <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg">Qty
                       </th>
+                      <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg">HSN</th>
+                      <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg">Tax(%)</th>
                       <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg">Price</th>
-                      <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg">Qty</th>
-                      <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right">
+                      <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right">
                         Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     <% invoice?.product?.forEach(product=> { %>
                     <tr>
-                      <td class="tm_width_3">
-                        <%= product?.product?.name %>
-                      </td>
                       <td class="tm_width_4">
-                        <%= product?.product?.description %>
-                      </td>
-                      <td class="tm_width_2">
-                        <%= product?.product?.currency?.symbol %>
-                        <%= product?.product?.price %>
+                        <%= product?.product?.name %>
                       </td>
                       <td class="tm_width_1">
                         <%= product?.quantity %>
                       </td>
-                      <td class="tm_width_2 tm_text_right">
-                        <%= product?.product?.currency?.symbol %>
-                        <%= product?.total %>
+                      <td class="tm_width_2">
+                        <%= product?.hsnCode %>
+                      </td>
+                      <td class="tm_width_1">
+                        <%= product?.tax %>%
+                      </td>
+                      <td class="tm_width_3">
+                        <%= product?.product?.currency?.symbol %><%= product?.product?.price %>
+                      </td>
+                      <td class="tm_width_3  tm_text_right">
+                        <%= product?.product?.currency?.symbol %><%= product?.total %>
                       </td>
                     </tr>
 
