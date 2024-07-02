@@ -382,7 +382,7 @@ const lineChartWithDataLabels = {
   },
 };
 
-const simpleBasicPieCharts = {
+const BasicPieCharts = {
   series: [44, 55, 13, 43, 22],
   options: {
     chart: {
@@ -412,5 +412,5 @@ export const chartData = {
   stackedColumnCharts,
   basicLineCharts,
   lineChartWithDataLabels,
-  simpleBasicPieCharts,
+  BasicPieCharts,
 };
