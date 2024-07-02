@@ -44,6 +44,11 @@ export class QuotationsettingsController {
     return await this.quotationsettingsService.findAll(user?.sub);
   }
 
+  @Get('first')
+  async findFirst(@GetUser() user: User) {
+    return this.quotationsettingsService.findFirst(user?.sub);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.quotationsettingsService.findOne(id);

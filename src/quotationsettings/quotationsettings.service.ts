@@ -50,4 +50,12 @@ export class QuotationsettingsService {
       message: 'Quotation setting deleted successfully',
     };
   }
+
+  async findFirst(user_id: string) {
+    const quotationsetting =
+      await this.prismaService.quotationSettings.findFirst({
+        where: { user_id },
+      });
+    return plainToInstance(QuotationSettingsDto, quotationsetting);
+  }
 }
