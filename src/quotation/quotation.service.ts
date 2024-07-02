@@ -185,4 +185,34 @@ export class QuotationService {
       quotationSettings,
     };
   }
+
+  async statusToMailed(id: string) {
+    const invoice = await this.prismaService.quotation.update({
+      where: { id },
+      data: {
+        status: 'Mailed to customer',
+      },
+    });
+    return plainToInstance(QuotationDto, invoice);
+  }
+
+  async statusToAccepted(id: string) {
+    const invoice = await this.prismaService.quotation.update({
+      where: { id },
+      data: {
+        status: 'Accepted',
+      },
+    });
+    return plainToInstance(QuotationDto, invoice);
+  }
+
+  async statusToRejected(id: string) {
+    const invoice = await this.prismaService.quotation.update({
+      where: { id },
+      data: {
+        status: 'Rejected',
+      },
+    });
+    return plainToInstance(QuotationDto, invoice);
+  }
 }

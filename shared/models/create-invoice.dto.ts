@@ -112,6 +112,15 @@ export class CreateInvoiceDto {
   total: number;
   @ApiProperty({
     type: 'string',
+    default: 'Draft',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  status?: string | null;
+  @ApiProperty({
+    type: 'string',
     required: false,
     nullable: true,
   })

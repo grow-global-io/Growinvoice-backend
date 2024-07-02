@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Res,
+  Query,
 } from '@nestjs/common';
 import { QuotationService } from './quotation.service';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -21,12 +22,17 @@ import { GetUser, User } from '@shared/decorators/user.decorator';
 import { Response } from 'express';
 import { convertLogoToBase64 } from '@shared/utils/constants';
 import { IsPublic } from '@shared/decorators/public.decorator';
+import { SendMailDto } from '@/mail/dto/send-mail.dto';
+import { MailService } from '@/mail/mail.service';
 
 @ApiExtraModels(QuotationDto)
 @ApiTags('quotation')
 @Controller('quotation')
 export class QuotationController {
-  constructor(private readonly quotationService: QuotationService) {}
+  constructor(
+    private readonly quotationService: QuotationService,
+    private readonly mailService: MailService,
+  ) {}
 
   @Post()
   @ApiSuccessResponse(QuotationDto, { status: 201 })
@@ -91,5 +97,61 @@ export class QuotationController {
       await this.quotationService.quotationSettingsWithFormat(a);
     const templateName = quotation?.template?.view ?? 'template1';
     return res.render('quotation/' + templateName, quotationSettingsWithFormat);
+  }
+
+  @IsPublic()
+  @Get('quotationPublicFindOne/:id')
+  async quotationPublicFindOne(@Param('id') id: string) {
+    return await this.quotationService.findOne(id);
+  }
+
+  @Post('quotationSentToMail')
+  @ApiSuccessResponse(QuotationDto, { status: 200 })
+  async invoiceSentToMail(
+    @Body() createInvoiceDto: SendMailDto,
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<QuotationDto>> {
+    const quotation = await this.quotationService.statusToMailed(id);
+    await this.mailService.sendMail(createInvoiceDto);
+    return {
+      message: 'Quotation created and sent to mail successfully',
+      result: quotation,
+    };
+  }
+
+  @Post('markedAsRejected')
+  @ApiSuccessResponse(QuotationDto, { status: 200 })
+  async markedAsRejected(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<QuotationDto>> {
+    const invoice = await this.quotationService.statusToRejected(id);
+    return {
+      message: 'Quotation marked as rejected successfully',
+      result: invoice,
+    };
+  }
+
+  @Post('markedAsAccepted')
+  @ApiSuccessResponse(QuotationDto, { status: 200 })
+  async markedAsAccepted(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<QuotationDto>> {
+    const invoice = await this.quotationService.statusToAccepted(id);
+    return {
+      message: 'Quotation marked as accepted successfully',
+      result: invoice,
+    };
+  }
+
+  @Post('markedAsMailed')
+  @ApiSuccessResponse(QuotationDto, { status: 200 })
+  async markedAsMailed(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<QuotationDto>> {
+    const invoice = await this.quotationService.statusToMailed(id);
+    return {
+      message: 'Quotation marked as mailed successfully',
+      result: invoice,
+    };
   }
 }

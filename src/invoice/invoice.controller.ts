@@ -27,12 +27,17 @@ import { GetUser, User } from '@shared/decorators/user.decorator';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { Response } from 'express';
 import { convertLogoToBase64 } from '@shared/utils/constants';
+import { MailService } from '@/mail/mail.service';
+import { SendMailDto } from '@/mail/dto/send-mail.dto';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
 @Controller('invoice')
 export class InvoiceController {
-  constructor(private readonly invoiceService: InvoiceService) {}
+  constructor(
+    private readonly invoiceService: InvoiceService,
+    private readonly mailService: MailService,
+  ) {}
 
   @Post()
   @ApiSuccessResponse(InvoiceDto, { status: 201 })
@@ -138,6 +143,56 @@ export class InvoiceController {
   @Get('invoicePublicFindOne/:id')
   async invoicePublicFindOne(@Param('id') id: string) {
     return await this.invoiceService.findOne(id);
+  }
+
+  @Post('invoiceSentToMail')
+  @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  async invoiceSentToMail(
+    @Body() createInvoiceDto: SendMailDto,
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<InvoiceDto>> {
+    const invoice = await this.invoiceService.statusToMailed(id);
+    await this.mailService.sendMail(createInvoiceDto);
+    return {
+      message: 'Invoice created and sent to mail successfully',
+      result: invoice,
+    };
+  }
+
+  @Post('markedAsPaid')
+  @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  async markedAsPaid(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<InvoiceDto>> {
+    const invoice = await this.invoiceService.statusToPaid(id);
+    return {
+      message: 'Invoice marked as paid successfully',
+      result: invoice,
+    };
+  }
+
+  @Post('markedAsUnpaid')
+  @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  async markedAsUnpaid(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<InvoiceDto>> {
+    const invoice = await this.invoiceService.statusToUnpaid(id);
+    return {
+      message: 'Invoice marked as unpaid successfully',
+      result: invoice,
+    };
+  }
+
+  @Post('markedAsMailed')
+  @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  async markedAsMailed(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<InvoiceDto>> {
+    const invoice = await this.invoiceService.statusToMailed(id);
+    return {
+      message: 'Invoice marked as mailed successfully',
+      result: invoice,
+    };
   }
 
   @IsPublic()

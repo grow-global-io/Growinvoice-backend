@@ -83,4 +83,9 @@ export class QuotationDto {
     nullable: true,
   })
   template_id: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  status: string | null;
 }

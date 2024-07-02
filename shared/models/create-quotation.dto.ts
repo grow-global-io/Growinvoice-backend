@@ -103,4 +103,13 @@ export class CreateQuotationDto {
   @IsOptional()
   @IsString()
   template_id?: string | null;
+  @ApiProperty({
+    type: 'string',
+    default: 'Draft',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  status?: string | null;
 }

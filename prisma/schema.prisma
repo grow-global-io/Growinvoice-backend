@@ -554,6 +554,9 @@ model Invoice {
   discountPercentage Float?
   total              Float
   paid_status        paidStatus        @default(Unpaid)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  status             String?           @default("Draft")
   /// @DtoRelationIncludeId
   template_id        String?
   template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
@@ -691,6 +694,9 @@ model Quotation {
   /// @DtoRelationIncludeId
   template_id        String?
   template           QuotationTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  status             String?             @default("Draft")
 }
 
 /// @@deny('read', isExist == false)

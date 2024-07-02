@@ -96,5 +96,10 @@ export class InvoiceDto {
     type: 'string',
     nullable: true,
   })
+  status: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
   template_id: string | null;
 }

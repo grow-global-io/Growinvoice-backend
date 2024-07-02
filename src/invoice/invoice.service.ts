@@ -347,4 +347,33 @@ export class InvoiceService {
       invoiceSettings,
     };
   }
+
+  async statusToMailed(id: string) {
+    return await this.prismaService.invoice.update({
+      where: { id },
+      data: {
+        status: 'Mailed to customer',
+      },
+    });
+  }
+
+  async statusToPaid(id: string) {
+    return await this.prismaService.invoice.update({
+      where: { id },
+      data: {
+        status: 'Paid',
+        paid_status: 'Paid',
+      },
+    });
+  }
+
+  async statusToUnpaid(id: string) {
+    return await this.prismaService.invoice.update({
+      where: { id },
+      data: {
+        status: 'Unpaid',
+        paid_status: 'Unpaid',
+      },
+    });
+  }
 }

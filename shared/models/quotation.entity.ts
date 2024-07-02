@@ -112,4 +112,9 @@ export class Quotation {
     nullable: true,
   })
   template?: QuotationTemplate | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  status: string | null;
 }
