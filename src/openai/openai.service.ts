@@ -9,6 +9,7 @@ import {
   HarmCategory,
 } from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';
+import { camelCaseToNormalString, chartData } from '@shared/utils/constants';
 
 @Injectable()
 export class OpenaiService {
@@ -100,105 +101,14 @@ export class OpenaiService {
   }
 
   async createGraph(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
-    const graphSample = {
-      series: [
-        {
-          name: 'Inflation',
-          data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2],
-        },
-      ],
-      options: {
-        chart: {
-          height: 350,
-          type: 'bar',
-        },
-        plotOptions: {
-          bar: {
-            borderRadius: 10,
-            dataLabels: {
-              position: 'top', // top, center, bottom
-            },
-          },
-        },
-        dataLabels: {
-          enabled: true,
-          formatter: function (val) {
-            return val + '%';
-          },
-          offsetY: -20,
-          style: {
-            fontSize: '12px',
-            colors: ['#304758'],
-          },
-        },
-
-        xaxis: {
-          categories: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-          ],
-          position: 'top',
-          axisBorder: {
-            show: false,
-          },
-          axisTicks: {
-            show: false,
-          },
-          crosshairs: {
-            fill: {
-              type: 'gradient',
-              gradient: {
-                colorFrom: '#D8E3F0',
-                colorTo: '#BED1E6',
-                stops: [0, 100],
-                opacityFrom: 0.4,
-                opacityTo: 0.5,
-              },
-            },
-          },
-          tooltip: {
-            enabled: true,
-          },
-        },
-        yaxis: {
-          axisBorder: {
-            show: false,
-          },
-          axisTicks: {
-            show: false,
-          },
-          labels: {
-            show: false,
-            formatter: function (val) {
-              return val + '%';
-            },
-          },
-        },
-        title: {
-          text: 'Monthly Inflation in Argentina, 2002',
-          floating: true,
-          offsetY: 330,
-          align: 'center',
-          style: {
-            color: '#444',
-          },
-        },
-      },
-    };
-
     const resulta = await this.create(createOpenaiDto, user_id);
-    console.log(resulta);
-    const graphGenPrompt = `i want to generate a graph json data format should be same like : ${JSON.stringify(graphSample)} or SAME LIKE REACT APEXCHARTS CHART GRAPH DATA and also determine the type of the chart also and the data should be generated from the following data: ${JSON.stringify(resulta)}. if generated data is empty, then generate graph JSON with empty data and respond only with a JSON data format for the graph. Make sure that every information need to be change and related to user request: ${createOpenaiDto?.prompt} and if user request is related to date or month or year then Make sure to use format also. and if user request is related to every month or every year or every day like that, then MAKE SURE TO take last 10 days, years, months from july or 2024 year. MAKE SURE respond only with json data format for the graph. MAKE SURE don't respond with any other information OR Dummy data. use the data from the query result.`;
+    const graphGenPrompt = `i want to generate a graph json data format. First, define the graph type whether it is a ${Object?.keys(
+      chartData,
+    )
+      ?.map((key) => camelCaseToNormalString(key))
+      ?.join(
+        ',',
+      )}. then generate the graph JSON data format for the graph. here are the some sample data: ${JSON.stringify(chartData)} also and the data should be generated from the following data: ${JSON.stringify(resulta)}. if generated data is empty, then generate graph JSON with empty data and respond only with a JSON data format for the graph. Make sure that every information need to be change and related to user request: ${createOpenaiDto?.prompt} and if user request is related to date or month or year then Make sure to use format also. and if user request is related to every month or every year or every day like that, then MAKE SURE TO take last 10 days, years, months from july or 2024 year. MAKE SURE respond only with json data format for the graph. MAKE SURE don't respond with any other information OR Dummy data. use the data from the query result.`;
     const graphResult =
       await this.genAiProJsonModel.generateContent(graphGenPrompt);
     const graphResponse = await graphResult?.response;
