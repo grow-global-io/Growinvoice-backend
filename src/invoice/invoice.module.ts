@@ -13,5 +13,6 @@ import { MailService } from '@/mail/mail.service';
     InvoicesettingsService,
     MailService,
   ],
+  exports: [InvoiceService],
 })
 export class InvoiceModule {}

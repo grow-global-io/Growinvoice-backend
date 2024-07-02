@@ -13,12 +13,14 @@ import {
   formatCustomerBillingAddress,
   formatCustomerShippingAddress,
 } from '@shared/utils/formatAddress';
+import { InvoiceService } from '@/invoice/invoice.service';
 
 @Injectable()
 export class QuotationService {
   constructor(
     private prismaService: PrismaService,
     private quotationSetting: QuotationsettingsService,
+    private invoiceService: InvoiceService,
   ) {}
 
   async create(createQuotationDto: CreateQuotationWithProducts) {
@@ -213,6 +215,42 @@ export class QuotationService {
         status: 'Rejected',
       },
     });
+    return plainToInstance(QuotationDto, invoice);
+  }
+
+  async convertToInvoice(id: string) {
+    const quotation = await this.prismaService.quotation.findUnique({
+      where: { id },
+      include: {
+        product: true,
+      },
+    });
+    const invoice = await this.invoiceService.create({
+      invoice_number: quotation.quatation_number,
+      customer_id: quotation.customer_id,
+      date: quotation.date,
+      due_date: quotation.expiry_at,
+      is_recurring: false,
+      status: 'Draft',
+      product: quotation?.product?.map((product) => {
+        return {
+          product_id: product.product_id,
+          quantity: product.quantity,
+          tax_id: product.tax_id,
+          hsnCode_id: product.hsnCode_id,
+          price: product.price,
+          total: product.total,
+        };
+      }),
+      sub_total: quotation.sub_total,
+      total: quotation.total,
+      user_id: quotation.user_id,
+      tax_id: quotation.tax_id,
+      discountPercentage: quotation.discountPercentage,
+      notes: quotation.notes,
+      reference_number: quotation.reference_number,
+    });
+    await this.remove(id);
     return plainToInstance(QuotationDto, invoice);
   }
 }

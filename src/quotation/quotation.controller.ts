@@ -154,4 +154,16 @@ export class QuotationController {
       result: invoice,
     };
   }
+
+  @Post('convertToInvoice')
+  @ApiSuccessResponse(QuotationDto, { status: 200 })
+  async convertToInvoice(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<QuotationDto>> {
+    const invoice = await this.quotationService.convertToInvoice(id);
+    return {
+      message: 'Quotation converted to invoice successfully',
+      result: invoice,
+    };
+  }
 }
