@@ -6,5 +6,6 @@ import { PrismaService } from '@/prisma/prisma.service';
 @Module({
   controllers: [QuotationsettingsController],
   providers: [QuotationsettingsService, PrismaService],
+  exports: [QuotationsettingsService],
 })
 export class QuotationsettingsModule {}

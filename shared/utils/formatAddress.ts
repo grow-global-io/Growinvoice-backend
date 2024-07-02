@@ -1,4 +1,5 @@
 import { InvoiceWithAllDataDto } from '@/invoice/dto/invoice-with-all-data.dto';
+import { QuotationWithAllDataDto } from '@/quotation/dto/quotation-with-all-data.dto';
 
 const companyAddressExpressionsMap = {
   '{company.name}': 'invoiceData?.user?.company[0]?.name',
@@ -32,7 +33,7 @@ const customerShippingAddressExpressionsMap = {
 };
 
 export function formatCompanyAddress(
-  invoiceData: InvoiceWithAllDataDto,
+  invoiceData: InvoiceWithAllDataDto | QuotationWithAllDataDto,
   expressionString: string,
 ): string {
   if (!invoiceData) return '';
@@ -49,7 +50,7 @@ export function formatCompanyAddress(
 }
 
 export function formatCustomerBillingAddress(
-  invoiceData: InvoiceWithAllDataDto,
+  invoiceData: InvoiceWithAllDataDto | QuotationWithAllDataDto,
   expressionString: string,
 ): string {
   if (!invoiceData) return '';
@@ -68,7 +69,7 @@ export function formatCustomerBillingAddress(
 }
 
 export function formatCustomerShippingAddress(
-  invoiceData: InvoiceWithAllDataDto,
+  invoiceData: InvoiceWithAllDataDto | QuotationWithAllDataDto,
   expressionString: string,
 ): string {
   if (!invoiceData) return '';

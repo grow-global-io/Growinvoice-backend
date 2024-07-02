@@ -26,7 +26,7 @@ import {
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { Response } from 'express';
-import axios from 'axios';
+import { convertLogoToBase64 } from '@shared/utils/constants';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
@@ -125,21 +125,7 @@ export class InvoiceController {
         message: 'Invoice not found',
       });
     }
-    if (invoice?.user?.company[0]?.logo) {
-      try {
-        const imageUrl = invoice.user.company[0].logo;
-        const image = await axios.get(imageUrl, {
-          responseType: 'arraybuffer',
-        });
-        const base64Image = Buffer.from(image.data, 'binary').toString(
-          'base64',
-        );
-        invoice.user.company[0].logo = `data:image/webp;base64,${base64Image}`;
-        a.user.company[0].logo = `data:image/webp;base64,${base64Image}`;
-      } catch (error) {
-        console.error('Error fetching or converting image:', error);
-      }
-    }
+    a.user.company[0].logo = await convertLogoToBase64(a.user.company[0].logo);
     const invoiceSettingsWithFormat =
       await this.invoiceService.invoiceSettingsWithFormat(invoice);
     return res.render(

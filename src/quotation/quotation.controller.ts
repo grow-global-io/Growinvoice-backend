@@ -6,9 +6,10 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { QuotationService } from './quotation.service';
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { QuotationDto } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import {
@@ -17,6 +18,9 @@ import {
 } from './dto/create-quotation-with-products.dto';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
+import { Response } from 'express';
+import { convertLogoToBase64 } from '@shared/utils/constants';
+import { IsPublic } from '@shared/decorators/public.decorator';
 
 @ApiExtraModels(QuotationDto)
 @ApiTags('quotation')
@@ -37,13 +41,13 @@ export class QuotationController {
   }
 
   @Get()
-  findAll(@GetUser() user: User) {
-    return this.quotationService.findAll(user?.sub);
+  async findAll(@GetUser() user: User) {
+    return await this.quotationService.findAll(user?.sub);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.quotationService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return await this.quotationService.findOne(id);
   }
 
   @Patch(':id')
@@ -69,5 +73,23 @@ export class QuotationController {
     return {
       message: 'Quotation deleted successfully',
     };
+  }
+
+  @IsPublic()
+  @Get('test/:id')
+  @ApiResponse({ status: 200, type: String })
+  async test(@Param('id') id: string, @Res() res?: Response) {
+    const quotation = await this.quotationService.findQuotationTest(id);
+    const a = quotation;
+    if (!quotation) {
+      return res.status(404).json({
+        message: 'Quotation not found',
+      });
+    }
+    a.user.company[0].logo = await convertLogoToBase64(a.user.company[0].logo);
+    const quotationSettingsWithFormat =
+      await this.quotationService.quotationSettingsWithFormat(a);
+    const templateName = quotation?.template?.view ?? 'template1';
+    return res.render('quotation/' + templateName, quotationSettingsWithFormat);
   }
 }

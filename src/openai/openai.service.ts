@@ -228,4 +228,57 @@ export class OpenaiService {
     });
     return results;
   }
+
+  async getChatWithOpenAI(
+    user_id: string,
+    createOpenaiDto: RequestBodyOpenaiDto[],
+  ) {
+    const schema = fs.readFileSync('./prisma/schema.prisma', 'utf8');
+    const messages = `Prisma.js Schema is: ${schema}. i want to do a chat with you for {prompt}. respond if you require any other information frome me. if you need any other information from me then please ask me for that. OR if you want to know about any other thing then please ask me for that. once you get all the information then please RESPOND only with SQL QUERY for POSTGRESQL DB OR respond what you need. i want to create the record only for the user with ID: ${user_id}`;
+
+    const result = await this.genAiProModel.startChat({
+      history: [
+        {
+          role: 'user',
+          parts: [{ text: 'Hello' }],
+        },
+        {
+          role: 'model',
+          parts: [
+            {
+              text: 'Hello, may I know how can I help you today',
+            },
+          ],
+        },
+        {
+          role: 'user',
+          parts: [
+            { text: messages?.replace('{prompt}', createOpenaiDto[0]?.prompt) },
+          ],
+        },
+      ],
+    });
+
+    const msg = `i want to create a product with the following details:
+    name: "Product Name",
+    description: "Product Description",
+    price: 100,
+    user_id: ${user_id},
+    type: Service,
+    currencies: INR,
+    unit: MONDD`;
+    const resulta = await result?.sendMessage(msg);
+    const response = await resulta?.response;
+    console.log(response);
+    const text = response?.text();
+    const checkisSQL = text?.includes('```sql');
+    if (checkisSQL) {
+      const querySplit = text.split('```sql')[1].split('```')[0];
+      const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
+      console.log(singleLineQuery);
+      const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
+      return resulta;
+    }
+    return text;
+  }
 }

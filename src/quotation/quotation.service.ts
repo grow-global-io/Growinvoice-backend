@@ -7,10 +7,19 @@ import {
 import { plainToInstance } from 'class-transformer';
 import { Quotation, QuotationDto } from '@shared/models';
 import { QuotationWithAllDataDto } from './dto/quotation-with-all-data.dto';
+import { QuotationsettingsService } from '@/quotationsettings/quotationsettings.service';
+import {
+  formatCompanyAddress,
+  formatCustomerBillingAddress,
+  formatCustomerShippingAddress,
+} from '@shared/utils/formatAddress';
 
 @Injectable()
 export class QuotationService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private quotationSetting: QuotationsettingsService,
+  ) {}
 
   async create(createQuotationDto: CreateQuotationWithProducts) {
     const quotationDetails = await this.prismaService.quotation.create({
@@ -90,5 +99,90 @@ export class QuotationService {
       where: { id },
     });
     return plainToInstance(QuotationDto, quotation);
+  }
+
+  async findQuotationTest(id: string) {
+    const quotation = await this.prismaService.quotation.findUnique({
+      where: { id },
+      include: {
+        tax: true,
+        template: true,
+        product: {
+          include: {
+            product: {
+              include: {
+                currency: true,
+                tax: true,
+                hsnCode: true,
+              },
+            },
+          },
+        },
+        customer: {
+          include: {
+            billingAddress: {
+              include: {
+                country: true,
+                state: true,
+              },
+            },
+            shippingAddress: {
+              include: {
+                country: true,
+                state: true,
+              },
+            },
+          },
+        },
+        user: {
+          include: {
+            currency: true,
+            company: {
+              include: {
+                country: true,
+                state: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return plainToInstance(QuotationWithAllDataDto, quotation);
+  }
+
+  async quotationSettingsWithFormat(quotation: QuotationWithAllDataDto) {
+    const a = quotation;
+    const quotationSettings = await this.quotationSetting?.findOne(
+      quotation?.user?.id,
+    );
+    if (quotationSettings === null || a?.user?.id === null) {
+      a.companyAddress = '';
+      a.customerBillingAddress = '';
+      a.customerShippingAddress = '';
+    } else {
+      const companyAddress = formatCompanyAddress(
+        a,
+        quotationSettings?.companyAddressTemplate,
+      );
+      a.companyAddress = companyAddress === '<p><br></p>' ? '' : companyAddress;
+      const customerBillingAddress = formatCustomerBillingAddress(
+        a,
+        quotationSettings?.customerBillingAddressTemplate,
+      );
+      a.customerBillingAddress =
+        customerBillingAddress === '<p><br></p>' ? '' : customerBillingAddress;
+      const customerShippingAddress = formatCustomerShippingAddress(
+        a,
+        quotationSettings?.customerShippingAddressTemplate,
+      );
+      a.customerShippingAddress =
+        customerShippingAddress === '<p><br></p>'
+          ? ''
+          : customerShippingAddress;
+    }
+    return {
+      quotation: a,
+      quotationSettings,
+    };
   }
 }

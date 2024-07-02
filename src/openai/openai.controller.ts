@@ -52,4 +52,15 @@ export class OpenaiController {
   async suggestions(@GetUser() user: User, @Query('q') searchTerm?: string) {
     return await this.openaiService.suggestions(searchTerm, user?.sub);
   }
+
+  @Post('chat')
+  async chat(
+    @GetUser() user: User,
+    @Body() chatHistoryDto: RequestBodyOpenaiDto[],
+  ) {
+    return await this.openaiService.getChatWithOpenAI(
+      user?.sub,
+      chatHistoryDto,
+    );
+  }
 }
