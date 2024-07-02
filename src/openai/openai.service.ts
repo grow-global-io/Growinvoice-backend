@@ -108,7 +108,13 @@ export class OpenaiService {
       ?.map((key) => camelCaseToNormalString(key))
       ?.join(
         ',',
-      )}. then generate the graph JSON data format for the graph. here are the some sample data: ${JSON.stringify(chartData)} also and the data should be generated from the following data: ${JSON.stringify(resulta)}. if generated data is empty, then generate graph JSON with empty data and respond only with a JSON data format for the graph. Make sure that every information need to be change and related to user request: ${createOpenaiDto?.prompt} and if user request is related to date or month or year then Make sure to use format also. and if user request is related to every month or every year or every day like that, then MAKE SURE TO take last 10 days, years, months from july or 2024 year. MAKE SURE respond only with json data format for the graph. MAKE SURE don't respond with any other information OR Dummy data. use the data from the query result.`;
+      )}. then generate the graph JSON data format for the graph. here are the some sample data: 
+      for column chart with data labels: ${JSON.stringify(chartData?.columnChartWithDataLabels)},
+        for basic column chart: ${JSON.stringify(chartData?.basicColumnCharts)},
+        for stacked column chart: ${JSON.stringify(chartData?.stackedColumnCharts)},
+        for basic line chart: ${JSON.stringify(chartData?.basicLineCharts)},
+        for line chart with data labels: ${JSON.stringify(chartData?.lineChartWithDataLabels)},
+        for basic area chart: ${JSON.stringify(chartData?.simpleBasicPieCharts)}. also and the data should be generated from the following data: ${JSON.stringify(resulta)}. if generated data is empty, then generate graph JSON with empty data and respond only with a JSON data format for the graph. Make sure that every information need to be change and related to user request: ${createOpenaiDto?.prompt} and if user request is related to date or month or year then Make sure to use format also. and if user request is related to every month or every year or every day like that, then MAKE SURE TO take last 10 days, years, months from july or 2024 year. MAKE SURE respond only with json data format for the graph. MAKE SURE don't respond with any other information OR Dummy data. use the data from the query result.`;
     const graphResult =
       await this.genAiProJsonModel.generateContent(graphGenPrompt);
     const graphResponse = await graphResult?.response;
