@@ -39,17 +39,6 @@ async function bootstrap() {
     origin: '*',
   });
 
-  await app.listen(process.env.PORT || 3000, () => {
-    // wakeDyno(DYNO_URL, {
-    //   interval: 25, // Interval in minutes to wake up
-    //   logging: false, // Enable logging or not
-    //   stopTimes: 60, // Stop after 60 minutes
-    // }); // Use this function when only needing to wake a single Heroku app.
-    // wakeDynos(DYNO_URLS, {
-    //   interval: 25, // Interval in minutes to wake up
-    //   logging: false, // Enable logging or not
-    //   stopTimes: 60, // Stop after 60 minutes
-    // }); // Use this function when needing to wake multiple Heroku apps.
-  });
+  await app.listen(process.env.PORT || 3000, () => {});
 }
 bootstrap();

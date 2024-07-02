@@ -69,7 +69,7 @@ export class OpenaiService {
 
   async create(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
     const schema = fs.readFileSync('./prisma/schema.prisma', 'utf8');
-    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query for PostgreSQL that will satisfy the question. Make sure that SQL query is only for PostgreSQL db and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)). The query should be specific to the user with ID: ${user_id}. even question is related to other user's data but query should be specific to the user with ID: ${user_id} only. Make sure that the query is safe and secure. Make sure that count result is cast to a text(like: CAST(count(*) AS TEXT)). if USER request is related to date or month or year then Make sure to use date_trunc function with format.`;
+    const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query for PostgreSQL that will satisfy the question. Make sure that SQL query is only for PostgreSQL db and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)). The query should be specific to the user with ID: ${user_id}. even question is related to other user's data but query should be specific to the user with ID: ${user_id} only. Make sure that the query is safe and secure. Make sure that count result is cast to a text(like: CAST(count(*) AS TEXT)). if USER request is related to date or month or year then Make sure to use format also`;
     const result = await this.genAiProModel.generateContent(messages);
     const response = await result?.response;
     const text = response?.text();
@@ -197,7 +197,7 @@ export class OpenaiService {
     };
 
     const resulta = await this.create(createOpenaiDto, user_id);
-    const graphGenPrompt = `i want to generate a graph json data format should be same like : ${JSON.stringify(graphSample)} and the data should be generated from the following data: ${JSON.stringify(resulta)} and respond only with a JSON data format for the graph.`;
+    const graphGenPrompt = `i want to generate a graph json data format should be same like : ${JSON.stringify(graphSample)} and the data should be generated from the following data: ${JSON.stringify(resulta)} and respond only with a JSON data format for the graph. Make sure that every information need to be change and related to user request: ${createOpenaiDto?.prompt} and if user request is related to date or month or year then Make sure to use format also. and if user request is related to every month or every year or every day like that, then MAKE SURE TO take last 10 days, years, months from now. MAKE SURE respond only with json data format for the graph.`;
     const graphResult =
       await this.genAiProJsonModel.generateContent(graphGenPrompt);
     const graphResponse = await graphResult?.response;
@@ -205,6 +205,7 @@ export class OpenaiService {
     const graphSplit = graphText?.startsWith('```json')
       ? graphText.split('```json')[1].split('```')[0]
       : graphText;
+    console.log(graphSplit);
     const graphData = JSON.parse(graphSplit);
     return graphData;
   }
