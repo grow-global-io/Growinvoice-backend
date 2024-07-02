@@ -74,4 +74,14 @@ export class QuotationSettings {
     type: 'string',
   })
   customerShippingAddressTemplate: string;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+  })
+  dueNotice: number;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+  })
+  overDueNotice: number;
 }

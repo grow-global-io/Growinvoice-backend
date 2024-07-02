@@ -750,6 +750,8 @@ model QuotationSettings {
   companyAddressTemplate          String
   customerBillingAddressTemplate  String
   customerShippingAddressTemplate String
+  dueNotice                       Int
+  overDueNotice                   Int
 
   @@unique([user_id, id])
 }

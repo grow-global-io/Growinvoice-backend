@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class UpdateQuotationSettingsDto {
   @ApiProperty({
@@ -76,4 +76,20 @@ export class UpdateQuotationSettingsDto {
   @IsOptional()
   @IsString()
   customerShippingAddressTemplate?: string;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  dueNotice?: number;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  overDueNotice?: number;
 }
