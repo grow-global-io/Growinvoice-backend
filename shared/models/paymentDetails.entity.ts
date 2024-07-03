@@ -2,6 +2,7 @@ import { PaymentType } from '@prisma/client';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { Invoice } from './invoice.entity';
+import { Payments } from './payments.entity';
 
 export class PaymentDetails {
   @ApiProperty({
@@ -88,4 +89,6 @@ export class PaymentDetails {
   user?: User;
   @ApiHideProperty()
   invoice?: Invoice[];
+  @ApiHideProperty()
+  Payments?: Payments[];
 }

@@ -108,3 +108,8 @@ export * from './create-openAiHistory.dto';
 export * from './update-openAiHistory.dto';
 export * from './openAiHistory.entity';
 export * from './openAiHistory.dto';
+export * from './connect-payments.dto';
+export * from './create-payments.dto';
+export * from './update-payments.dto';
+export * from './payments.entity';
+export * from './payments.dto';

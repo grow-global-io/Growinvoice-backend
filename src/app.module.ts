@@ -23,6 +23,7 @@ import { InvoicesettingsModule } from './invoicesettings/invoicesettings.module'
 import { OpenaiModule } from './openai/openai.module';
 import { QuotationtemplateModule } from './quotationtemplate/quotationtemplate.module';
 import { QuotationsettingsModule } from './quotationsettings/quotationsettings.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { QuotationsettingsModule } from './quotationsettings/quotationsettings.m
     OpenaiModule,
     QuotationtemplateModule,
     QuotationsettingsModule,
+    PaymentsModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],

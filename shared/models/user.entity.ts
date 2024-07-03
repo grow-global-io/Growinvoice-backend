@@ -12,6 +12,7 @@ import { Quotation } from './quotation.entity';
 import { InvoiceSettings } from './invoiceSettings.entity';
 import { OpenAiHistory } from './openAiHistory.entity';
 import { QuotationSettings } from './quotationSettings.entity';
+import { Payments } from './payments.entity';
 
 export class User {
   @ApiProperty({
@@ -97,4 +98,6 @@ export class User {
   OpenAiHistory?: OpenAiHistory[];
   @ApiHideProperty()
   QuotationSettings?: QuotationSettings[];
+  @ApiHideProperty()
+  Payments?: Payments[];
 }

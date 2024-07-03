@@ -169,6 +169,8 @@ model User {
   OpenAiHistory     OpenAiHistory[]
   /// @DtoApiHidden
   QuotationSettings QuotationSettings[]
+  /// @DtoApiHidden
+  Payments          Payments[]
 }
 
 /// @@deny('read', isExist == false)
@@ -478,6 +480,8 @@ model PaymentDetails {
   user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
   invoice     Invoice[]
+  /// @DtoApiHidden
+  Payments    Payments[]
 }
 
 /// @@deny('read', isExist == false)
@@ -560,6 +564,8 @@ model Invoice {
   /// @DtoRelationIncludeId
   template_id        String?
   template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+  /// @DtoApiHidden
+  Payments           Payments[]
 }
 
 /// @@deny('read', isExist == false)
@@ -781,4 +787,40 @@ model OpenAiHistory {
   result    String
 
   @@unique([user_id, query])
+}
+
+/// @@deny('read', isExist == false)
+model Payments {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime       @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?      @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean        @default(true)
+  id                String         @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  paymentDate       DateTime       @default(now())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reference_number  String?
+  amount            Float
+  /// @DtoRelationIncludeId
+  paymentDetails_id String
+  paymentDetails    PaymentDetails @relation(fields: [paymentDetails_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes             String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  private_notes     String?
+  /// @DtoRelationIncludeId
+  user_id           String
+  user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  invoice_id        String
+  invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
 }

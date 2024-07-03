@@ -117,6 +117,7 @@ model User extends Base {
     InvoiceSettings   InvoiceSettings[]   @DtoApiHidden
     OpenAiHistory     OpenAiHistory[]     @DtoApiHidden
     QuotationSettings QuotationSettings[] @DtoApiHidden
+    Payments          Payments[]          @DtoApiHidden
 }
 
 model Company extends Base {
@@ -265,6 +266,7 @@ model PaymentDetails extends Base {
     user_id     String      @DtoRelationIncludeId
     user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
     invoice     Invoice[]   @DtoApiHidden
+    Payments    Payments[]  @DtoApiHidden
 }
 
 model InvoiceProducts extends Base {
@@ -307,6 +309,7 @@ model Invoice extends Base {
     status             String?           @DtoCreateOptional @DtoUpdateOptional @default("Draft")
     template_id        String?           @DtoRelationIncludeId
     template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+    Payments           Payments[]        @DtoApiHidden
 }
 
 
@@ -413,4 +416,19 @@ model OpenAiHistory extends Base {
     result  String
 
     @@unique([user_id, query])
+}
+
+model Payments extends Base {
+    id                String         @id @default(cuid())
+    paymentDate       DateTime       @default(now()) @DtoCreateOptional @DtoUpdateOptional
+    reference_number  String?        @DtoCreateOptional @DtoUpdateOptional
+    amount            Float
+    paymentDetails_id String         @DtoRelationIncludeId
+    paymentDetails    PaymentDetails @relation(fields: [paymentDetails_id], references: [id], onDelete: Cascade)
+    notes             String?        @DtoCreateOptional @DtoUpdateOptional
+    private_notes     String?        @DtoCreateOptional @DtoUpdateOptional
+    user_id           String         @DtoRelationIncludeId
+    user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    invoice_id        String         @DtoRelationIncludeId
+    invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
 }

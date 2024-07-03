@@ -6,6 +6,7 @@ import { PaymentDetails } from './paymentDetails.entity';
 import { InvoiceProducts } from './invoiceProducts.entity';
 import { Tax } from './tax.entity';
 import { InvoiceTemplate } from './invoiceTemplate.entity';
+import { Payments } from './payments.entity';
 
 export class Invoice {
   @ApiProperty({
@@ -138,4 +139,6 @@ export class Invoice {
     nullable: true,
   })
   template?: InvoiceTemplate | null;
+  @ApiHideProperty()
+  Payments?: Payments[];
 }
