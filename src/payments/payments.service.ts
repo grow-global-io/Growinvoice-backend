@@ -3,6 +3,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import {
   CreatePaymentsDto,
+  Payments,
   PaymentsDto,
   UpdatePaymentsDto,
 } from '@shared/models';
@@ -31,7 +32,7 @@ export class PaymentsService {
         paymentDetails: true,
       },
     });
-    return payments.map((payment) => plainToInstance(PaymentsDto, payment));
+    return payments.map((payment) => plainToInstance(Payments, payment));
   }
 
   async findOne(id: string) {
@@ -42,7 +43,7 @@ export class PaymentsService {
         paymentDetails: true,
       },
     });
-    return plainToInstance(PaymentsDto, payment);
+    return plainToInstance(Payments, payment);
   }
 
   async update(id: string, updatePaymentDto: UpdatePaymentsDto) {

@@ -10,14 +10,17 @@ import {
 import { PaymentsService } from './payments.service';
 import {
   CreatePaymentsDto,
+  Payments,
   PaymentsDto,
   UpdatePaymentsDto,
 } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 
+@ApiExtraModels(PaymentsDto)
+@ApiExtraModels(Payments)
 @ApiTags('payments')
 @Controller('payments')
 export class PaymentsController {
