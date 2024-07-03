@@ -26,6 +26,10 @@ export class PaymentsService {
   async findAll(user_id: string) {
     const payments = await this.prisma.payments.findMany({
       where: { user_id },
+      include: {
+        invoice: true,
+        paymentDetails: true,
+      },
     });
     return payments.map((payment) => plainToInstance(PaymentsDto, payment));
   }
@@ -33,6 +37,10 @@ export class PaymentsService {
   async findOne(id: string) {
     const payment = await this.prisma.payments.findUnique({
       where: { id },
+      include: {
+        invoice: true,
+        paymentDetails: true,
+      },
     });
     return plainToInstance(PaymentsDto, payment);
   }
