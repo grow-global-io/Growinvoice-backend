@@ -265,4 +265,77 @@ export class QuotationService {
     await this.remove(id);
     return plainToInstance(QuotationDto, invoice);
   }
+
+  async createQuotationPreview(
+    createQuotationDto: CreateQuotationWithProducts,
+  ) {
+    const quotationDetails: any = {
+      ...createQuotationDto,
+    };
+    if (createQuotationDto.tax_id) {
+      quotationDetails.tax = await this.prismaService.tax.findUnique({
+        where: { id: createQuotationDto.tax_id },
+      });
+    }
+    if (createQuotationDto?.product?.length > 0) {
+      quotationDetails.product = await Promise.all(
+        createQuotationDto.product.map(async (product) => {
+          const productDetails = await this.prismaService.product.findUnique({
+            where: { id: product.product_id },
+            include: {
+              currency: true,
+              tax: true,
+              hsnCode: true,
+            },
+          });
+          return {
+            ...product,
+            product: {
+              ...productDetails,
+            },
+          };
+        }),
+      );
+    }
+    if (createQuotationDto?.customer_id) {
+      quotationDetails.customer = await this.prismaService.customer.findUnique({
+        where: { id: createQuotationDto.customer_id },
+        include: {
+          billingAddress: {
+            include: {
+              country: true,
+              state: true,
+            },
+          },
+          shippingAddress: {
+            include: {
+              country: true,
+              state: true,
+            },
+          },
+        },
+      });
+    }
+    if (createQuotationDto?.user_id) {
+      quotationDetails.user = await this.prismaService.user.findUnique({
+        where: { id: createQuotationDto.user_id },
+        include: {
+          currency: true,
+          company: {
+            include: {
+              country: true,
+              state: true,
+            },
+          },
+        },
+      });
+    }
+    if (createQuotationDto?.template_id) {
+      quotationDetails.template =
+        await this.prismaService.quotationTemplate.findUnique({
+          where: { id: createQuotationDto.template_id },
+        });
+    }
+    return quotationDetails;
+  }
 }

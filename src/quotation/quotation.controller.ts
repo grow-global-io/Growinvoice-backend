@@ -166,4 +166,21 @@ export class QuotationController {
       result: invoice,
     };
   }
+
+  @IsPublic()
+  @Post('quotationPreviewFromBody')
+  @ApiResponse({ status: 200, type: String })
+  async quotationPreviewFromBody(
+    @Body() createQuotationDto: CreateQuotationWithProducts,
+    @Res() res?: Response,
+  ) {
+    const quotation =
+      await this.quotationService.createQuotationPreview(createQuotationDto);
+    const quotationSettings =
+      await this.quotationService?.quotationSettingsWithFormat(quotation);
+    return res.render(
+      'quotation/' + quotation?.template?.view ?? 'template1',
+      quotationSettings,
+    );
+  }
 }
