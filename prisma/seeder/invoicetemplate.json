@@ -1,34 +1,42 @@
 [
   {
     "name": "General 1",
-    "view": "template1"
+    "view": "template1",
+    "path": "https://growinvoice.blob.core.windows.net/growinvoice/25791ea5-be26-47a2-912e-7b5050a031e6screencapture-127-0-0-1-5500-general-3-html-2024-06-29-01_54_15.png"
   },
   {
     "name": "General 2",
-    "view": "template2"
+    "view": "template2",
+    "path": "https://growinvoice.blob.core.windows.net/growinvoice/7f036069-f58c-4c4f-a317-97f9f812e6b3screencapture-127-0-0-1-5500-general-6-html-2024-06-29-01_57_28.png"
   },
   {
     "name": "General 3",
-    "view": "template3"
+    "view": "template3",
+    "path": "https://growinvoice.blob.core.windows.net/growinvoice/ec70857c-d106-4eaf-8be3-1ef2c600ba72screencapture-127-0-0-1-5500-general-9-html-2024-06-29-01_58_57.png"
   },
   {
     "name": "General 4",
-    "view": "template4"
+    "view": "template4",
+    "path": "https://growinvoice.blob.core.windows.net/growinvoice/65edd168-74ec-4af5-afbb-de741e6d8526screencapture-127-0-0-1-5500-general-10-html-2024-06-29-02_00_43.png"
   },
   {
     "name": "General 5",
-    "view": "template5"
+    "view": "template5",
+    "path": "https://growinvoice.blob.core.windows.net/growinvoice/acfaa34b-f98a-485a-866f-0ef3f57c8f26screencapture-127-0-0-1-5500-general-11-html-2024-06-29-02_02_07.png"
   },
   {
     "name": "General 6",
-    "view": "template6"
+    "view": "template6",
+    "path": "https://growinvoice.blob.core.windows.net/growinvoice/da9d717c-cb10-4e07-8056-86c29ea46b2fscreencapture-127-0-0-1-5500-index-html-2024-06-29-02_02_52.png"
   },
   {
     "name": "Restaurant Template",
-    "view": "template7"
+    "view": "template7",
+    "path": "https://growinvoice.blob.core.windows.net/growinvoice/8fb31de8-a418-4d02-aa85-c05050413bc8screencapture-127-0-0-1-5500-restaurant-invoice-html-2024-06-29-02_03_32.png"
   },
   {
     "name": "Real Estate Template",
-    "view": "template8"
+    "view": "template8",
+    "path": "https://growinvoice.blob.core.windows.net/growinvoice/f7c169d7-c151-4ee1-b8e3-9308a296d3fdscreencapture-127-0-0-1-5500-real-estate-invoice-html-2024-06-29-02_04_14.png"
   }
 ]

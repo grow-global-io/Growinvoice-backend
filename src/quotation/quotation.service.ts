@@ -14,6 +14,8 @@ import {
   formatCustomerShippingAddress,
 } from '@shared/utils/formatAddress';
 import { InvoiceService } from '@/invoice/invoice.service';
+import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
+import { InvoicetemplateService } from '@/invoicetemplate/invoicetemplate.service';
 
 @Injectable()
 export class QuotationService {
@@ -21,6 +23,8 @@ export class QuotationService {
     private prismaService: PrismaService,
     private quotationSetting: QuotationsettingsService,
     private invoiceService: InvoiceService,
+    private invoiceSettingService: InvoicesettingsService,
+    private invoiceTemplateService: InvoicetemplateService,
   ) {}
 
   async create(createQuotationDto: CreateQuotationWithProducts) {
@@ -225,6 +229,11 @@ export class QuotationService {
         product: true,
       },
     });
+    const invoiceSettings = await this.invoiceSettingService.findFirst(
+      quotation?.user_id,
+    );
+
+    const invoiceTemplates = await this.invoiceTemplateService?.findAll();
     const invoice = await this.invoiceService.create({
       invoice_number: quotation.quatation_number,
       customer_id: quotation.customer_id,
@@ -249,6 +258,9 @@ export class QuotationService {
       discountPercentage: quotation.discountPercentage,
       notes: quotation.notes,
       reference_number: quotation.reference_number,
+      template_id:
+        invoiceSettings?.invoiceTemplateId ??
+        invoiceTemplates?.find((item) => item?.view === 'template1')?.id,
     });
     await this.remove(id);
     return plainToInstance(QuotationDto, invoice);

@@ -6,6 +6,7 @@ import { QuotationsettingsService } from '@/quotationsettings/quotationsettings.
 import { MailService } from '@/mail/mail.service';
 import { InvoiceService } from '@/invoice/invoice.service';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
+import { InvoicetemplateService } from '@/invoicetemplate/invoicetemplate.service';
 
 @Module({
   controllers: [QuotationController],
@@ -16,6 +17,7 @@ import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.servic
     MailService,
     InvoiceService,
     InvoicesettingsService,
+    InvoicetemplateService,
   ],
 })
 export class QuotationModule {}
