@@ -12,7 +12,7 @@ export class PdfgenerateService {
 
     pdfhtmlPdf
       .create(htmlData, {
-        format: 'Legal', // Adjusted format to A4
+        format: 'A4', // Adjusted format to A4
         orientation: 'portrait',
       })
       .toBuffer((err, buffer) => {
