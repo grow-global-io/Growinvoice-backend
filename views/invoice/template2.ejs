@@ -37,8 +37,7 @@
           <div class="tm_invoice_info tm_mb20">
             <div class="tm_invoice_seperator tm_gray_bg"></div>
             <div class="tm_invoice_info_list">
-              <p class="tm_invoice_number tm_m0">Invoice No: <b class="tm_primary_color">#INV-<%=
-                    invoice?.invoice_number %></b></p>
+              <p class="tm_invoice_number tm_m0">Invoice No: <b class="tm_primary_color">#<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %></b></p>
               <p class="tm_invoice_date tm_m0">Date: <b class="tm_primary_color">
                   <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %>
                 </b></p>
@@ -48,18 +47,26 @@
             <div class="tm_invoice_left">
               <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
               <p>
+                <% if (invoice?.companyAddress ==="") { %>
                 <b style="text-transform: capitalize;">
                   <%= invoice?.user?.company[0]?.name %>
                 </b><br>
                 <%= invoice?.user?.company[0]?.address %><br>
                 <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
-                        invoice?.user?.company[0]?.country?.name %><br>
+                          invoice?.user?.company[0]?.country?.name %><br>
                 <%= invoice?.user?.company[0]?.zip %><br>
+
+                <% } else { %>
+
+                <%- invoice?.companyAddress %>
+
+                <% }  %>
               </p>
             </div>
             <div class="tm_invoice_right tm_text_right">
               <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
               <p>
+                <% if (invoice?.customerBillingAddress ==="") { %>
                 <b style="text-transform: capitalize;">
                   <%= invoice?.customer?.name %>
                 </b><br>
@@ -67,6 +74,11 @@
                 <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
                 <%= invoice?.customer?.billingAddress?.country?.name %><br>
                 <%= invoice?.customer?.billingAddress?.zip %><br>
+                <% } else { %>
+
+                <%- invoice?.customerBillingAddress %>
+
+                <% }  %>
               </p>
             </div>
           </div>
@@ -95,11 +107,11 @@
                       <td class="tm_width_1">
                         <%= product?.quantity %>
                       </td>
-                      <td class="tm_width_2">
-                        <%= product?.hsnCode %>
+                      <td class="tm_width_1">
+                        <%= product?.product?.hsnCode?.code %>
                       </td>
                       <td class="tm_width_1">
-                        <%= product?.tax %>%
+                        <%= product?.product?.tax?.percentage %>%
                       </td>
                       <td class="tm_width_3">
                         <%= product?.product?.currency?.symbol %><%= product?.product?.price %>
@@ -146,7 +158,7 @@
                                   invoice?.discountPercentage %>%)</span></td>
                       <td class="tm_width_3 tm_primary_color tm_text_right">
                         <%= invoice?.user?.currency?.symbol %>
-                        <%= (invoice?.discountPercentage / 100) * invoice?.sub_total %>
+                        <%= ((invoice?.discountPercentage / 100) * invoice?.sub_total).toFixed(2) %>
                       </td>
                     </tr>
                     <% } %>
@@ -304,13 +316,20 @@
                 <td>Recipient's Details</td>
                 <td>
                   <p>
+                    <% if (invoice?.companyAddress ==="") { %>
                     <b style="text-transform: capitalize;">
                       <%= invoice?.user?.company[0]?.name %>
                     </b><br>
                     <%= invoice?.user?.company[0]?.address %><br>
                     <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
-                            invoice?.user?.company[0]?.country?.name %><br>
+                          invoice?.user?.company[0]?.country?.name %><br>
                     <%= invoice?.user?.company[0]?.zip %><br>
+
+                    <% } else { %>
+
+                    <%- invoice?.companyAddress %>
+
+                    <% }  %>
                   </p>
                 </td>
               </tr>
@@ -318,14 +337,20 @@
                 <td>Payer's Name & Address</td>
                 <td>
                   <p>
+                    <% if (invoice?.customerBillingAddress ==="") { %>
                     <b style="text-transform: capitalize;">
                       <%= invoice?.customer?.name %>
                     </b><br>
                     <%= invoice?.customer?.billingAddress?.address %><br>
-                    <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name
-                          %>,
+                    <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
                     <%= invoice?.customer?.billingAddress?.country?.name %><br>
                     <%= invoice?.customer?.billingAddress?.zip %><br>
+                    <% } else { %>
+
+                    <%- invoice?.customerBillingAddress %>
+
+                    <% }  %>
+
                   </p>
                 </td>
               </tr>
@@ -362,8 +387,7 @@
           </div>
           <div class="row">
             <div class="col">
-              The payment will be cleared for the recipient in accordance with the General items for payment
-              transmission and only on the basis of the account number given by the payer.
+              <%- invoiceSettings?.footer ?? "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer." %>
             </div>
           </div>
         </div>
