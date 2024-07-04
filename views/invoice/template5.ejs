@@ -30,6 +30,7 @@
             </div>
             <div class="tm_invoice_right">
               <div class="tm_head_address tm_white_color">
+                <% if (invoice?.customerBillingAddress ==="") { %>
                 <b style="text-transform: capitalize;">
                   <%= invoice?.customer?.name %>
                 </b><br>
@@ -37,6 +38,11 @@
                 <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
                 <%= invoice?.customer?.billingAddress?.country?.name %><br>
                 <%= invoice?.customer?.billingAddress?.zip %><br>
+                <% } else { %>
+
+                <%- invoice?.customerBillingAddress %>
+
+                <% }  %>
               </div>
             </div>
             <div class="tm_primary_color tm_text_uppercase tm_watermark_title tm_white_color">Invoice</div>
@@ -45,17 +51,24 @@
             <div class="tm_invoice_info_left tm_gray_bg">
               <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
               <p class="tm_mb0">
-                <b style="text-transform: capitalize;">
-                  <%= invoice?.user?.company[0]?.name %>
-                </b><br>
-                <%= invoice?.user?.company[0]?.address %><br>
-                <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
-                        invoice?.user?.company[0]?.country?.name %><br>
-                <%= invoice?.user?.company[0]?.zip %><br>
+                  <% if (invoice?.companyAddress ==="") { %>
+                  <b style="text-transform: capitalize;">
+                    <%= invoice?.user?.company[0]?.name %>
+                  </b><br>
+                  <%= invoice?.user?.company[0]?.address %><br>
+                  <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
+                          invoice?.user?.company[0]?.country?.name %><br>
+                  <%= invoice?.user?.company[0]?.zip %><br>
+
+                  <% } else { %>
+
+                  <%- invoice?.companyAddress %>
+
+                  <% }  %>
               </p>
             </div>
             <div class="tm_invoice_info_right tm_text_right">
-              <p class="tm_invoice_number tm_m0">Invoice No: <b class="tm_primary_color">#INV-<%= invoice?.invoice_number %></b></p>
+              <p class="tm_invoice_number tm_m0">Invoice No: <b class="tm_primary_color">#<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %></b></p>
               <p class="tm_invoice_date tm_m0">Date: <b class="tm_primary_color"><%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %></b></p>
             </div>
           </div>
@@ -66,14 +79,16 @@
                   <table class="tm_gray_bg">
                     <thead>
                       <tr>
-                        <th class="tm_width_5 tm_semi_bold tm_white_color tm_accent_bg">
-                          Description</th>
+                        <th class="tm_width_3 tm_semi_bold tm_white_color tm_accent_bg">
+                          Item</th>
                         <th class="tm_width_1 tm_semi_bold tm_white_color tm_accent_bg tm_border_left">
                           Qty</th>
+                        <th class="tm_width_1 tm_semi_bold tm_white_color tm_accent_bg tm_border_left">
+                          HSN</th>
+                        <th class="tm_width_1 tm_semi_bold tm_white_color tm_accent_bg tm_border_left">
+                          Tax(%)</th>
                         <th class="tm_width_2 tm_semi_bold tm_white_color tm_accent_bg tm_border_left">
                           Price</th>
-                        <th class="tm_width_2 tm_semi_bold tm_white_color tm_accent_bg tm_border_left">
-                          Discount</th>
                         <th class="tm_width_2 tm_semi_bold tm_white_color tm_accent_bg tm_border_left tm_text_right">
                           Total</th>
                       </tr>
@@ -81,18 +96,21 @@
                     <tbody>
                       <% invoice?.product?.forEach(product=> { %>
                       <tr>
-                        <td class="tm_width_5">
+                        <td class="tm_width_3">
                           <%= product?.product?.name %>
                         </td>
                         <td class="tm_width_1 tm_border_left">
-                          <%= product?.product?.description %>
+                          <%= product?.quantity %>
+                        </td>
+                        <td class="tm_width_1 tm_border_left">
+                          <%= product?.product?.hsnCode?.code %>
+                        </td>
+                        <td class="tm_width_1 tm_border_left">
+                          <%= product?.product?.tax?.percentage %>%
                         </td>
                         <td class="tm_width_2 tm_border_left">
                           <%= product?.product?.currency?.symbol %>
                           <%= product?.product?.price %>
-                        </td>
-                        <td class="tm_width_2 tm_border_left">
-                          <%= product?.quantity %>
                         </td>
                         <td class="tm_width_2 tm_border_left tm_text_right">
                           <%= product?.product?.currency?.symbol %>
@@ -125,7 +143,7 @@
                               invoice?.tax?.percentage %>%)</span></td>
                         <td class="tm_width_3 tm_primary_color tm_text_right">
                           <%= invoice?.user?.currency?.symbol %>
-                          <%= (invoice?.tax?.percentage / 100) * invoice?.sub_total %>
+                          <%= ((invoice?.tax?.percentage / 100) * invoice?.sub_total).toFixed(2) %>
                         </td>
                       </tr>
                       <% } %>
@@ -136,7 +154,7 @@
                                   invoice?.discountPercentage %>%)</span></td>
                         <td class="tm_width_3 tm_primary_color tm_text_right">
                           <%= invoice?.user?.currency?.symbol %>
-                          <%= (invoice?.discountPercentage / 100) * invoice?.sub_total %>
+                           <%= ((invoice?.discountPercentage / 100) * invoice?.sub_total).toFixed(2) %>
                         </td>
                       </tr>
                       <% } %>
@@ -293,29 +311,47 @@
                   <tr>
                     <td>Recipient's Details</td>
                     <td>
-                      <p>
-                        <b style="text-transform: capitalize;">
-                          <%= invoice?.user?.company[0]?.name %>
-                        </b><br>
-                        <%= invoice?.user?.company[0]?.address %><br>
-                        <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
-                        invoice?.user?.company[0]?.country?.name %><br>
-                        <%= invoice?.user?.company[0]?.zip %><br>
-                      </p>
+                      <div class="templateTo">
+                        <p>
+                          <% if (invoice?.companyAddress ==="") { %>
+                          <b style="text-transform: capitalize;">
+                            <%= invoice?.user?.company[0]?.name %>
+                          </b><br>
+                          <%= invoice?.user?.company[0]?.address %><br>
+                          <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
+                          invoice?.user?.company[0]?.country?.name %><br>
+                          <%= invoice?.user?.company[0]?.zip %><br>
+
+                          <% } else { %>
+
+                          <%- invoice?.companyAddress %>
+
+                          <% }  %>
+                        </p>
+                      </div>
                     </td>
                   </tr>
                   <tr>
                     <td>Payer's Name & Address</td>
                     <td>
-                      <p>
-                        <b style="text-transform: capitalize;">
-                          <%= invoice?.customer?.name %>
-                        </b><br>
-                        <%= invoice?.customer?.billingAddress?.address %><br>
-                        <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
-                        <%= invoice?.customer?.billingAddress?.country?.name %><br>
-                        <%= invoice?.customer?.billingAddress?.zip %><br>
-                      </p>
+                      <div class="templateTo">
+                        <p>
+                          <% if (invoice?.customerBillingAddress ==="") { %>
+                          <b style="text-transform: capitalize;">
+                            <%= invoice?.customer?.name %>
+                          </b><br>
+                          <%= invoice?.customer?.billingAddress?.address %><br>
+                          <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
+                          <%= invoice?.customer?.billingAddress?.country?.name %><br>
+                          <%= invoice?.customer?.billingAddress?.zip %><br>
+                          <% } else { %>
+
+                          <%- invoice?.customerBillingAddress %>
+
+                          <% }  %>
+
+                        </p>
+                      </div>
                     </td>
                   </tr>
                   <tr>
@@ -351,11 +387,10 @@
               </div>
               <div class="row">
                 <div class="col">
-                  The payment will be cleared for the recipient in accordance with the General items for payment
-                  transmission and only on the basis of the account number given by the payer.
+                  <%- invoiceSettings?.footer ?? "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer." %>
                 </div>
               </div>
-            </div>
+              </div>
             <div class="tm_padd_15_20 tm_gray_bg">
               <p class="tm_mb5"><b class="tm_primary_color">Terms & Conditions:</b></p>
               <ul class="tm_m0 tm_note_list">
