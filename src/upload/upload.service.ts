@@ -25,7 +25,7 @@ export class UploadService {
       this.constainerName,
     );
     const blockBlobClient = containerClient.getBlockBlobClient(
-      uuid() + file.originalname,
+      uuid() + file.originalname.replace('.gz', ''),
     );
 
     let fileBuffer = file.buffer;
