@@ -11,14 +11,20 @@ export class PdfgenerateService {
     const htmlData = htmla?.data;
 
     return new Promise((resolve, reject) => {
-      pdfhtmlPdf.create(htmlData, {}).toStream((err, stream) => {
-        if (err) {
-          reject(err);
-        } else {
-          stream.pipe(res);
-          resolve(stream);
-        }
-      });
+      pdfhtmlPdf
+        .create(htmlData, {
+          childProcessOptions: {
+            detached: true,
+          },
+        })
+        .toStream((err, stream) => {
+          if (err) {
+            reject(err);
+          } else {
+            stream.pipe(res);
+            resolve(stream);
+          }
+        });
     });
   }
 }
