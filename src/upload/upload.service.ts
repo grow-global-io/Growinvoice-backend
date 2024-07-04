@@ -24,8 +24,8 @@ export class UploadService {
     const containerClient = blobServiceClient.getContainerClient(
       this.constainerName,
     );
-    const blockBlobClient = containerClient.getBlockBlobClient(
-      uuid() + file.originalname.replace('.gz', ''),
+    let blockBlobClient = containerClient.getBlockBlobClient(
+      uuid() + file.originalname,
     );
 
     let fileBuffer = file.buffer;
@@ -35,6 +35,8 @@ export class UploadService {
     ) {
       try {
         fileBuffer = await this.gunzip(file.buffer);
+        const fileName = file.originalname.replace('.gz', '');
+        blockBlobClient = containerClient.getBlockBlobClient(uuid() + fileName);
       } catch (error) {
         throw new Error('Failed to decompress gzip file');
       }
