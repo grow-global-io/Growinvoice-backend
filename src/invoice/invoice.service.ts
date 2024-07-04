@@ -358,9 +358,14 @@ export class InvoiceService {
   }
 
   async statusToPaid(id: string) {
+    const invoice = await this.prismaService.invoice.findUnique({
+      where: { id },
+    });
     return await this.prismaService.invoice.update({
       where: { id },
       data: {
+        due_amount: 0,
+        paid_amount: invoice.total,
         status: 'Paid',
         paid_status: 'Paid',
       },
@@ -368,9 +373,14 @@ export class InvoiceService {
   }
 
   async statusToUnpaid(id: string) {
+    const invoice = await this.prismaService.invoice.findUnique({
+      where: { id },
+    });
     return await this.prismaService.invoice.update({
       where: { id },
       data: {
+        due_amount: invoice.total,
+        paid_amount: 0,
         status: 'Unpaid',
         paid_status: 'Unpaid',
       },

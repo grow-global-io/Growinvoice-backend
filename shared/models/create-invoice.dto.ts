@@ -109,6 +109,20 @@ export class CreateInvoiceDto {
   })
   @IsNotEmpty()
   @IsNumber()
+  due_amount: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+  })
+  @IsNotEmpty()
+  @IsNumber()
+  paid_amount: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+  })
+  @IsNotEmpty()
+  @IsNumber()
   total: number;
   @ApiProperty({
     type: 'string',

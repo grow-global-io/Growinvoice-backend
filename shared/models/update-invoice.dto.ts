@@ -116,6 +116,22 @@ export class UpdateInvoiceDto {
   })
   @IsOptional()
   @IsNumber()
+  due_amount?: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
+  paid_amount?: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber()
   total?: number;
   @ApiProperty({
     type: 'string',
