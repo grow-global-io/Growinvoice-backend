@@ -52,6 +52,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "phantomjs": "^2.1.7",
     "prisma": "^5.14.0",
     "prisma-paginate": "^5.2.1",
     "puppeteer": "^22.12.1",
