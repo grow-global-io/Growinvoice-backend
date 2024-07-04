@@ -568,6 +568,9 @@ model Invoice {
   template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
   /// @DtoApiHidden
   Payments           Payments[]
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  template_url       String?
 }
 
 /// @@deny('read', isExist == false)
@@ -705,6 +708,9 @@ model Quotation {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   status             String?             @default("Draft")
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  template_url       String?
 }
 
 /// @@deny('read', isExist == false)

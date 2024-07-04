@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Product" ALTER COLUMN "hsnCode_id" DROP NOT NULL,
-ALTER COLUMN "tax_id" DROP NOT NULL;

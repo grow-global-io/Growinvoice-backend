@@ -112,4 +112,12 @@ export class CreateQuotationDto {
   @IsOptional()
   @IsString()
   status?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  template_url?: string | null;
 }

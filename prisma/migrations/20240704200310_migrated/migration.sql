@@ -82,7 +82,7 @@ CREATE TABLE "HSNCode" (
     "isExist" BOOLEAN NOT NULL DEFAULT true,
     "id" TEXT NOT NULL,
     "code" TEXT NOT NULL,
-    "tax" DOUBLE PRECISION NOT NULL,
+    "tax_id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
 
     CONSTRAINT "HSNCode_pkey" PRIMARY KEY ("id")
@@ -125,8 +125,8 @@ CREATE TABLE "Product" (
     "type" "ProductType" NOT NULL,
     "currency_id" TEXT NOT NULL,
     "unit_id" TEXT NOT NULL,
-    "hsnCode_id" TEXT NOT NULL,
-    "tax_id" TEXT NOT NULL,
+    "hsnCode_id" TEXT,
+    "tax_id" TEXT,
     "user_id" TEXT NOT NULL,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
@@ -183,8 +183,8 @@ CREATE TABLE "Customer" (
     "isExist" BOOLEAN NOT NULL DEFAULT true,
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "display_name" TEXT,
-    "email" TEXT,
+    "display_name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "phone" TEXT,
     "website" TEXT,
     "option" "CustomerOption" NOT NULL,
@@ -227,8 +227,8 @@ CREATE TABLE "InvoiceProducts" (
     "invoice_id" TEXT NOT NULL,
     "product_id" TEXT NOT NULL,
     "quantity" DOUBLE PRECISION NOT NULL,
-    "tax" DOUBLE PRECISION,
-    "hsnCode" DOUBLE PRECISION,
+    "tax_id" TEXT,
+    "hsnCode_id" TEXT,
     "price" DOUBLE PRECISION NOT NULL,
     "total" DOUBLE PRECISION NOT NULL,
 
@@ -245,19 +245,58 @@ CREATE TABLE "Invoice" (
     "user_id" TEXT NOT NULL,
     "invoice_number" TEXT NOT NULL,
     "reference_number" TEXT,
-    "date" TEXT NOT NULL,
-    "due_date" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "due_date" TIMESTAMP(3) NOT NULL,
     "is_recurring" BOOLEAN NOT NULL,
     "recurring" "InvoiceRecurring",
-    "paymentId" TEXT NOT NULL,
+    "paymentId" TEXT,
     "notes" TEXT,
     "sub_total" DOUBLE PRECISION NOT NULL,
     "tax_id" TEXT,
     "discountPercentage" DOUBLE PRECISION,
+    "due_amount" DOUBLE PRECISION NOT NULL,
+    "paid_amount" DOUBLE PRECISION NOT NULL,
     "total" DOUBLE PRECISION NOT NULL,
     "paid_status" "paidStatus" NOT NULL DEFAULT 'Unpaid',
+    "status" TEXT DEFAULT 'Draft',
+    "template_id" TEXT,
+    "template_url" TEXT,
 
     CONSTRAINT "Invoice_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "invoiceTemplate" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+    "isExist" BOOLEAN NOT NULL DEFAULT true,
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "view" TEXT NOT NULL,
+    "path" TEXT,
+
+    CONSTRAINT "invoiceTemplate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "InvoiceSettings" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+    "isExist" BOOLEAN NOT NULL DEFAULT true,
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "invoiceTemplateId" TEXT NOT NULL,
+    "invoicePrefix" TEXT NOT NULL,
+    "autoArchive" BOOLEAN NOT NULL DEFAULT false,
+    "footer" TEXT,
+    "notes" TEXT,
+    "dueNotice" INTEGER NOT NULL,
+    "overDueNotice" INTEGER NOT NULL,
+    "companyAddressTemplate" TEXT NOT NULL,
+    "customerBillingAddressTemplate" TEXT NOT NULL,
+    "customerShippingAddressTemplate" TEXT NOT NULL,
+
+    CONSTRAINT "InvoiceSettings_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -269,8 +308,8 @@ CREATE TABLE "QuotationProducts" (
     "quotation_id" TEXT NOT NULL,
     "product_id" TEXT NOT NULL,
     "quantity" DOUBLE PRECISION NOT NULL,
-    "tax" DOUBLE PRECISION,
-    "hsnCode" DOUBLE PRECISION,
+    "tax_id" TEXT,
+    "hsnCode_id" TEXT,
     "price" DOUBLE PRECISION NOT NULL,
     "total" DOUBLE PRECISION NOT NULL,
 
@@ -287,20 +326,23 @@ CREATE TABLE "Quotation" (
     "user_id" TEXT NOT NULL,
     "quatation_number" TEXT NOT NULL,
     "reference_number" TEXT,
-    "date" TEXT NOT NULL,
-    "expiry_at" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "expiry_at" TIMESTAMP(3) NOT NULL,
     "notes" TEXT,
     "private_notes" TEXT,
     "sub_total" DOUBLE PRECISION NOT NULL,
     "tax_id" TEXT,
     "discountPercentage" DOUBLE PRECISION,
     "total" DOUBLE PRECISION NOT NULL,
+    "template_id" TEXT,
+    "status" TEXT DEFAULT 'Draft',
+    "template_url" TEXT,
 
     CONSTRAINT "Quotation_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "invoiceTemplate" (
+CREATE TABLE "QuotationTemplate" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
     "isExist" BOOLEAN NOT NULL DEFAULT true,
@@ -309,7 +351,60 @@ CREATE TABLE "invoiceTemplate" (
     "view" TEXT NOT NULL,
     "path" TEXT,
 
-    CONSTRAINT "invoiceTemplate_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "QuotationTemplate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "QuotationSettings" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+    "isExist" BOOLEAN NOT NULL DEFAULT true,
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "quotationTemplateId" TEXT NOT NULL,
+    "quotationPrefix" TEXT NOT NULL,
+    "autoArchive" BOOLEAN NOT NULL DEFAULT false,
+    "autoConvert" BOOLEAN NOT NULL DEFAULT false,
+    "footer" TEXT,
+    "notes" TEXT,
+    "companyAddressTemplate" TEXT NOT NULL,
+    "customerBillingAddressTemplate" TEXT NOT NULL,
+    "customerShippingAddressTemplate" TEXT NOT NULL,
+    "dueNotice" INTEGER NOT NULL,
+    "overDueNotice" INTEGER NOT NULL,
+
+    CONSTRAINT "QuotationSettings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "OpenAiHistory" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+    "isExist" BOOLEAN NOT NULL DEFAULT true,
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "query" TEXT NOT NULL,
+    "result" TEXT NOT NULL,
+
+    CONSTRAINT "OpenAiHistory_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Payments" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+    "isExist" BOOLEAN NOT NULL DEFAULT true,
+    "id" TEXT NOT NULL,
+    "paymentDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "reference_number" TEXT,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "paymentDetails_id" TEXT NOT NULL,
+    "notes" TEXT,
+    "private_notes" TEXT,
+    "user_id" TEXT NOT NULL,
+    "invoice_id" TEXT NOT NULL,
+
+    CONSTRAINT "Payments_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -317,6 +412,15 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Company_user_id_key" ON "Company"("user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "InvoiceSettings_user_id_id_key" ON "InvoiceSettings"("user_id", "id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "QuotationSettings_user_id_id_key" ON "QuotationSettings"("user_id", "id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "OpenAiHistory_user_id_query_key" ON "OpenAiHistory"("user_id", "query");
 
 -- AddForeignKey
 ALTER TABLE "State" ADD CONSTRAINT "State_country_id_fkey" FOREIGN KEY ("country_id") REFERENCES "Country"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -332,6 +436,9 @@ ALTER TABLE "Company" ADD CONSTRAINT "Company_state_id_fkey" FOREIGN KEY ("state
 
 -- AddForeignKey
 ALTER TABLE "Company" ADD CONSTRAINT "Company_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HSNCode" ADD CONSTRAINT "HSNCode_tax_id_fkey" FOREIGN KEY ("tax_id") REFERENCES "Tax"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "HSNCode" ADD CONSTRAINT "HSNCode_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -391,6 +498,12 @@ ALTER TABLE "InvoiceProducts" ADD CONSTRAINT "InvoiceProducts_invoice_id_fkey" F
 ALTER TABLE "InvoiceProducts" ADD CONSTRAINT "InvoiceProducts_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "InvoiceProducts" ADD CONSTRAINT "InvoiceProducts_tax_id_fkey" FOREIGN KEY ("tax_id") REFERENCES "Tax"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "InvoiceProducts" ADD CONSTRAINT "InvoiceProducts_hsnCode_id_fkey" FOREIGN KEY ("hsnCode_id") REFERENCES "HSNCode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Invoice" ADD CONSTRAINT "Invoice_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "Customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -403,10 +516,25 @@ ALTER TABLE "Invoice" ADD CONSTRAINT "Invoice_paymentId_fkey" FOREIGN KEY ("paym
 ALTER TABLE "Invoice" ADD CONSTRAINT "Invoice_tax_id_fkey" FOREIGN KEY ("tax_id") REFERENCES "Tax"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Invoice" ADD CONSTRAINT "Invoice_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "invoiceTemplate"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "InvoiceSettings" ADD CONSTRAINT "InvoiceSettings_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "InvoiceSettings" ADD CONSTRAINT "InvoiceSettings_invoiceTemplateId_fkey" FOREIGN KEY ("invoiceTemplateId") REFERENCES "invoiceTemplate"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "QuotationProducts" ADD CONSTRAINT "QuotationProducts_quotation_id_fkey" FOREIGN KEY ("quotation_id") REFERENCES "Quotation"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "QuotationProducts" ADD CONSTRAINT "QuotationProducts_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "QuotationProducts" ADD CONSTRAINT "QuotationProducts_tax_id_fkey" FOREIGN KEY ("tax_id") REFERENCES "Tax"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "QuotationProducts" ADD CONSTRAINT "QuotationProducts_hsnCode_id_fkey" FOREIGN KEY ("hsnCode_id") REFERENCES "HSNCode"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Quotation" ADD CONSTRAINT "Quotation_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "Customer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -416,3 +544,24 @@ ALTER TABLE "Quotation" ADD CONSTRAINT "Quotation_user_id_fkey" FOREIGN KEY ("us
 
 -- AddForeignKey
 ALTER TABLE "Quotation" ADD CONSTRAINT "Quotation_tax_id_fkey" FOREIGN KEY ("tax_id") REFERENCES "Tax"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Quotation" ADD CONSTRAINT "Quotation_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "QuotationTemplate"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "QuotationSettings" ADD CONSTRAINT "QuotationSettings_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "QuotationSettings" ADD CONSTRAINT "QuotationSettings_quotationTemplateId_fkey" FOREIGN KEY ("quotationTemplateId") REFERENCES "QuotationTemplate"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "OpenAiHistory" ADD CONSTRAINT "OpenAiHistory_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payments" ADD CONSTRAINT "Payments_paymentDetails_id_fkey" FOREIGN KEY ("paymentDetails_id") REFERENCES "PaymentDetails"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payments" ADD CONSTRAINT "Payments_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Payments" ADD CONSTRAINT "Payments_invoice_id_fkey" FOREIGN KEY ("invoice_id") REFERENCES "Invoice"("id") ON DELETE CASCADE ON UPDATE CASCADE;

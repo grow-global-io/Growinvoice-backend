@@ -151,4 +151,9 @@ export class Invoice {
   template?: InvoiceTemplate | null;
   @ApiHideProperty()
   Payments?: Payments[];
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  template_url: string | null;
 }

@@ -150,4 +150,12 @@ export class UpdateInvoiceDto {
   @IsOptional()
   @IsString()
   template_id?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  template_url?: string | null;
 }

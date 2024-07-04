@@ -88,4 +88,9 @@ export class QuotationDto {
     nullable: true,
   })
   status: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  template_url: string | null;
 }

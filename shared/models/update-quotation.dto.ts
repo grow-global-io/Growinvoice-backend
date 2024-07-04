@@ -113,4 +113,12 @@ export class UpdateQuotationDto {
   @IsOptional()
   @IsString()
   status?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  template_url?: string | null;
 }

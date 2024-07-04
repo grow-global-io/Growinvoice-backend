@@ -312,6 +312,7 @@ model Invoice extends Base {
     template_id        String?           @DtoRelationIncludeId
     template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
     Payments           Payments[]        @DtoApiHidden
+    template_url       String?           @DtoCreateOptional @DtoUpdateOptional
 }
 
 
@@ -379,6 +380,7 @@ model Quotation extends Base {
     template_id        String?             @DtoRelationIncludeId
     template           QuotationTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
     status             String?             @DtoCreateOptional @DtoUpdateOptional @default("Draft")
+    template_url       String?             @DtoCreateOptional @DtoUpdateOptional
 }
 
 model QuotationTemplate extends Base {
