@@ -18,15 +18,9 @@ export class PdfgenerateController {
   @Get('testpuppeteer')
   async testpuppeteer(@Res() res?: Response) {
     const pdf = await this.pdfgenerateService.createPdfInOneFile();
-    res.set({
-      // pdf
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=pdf.pdf`,
-      // prevent cache
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      Pragma: 'no-cache',
-      Expires: 0,
-    });
-    res.end(pdf);
+    res.setHeader('Content-disposition', 'attachment; filename=chart.pdf');
+    res.setHeader('Content-type', 'application/pdf');
+
+    res.send(pdf);
   }
 }
