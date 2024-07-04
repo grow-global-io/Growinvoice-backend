@@ -16,8 +16,17 @@ export class PdfgenerateController {
 
   @IsPublic()
   @Get('testpuppeteer')
-  async testpuppeteer() {
-    const pdf = await this.pdfgenerateService.createWithPuppeteer();
-    return pdf;
+  async testpuppeteer(@Res() res?: Response) {
+    const pdf = await this.pdfgenerateService.createPdfInOneFile();
+    res.set({
+      // pdf
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=pdf.pdf`,
+      // prevent cache
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      Pragma: 'no-cache',
+      Expires: 0,
+    });
+    res.end(pdf);
   }
 }

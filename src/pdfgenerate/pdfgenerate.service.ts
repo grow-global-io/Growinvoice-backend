@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import * as pdfhtmlPdf from 'html-pdf';
-import puppeteer from 'puppeteer';
+import { createPdf } from '@saemhco/nestjs-html-pdf';
+import nodeHtmlToImage from 'node-html-to-image';
 
 @Injectable()
 export class PdfgenerateService {
@@ -29,19 +30,39 @@ export class PdfgenerateService {
     });
   }
 
-  async createWithPuppeteer() {
-    const browser = await puppeteer.launch({
-      ignoreDefaultArgs: ['--disable-extensions'],
-    });
-    const page = await browser.newPage();
-    await page.goto(
+  async createWithJspdf() {
+    const htmla = await axios.get(
       'https://growinvoice-94ee0dd2031b.herokuapp.com/api/invoice/test/cly5pbjbu0005emyec2tfxqn4',
-      {
-        waitUntil: 'networkidle0',
-      },
     );
-    const pdf = await page.pdf();
-    await browser.close();
-    return pdf;
+    const htmlData = htmla?.data;
+    return createPdf(htmlData);
+  }
+
+  async generateImage(html: string) {
+    const image = await nodeHtmlToImage({
+      html: html.toString(),
+      puppeteerArgs: {
+        args: [
+          '--disable-gpu',
+          '--no-sandbox',
+          '--lang=en-US',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+        ],
+      },
+    });
+
+    return await image;
+  }
+
+  async createPdfInOneFile() {
+    const htmla = await axios.get(
+      'https://growinvoice-94ee0dd2031b.herokuapp.com/api/invoice/test/cly5pbjbu0005emyec2tfxqn4',
+    );
+    const htmlData = htmla?.data;
+
+    const buffer2 = await this.generateImage(htmlData);
+
+    return buffer2;
   }
 }
