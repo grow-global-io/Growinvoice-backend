@@ -118,6 +118,16 @@ export class Invoice {
     type: 'number',
     format: 'float',
   })
+  due_amount: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+  })
+  paid_amount: number;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+  })
   total: number;
   @ApiProperty({
     enum: paidStatus,

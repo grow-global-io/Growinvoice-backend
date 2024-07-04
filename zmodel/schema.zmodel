@@ -304,6 +304,8 @@ model Invoice extends Base {
     tax_id             String?           @DtoRelationIncludeId
     tax                Tax?              @relation(fields: [tax_id], references: [id], onDelete: SetNull)
     discountPercentage Float?            @DtoCreateOptional @DtoUpdateOptional
+    due_amount         Float
+    paid_amount        Float
     total              Float
     paid_status        paidStatus        @default(Unpaid)
     status             String?           @DtoCreateOptional @DtoUpdateOptional @default("Draft")

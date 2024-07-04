@@ -556,6 +556,8 @@ model Invoice {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   discountPercentage Float?
+  due_amount         Float
+  paid_amount        Float
   total              Float
   paid_status        paidStatus        @default(Unpaid)
   /// @DtoCreateOptional

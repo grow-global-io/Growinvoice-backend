@@ -258,6 +258,8 @@ export class QuotationService {
       discountPercentage: quotation.discountPercentage,
       notes: quotation.notes,
       reference_number: quotation.reference_number,
+      due_amount: quotation.total,
+      paid_amount: 0,
       template_id:
         invoiceSettings?.invoiceTemplateId ??
         invoiceTemplates?.find((item) => item?.view === 'template1')?.id,
