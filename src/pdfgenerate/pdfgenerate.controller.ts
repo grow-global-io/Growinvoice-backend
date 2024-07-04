@@ -13,4 +13,11 @@ export class PdfgenerateController {
     const pdf = await this.pdfgenerateService.createWithHtmlPdf(res);
     return pdf;
   }
+
+  @IsPublic()
+  @Get('testpuppeteer')
+  async testpuppeteer() {
+    const pdf = await this.pdfgenerateService.createWithPuppeteer();
+    return pdf;
+  }
 }
