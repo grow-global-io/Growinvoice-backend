@@ -6,7 +6,7 @@ import * as pdfhtmlPdf from 'html-pdf';
 export class PdfgenerateService {
   async createWithHtmlPdf(res: any) {
     const htmla = await axios.get(
-      'http://localhost:3000/api/invoice/test/cly5pbjbu0005emyec2tfxqn4',
+      'https://growinvoice-94ee0dd2031b.herokuapp.com/api/invoice/test/cly5pbjbu0005emyec2tfxqn4',
     );
     const htmlData = htmla?.data;
 
