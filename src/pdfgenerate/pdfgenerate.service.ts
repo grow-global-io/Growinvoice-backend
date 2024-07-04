@@ -10,23 +10,15 @@ export class PdfgenerateService {
     );
     const htmlData = htmla?.data;
 
-    pdfhtmlPdf
-      .create(htmlData, {
-        format: 'A4', // Adjusted format to A4
-        orientation: 'portrait',
-      })
-      .toBuffer((err, buffer) => {
+    return new Promise((resolve, reject) => {
+      pdfhtmlPdf.create(htmlData, {}).toStream((err, stream) => {
         if (err) {
-          console.error(err);
-          res.status(500).send('Error generating PDF');
-          return;
+          reject(err);
+        } else {
+          stream.pipe(res);
+          resolve(stream);
         }
-
-        // Set the response headers to indicate a file attachment
-        res.setHeader('Content-Type', 'application/pdf');
-
-        // Send the buffer as the response
-        res.send(buffer);
       });
+    });
   }
 }
