@@ -24,6 +24,7 @@ import { OpenaiModule } from './openai/openai.module';
 import { QuotationtemplateModule } from './quotationtemplate/quotationtemplate.module';
 import { QuotationsettingsModule } from './quotationsettings/quotationsettings.module';
 import { PaymentsModule } from './payments/payments.module';
+import { PdfgenerateModule } from './pdfgenerate/pdfgenerate.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { PaymentsModule } from './payments/payments.module';
     QuotationtemplateModule,
     QuotationsettingsModule,
     PaymentsModule,
+    PdfgenerateModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],
