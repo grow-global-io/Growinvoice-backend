@@ -56,7 +56,9 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.0",
-    "uuidv4": "^6.2.13"
+    "util": "^0.12.5",
+    "uuidv4": "^6.2.13",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",
