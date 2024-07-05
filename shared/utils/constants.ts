@@ -414,3 +414,12 @@ export const chartData = {
   lineChartWithDataLabels,
   BasicPieCharts,
 };
+
+// const messages = `I have a Prisma.js Schema that you can read below: ${schema} and Write an SQL Query that will satisfy question: ${createOpenaiDto?.prompt} Respond only with an SQL Query for PostgreSQL that will satisfy the question. Make sure that SQL query is only for PostgreSQL db and table name should be in double quotes and table name should be same like in schema(make sure with capital letters). and if question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)). The query should be specific to the user with ID: ${user_id}. even question is related to other user's data but query should be specific to the user with ID: ${user_id} only. Make sure that the query is safe and secure. Make sure that count result is cast to a text(like: CAST(count(*) AS TEXT)). if USER request is related to date or month or year then Make sure to use format also`;
+//  const graphGenPrompt = `i want to generate a graph json data format. for the user request prompt: ${createOpenaiDto?.prompt} - First, define the graph type whether it is a ${Object?.keys(
+//    chartData,
+//  )
+//    ?.map((key) => camelCaseToNormalString(key))
+//    ?.join(
+//      ',',
+//  )}. Second, generate the graph JSON data format for the graph exactly same like sample data: if type if bar or column chart:  column chart with data labels: ${JSON.stringify(chartData?.columnChartWithDataLabels)} and for basic column chart: ${JSON.stringify(chartData?.basicColumnCharts)} and for stacked column chart: ${JSON.stringify(chartData?.stackedColumnCharts)}, if type is line chart:  for basic line chart: ${JSON.stringify(chartData?.basicLineCharts)} and for line chart with data labels: ${JSON.stringify(chartData?.lineChartWithDataLabels)}, if type is pie chart then data should same like: for basic pie chart data: ${JSON.stringify(chartData?.BasicPieCharts)}. and also MAKE SURE THAT JSON DATA SHOULD MATCH WITH CORRESPONDING SAMPLE DATA also and the data should be generated from the following data: ${JSON.stringify(resulta)}. if generated data is empty, then generate graph JSON with empty data and respond only with a JSON data format for the graph. Make sure that every information need to be change and related to user request: ${createOpenaiDto?.prompt} and MAKE SURE respond only with json data format for the graph. MAKE SURE DONOT USE Dummy data. use the data from the generated query result.`;
