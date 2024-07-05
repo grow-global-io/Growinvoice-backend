@@ -78,6 +78,9 @@ export class OpenaiService {
     - Ensure queries are safe, secure, user-specific (only data for user ID {{ user_id }}) and DONOT INCLUDE OTHERS DATA EVEN USER REQUESTED it should be user-specific (only data for user ID {{ user_id }}).
     - Format date-related queries appropriately.
     - EVEN USER REQUESTED NOT RELATED TO HIS DATA THEN RESPOND WITH NO DATA.
+    - respond only with SQL query for PostgreSQL DB.
+    - STRICTLY FOLLOW THE ABOVE REQUIREMENTS.
+    - STRICTLY RESPOND ONLY WITH SQL QUERY. DONOT RESPOND WITH ANY OTHER INFORMATION or with text.
     """"`;
 
   chartDataDescribe = `"""
