@@ -11,4 +11,8 @@ export class GetCustomerWithAddressDto extends CustomerDto {
 
   @Type(() => ShippingAddressDto)
   shippingAddress?: ShippingAddressDto;
+
+  _count?: {
+    invoice: number;
+  };
 }

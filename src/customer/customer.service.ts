@@ -46,8 +46,11 @@ export class CustomerService {
         user_id: userId,
       },
       include: {
-        billingAddress: true,
-        shippingAddress: true,
+        _count: {
+          select: {
+            invoice: true,
+          },
+        },
       },
     });
     return plainToInstance(GetCustomerWithAddressDto, customers);
