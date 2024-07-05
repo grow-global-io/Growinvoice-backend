@@ -4,10 +4,13 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { RequestLoggerMiddleware } from '@shared/middleware/logger.middleware';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import * as compression from 'compression';
+
 // import { wakeDyno, wakeDynos } from 'heroku-keep-awake';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.use(compression());
 
   app.useStaticAssets(join(__dirname, '..', 'public'), {
     prefix: '/public/',

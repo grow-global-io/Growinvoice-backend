@@ -3,6 +3,7 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  Body,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -31,6 +32,13 @@ export class UploadController {
   })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const link = await this.uploadService.upload(file);
+    return link;
+  }
+
+  @IsPublic()
+  @Post('base64')
+  async uploadBase64File(@Body() file: { base64: string }) {
+    const link = await this.uploadService.uploadViaBase64(file);
     return link;
   }
 }
