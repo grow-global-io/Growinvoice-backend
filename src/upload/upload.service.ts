@@ -37,23 +37,26 @@ export class UploadService {
   }
 
   async uploadViaBase64(file: { base64: string }) {
-    const blobServiceClient = BlobServiceClient.fromConnectionString(
-      this.azureConnectionString,
-    );
-    const containerClient = blobServiceClient.getContainerClient(
-      this.constainerName,
-    );
-    const blockBlobClient = containerClient.getBlockBlobClient(uuid() + '.png');
+    const decompressedData = await this.deCompressGzipRequest(file?.base64);
+    console.log(decompressedData);
+    return decompressedData;
+    // const blobServiceClient = BlobServiceClient.fromConnectionString(
+    //   this.azureConnectionString,
+    // );
+    // const containerClient = blobServiceClient.getContainerClient(
+    //   this.constainerName,
+    // );
+    // const blockBlobClient = containerClient.getBlockBlobClient(uuid() + '.png');
 
-    const fileBuffer = Buffer.from(file.base64, 'base64');
+    // const fileBuffer = Buffer.from(file.base64, 'base64');
 
-    await blockBlobClient.uploadData(fileBuffer, {
-      blobHTTPHeaders: { blobContentType: 'image/png' },
-    });
-    return plainToInstance(UploadResponseDto, {
-      link: blockBlobClient.url,
-      message: 'File uploaded successfully',
-    });
+    // await blockBlobClient.uploadData(fileBuffer, {
+    //   blobHTTPHeaders: { blobContentType: 'image/png' },
+    // });
+    // return plainToInstance(UploadResponseDto, {
+    //   link: blockBlobClient.url,
+    //   message: 'File uploaded successfully',
+    // });
   }
 
   async deCompressGzipRequest(data: string) {
