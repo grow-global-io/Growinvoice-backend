@@ -4,11 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { plainToInstance } from 'class-transformer';
 import { uuid } from 'uuidv4';
 import { UploadResponseDto } from './dto/upload-response.dto';
-import { existsSync } from 'fs';
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import { promisify } from 'util';
-import { exec } from 'child_process';
 
 @Injectable()
 export class UploadService {
@@ -113,55 +108,5 @@ export class UploadService {
       link: blockBlobClient.url,
       message: 'File uploaded successfully',
     });
-  }
-
-  async uploadPdfCompress(file: Express.Multer.File) {
-    const execPromise = promisify(exec);
-
-    const cwd = process.cwd();
-    // file to base64
-    const fileBuffer = file.buffer.toString('base64');
-    const tempFolder = path.join(cwd, 'temp');
-    const hasTempFolder = existsSync(tempFolder);
-
-    if (!hasTempFolder) {
-      await fs.mkdir(tempFolder);
-    }
-
-    const originalFilePath = path.join(cwd, 'temp', 'original.pdf');
-    const compressFilePath = path.join(cwd, 'temp', 'compress.pdf');
-
-    await fs.writeFile(originalFilePath, fileBuffer, 'base64');
-
-    await execPromise(
-      `gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile="${compressFilePath}" ${originalFilePath}`,
-    );
-
-    const compressFileBase64 = await fs.readFile(compressFilePath, 'base64');
-
-    await fs.unlink(originalFilePath);
-    await fs.unlink(compressFilePath);
-
-    return compressFileBase64;
-    // const blobServiceClient = BlobServiceClient.fromConnectionString(
-    //   this.azureConnectionString,
-    // );
-    // const containerClient = blobServiceClient.getContainerClient(
-    //   this.constainerName,
-    // );
-    // const blockBlobClient = containerClient.getBlockBlobClient(
-    //   uuid() + path.basename(filePath),
-    // );
-
-    // const fileBuffer = await fs.readFile(filePath);
-
-    // await blockBlobClient.uploadData(fileBuffer, {
-    //   blobHTTPHeaders: { blobContentType: 'application/pdf' },
-    // });
-
-    // return plainToInstance(UploadResponseDto, {
-    //   link: blockBlobClient.url,
-    //   message: 'File uploaded successfully',
-    // });
   }
 }
