@@ -69,31 +69,43 @@ export class OpenaiService {
   }
 
   chatGptDescribe = `"""
-  You are an expert SQL Specialist, Your job is to conver english or say natural language to SQL Query.
-    it has a Prisma.js Schema that you can read below: ${fs.readFileSync('./prisma/schema.prisma', 'utf8')}.
-    Respond only with an SQL Query for PostgreSQL that will satisfy the question.
-    Make sure that SQL query is only for PostgreSQL db and table name should be in double quotes and table name should be same like in schema(make sure with capital letters).
-    If question is related to BigInt or Count then count result is cast to a text(like: CAST(count(*) AS TEXT)).
-    The query should be specific to the user with ID: {{ user_id }}.
-    even question is related to other user's data but query should be specific to the user with ID: {{ user_id }} only.
-     Make sure that the query is safe and secure. Make sure that count result is cast to a text(like: CAST(count(*) AS TEXT)). 
-     if USER request is related to date or month or year then Make sure to use format also.
-  """"`;
+    You are an expert SQL Specialist. Convert natural language queries to SQL for PostgreSQL, ensuring they only access data related to user with ID {{ user_id }}.
+    Schema (Prisma.js): ${fs.readFileSync('./prisma/schema.prisma', 'utf8')}.
+    Requirements:
+    - Use table names exactly as in the schema (with capital letters).
+    - Use table names in double quotes ("") to avoid case sensitivity issues.
+    - For BigInt or Count, cast results to text (CAST(count(*) AS TEXT)).
+    - Ensure queries are safe, secure, user-specific (only data for user ID {{ user_id }}) and DONOT INCLUDE OTHERS DATA EVEN USER REQUESTED it should be user-specific (only data for user ID {{ user_id }}).
+    - Format date-related queries appropriately.
+    - EVEN USER REQUESTED NOT RELATED TO HIS DATA THEN RESPOND WITH NO DATA.
+    """"`;
 
-  chartDataDescribe = `""" 
-    You are an expert JSON Specialist, Your job is to convert SQL Query result to JSON Data format for the graph.
-    Respond only with a JSON Data format for the graph.
-    Make sure that JSON data format is exactly same like sample data.
-    For the user request prompt: {{ user_request_prompt }} - 
-    First, define the graph type whether it is a ${Object?.keys(chartData)
+  chartDataDescribe = `"""
+    You are an expert JSON Specialist. Convert SQL query results to JSON data format for graphing. Ensure the JSON matches the sample data format.
+    
+    For the user request prompt: {{ user_request_prompt }}:
+    
+    1. Identify the graph type: ${Object?.keys(chartData)
       ?.map((key) => camelCaseToNormalString(key))
-      ?.join(',')}. 
-      Second, generate the graph JSON data format for the graph exactly same like sample data: 
-      if type is bar or column chart:  column chart with data labels: ${JSON.stringify(chartData?.columnChartWithDataLabels)} or for basic column chart: ${JSON.stringify(chartData?.basicColumnCharts)} or for stacked column chart: ${JSON.stringify(chartData?.stackedColumnCharts)}.
-        if type is line chart for basic line chart: ${JSON.stringify(chartData?.basicLineCharts)} or for line chart with data labels: ${JSON.stringify(chartData?.lineChartWithDataLabels)}.
-         if type is pie chart then data should same like: for basic pie chart data: ${JSON.stringify(chartData?.BasicPieCharts)}. and also MAKE SURE THAT JSON DATA SHOULD MATCH WITH CORRESPONDING SAMPLE DATA also and the data should be generated from the following data: {{ generated_data }}. if generated data is empty, then generate graph JSON with empty data and respond only with a JSON data format for the graph. Make sure that every information need to be change and related to user request: {{ user_request_prompt }} and MAKE SURE respond only with json data format for the graph.  use the data from the generated query result.
-         if data is availble only for few, but user requested more data then if no data is there then make it as no data
-  """`;
+      ?.join(', ')}.
+    2. From the results: {{ generated_data }} - Generate the graph JSON data format exactly like the sample data:
+
+       - **Bar or Column Chart**:
+         - Column chart with data labels: ${JSON.stringify(chartData?.columnChartWithDataLabels)}
+         - Basic column chart: ${JSON.stringify(chartData?.basicColumnCharts)}
+         - Stacked column chart: ${JSON.stringify(chartData?.stackedColumnCharts)}
+       
+       - **Line Chart**:
+         - Basic line chart: ${JSON.stringify(chartData?.basicLineCharts)}
+         - Line chart with data labels: ${JSON.stringify(chartData?.lineChartWithDataLabels)}
+       
+       - **Pie Chart**:
+         - Basic pie chart: ${JSON.stringify(chartData?.BasicPieCharts)}
+       
+    Ensure the JSON matches the corresponding sample data and is generated from the query result: {{ generated_data }}. If no data is available, generate an empty graph JSON format. if data is available only for a few, but the user requested more data, respond with "no data" or 0.
+    
+    Make sure every detail is related to the user request: {{ user_request_prompt }}. Respond only with the JSON data format for the graph.
+"""`;
 
   async create(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
     const chatgpt = this.chatGptDescribe.replaceAll('{{ user_id }}', user_id);
