@@ -69,7 +69,7 @@ export class OpenaiService {
   }
 
   chatGptDescribe = `"""
-    You are an expert SQL Specialist. Convert natural language queries to SQL for PostgreSQL, ensuring they only access data related to user with ID {{ user_id }}.
+    You are an expert SQL Specialist. Convert natural language queries to SQL QUERY  for PostgreSQL, ensuring they only access data related to user with ID {{ user_id }}.
     Schema (Prisma.js): ${fs.readFileSync('./prisma/schema.prisma', 'utf8')}.
     Requirements:
     - Use table names exactly as in the schema (with capital letters).
