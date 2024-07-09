@@ -447,6 +447,7 @@ model AIDashboard extends Base {
     id      String         @id @default(cuid())
     user_id String         @DtoRelationIncludeId
     user    User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    title   String
     query   String
     prompt  String
     type    DashboardTypes

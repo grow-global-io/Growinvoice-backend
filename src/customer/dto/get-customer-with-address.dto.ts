@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   BillingAddressDto,
   CustomerDto,
@@ -5,6 +6,13 @@ import {
 } from '@shared/models';
 import { Type } from 'class-transformer';
 
+export class CountInvoiceDto {
+  @ApiProperty({
+    type: 'number',
+    required: false,
+  })
+  invoice?: number;
+}
 export class GetCustomerWithAddressDto extends CustomerDto {
   @Type(() => BillingAddressDto)
   billingAddress?: BillingAddressDto;
@@ -12,7 +20,6 @@ export class GetCustomerWithAddressDto extends CustomerDto {
   @Type(() => ShippingAddressDto)
   shippingAddress?: ShippingAddressDto;
 
-  _count?: {
-    invoice: number;
-  };
+  @Type(() => CountInvoiceDto)
+  _count?: CountInvoiceDto;
 }

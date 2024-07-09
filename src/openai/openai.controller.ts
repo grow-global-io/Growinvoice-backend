@@ -1,7 +1,7 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Param } from '@nestjs/common';
 import { OpenaiService } from './openai.service';
 import { RequestBodyOpenaiDto } from './dto/request-body-openai.dto';
-import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 
 @ApiTags('openai')
@@ -47,12 +47,6 @@ export class OpenaiController {
     return await this.openaiService.createGraph(createOpenaiDto, user?.sub);
   }
 
-  @ApiQuery({ name: 'q', required: false })
-  @Get('suggestions')
-  async suggestions(@GetUser() user: User, @Query('q') searchTerm?: string) {
-    return await this.openaiService.suggestions(searchTerm, user?.sub);
-  }
-
   @Post('chat')
   async chat(
     @GetUser() user: User,
@@ -62,5 +56,10 @@ export class OpenaiController {
       user?.sub,
       chatHistoryDto,
     );
+  }
+
+  @Post('dashboardDataGet/:id')
+  async dashboardDataGet(@Param('id') id: string) {
+    return await this.openaiService.getChatWithOpenAIForDashboard(id);
   }
 }

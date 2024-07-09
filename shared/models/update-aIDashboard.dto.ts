@@ -16,6 +16,13 @@ export class UpdateAIDashboardDto {
   })
   @IsOptional()
   @IsString()
+  title?: string;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
   query?: string;
   @ApiProperty({
     type: 'string',

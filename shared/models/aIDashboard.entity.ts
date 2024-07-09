@@ -34,6 +34,10 @@ export class AIDashboard {
   @ApiProperty({
     type: 'string',
   })
+  title: string;
+  @ApiProperty({
+    type: 'string',
+  })
   query: string;
   @ApiProperty({
     type: 'string',

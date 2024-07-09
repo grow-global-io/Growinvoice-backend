@@ -28,6 +28,10 @@ export class AIDashboardDto {
   @ApiProperty({
     type: 'string',
   })
+  title: string;
+  @ApiProperty({
+    type: 'string',
+  })
   query: string;
   @ApiProperty({
     type: 'string',

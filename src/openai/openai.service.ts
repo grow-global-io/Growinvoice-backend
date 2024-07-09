@@ -10,6 +10,7 @@ import {
 } from '@google/generative-ai';
 import { ConfigService } from '@nestjs/config';
 import { camelCaseToNormalString, chartData } from '@shared/utils/constants';
+import { DashboardsService } from '@/dashboards/dashboards.service';
 
 @Injectable()
 export class OpenaiService {
@@ -39,6 +40,7 @@ export class OpenaiService {
   constructor(
     private prismaServe: PrismaService,
     private readonly configService: ConfigService,
+    private readonly dashboardService: DashboardsService,
   ) {
     this.genAI = new GoogleGenerativeAI(
       this.configService.get('GOOGLE_API_KEY'),
@@ -81,7 +83,7 @@ export class OpenaiService {
     - respond only with SQL query for PostgreSQL DB.
     - STRICTLY FOLLOW THE ABOVE REQUIREMENTS.
     - STRICTLY RESPOND ONLY WITH SQL QUERY. DONOT RESPOND WITH ANY OTHER INFORMATION or with text.
-    - Strictly give the format for date or month or year or any other date-related queries to avoid error like: ERROR: function date(unknown, unknown) does not exist
+    - Strictly use the date_trunc function that can satisfy for POSTGRESQL for date-related queries.
     """"`;
 
   chartDataDescribe = `"""
@@ -122,28 +124,7 @@ export class OpenaiService {
     const text = response?.text();
     const querySplit = text.split('```sql')[1].split('```')[0];
     const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
-    await this?.prismaServe?.openAiHistory?.upsert({
-      where: {
-        user_id_query: {
-          user_id,
-          query: createOpenaiDto?.prompt,
-        },
-      },
-
-      create: {
-        query: createOpenaiDto?.prompt,
-        result: singleLineQuery,
-        user_id,
-      },
-      update: {
-        query: createOpenaiDto?.prompt,
-        result: singleLineQuery,
-        user_id,
-      },
-    });
-    console.log(singleLineQuery);
     const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
-    console.log(resulta);
     return {
       query: singleLineQuery,
       result: resulta,
@@ -178,26 +159,6 @@ export class OpenaiService {
       prompt: createOpenaiDto?.prompt,
       graphData,
     };
-  }
-
-  async suggestions(searchTerm: string, user_id: string) {
-    const fetchSuggestions = await this.prismaServe.openAiHistory.findMany({
-      where: {
-        user_id,
-        OR: searchTerm ? [{ query: { contains: searchTerm } }] : undefined,
-      },
-      take: 100,
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-    const results = fetchSuggestions.map((suggest) => {
-      return {
-        value: suggest.query,
-        label: suggest.query,
-      };
-    });
-    return results;
   }
 
   async getChatWithOpenAI(
@@ -251,5 +212,36 @@ export class OpenaiService {
       return resulta;
     }
     return text;
+  }
+
+  async getChatWithOpenAIForDashboard(dashboard_id: string) {
+    const dashboardData = await this.dashboardService.findOne(dashboard_id);
+    const resulta = await this.prismaServe.$queryRawUnsafe(
+      dashboardData?.query,
+    );
+    if (dashboardData?.type === 'Table') {
+      return resulta;
+    } else {
+      const graphGenPrompt = this.chartDataDescribe.replaceAll(
+        '{{ user_request_prompt }}',
+        dashboardData?.prompt,
+      );
+      const graphResulted = graphGenPrompt.replaceAll(
+        '{{ generated_data }}',
+        JSON.stringify(resulta),
+      );
+
+      const graphResult = await this.genAiProJsonModel.generateContent([
+        graphResulted,
+        dashboardData?.prompt,
+      ]);
+      const graphResponse = await graphResult?.response;
+      const graphText = graphResponse?.text();
+      const graphSplit = graphText?.startsWith('```json')
+        ? graphText.split('```json')[1].split('```')[0]
+        : graphText;
+      const graphData = JSON.parse(graphSplit);
+      return graphData;
+    }
   }
 }

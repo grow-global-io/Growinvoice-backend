@@ -14,6 +14,12 @@ export class CreateAIDashboardDto {
   })
   @IsNotEmpty()
   @IsString()
+  title: string;
+  @ApiProperty({
+    type: 'string',
+  })
+  @IsNotEmpty()
+  @IsString()
   query: string;
   @ApiProperty({
     type: 'string',

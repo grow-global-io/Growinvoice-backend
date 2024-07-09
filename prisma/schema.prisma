@@ -855,6 +855,7 @@ model AIDashboard {
   /// @DtoRelationIncludeId
   user_id   String
   user      User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  title     String
   query     String
   prompt    String
   type      DashboardTypes
