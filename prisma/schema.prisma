@@ -71,6 +71,11 @@ enum paidStatus {
   Unpaid
 }
 
+enum DashboardTypes {
+  Table
+  Chart
+}
+
 /// @@deny('read', isExist == false)
 model Country {
   /// @DtoCreateHidden
@@ -171,6 +176,8 @@ model User {
   QuotationSettings QuotationSettings[]
   /// @DtoApiHidden
   Payments          Payments[]
+  /// @DtoApiHidden
+  AIDashboard       AIDashboard[]
 }
 
 /// @@deny('read', isExist == false)
@@ -831,4 +838,24 @@ model Payments {
   /// @DtoRelationIncludeId
   invoice_id        String
   invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+}
+
+/// @@deny('read', isExist == false)
+model AIDashboard {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime       @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime?      @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean        @default(true)
+  id        String         @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  query     String
+  prompt    String
+  type      DashboardTypes
 }

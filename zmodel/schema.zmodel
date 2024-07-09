@@ -118,6 +118,7 @@ model User extends Base {
     OpenAiHistory     OpenAiHistory[]     @DtoApiHidden
     QuotationSettings QuotationSettings[] @DtoApiHidden
     Payments          Payments[]          @DtoApiHidden
+    AIDashboard       AIDashboard[]       @DtoApiHidden
 }
 
 model Company extends Base {
@@ -435,4 +436,18 @@ model Payments extends Base {
     user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
     invoice_id        String         @DtoRelationIncludeId
     invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+}
+
+enum DashboardTypes {
+    Table
+    Chart
+}
+
+model AIDashboard extends Base {
+    id      String         @id @default(cuid())
+    user_id String         @DtoRelationIncludeId
+    user    User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    query   String
+    prompt  String
+    type    DashboardTypes
 }

@@ -81,6 +81,7 @@ export class OpenaiService {
     - respond only with SQL query for PostgreSQL DB.
     - STRICTLY FOLLOW THE ABOVE REQUIREMENTS.
     - STRICTLY RESPOND ONLY WITH SQL QUERY. DONOT RESPOND WITH ANY OTHER INFORMATION or with text.
+    - Strictly give the format for date or month or year or any other date-related queries to avoid error like: ERROR: function date(unknown, unknown) does not exist
     """"`;
 
   chartDataDescribe = `"""
@@ -143,18 +144,23 @@ export class OpenaiService {
     console.log(singleLineQuery);
     const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
     console.log(resulta);
-    return resulta;
+    return {
+      query: singleLineQuery,
+      result: resulta,
+      prompt: createOpenaiDto?.prompt,
+    };
   }
 
   async createGraph(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
     const resulta = await this.create(createOpenaiDto, user_id);
+    const query = resulta?.query;
     const graphGenPrompt = this.chartDataDescribe.replaceAll(
       '{{ user_request_prompt }}',
       createOpenaiDto?.prompt,
     );
     const graphResulted = graphGenPrompt.replaceAll(
       '{{ generated_data }}',
-      JSON.stringify(resulta),
+      JSON.stringify(resulta?.result),
     );
 
     const graphResult = await this.genAiProJsonModel.generateContent([
@@ -167,7 +173,11 @@ export class OpenaiService {
       ? graphText.split('```json')[1].split('```')[0]
       : graphText;
     const graphData = JSON.parse(graphSplit);
-    return graphData;
+    return {
+      query,
+      prompt: createOpenaiDto?.prompt,
+      graphData,
+    };
   }
 
   async suggestions(searchTerm: string, user_id: string) {

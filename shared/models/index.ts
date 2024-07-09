@@ -113,3 +113,8 @@ export * from './create-payments.dto';
 export * from './update-payments.dto';
 export * from './payments.entity';
 export * from './payments.dto';
+export * from './connect-aIDashboard.dto';
+export * from './create-aIDashboard.dto';
+export * from './update-aIDashboard.dto';
+export * from './aIDashboard.entity';
+export * from './aIDashboard.dto';
