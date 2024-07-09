@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get } from '@nestjs/common';
 import { OpenaiService } from './openai.service';
 import { RequestBodyOpenaiDto } from './dto/request-body-openai.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -58,7 +58,7 @@ export class OpenaiController {
     );
   }
 
-  @Post('dashboardDataGet/:id')
+  @Get('dashboardDataGet/:id')
   async dashboardDataGet(@Param('id') id: string) {
     return await this.openaiService.getChatWithOpenAIForDashboard(id);
   }
