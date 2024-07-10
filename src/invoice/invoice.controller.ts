@@ -42,7 +42,7 @@ export class InvoiceController {
 
   @IsPublic()
   @Get('invoiceTest')
-  async invoiceTest() {
+  async invoiceTest(@Res() res: Response) {
     const browser = await puppeteer.launch({
       headless: true,
       executablePath: '/usr/bin/chromium-browser',
@@ -52,10 +52,13 @@ export class InvoiceController {
     await page.goto(
       'https://growinvoice-94ee0dd2031b.herokuapp.com/api/invoice/test/cly8fgtr9000s2s2ifzgch6u0',
     );
-    await page.pdf();
+    const pdf = await page.pdf();
 
     await browser.close();
-    return 'done';
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=invoice.pdf');
+    return res.send(pdf);
   }
 
   @Post()
