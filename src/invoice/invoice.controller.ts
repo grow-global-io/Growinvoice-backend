@@ -29,6 +29,7 @@ import { Response } from 'express';
 import { convertLogoToBase64 } from '@shared/utils/constants';
 import { MailService } from '@/mail/mail.service';
 import { SendMailDto } from '@/mail/dto/send-mail.dto';
+import * as puppeteer from 'puppeteer-core';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
@@ -38,6 +39,24 @@ export class InvoiceController {
     private readonly invoiceService: InvoiceService,
     private readonly mailService: MailService,
   ) {}
+
+  @IsPublic()
+  @Get('invoiceTest')
+  async invoiceTest() {
+    const browser = await puppeteer.launch({
+      headless: true,
+      executablePath: '/usr/bin/chromium-browser',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
+    await page.goto(
+      'https://growinvoice-94ee0dd2031b.herokuapp.com/api/invoice/test/cly8fgtr9000s2s2ifzgch6u0',
+    );
+    await page.pdf();
+
+    await browser.close();
+    return 'done';
+  }
 
   @Post()
   @ApiSuccessResponse(InvoiceDto, { status: 201 })
