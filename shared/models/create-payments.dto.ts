@@ -1,3 +1,4 @@
+import { PaymentType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsDateString,
@@ -59,6 +60,12 @@ export class CreatePaymentsDto {
   @IsNotEmpty()
   @IsString()
   user_id: string;
+  @ApiProperty({
+    enum: PaymentType,
+    default: 'Cash',
+  })
+  @IsOptional()
+  payment_type?: PaymentType;
   @ApiProperty({
     type: 'string',
   })

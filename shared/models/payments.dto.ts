@@ -1,3 +1,4 @@
+import { PaymentType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PaymentsDto {
@@ -53,6 +54,10 @@ export class PaymentsDto {
     type: 'string',
   })
   user_id: string;
+  @ApiProperty({
+    enum: PaymentType,
+  })
+  payment_type: PaymentType;
   @ApiProperty({
     type: 'string',
   })

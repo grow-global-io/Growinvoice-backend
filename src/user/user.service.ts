@@ -218,4 +218,15 @@ export class UserService {
       return plainToInstance(UserDto, result);
     }
   }
+
+  async findOne(id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        currency: true,
+      },
+    });
+    return plainToInstance(User, user);
+  }
 }

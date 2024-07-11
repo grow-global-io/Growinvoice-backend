@@ -1,5 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { PaymentType } from '@prisma/client';
 import {
   CreatePaymentDetailsDto,
   PaymentDetailsDto,
@@ -43,5 +44,12 @@ export class PaymentdetailsService {
     return await this.prismaService.paymentDetails.delete({
       where: { id },
     });
+  }
+
+  async findByPaymentTypeandUserId(paymentType: PaymentType, user_id: string) {
+    const paymentDetails = await this.prismaService.paymentDetails.findFirst({
+      where: { paymentType, user_id },
+    });
+    return plainToInstance(PaymentDetailsDto, paymentDetails);
   }
 }

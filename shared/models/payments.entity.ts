@@ -1,3 +1,4 @@
+import { PaymentType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { PaymentDetails } from './paymentDetails.entity';
 import { User } from './user.entity';
@@ -66,6 +67,10 @@ export class Payments {
     required: false,
   })
   user?: User;
+  @ApiProperty({
+    enum: PaymentType,
+  })
+  payment_type: PaymentType;
   @ApiProperty({
     type: 'string',
   })

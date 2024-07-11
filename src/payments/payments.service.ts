@@ -1,5 +1,7 @@
 import { InvoiceService } from '@/invoice/invoice.service';
+import { PaymentdetailsService } from '@/paymentdetails/paymentdetails.service';
 import { PrismaService } from '@/prisma/prisma.service';
+import { UserService } from '@/user/user.service';
 import { Injectable } from '@nestjs/common';
 import {
   CreatePaymentsDto,
@@ -8,12 +10,15 @@ import {
   UpdatePaymentsDto,
 } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
+import Stripe from 'stripe';
 
 @Injectable()
 export class PaymentsService {
   constructor(
     private prisma: PrismaService,
     private invoiceService: InvoiceService,
+    private paymentsDetails: PaymentdetailsService,
+    private userService: UserService,
   ) {}
 
   async create(createPaymentDto: CreatePaymentsDto) {
@@ -59,5 +64,75 @@ export class PaymentsService {
       where: { id },
     });
     return plainToInstance(PaymentsDto, payment);
+  }
+
+  async stripePayment(user_id: string, invoice_id: string) {
+    const invoice = await this.invoiceService.findOne(invoice_id);
+    if (!invoice) {
+      throw new Error('Invoice not found');
+    }
+    if (invoice.user_id !== user_id) {
+      throw new Error('Unauthorized');
+    }
+    const stripeKey = await this.paymentsDetails.findByPaymentTypeandUserId(
+      'Stripe',
+      user_id,
+    );
+    const userDetails = await this.userService.findOne(user_id);
+    const stripe = new Stripe(stripeKey?.stripeId);
+    const stripePaymentLink = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: userDetails?.currency?.short_code,
+            product_data: {
+              name: 'Invoice Payment',
+              description:
+                'Payment for the invoice - ' + invoice?.invoice_number,
+            },
+            unit_amount: Math.round(invoice?.total * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.FRONTEND_URL}/api/payments/success?session_id={CHECKOUT_SESSION_ID}&user_id=${user_id}&invoice_id=${invoice_id}`,
+      cancel_url: `${process.env.FRONTEND_URL}/api/payments/cancel?type=cancel`,
+      billing_address_collection: 'required',
+      metadata: {
+        invoice_id,
+        user_id,
+      },
+    });
+    return stripePaymentLink?.url;
+  }
+
+  async success(session_id: string, user_id: string, invoice_id: string) {
+    const invoice = await this.invoiceService.findOne(invoice_id);
+    if (!invoice) {
+      throw new Error('Invoice not found');
+    }
+    if (invoice.user_id !== user_id) {
+      throw new Error('Unauthorized');
+    }
+    const stripeKey = await this.paymentsDetails.findByPaymentTypeandUserId(
+      'Stripe',
+      user_id,
+    );
+    const stripe = new Stripe(stripeKey?.stripeId);
+    const session = await stripe.checkout.sessions.retrieve(session_id);
+    if (session.payment_status === 'paid') {
+      await this.create({
+        invoice_id,
+        user_id,
+        amount: invoice.total,
+        paymentDetails_id: stripeKey?.id,
+        paymentDate: new Date(),
+        payment_type: 'Stripe',
+      });
+      await this.invoiceService.statusToPaid(invoice_id);
+      return 'Payment successful';
+    }
+    return 'Payment failed';
   }
 }

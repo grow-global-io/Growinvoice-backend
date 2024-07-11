@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import {
@@ -18,6 +19,7 @@ import { ApiSuccessResponse } from '@shared/decorators/api-success-response.deco
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { IsPublic } from '@shared/decorators/public.decorator';
 
 @ApiExtraModels(PaymentsDto)
 @ApiExtraModels(Payments)
@@ -25,6 +27,16 @@ import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
+
+  @IsPublic()
+  @Get('success')
+  async success(
+    @Query('session_id') session_id: string,
+    @Query('invoice_id') invoice_id: string,
+    @Query('user_id') user_id: string,
+  ) {
+    return await this.paymentsService.success(session_id, user_id, invoice_id);
+  }
 
   @Post()
   @ApiSuccessResponse(PaymentsDto)
@@ -67,6 +79,22 @@ export class PaymentsController {
     await this.paymentsService.remove(id);
     return {
       message: 'Payment deleted successfully',
+    };
+  }
+
+  @Post('stripePayment')
+  @ApiSuccessResponse(String)
+  async stripePayment(
+    @GetUser() user: User,
+    @Query('invoice_id') invoice_id: string,
+  ): Promise<SuccessResponseDto<string>> {
+    const link = await this.paymentsService.stripePayment(
+      user?.sub,
+      invoice_id,
+    );
+    return {
+      result: link,
+      message: 'Payment created successfully',
     };
   }
 }

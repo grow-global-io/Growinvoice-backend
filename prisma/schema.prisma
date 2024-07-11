@@ -835,6 +835,9 @@ model Payments {
   /// @DtoRelationIncludeId
   user_id           String
   user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  payment_type      PaymentType    @default(Cash)
   /// @DtoRelationIncludeId
   invoice_id        String
   invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)

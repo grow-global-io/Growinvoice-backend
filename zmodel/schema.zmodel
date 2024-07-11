@@ -434,6 +434,7 @@ model Payments extends Base {
     private_notes     String?        @DtoCreateOptional @DtoUpdateOptional
     user_id           String         @DtoRelationIncludeId
     user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    payment_type      PaymentType    @default(Cash) @DtoCreateOptional @DtoUpdateOptional
     invoice_id        String         @DtoRelationIncludeId
     invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
 }
