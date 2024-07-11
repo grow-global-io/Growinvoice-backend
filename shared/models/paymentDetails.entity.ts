@@ -91,4 +91,8 @@ export class PaymentDetails {
   invoice?: Invoice[];
   @ApiHideProperty()
   Payments?: Payments[];
+  @ApiProperty({
+    type: 'boolean',
+  })
+  enable: boolean;
 }

@@ -489,6 +489,9 @@ model PaymentDetails {
   invoice     Invoice[]
   /// @DtoApiHidden
   Payments    Payments[]
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  enable      Boolean     @default(true)
 }
 
 /// @@deny('read', isExist == false)
