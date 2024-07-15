@@ -79,8 +79,4 @@ export class PaymentDetailsDto {
     type: 'string',
   })
   user_id: string;
-  @ApiProperty({
-    type: 'boolean',
-  })
-  enable: boolean;
 }

@@ -83,18 +83,14 @@ export class PaymentsController {
   }
 
   @Post('stripePayment')
-  @ApiSuccessResponse(String)
   async stripePayment(
     @GetUser() user: User,
     @Query('invoice_id') invoice_id: string,
-  ): Promise<SuccessResponseDto<string>> {
+  ) {
     const link = await this.paymentsService.stripePayment(
       user?.sub,
       invoice_id,
     );
-    return {
-      result: link,
-      message: 'Payment created successfully',
-    };
+    return link;
   }
 }

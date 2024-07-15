@@ -74,6 +74,11 @@ enum paidStatus {
     Unpaid
 }
 
+enum GateWayType {
+    Stripe
+    Razorpay
+}
+
 model Country extends Base {
     id              String            @id @default(cuid())
     name            String
@@ -118,6 +123,7 @@ model User extends Base {
     OpenAiHistory     OpenAiHistory[]     @DtoApiHidden
     QuotationSettings QuotationSettings[] @DtoApiHidden
     Payments          Payments[]          @DtoApiHidden
+    GateWayDetails    GateWayDetails[]    @DtoApiHidden
     AIDashboard       AIDashboard[]       @DtoApiHidden
 }
 
@@ -268,7 +274,18 @@ model PaymentDetails extends Base {
     user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
     invoice     Invoice[]   @DtoApiHidden
     Payments    Payments[]  @DtoApiHidden
-    enable      Boolean     @default(true) @DtoCreateOptional @DtoUpdateOptional
+}
+
+model GateWayDetails extends Base {
+    id      String      @id @default(cuid())
+    type    GateWayType
+    key     String?     @DtoCreateOptional @DtoUpdateOptional
+    secret  String?     @DtoCreateOptional @DtoUpdateOptional
+    user_id String      @DtoRelationIncludeId
+    user    User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    enabled Boolean     @default(false) @DtoCreateOptional @DtoUpdateOptional
+
+    @@unique([type, user_id])
 }
 
 model InvoiceProducts extends Base {

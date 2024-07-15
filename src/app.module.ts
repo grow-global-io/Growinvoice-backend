@@ -25,6 +25,7 @@ import { QuotationtemplateModule } from './quotationtemplate/quotationtemplate.m
 import { QuotationsettingsModule } from './quotationsettings/quotationsettings.module';
 import { PaymentsModule } from './payments/payments.module';
 import { DashboardsModule } from './dashboards/dashboards.module';
+import { GatewaydetailsModule } from './gatewaydetails/gatewaydetails.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { DashboardsModule } from './dashboards/dashboards.module';
     QuotationsettingsModule,
     PaymentsModule,
     DashboardsModule,
+    GatewaydetailsModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],

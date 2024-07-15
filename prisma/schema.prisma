@@ -71,6 +71,11 @@ enum paidStatus {
   Unpaid
 }
 
+enum GateWayType {
+  Stripe
+  Razorpay
+}
+
 enum DashboardTypes {
   Table
   Chart
@@ -176,6 +181,8 @@ model User {
   QuotationSettings QuotationSettings[]
   /// @DtoApiHidden
   Payments          Payments[]
+  /// @DtoApiHidden
+  GateWayDetails    GateWayDetails[]
   /// @DtoApiHidden
   AIDashboard       AIDashboard[]
 }
@@ -489,9 +496,35 @@ model PaymentDetails {
   invoice     Invoice[]
   /// @DtoApiHidden
   Payments    Payments[]
+}
+
+/// @@deny('read', isExist == false)
+model GateWayDetails {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime    @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime?   @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean     @default(true)
+  id        String      @id() @default(cuid())
+  type      GateWayType
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  enable      Boolean     @default(true)
+  key       String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  secret    String?
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  enabled   Boolean     @default(false)
+
+  @@unique([type, user_id])
 }
 
 /// @@deny('read', isExist == false)

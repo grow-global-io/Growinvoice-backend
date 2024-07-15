@@ -27,9 +27,10 @@ export class PaymentdetailsService {
   }
 
   async findOne(id: string) {
-    return await this.prismaService.paymentDetails.findUnique({
+    const paymentDetails = await this.prismaService.paymentDetails.findUnique({
       where: { id },
     });
+    return plainToInstance(PaymentDetailsDto, paymentDetails);
   }
 
   async update(id: string, updatePaymentdetailDto: UpdatePaymentDetailsDto) {

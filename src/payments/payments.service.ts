@@ -1,3 +1,4 @@
+import { GatewaydetailsService } from '@/gatewaydetails/gatewaydetails.service';
 import { InvoiceService } from '@/invoice/invoice.service';
 import { PaymentdetailsService } from '@/paymentdetails/paymentdetails.service';
 import { PrismaService } from '@/prisma/prisma.service';
@@ -19,6 +20,7 @@ export class PaymentsService {
     private invoiceService: InvoiceService,
     private paymentsDetails: PaymentdetailsService,
     private userService: UserService,
+    private gateWayService: GatewaydetailsService,
   ) {}
 
   async create(createPaymentDto: CreatePaymentsDto) {
@@ -74,12 +76,18 @@ export class PaymentsService {
     if (invoice.user_id !== user_id) {
       throw new Error('Unauthorized');
     }
-    const stripeKey = await this.paymentsDetails.findByPaymentTypeandUserId(
-      'Stripe',
+    const stripeKey = await this.gateWayService.getbyuserIdandType(
       user_id,
+      'Stripe',
     );
+    if (!stripeKey) {
+      throw new Error('Stripe key not found');
+    }
+    if (stripeKey?.enabled === false) {
+      throw new Error('Stripe key not enabled');
+    }
     const userDetails = await this.userService.findOne(user_id);
-    const stripe = new Stripe(stripeKey?.stripeId);
+    const stripe = new Stripe(stripeKey?.key);
     const stripePaymentLink = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [
@@ -115,11 +123,11 @@ export class PaymentsService {
     if (invoice.user_id !== user_id) {
       throw new Error('Unauthorized');
     }
-    const stripeKey = await this.paymentsDetails.findByPaymentTypeandUserId(
-      'Stripe',
+    const stripeKey = await this.gateWayService.getbyuserIdandType(
       user_id,
+      'Stripe',
     );
-    const stripe = new Stripe(stripeKey?.stripeId);
+    const stripe = new Stripe(stripeKey?.key);
     const session = await stripe.checkout.sessions.retrieve(session_id);
     if (session.payment_status === 'paid') {
       await this.create({

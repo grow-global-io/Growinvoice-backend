@@ -7,6 +7,7 @@ import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.servic
 import { PaymentdetailsService } from '@/paymentdetails/paymentdetails.service';
 import { UserService } from '@/user/user.service';
 import { MailService } from '@/mail/mail.service';
+import { GatewaydetailsService } from '@/gatewaydetails/gatewaydetails.service';
 
 @Module({
   controllers: [PaymentsController],
@@ -18,6 +19,7 @@ import { MailService } from '@/mail/mail.service';
     PaymentdetailsService,
     UserService,
     MailService,
+    GatewaydetailsService,
   ],
 })
 export class PaymentsModule {}
