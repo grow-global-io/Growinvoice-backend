@@ -123,3 +123,8 @@ export * from './create-aIDashboard.dto';
 export * from './update-aIDashboard.dto';
 export * from './aIDashboard.entity';
 export * from './aIDashboard.dto';
+export * from './connect-notification.dto';
+export * from './create-notification.dto';
+export * from './update-notification.dto';
+export * from './notification.entity';
+export * from './notification.dto';

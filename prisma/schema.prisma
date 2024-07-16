@@ -185,6 +185,8 @@ model User {
   GateWayDetails    GateWayDetails[]
   /// @DtoApiHidden
   AIDashboard       AIDashboard[]
+  /// @DtoApiHidden
+  Notification      Notification[]
 }
 
 /// @@deny('read', isExist == false)
@@ -898,4 +900,30 @@ model AIDashboard {
   query     String
   prompt    String
   type      DashboardTypes
+}
+
+/// @@deny('read', isExist == false)
+model Notification {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  read      Boolean   @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  meta      String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  metaType  String?
 }

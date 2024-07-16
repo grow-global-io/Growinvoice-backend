@@ -125,6 +125,7 @@ model User extends Base {
     Payments          Payments[]          @DtoApiHidden
     GateWayDetails    GateWayDetails[]    @DtoApiHidden
     AIDashboard       AIDashboard[]       @DtoApiHidden
+    Notification      Notification[]      @DtoApiHidden
 }
 
 model Company extends Base {
@@ -470,4 +471,15 @@ model AIDashboard extends Base {
     query   String
     prompt  String
     type    DashboardTypes
+}
+
+model Notification extends Base {
+    id       String  @id @default(cuid())
+    user_id  String  @DtoRelationIncludeId
+    user     User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    title    String
+    body     String
+    read     Boolean @default(false)
+    meta     String? @DtoCreateOptional @DtoUpdateOptional
+    metaType String? @DtoCreateOptional @DtoUpdateOptional
 }

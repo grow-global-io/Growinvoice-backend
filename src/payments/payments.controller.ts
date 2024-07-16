@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Res,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import {
@@ -20,6 +21,7 @@ import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { IsPublic } from '@shared/decorators/public.decorator';
+import { Response } from 'express';
 
 @ApiExtraModels(PaymentsDto)
 @ApiExtraModels(Payments)
@@ -34,8 +36,17 @@ export class PaymentsController {
     @Query('session_id') session_id: string,
     @Query('invoice_id') invoice_id: string,
     @Query('user_id') user_id: string,
+    @Res() res: Response,
   ) {
-    return await this.paymentsService.success(session_id, user_id, invoice_id);
+    const success = await this.paymentsService.success(
+      session_id,
+      user_id,
+      invoice_id,
+    );
+    if (success) {
+      return res.redirect(`${process.env.FRONTEND_URL}/payment/success`);
+    }
+    return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
   }
 
   @Post()
@@ -82,15 +93,13 @@ export class PaymentsController {
     };
   }
 
+  @IsPublic()
   @Post('stripePayment')
   async stripePayment(
-    @GetUser() user: User,
+    @Query('user_id') user_id: string,
     @Query('invoice_id') invoice_id: string,
   ) {
-    const link = await this.paymentsService.stripePayment(
-      user?.sub,
-      invoice_id,
-    );
+    const link = await this.paymentsService.stripePayment(user_id, invoice_id);
     return link;
   }
 }

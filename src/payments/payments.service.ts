@@ -1,5 +1,6 @@
 import { GatewaydetailsService } from '@/gatewaydetails/gatewaydetails.service';
 import { InvoiceService } from '@/invoice/invoice.service';
+import { NotificationsService } from '@/notifications/notifications.service';
 import { PaymentdetailsService } from '@/paymentdetails/paymentdetails.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserService } from '@/user/user.service';
@@ -21,6 +22,7 @@ export class PaymentsService {
     private paymentsDetails: PaymentdetailsService,
     private userService: UserService,
     private gateWayService: GatewaydetailsService,
+    private notificationService: NotificationsService,
   ) {}
 
   async create(createPaymentDto: CreatePaymentsDto) {
@@ -104,8 +106,8 @@ export class PaymentsService {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.FRONTEND_URL}/api/payments/success?session_id={CHECKOUT_SESSION_ID}&user_id=${user_id}&invoice_id=${invoice_id}`,
-      cancel_url: `${process.env.FRONTEND_URL}/api/payments/cancel?type=cancel`,
+      success_url: `${process.env.BACKEND_URL}/api/payments/success?session_id={CHECKOUT_SESSION_ID}&user_id=${user_id}&invoice_id=${invoice_id}`,
+      cancel_url: `${process.env.BACKEND_URL}/api/payments/cancel?type=cancel`,
       billing_address_collection: 'required',
       metadata: {
         invoice_id,
@@ -134,13 +136,20 @@ export class PaymentsService {
         invoice_id,
         user_id,
         amount: invoice.total,
-        paymentDetails_id: stripeKey?.id,
+        paymentDetails_id: invoice?.paymentId,
         paymentDate: new Date(),
         payment_type: 'Stripe',
       });
       await this.invoiceService.statusToPaid(invoice_id);
-      return 'Payment successful';
+      await this.notificationService.create({
+        user_id,
+        title: 'Payment Success',
+        body:
+          'Payment for invoice ' + invoice.invoice_number + ' is successful',
+      });
+      // redirect to success page
+      return true;
     }
-    return 'Payment failed';
+    return false;
   }
 }

@@ -83,7 +83,6 @@ export class OpenaiService {
     - respond only with SQL query for PostgreSQL DB.
     - STRICTLY FOLLOW THE ABOVE REQUIREMENTS.
     - STRICTLY RESPOND ONLY WITH SQL QUERY. DONOT RESPOND WITH ANY OTHER INFORMATION or with text.
-    - Strictly use the date_trunc function that can satisfy for POSTGRESQL for date-related queries.
     """"`;
 
   chartDataDescribe = `"""
@@ -124,7 +123,9 @@ export class OpenaiService {
     const text = response?.text();
     const querySplit = text.split('```sql')[1].split('```')[0];
     const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
+    console.log(singleLineQuery);
     const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
+    console.log(resulta);
     return {
       query: singleLineQuery,
       result: resulta,

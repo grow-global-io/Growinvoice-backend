@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { GatewaydetailsService } from './gatewaydetails.service';
 import {
@@ -17,6 +18,7 @@ import { ApiSuccessResponse } from '@shared/decorators/api-success-response.deco
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { IsPublic } from '@shared/decorators/public.decorator';
 
 @ApiTags('gatewaydetails')
 @Controller('gatewaydetails')
@@ -42,9 +44,10 @@ export class GatewaydetailsController {
     return await this.gatewaydetailsService.findAll(user?.sub);
   }
 
+  @IsPublic()
   @Get('enabled')
-  async findEnabledAll(@GetUser() user: User) {
-    return await this.gatewaydetailsService.findEnabledAll(user?.sub);
+  async findEnabledAll(@Query('user_id') user_id: string) {
+    return await this.gatewaydetailsService.findEnabledAll(user_id);
   }
 
   @Get(':id')

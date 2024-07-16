@@ -15,6 +15,7 @@ import { QuotationSettings } from './quotationSettings.entity';
 import { Payments } from './payments.entity';
 import { GateWayDetails } from './gateWayDetails.entity';
 import { AIDashboard } from './aIDashboard.entity';
+import { Notification } from './notification.entity';
 
 export class User {
   @ApiProperty({
@@ -106,4 +107,6 @@ export class User {
   GateWayDetails?: GateWayDetails[];
   @ApiHideProperty()
   AIDashboard?: AIDashboard[];
+  @ApiHideProperty()
+  Notification?: Notification[];
 }

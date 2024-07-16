@@ -7,9 +7,16 @@ import {
   UpdateGateWayDetailsDto,
 } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
+import { PasswordMaskOptions, maskPassword } from 'maskdata';
 
 @Injectable()
 export class GatewaydetailsService {
+  options: PasswordMaskOptions = {
+    maskWith: '*',
+    maxMaskedCharacters: 10,
+    unmaskedStartCharacters: 2,
+    unmaskedEndCharacters: 2,
+  };
   constructor(private prismaService: PrismaService) {}
   async create(createGatewaydetailDto: CreateGateWayDetailsDto) {
     const gatewayDetails = await this.prismaService.gateWayDetails.create({
@@ -25,8 +32,14 @@ export class GatewaydetailsService {
         user_id,
       },
     });
-
-    return plainToInstance(GateWayDetailsDto, gatewayDetails);
+    const gateWaymap = gatewayDetails.map((gateway) => {
+      return {
+        ...gateway,
+        key: maskPassword(gateway.key, this.options),
+        secret: maskPassword(gateway.secret, this.options),
+      };
+    });
+    return plainToInstance(GateWayDetailsDto, gateWaymap);
   }
 
   async findEnabledAll(user_id: string) {
@@ -47,7 +60,13 @@ export class GatewaydetailsService {
       },
     });
 
-    return plainToInstance(GateWayDetailsDto, gatewayDetails);
+    const gateway = {
+      ...gatewayDetails,
+      key: maskPassword(gatewayDetails.key, this.options),
+      secret: maskPassword(gatewayDetails.secret, this.options),
+    };
+
+    return plainToInstance(GateWayDetailsDto, gateway);
   }
 
   async update(id: string, updateGatewaydetailDto: UpdateGateWayDetailsDto) {
