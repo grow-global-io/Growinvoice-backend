@@ -1,7 +1,6 @@
 import { GatewaydetailsService } from '@/gatewaydetails/gatewaydetails.service';
 import { InvoiceService } from '@/invoice/invoice.service';
 import { NotificationsService } from '@/notifications/notifications.service';
-import { PaymentdetailsService } from '@/paymentdetails/paymentdetails.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserService } from '@/user/user.service';
 import { Injectable } from '@nestjs/common';
@@ -13,13 +12,16 @@ import {
 } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import Stripe from 'stripe';
+import { RazorpayPaymentDto } from './dto/razorpay-payment-create.dto';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Razorpay = require('razorpay');
 
 @Injectable()
 export class PaymentsService {
   constructor(
     private prisma: PrismaService,
     private invoiceService: InvoiceService,
-    private paymentsDetails: PaymentdetailsService,
     private userService: UserService,
     private gateWayService: GatewaydetailsService,
     private notificationService: NotificationsService,
@@ -151,5 +153,94 @@ export class PaymentsService {
       return true;
     }
     return false;
+  }
+
+  async successRazorpay(
+    razorpay_payment_id: string,
+    user_id: string,
+    invoice_id: string,
+  ) {
+    const invoice = await this.invoiceService.findOne(invoice_id);
+    if (!invoice) {
+      throw new Error('Invoice not found');
+    }
+    if (invoice.user_id !== user_id) {
+      throw new Error('Unauthorized');
+    }
+    const razorpayKey = await this.gateWayService.getbyuserIdandType(
+      user_id,
+      'Razorpay',
+    );
+    if (!razorpayKey) {
+      throw new Error('Razorpay key not found');
+    }
+    if (razorpayKey?.enabled === false) {
+      throw new Error('Razorpay key not enabled');
+    }
+    const razorpay = new Razorpay({
+      key_id: razorpayKey?.key,
+      key_secret: razorpayKey?.secret,
+    });
+
+    const payment = await razorpay.payments.fetch(razorpay_payment_id);
+    if (payment.status === 'captured') {
+      await this.create({
+        invoice_id,
+        user_id,
+        amount: invoice.total,
+        paymentDetails_id: invoice?.paymentId,
+        paymentDate: new Date(),
+        payment_type: 'Razorpay',
+      });
+      await this.invoiceService.statusToPaid(invoice_id);
+      await this.notificationService.create({
+        user_id,
+        title: 'Payment Success',
+        body:
+          'Payment for invoice ' + invoice.invoice_number + ' is successful',
+      });
+      // redirect to success page
+      return true;
+    }
+    return false;
+  }
+
+  async razorpayPayment(user_id: string, invoice_id: string) {
+    const invoice = await this.invoiceService.findOne(invoice_id);
+    if (!invoice) {
+      throw new Error('Invoice not found');
+    }
+    if (invoice.user_id !== user_id) {
+      throw new Error('Unauthorized');
+    }
+    const razorpayKey = await this.gateWayService.getbyuserIdandType(
+      user_id,
+      'Razorpay',
+    );
+    if (!razorpayKey) {
+      throw new Error('Razorpay key not found');
+    }
+    if (razorpayKey?.enabled === false) {
+      throw new Error('Razorpay key not enabled');
+    }
+    const userDetails = await this.userService.findOne(user_id);
+    const razorpay = new Razorpay({
+      key_id: razorpayKey?.key,
+      key_secret: razorpayKey?.secret,
+    });
+
+    const order = await razorpay.orders.create({
+      amount: Math.round(invoice?.total * 100),
+      currency: userDetails?.currency?.short_code,
+      receipt: invoice?.invoice_number,
+      payment_capture: true,
+    });
+
+    return plainToInstance(RazorpayPaymentDto, {
+      id: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      receipt: order.receipt,
+    });
   }
 }

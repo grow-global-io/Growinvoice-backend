@@ -19,7 +19,12 @@ import {
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
-import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { Response } from 'express';
 
@@ -47,6 +52,29 @@ export class PaymentsController {
       return res.redirect(`${process.env.FRONTEND_URL}/payment/success`);
     }
     return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
+  }
+
+  @IsPublic()
+  @Get('successRazorpay')
+  @ApiQuery({ name: 'razorpay_payment_id', required: true })
+  @ApiQuery({ name: 'invoice_id', required: true })
+  @ApiQuery({ name: 'user_id', required: true })
+  @ApiResponse({
+    status: 200,
+    type: Boolean,
+  })
+  async successRazorpay(
+    @Query('razorpay_payment_id') razorpay_payment_id: string,
+    @Query('invoice_id') invoice_id: string,
+    @Query('user_id') user_id: string,
+  ) {
+    const success = await this.paymentsService.successRazorpay(
+      razorpay_payment_id,
+      user_id,
+      invoice_id,
+    );
+
+    return success;
   }
 
   @Post()
@@ -100,6 +128,19 @@ export class PaymentsController {
     @Query('invoice_id') invoice_id: string,
   ) {
     const link = await this.paymentsService.stripePayment(user_id, invoice_id);
+    return link;
+  }
+
+  @IsPublic()
+  @Post('razorpayPayment')
+  async razorpayPayment(
+    @Query('user_id') user_id: string,
+    @Query('invoice_id') invoice_id: string,
+  ) {
+    const link = await this.paymentsService.razorpayPayment(
+      user_id,
+      invoice_id,
+    );
     return link;
   }
 }
