@@ -51,4 +51,12 @@ export class NotificationsService {
     });
     return plainToInstance(NotificationDto, notification);
   }
+
+  async markAsRead(user_id: string) {
+    await this.prismaService.notification.updateMany({
+      where: { user_id },
+      data: { read: true },
+    });
+    return true;
+  }
 }

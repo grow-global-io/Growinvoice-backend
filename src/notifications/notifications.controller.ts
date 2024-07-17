@@ -38,4 +38,13 @@ export class NotificationsController {
   ) {
     return await this.notificationsService.findAll(user?.sub, take, skip);
   }
+
+  @Post('mark-as-read')
+  @ApiSuccessResponse()
+  async markAsRead(@GetUser() user: User): Promise<SuccessResponseDto> {
+    await this.notificationsService.markAsRead(user.sub);
+    return {
+      message: 'Notifications marked as read',
+    };
+  }
 }
