@@ -27,6 +27,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { DashboardsModule } from './dashboards/dashboards.module';
 import { GatewaydetailsModule } from './gatewaydetails/gatewaydetails.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { Json2excelModule } from './json2excel/json2excel.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     DashboardsModule,
     GatewaydetailsModule,
     NotificationsModule,
+    Json2excelModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],

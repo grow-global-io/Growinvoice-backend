@@ -30,6 +30,7 @@ export class NotificationsService {
   ): Promise<CursorPaginatedDto<NotificationDto>> {
     const notifications = await this.prismaService.notification.findMany({
       where: { user_id },
+      orderBy: { createdAt: 'desc' },
       take: parseInt(take) ?? 10,
       skip: cursor ? 1 : 0, // Skip the cursor item itself
       cursor: cursor ? { id: cursor } : undefined,

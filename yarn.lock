@@ -512,6 +512,11 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@e965/xlsx@^0.20.0":
+  version "0.20.3"
+  resolved "https://registry.yarnpkg.com/@e965/xlsx/-/xlsx-0.20.3.tgz#4577f2c7691137d3e315018218ba2b76e4721ba9"
+  integrity sha512-703RN/3OdsRD5mtse2HBX7Um7xwaP9tlswEG6svOtjqokXoX7rJdQj7DyabD2I+xk22RgaIIU+R6BHgkpZGB/w==
+
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@eslint-community/eslint-utils/-/eslint-utils-4.4.0.tgz#a23514e8fb9af1269d5f7788aa556798d61c6b59"
@@ -4521,6 +4526,13 @@ jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
   integrity sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==
+
+json-as-xlsx@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/json-as-xlsx/-/json-as-xlsx-2.5.6.tgz#c8f9fd1c374ba4762a8c524d079276dbf17e7d34"
+  integrity sha512-z7phlB+VgS9wZv2N4SBKlguC3C7uauSj2PYSZICCrPaiu1lu8zkCpzZ4sOHWi0/3Je0CJl87q+J+3mpZbxpOew==
+  dependencies:
+    "@e965/xlsx" "^0.20.0"
 
 json-buffer@3.0.1:
   version "3.0.1"
