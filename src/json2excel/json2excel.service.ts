@@ -1,26 +1,120 @@
-import { Injectable } from '@nestjs/common';
-import { CreateJson2excelDto } from './dto/create-json2excel.dto';
-import { UpdateJson2excelDto } from './dto/update-json2excel.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Workbook } from 'exceljs';
+import * as tmp from 'tmp';
 
 @Injectable()
 export class Json2excelService {
-  create(createJson2excelDto: CreateJson2excelDto) {
-    return 'This action adds a new json2excel';
+  constructor() {}
+
+  async createXls(dataa?: any) {
+    const data = dataa ?? [
+      {
+        name: 'John Doe',
+        age: 20,
+        isStudent: true,
+      },
+      {
+        name: 'Jane Doe',
+        age: 25,
+        isStudent: false,
+      },
+    ];
+
+    const rows = [];
+
+    data.forEach((item) => {
+      rows.push(Object.values(item));
+    });
+
+    const book = new Workbook();
+
+    const sheet = book.addWorksheet('Sheet1');
+
+    rows.unshift(Object.keys(data[0]));
+
+    sheet.addRows(rows);
+
+    const File = await new Promise((resolve, reject) => {
+      tmp.file(
+        {
+          discardDescriptor: true,
+          prefix: 'myExcelSheet',
+          postfix: '.xlsx',
+          mode: parseInt('0600', 8),
+        },
+        async (err, file) => {
+          if (err) {
+            throw new BadRequestException('Error creating file');
+          }
+
+          book?.xlsx
+            ?.writeFile(file)
+            .then(() => {
+              resolve(file);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        },
+      );
+    });
+
+    return File;
   }
 
-  findAll() {
-    return `This action returns all json2excel`;
-  }
+  async createCsv(dataa?: any) {
+    const data = dataa ?? [
+      {
+        name: 'John Doe',
+        age: 20,
+        isStudent: true,
+      },
+      {
+        name: 'Jane Doe',
+        age: 25,
+        isStudent: false,
+      },
+    ];
 
-  findOne(id: number) {
-    return `This action returns a #${id} json2excel`;
-  }
+    const rows = [];
 
-  update(id: number, updateJson2excelDto: UpdateJson2excelDto) {
-    return `This action updates a #${id} json2excel`;
-  }
+    data.forEach((item) => {
+      rows.push(Object.values(item));
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} json2excel`;
+    const book = new Workbook();
+
+    const sheet = book.addWorksheet('Sheet1');
+
+    rows.unshift(Object.keys(data[0]));
+
+    sheet.addRows(rows);
+
+    const File = await new Promise((resolve, reject) => {
+      tmp.file(
+        {
+          discardDescriptor: true,
+          prefix: 'myExcelSheet',
+          postfix: '.csv',
+          mode: parseInt('0600', 8),
+        },
+        async (err, file) => {
+          if (err) {
+            throw new BadRequestException('Error creating file');
+          }
+
+          book?.csv
+            ?.writeFile(file)
+            .then(() => {
+              resolve(file);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        },
+      );
+    });
+
+    return File;
   }
 }

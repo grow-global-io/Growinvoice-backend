@@ -1,34 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Res, Header } from '@nestjs/common';
 import { Json2excelService } from './json2excel.service';
-import { CreateJson2excelDto } from './dto/create-json2excel.dto';
-import { UpdateJson2excelDto } from './dto/update-json2excel.dto';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { IsPublic } from '@shared/decorators/public.decorator';
+import { Response } from 'express';
 
+@ApiTags('json2excel')
 @Controller('json2excel')
 export class Json2excelController {
   constructor(private readonly json2excelService: Json2excelService) {}
 
+  @IsPublic()
   @Post()
-  create(@Body() createJson2excelDto: CreateJson2excelDto) {
-    return this.json2excelService.create(createJson2excelDto);
+  @ApiBody({ type: Object })
+  @ApiResponse({ status: 201, description: 'Created', type: Object })
+  async create(@Body() data: any, @Res() res: Response) {
+    const buffer: any = await this.json2excelService.createXls(data);
+    res.download(buffer);
   }
 
-  @Get()
-  findAll() {
-    return this.json2excelService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.json2excelService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateJson2excelDto: UpdateJson2excelDto) {
-    return this.json2excelService.update(+id, updateJson2excelDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.json2excelService.remove(+id);
+  @IsPublic()
+  @Post('csv')
+  @Header('Content-Type', 'text/csv')
+  @ApiBody({ type: Object })
+  @ApiResponse({ status: 201, description: 'Created', type: Object })
+  async createCsv(@Body() data: any, @Res() res: Response) {
+    const buffer: any = await this.json2excelService.createCsv(data);
+    res.download(buffer);
   }
 }
