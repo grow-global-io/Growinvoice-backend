@@ -76,6 +76,22 @@ enum GateWayType {
   Razorpay
 }
 
+enum PlanFeature {
+  Invoice
+  Quotation
+  Customer
+  Product
+  Tax
+  HSNCode
+  ProductUnit
+  PaymentDetails
+  InvoiceSettings
+  QuotationSettings
+  Payments
+  GateWayDetails
+  AIDashboard
+}
+
 enum DashboardTypes {
   Table
   Chart
@@ -187,6 +203,8 @@ model User {
   AIDashboard       AIDashboard[]
   /// @DtoApiHidden
   Notification      Notification[]
+  /// @DtoApiHidden
+  UserPlans         UserPlans[]
 }
 
 /// @@deny('read', isExist == false)
@@ -926,4 +944,71 @@ model Notification {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   metaType  String?
+}
+
+/// @@deny('read', isExist == false)
+model Plans {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt    DateTime       @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt    DateTime?      @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist      Boolean        @default(true)
+  id           String         @id() @default(cuid())
+  name         String
+  description  String
+  is_active    Boolean
+  price        Float
+  days         Int
+  /// @DtoApiHidden
+  PlanFeatures PlanFeatures[]
+  /// @DtoApiHidden
+  UserPlans    UserPlans[]
+}
+
+/// @@deny('read', isExist == false)
+model PlanFeatures {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime    @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime?   @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean     @default(true)
+  id        String      @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  plan_id   String
+  plan      Plans       @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  feature   PlanFeature
+  count     Int
+}
+
+/// @@deny('read', isExist == false)
+model UserPlans {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id    String
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  plan_id    String
+  plan       Plans     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  start_date DateTime
+  end_date   DateTime
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  status     Boolean   @default(false)
 }

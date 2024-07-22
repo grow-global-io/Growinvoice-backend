@@ -79,6 +79,22 @@ enum GateWayType {
     Razorpay
 }
 
+enum PlanFeature {
+    Invoice
+    Quotation
+    Customer
+    Product
+    Tax
+    HSNCode
+    ProductUnit
+    PaymentDetails
+    InvoiceSettings
+    QuotationSettings
+    Payments
+    GateWayDetails
+    AIDashboard
+}
+
 model Country extends Base {
     id              String            @id @default(cuid())
     name            String
@@ -126,6 +142,7 @@ model User extends Base {
     GateWayDetails    GateWayDetails[]    @DtoApiHidden
     AIDashboard       AIDashboard[]       @DtoApiHidden
     Notification      Notification[]      @DtoApiHidden
+    UserPlans         UserPlans[]         @DtoApiHidden
 }
 
 model Company extends Base {
@@ -483,3 +500,34 @@ model Notification extends Base {
     meta     String? @DtoCreateOptional @DtoUpdateOptional
     metaType String? @DtoCreateOptional @DtoUpdateOptional
 }
+
+model Plans extends Base {
+    id           String         @id @default(cuid())
+    name         String
+    description  String
+    is_active    Boolean
+    price        Float
+    days         Int
+    PlanFeatures PlanFeatures[] @DtoApiHidden
+    UserPlans    UserPlans[]    @DtoApiHidden
+}
+
+model PlanFeatures extends Base {
+    id      String      @id @default(cuid())
+    plan_id String      @DtoRelationIncludeId
+    plan    Plans       @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+    feature PlanFeature
+    count   Int
+}
+
+model UserPlans extends Base {
+    id         String   @id @default(cuid())
+    user_id    String   @DtoRelationIncludeId
+    user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    plan_id    String   @DtoRelationIncludeId
+    plan       Plans    @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+    start_date DateTime
+    end_date   DateTime
+    status     Boolean  @default(false) @DtoCreateOptional @DtoUpdateOptional
+}
+

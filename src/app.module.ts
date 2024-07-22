@@ -28,6 +28,8 @@ import { DashboardsModule } from './dashboards/dashboards.module';
 import { GatewaydetailsModule } from './gatewaydetails/gatewaydetails.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { Json2excelModule } from './json2excel/json2excel.module';
+import { PlansModule } from './plans/plans.module';
+import { UserplansModule } from './userplans/userplans.module';
 
 @Module({
   imports: [
@@ -59,6 +61,8 @@ import { Json2excelModule } from './json2excel/json2excel.module';
     GatewaydetailsModule,
     NotificationsModule,
     Json2excelModule,
+    PlansModule,
+    UserplansModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],

@@ -16,6 +16,7 @@ import { Payments } from './payments.entity';
 import { GateWayDetails } from './gateWayDetails.entity';
 import { AIDashboard } from './aIDashboard.entity';
 import { Notification } from './notification.entity';
+import { UserPlans } from './userPlans.entity';
 
 export class User {
   @ApiProperty({
@@ -109,4 +110,6 @@ export class User {
   AIDashboard?: AIDashboard[];
   @ApiHideProperty()
   Notification?: Notification[];
+  @ApiHideProperty()
+  UserPlans?: UserPlans[];
 }

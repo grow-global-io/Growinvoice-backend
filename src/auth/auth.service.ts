@@ -38,7 +38,21 @@ export class AuthService {
   async verifyToken(user: User) {
     const userData = await this.prismaService.user.findUnique({
       where: { id: user.sub },
-      include: { company: true, currency: true },
+      include: {
+        company: true,
+        currency: true,
+        UserPlans: {
+          where: {
+            status: true,
+            start_date: {
+              lte: new Date(),
+            },
+            end_date: {
+              gte: new Date(),
+            },
+          },
+        },
+      },
     });
     if (!userData) {
       throw new BadRequestException('User not found');
