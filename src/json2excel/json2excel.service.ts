@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Workbook } from 'exceljs';
 import * as tmp from 'tmp';
+import * as fs from 'fs';
+import { UploadService } from '@/upload/upload.service';
 
 @Injectable()
 export class Json2excelService {
-  constructor() {}
+  constructor(private uploadService: UploadService) {}
 
   async createXls(dataa?: any) {
     const data = dataa ?? [
@@ -59,7 +61,15 @@ export class Json2excelService {
       );
     });
 
-    return File;
+    const b = await fs?.readFileSync(File as any);
+
+    const a = await this.uploadService.uploadBuffer(
+      b,
+      '.xlsx',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+
+    return a;
   }
 
   async createCsv(dataa?: any) {
@@ -115,6 +125,14 @@ export class Json2excelService {
       );
     });
 
-    return File;
+    const b = await fs?.readFileSync(File as any);
+
+    const a = await this.uploadService.uploadBuffer(
+      b,
+      '.xlsx',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+
+    return a;
   }
 }

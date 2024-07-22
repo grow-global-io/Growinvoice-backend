@@ -35,6 +35,30 @@ export class UploadService {
     });
   }
 
+  async uploadBuffer(
+    file: Buffer,
+    ext: string,
+    mimetype: string,
+  ): Promise<UploadResponseDto> {
+    const blobServiceClient = BlobServiceClient.fromConnectionString(
+      this.azureConnectionString,
+    );
+    const containerClient = blobServiceClient.getContainerClient(
+      this.constainerName,
+    );
+    const blockBlobClient = containerClient.getBlockBlobClient(uuid() + ext);
+
+    const fileBuffer = file;
+
+    await blockBlobClient.uploadData(fileBuffer, {
+      blobHTTPHeaders: { blobContentType: mimetype },
+    });
+    return plainToInstance(UploadResponseDto, {
+      link: blockBlobClient.url,
+      message: 'File uploaded successfully',
+    });
+  }
+
   async uploadPdf(file: Express.Multer.File): Promise<UploadResponseDto> {
     const startTime = Date.now();
     const blobServiceClient = BlobServiceClient.fromConnectionString(
