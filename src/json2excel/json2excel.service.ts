@@ -127,11 +127,7 @@ export class Json2excelService {
 
     const b = await fs?.readFileSync(File as any);
 
-    const a = await this.uploadService.uploadBuffer(
-      b,
-      '.xlsx',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    );
+    const a = await this.uploadService.uploadBuffer(b, '.csv', 'text/csv');
 
     return a;
   }

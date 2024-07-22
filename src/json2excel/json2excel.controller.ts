@@ -1,8 +1,7 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { Json2excelService } from './json2excel.service';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { IsPublic } from '@shared/decorators/public.decorator';
-import { Response } from 'express';
 
 @ApiTags('json2excel')
 @Controller('json2excel')
@@ -12,18 +11,16 @@ export class Json2excelController {
   @IsPublic()
   @Post()
   @ApiBody({ type: Object })
-  @ApiResponse({ status: 201, description: 'Created', type: Object })
-  async create(@Body() data: any, @Res() res: Response) {
+  async create(@Body() data: any) {
     const buffer = await this.json2excelService.createXls(data);
-    res.send(buffer);
+    return buffer;
   }
 
   @IsPublic()
   @Post('csv')
   @ApiBody({ type: Object })
-  @ApiResponse({ status: 201, description: 'Created', type: Object })
-  async createCsv(@Body() data: any, @Res() res: Response) {
+  async createCsv(@Body() data: any) {
     const buffer: any = await this.json2excelService.createCsv(data);
-    res.send(buffer);
+    return buffer;
   }
 }
