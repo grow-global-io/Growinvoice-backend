@@ -31,6 +31,7 @@ import { Json2excelModule } from './json2excel/json2excel.module';
 import { PlansModule } from './plans/plans.module';
 import { UserplansModule } from './userplans/userplans.module';
 import { VendorsModule } from './vendors/vendors.module';
+import { ExpensesModule } from './expenses/expenses.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { VendorsModule } from './vendors/vendors.module';
     PlansModule,
     UserplansModule,
     VendorsModule,
+    ExpensesModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],
