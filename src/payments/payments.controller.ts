@@ -62,7 +62,7 @@ export class PaymentsController {
     @Query('user_id') user_id: string,
     @Res() res: Response,
   ) {
-    const success = await this.paymentsService.success(
+    const success = await this.paymentsService.successPlans(
       session_id,
       user_id,
       plan_id,

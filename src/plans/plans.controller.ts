@@ -12,12 +12,13 @@ import {
   CreatePlanWithFeaturesDto,
   UpdatePlanWithFeaturesDto,
 } from './dto/create-plan-with-features.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { PlansDto } from '@shared/models';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { IsPublic } from '@shared/decorators/public.decorator';
 
+@ApiExtraModels(PlansDto)
 @ApiTags('plans')
 @Controller('plans')
 export class PlansController {

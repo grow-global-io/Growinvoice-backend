@@ -126,6 +126,12 @@ export class PaymentsService {
   }
 
   async stripePaymentLinkForPlan(user_id: string, plan_id: string) {
+    const user = await this.prisma.userPlans.findFirst({
+      where: { user_id, status: true, end_date: { gt: new Date() } },
+    });
+    if (user) {
+      throw new Error('Plan already exists');
+    }
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
       throw new Error('Plan not found');
@@ -134,14 +140,13 @@ export class PaymentsService {
     if (!stripeKey) {
       throw new Error('Stripe key not found');
     }
-    const userDetails = await this.userService.findOne(user_id);
     const stripe = new Stripe(stripeKey);
     const stripePaymentLink = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [
         {
           price_data: {
-            currency: userDetails?.currency?.short_code,
+            currency: 'USD',
             product_data: {
               name: `Payment for the plan - ${plan?.name}`,
               description: 'Payment for the plan - ' + plan?.name,
@@ -174,20 +179,13 @@ export class PaymentsService {
     const stripe = new Stripe(stripeKey);
     const session = await stripe.checkout.sessions.retrieve(session_id);
     if (session.payment_status === 'paid') {
-      // await this.create({
-      //   plan_id,
-      //   user_id,
-      //   amount: plan.price,
-      //   paymentDetails_id: plan?.paymentId,
-      //   paymentDate: new Date(),
-      //   payment_type: 'Stripe',
-      // });
       const end_date = new Date();
       end_date.setDate(end_date.getDate() + plan.days);
       await this.userplansService.create({
         end_date: end_date,
         plan_id,
         start_date: new Date(),
+        session_id,
         status: true,
         user_id,
       });

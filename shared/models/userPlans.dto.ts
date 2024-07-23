@@ -30,6 +30,10 @@ export class UserPlansDto {
   plan_id: string;
   @ApiProperty({
     type: 'string',
+  })
+  session_id: string;
+  @ApiProperty({
+    type: 'string',
     format: 'date-time',
   })
   start_date: Date;

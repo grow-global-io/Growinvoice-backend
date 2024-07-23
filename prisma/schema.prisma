@@ -1006,6 +1006,9 @@ model UserPlans {
   /// @DtoRelationIncludeId
   plan_id    String
   plan       Plans     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  session_id String
   start_date DateTime
   end_date   DateTime
   /// @DtoCreateOptional

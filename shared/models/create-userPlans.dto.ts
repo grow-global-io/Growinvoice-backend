@@ -22,6 +22,12 @@ export class CreateUserPlansDto {
   plan_id: string;
   @ApiProperty({
     type: 'string',
+  })
+  @IsOptional()
+  @IsString()
+  session_id?: string;
+  @ApiProperty({
+    type: 'string',
     format: 'date-time',
   })
   @IsNotEmpty()

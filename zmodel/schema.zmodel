@@ -526,6 +526,7 @@ model UserPlans extends Base {
     user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
     plan_id    String   @DtoRelationIncludeId
     plan       Plans    @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+    session_id String   @DtoCreateOptional @DtoUpdateOptional
     start_date DateTime
     end_date   DateTime
     status     Boolean  @default(false) @DtoCreateOptional @DtoUpdateOptional

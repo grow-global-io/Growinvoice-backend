@@ -18,6 +18,13 @@ export class UpdateUserPlansDto {
   plan_id?: string;
   @ApiProperty({
     type: 'string',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  session_id?: string;
+  @ApiProperty({
+    type: 'string',
     format: 'date-time',
     required: false,
   })
