@@ -9,6 +9,8 @@ import { MailService } from '@/mail/mail.service';
 import { GatewaydetailsService } from '@/gatewaydetails/gatewaydetails.service';
 import { NotificationsService } from '@/notifications/notifications.service';
 import { NotificationsGateway } from '@/notifications/notifications.gateway';
+import { PlansService } from '@/plans/plans.service';
+import { UserplansService } from '@/userplans/userplans.service';
 
 @Module({
   controllers: [PaymentsController],
@@ -22,6 +24,8 @@ import { NotificationsGateway } from '@/notifications/notifications.gateway';
     GatewaydetailsService,
     NotificationsService,
     NotificationsGateway,
+    PlansService,
+    UserplansService,
   ],
 })
 export class PaymentsModule {}

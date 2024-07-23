@@ -55,6 +55,25 @@ export class PaymentsController {
   }
 
   @IsPublic()
+  @Get('successPlans')
+  async successPlans(
+    @Query('session_id') session_id: string,
+    @Query('plan_id') plan_id: string,
+    @Query('user_id') user_id: string,
+    @Res() res: Response,
+  ) {
+    const success = await this.paymentsService.success(
+      session_id,
+      user_id,
+      plan_id,
+    );
+    if (success) {
+      return res.redirect(`${process.env.FRONTEND_URL}/payment/success`);
+    }
+    return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
+  }
+
+  @IsPublic()
   @Get('successRazorpay')
   @ApiQuery({ name: 'razorpay_payment_id', required: true })
   @ApiQuery({ name: 'invoice_id', required: true })
@@ -128,6 +147,19 @@ export class PaymentsController {
     @Query('invoice_id') invoice_id: string,
   ) {
     const link = await this.paymentsService.stripePayment(user_id, invoice_id);
+    return link;
+  }
+
+  @IsPublic()
+  @Post('stripePaymentForPlans')
+  async stripePaymentForPlans(
+    @Query('user_id') user_id: string,
+    @Query('plan_id') plan_id: string,
+  ) {
+    const link = await this.paymentsService.stripePaymentLinkForPlan(
+      user_id,
+      plan_id,
+    );
     return link;
   }
 

@@ -61,6 +61,7 @@ export class PlansController {
     };
   }
 
+  @IsPublic()
   @Delete(':id')
   @ApiSuccessResponse()
   async remove(@Param('id') id: string): Promise<SuccessResponseDto> {

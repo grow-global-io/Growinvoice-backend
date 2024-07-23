@@ -13,6 +13,9 @@ import {
 import { plainToInstance } from 'class-transformer';
 import Stripe from 'stripe';
 import { RazorpayPaymentDto } from './dto/razorpay-payment-create.dto';
+import { PlansService } from '@/plans/plans.service';
+import { ConfigService } from '@nestjs/config';
+import { UserplansService } from '@/userplans/userplans.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Razorpay = require('razorpay');
@@ -25,6 +28,9 @@ export class PaymentsService {
     private userService: UserService,
     private gateWayService: GatewaydetailsService,
     private notificationService: NotificationsService,
+    private planService: PlansService,
+    private configService: ConfigService,
+    private userplansService: UserplansService,
   ) {}
 
   async create(createPaymentDto: CreatePaymentsDto) {
@@ -117,6 +123,83 @@ export class PaymentsService {
       },
     });
     return stripePaymentLink?.url;
+  }
+
+  async stripePaymentLinkForPlan(user_id: string, plan_id: string) {
+    const plan = await this.planService.findOne(plan_id);
+    if (!plan) {
+      throw new Error('Plan not found');
+    }
+    const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
+    if (!stripeKey) {
+      throw new Error('Stripe key not found');
+    }
+    const userDetails = await this.userService.findOne(user_id);
+    const stripe = new Stripe(stripeKey);
+    const stripePaymentLink = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: userDetails?.currency?.short_code,
+            product_data: {
+              name: `Payment for the plan - ${plan?.name}`,
+              description: 'Payment for the plan - ' + plan?.name,
+            },
+            unit_amount: Math.round(plan?.price * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.BACKEND_URL}/api/payments/successPlans?session_id={CHECKOUT_SESSION_ID}&user_id=${user_id}&plan_id=${plan_id}`,
+      cancel_url: `${process.env.BACKEND_URL}/api/payments/cancelPlans?type=cancel`,
+      billing_address_collection: 'required',
+      metadata: {
+        plan_id,
+        user_id,
+      },
+    });
+    return stripePaymentLink?.url;
+  }
+
+  async successPlans(session_id: string, user_id: string, plan_id: string) {
+    const plan = await this.planService.findOne(plan_id);
+    if (!plan) {
+      throw new Error('Plan not found');
+    }
+    const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
+    if (!stripeKey) {
+      throw new Error('Stripe key not found');
+    }
+    const stripe = new Stripe(stripeKey);
+    const session = await stripe.checkout.sessions.retrieve(session_id);
+    if (session.payment_status === 'paid') {
+      // await this.create({
+      //   plan_id,
+      //   user_id,
+      //   amount: plan.price,
+      //   paymentDetails_id: plan?.paymentId,
+      //   paymentDate: new Date(),
+      //   payment_type: 'Stripe',
+      // });
+      const end_date = new Date();
+      end_date.setDate(end_date.getDate() + plan.days);
+      await this.userplansService.create({
+        end_date: end_date,
+        plan_id,
+        start_date: new Date(),
+        status: true,
+        user_id,
+      });
+      await this.notificationService.create({
+        user_id,
+        title: 'Payment Success',
+        body: 'Payment for plan ' + plan.name + ' is successful',
+      });
+      // redirect to success page
+      return true;
+    }
+    return false;
   }
 
   async success(session_id: string, user_id: string, invoice_id: string) {
