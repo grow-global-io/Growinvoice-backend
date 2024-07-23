@@ -97,53 +97,66 @@ enum DashboardTypes {
   Chart
 }
 
+enum ExpenseCategory {
+  Travel
+  Food
+  Office
+  Rent
+  Salary
+  Other
+}
+
 /// @@deny('read', isExist == false)
 model Country {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt       DateTime          @default(now())
+  createdAt             DateTime                @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt       DateTime?         @updatedAt()
+  updatedAt             DateTime?               @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist         Boolean           @default(true)
-  id              String            @id() @default(cuid())
-  name            String
-  code            String
-  phone_code      String
+  isExist               Boolean                 @default(true)
+  id                    String                  @id() @default(cuid())
+  name                  String
+  code                  String
+  phone_code            String
   /// @DtoApiHidden
-  state           State[]
+  state                 State[]
   /// @DtoApiHidden
-  BillingAddress  BillingAddress[]
+  BillingAddress        BillingAddress[]
   /// @DtoApiHidden
-  ShippingAddress ShippingAddress[]
+  ShippingAddress       ShippingAddress[]
   /// @DtoApiHidden
-  Company         Company[]
+  Company               Company[]
+  /// @DtoApiHidden
+  VendorsBillingAddress VendorsBillingAddress[]
 }
 
 /// @@deny('read', isExist == false)
 model State {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt       DateTime          @default(now())
+  createdAt             DateTime                @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt       DateTime?         @updatedAt()
+  updatedAt             DateTime?               @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist         Boolean           @default(true)
-  id              String            @id() @default(cuid())
-  name            String
+  isExist               Boolean                 @default(true)
+  id                    String                  @id() @default(cuid())
+  name                  String
   /// @DtoRelationIncludeId
-  country_id      String
-  country         Country           @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  country_id            String
+  country               Country                 @relation(fields: [country_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
-  BillingAddress  BillingAddress[]
+  BillingAddress        BillingAddress[]
   /// @DtoApiHidden
-  ShippingAddress ShippingAddress[]
+  ShippingAddress       ShippingAddress[]
   /// @DtoApiHidden
-  Company         Company[]
+  Company               Company[]
+  /// @DtoApiHidden
+  VendorsBillingAddress VendorsBillingAddress[]
 }
 
 /// @@deny('read', isExist == false)
@@ -205,6 +218,10 @@ model User {
   Notification      Notification[]
   /// @DtoApiHidden
   UserPlans         UserPlans[]
+  /// @DtoApiHidden
+  Vendors           Vendors[]
+  /// @DtoApiHidden
+  Expenses          Expenses[]
 }
 
 /// @@deny('read', isExist == false)
@@ -428,6 +445,8 @@ model Currencies {
   user       User[]
   /// @DtoApiHidden
   product    Product[]
+  /// @DtoApiHidden
+  expense    Expenses[]
 }
 
 /// @@deny('read', isExist == false)
@@ -1014,4 +1033,88 @@ model UserPlans {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   status     Boolean   @default(false)
+}
+
+/// @@deny('read', isExist == false)
+model Vendors {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime              @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?             @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean               @default(true)
+  id                String                @id() @default(cuid())
+  name              String
+  display_name      String
+  email             String
+  phone             String?
+  website           String?
+  /// @DtoRelationIncludeId
+  billingAddress_id String
+  billingAddress    VendorsBillingAddress @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id           String
+  user              User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  expenses          Expenses[]
+}
+
+/// @@deny('read', isExist == false)
+model VendorsBillingAddress {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  address    String
+  city       String
+  /// @DtoRelationIncludeId
+  state_id   String
+  state      State     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  country_id String
+  country    Country   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  zip        String
+  /// @DtoApiHidden
+  vendor     Vendors[]
+}
+
+/// @@deny('read', isExist == false)
+model Expenses {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt   DateTime        @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt   DateTime?       @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist     Boolean         @default(true)
+  id          String          @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  receipt_url String?
+  category    ExpenseCategory
+  /// @DtoRelationIncludeId
+  vendor_id   String
+  vendor      Vendors         @relation(fields: [vendor_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id     String
+  user        User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  expenseDate DateTime
+  amount      Float
+  /// @DtoRelationIncludeId
+  currency_id String
+  currency    Currencies      @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes       String?
 }

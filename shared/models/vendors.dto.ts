@@ -1,10 +1,6 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { Customer } from './customer.entity';
-import { User } from './user.entity';
-import { Product } from './product.entity';
-import { Expenses } from './expenses.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class Currencies {
+export class VendorsDto {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -31,21 +27,27 @@ export class Currencies {
   @ApiProperty({
     type: 'string',
   })
-  symbol: string;
+  display_name: string;
   @ApiProperty({
     type: 'string',
   })
-  code: string;
+  email: string;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  phone: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  website: string | null;
   @ApiProperty({
     type: 'string',
   })
-  short_code: string;
-  @ApiHideProperty()
-  currency?: Customer[];
-  @ApiHideProperty()
-  user?: User[];
-  @ApiHideProperty()
-  product?: Product[];
-  @ApiHideProperty()
-  expense?: Expenses[];
+  billingAddress_id: string;
+  @ApiProperty({
+    type: 'string',
+  })
+  user_id: string;
 }

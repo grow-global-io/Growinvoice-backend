@@ -1,11 +1,9 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { State } from './state.entity';
-import { BillingAddress } from './billingAddress.entity';
-import { ShippingAddress } from './shippingAddress.entity';
-import { Company } from './company.entity';
-import { VendorsBillingAddress } from './vendorsBillingAddress.entity';
+import { Country } from './country.entity';
+import { Vendors } from './vendors.entity';
 
-export class Country {
+export class VendorsBillingAddress {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -28,23 +26,33 @@ export class Country {
   @ApiProperty({
     type: 'string',
   })
-  name: string;
+  address: string;
   @ApiProperty({
     type: 'string',
   })
-  code: string;
+  city: string;
   @ApiProperty({
     type: 'string',
   })
-  phone_code: string;
+  state_id: string;
+  @ApiProperty({
+    type: () => State,
+    required: false,
+  })
+  state?: State;
+  @ApiProperty({
+    type: 'string',
+  })
+  country_id: string;
+  @ApiProperty({
+    type: () => Country,
+    required: false,
+  })
+  country?: Country;
+  @ApiProperty({
+    type: 'string',
+  })
+  zip: string;
   @ApiHideProperty()
-  state?: State[];
-  @ApiHideProperty()
-  BillingAddress?: BillingAddress[];
-  @ApiHideProperty()
-  ShippingAddress?: ShippingAddress[];
-  @ApiHideProperty()
-  Company?: Company[];
-  @ApiHideProperty()
-  VendorsBillingAddress?: VendorsBillingAddress[];
+  vendor?: Vendors[];
 }

@@ -17,6 +17,8 @@ import { GateWayDetails } from './gateWayDetails.entity';
 import { AIDashboard } from './aIDashboard.entity';
 import { Notification } from './notification.entity';
 import { UserPlans } from './userPlans.entity';
+import { Vendors } from './vendors.entity';
+import { Expenses } from './expenses.entity';
 
 export class User {
   @ApiProperty({
@@ -112,4 +114,8 @@ export class User {
   Notification?: Notification[];
   @ApiHideProperty()
   UserPlans?: UserPlans[];
+  @ApiHideProperty()
+  Vendors?: Vendors[];
+  @ApiHideProperty()
+  Expenses?: Expenses[];
 }

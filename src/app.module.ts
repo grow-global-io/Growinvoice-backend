@@ -30,6 +30,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { Json2excelModule } from './json2excel/json2excel.module';
 import { PlansModule } from './plans/plans.module';
 import { UserplansModule } from './userplans/userplans.module';
+import { VendorsModule } from './vendors/vendors.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { UserplansModule } from './userplans/userplans.module';
     Json2excelModule,
     PlansModule,
     UserplansModule,
+    VendorsModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],

@@ -96,24 +96,26 @@ enum PlanFeature {
 }
 
 model Country extends Base {
-    id              String            @id @default(cuid())
-    name            String
-    code            String
-    phone_code      String
-    state           State[]           @DtoApiHidden
-    BillingAddress  BillingAddress[]  @DtoApiHidden
-    ShippingAddress ShippingAddress[] @DtoApiHidden
-    Company         Company[]         @DtoApiHidden
+    id                    String                  @id @default(cuid())
+    name                  String
+    code                  String
+    phone_code            String
+    state                 State[]                 @DtoApiHidden
+    BillingAddress        BillingAddress[]        @DtoApiHidden
+    ShippingAddress       ShippingAddress[]       @DtoApiHidden
+    Company               Company[]               @DtoApiHidden
+    VendorsBillingAddress VendorsBillingAddress[] @DtoApiHidden
 }
 
 model State extends Base {
-    id              String            @id @default(cuid())
-    name            String
-    country_id      String            @DtoRelationIncludeId
-    country         Country           @relation(fields: [country_id], references: [id], onDelete: Cascade)
-    BillingAddress  BillingAddress[]  @DtoApiHidden
-    ShippingAddress ShippingAddress[] @DtoApiHidden
-    Company         Company[]         @DtoApiHidden
+    id                    String                  @id @default(cuid())
+    name                  String
+    country_id            String                  @DtoRelationIncludeId
+    country               Country                 @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    BillingAddress        BillingAddress[]        @DtoApiHidden
+    ShippingAddress       ShippingAddress[]       @DtoApiHidden
+    Company               Company[]               @DtoApiHidden
+    VendorsBillingAddress VendorsBillingAddress[] @DtoApiHidden
 }
 
 model User extends Base {
@@ -143,6 +145,8 @@ model User extends Base {
     AIDashboard       AIDashboard[]       @DtoApiHidden
     Notification      Notification[]      @DtoApiHidden
     UserPlans         UserPlans[]         @DtoApiHidden
+    Vendors           Vendors[]           @DtoApiHidden
+    Expenses          Expenses[]          @DtoApiHidden
 }
 
 model Company extends Base {
@@ -251,6 +255,7 @@ model Currencies extends Base {
     currency   Customer[] @DtoApiHidden
     user       User[]     @DtoApiHidden
     product    Product[]  @DtoApiHidden
+    expense    Expenses[] @DtoApiHidden
 }
 
 
@@ -532,3 +537,52 @@ model UserPlans extends Base {
     status     Boolean  @default(false) @DtoCreateOptional @DtoUpdateOptional
 }
 
+model Vendors extends Base {
+    id                String                @id @default(cuid())
+    name              String
+    display_name      String
+    email             String
+    phone             String?
+    website           String?
+    billingAddress_id String                @DtoRelationIncludeId
+    billingAddress    VendorsBillingAddress @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
+    user_id           String                @DtoRelationIncludeId
+    user              User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    expenses          Expenses[]            @DtoApiHidden
+}
+
+model VendorsBillingAddress extends Base {
+    id         String    @id @default(cuid())
+    address    String
+    city       String
+    state_id   String    @DtoRelationIncludeId
+    state      State     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    country_id String    @DtoRelationIncludeId
+    country    Country   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    zip        String
+    vendor     Vendors[] @DtoApiHidden
+}
+
+enum ExpenseCategory {
+    Travel
+    Food
+    Office
+    Rent
+    Salary
+    Other
+}
+
+model Expenses extends Base {
+    id          String          @id @default(cuid())
+    receipt_url String?         @DtoCreateOptional @DtoUpdateOptional
+    category    ExpenseCategory
+    vendor_id   String          @DtoRelationIncludeId
+    vendor      Vendors         @relation(fields: [vendor_id], references: [id], onDelete: Cascade)
+    user_id     String          @DtoRelationIncludeId
+    user        User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    expenseDate DateTime
+    amount      Float
+    currency_id String          @DtoRelationIncludeId
+    currency    Currencies      @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+    notes       String?         @DtoCreateOptional @DtoUpdateOptional
+}

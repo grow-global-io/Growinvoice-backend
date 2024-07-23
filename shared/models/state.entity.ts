@@ -3,6 +3,7 @@ import { Country } from './country.entity';
 import { BillingAddress } from './billingAddress.entity';
 import { ShippingAddress } from './shippingAddress.entity';
 import { Company } from './company.entity';
+import { VendorsBillingAddress } from './vendorsBillingAddress.entity';
 
 export class State {
   @ApiProperty({
@@ -43,4 +44,6 @@ export class State {
   ShippingAddress?: ShippingAddress[];
   @ApiHideProperty()
   Company?: Company[];
+  @ApiHideProperty()
+  VendorsBillingAddress?: VendorsBillingAddress[];
 }
