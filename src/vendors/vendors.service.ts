@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateVendorsWithAddressDto } from './dto/create-vendor-with-address.dto';
+import {
+  CreateVendorsWithAddressDto,
+  GetVendorsWithAddressDto,
+} from './dto/create-vendor-with-address.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { VendorsDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
@@ -43,8 +46,11 @@ export class VendorsService {
       where: {
         id,
       },
+      include: {
+        billingAddress: true,
+      },
     });
-    return plainToInstance(VendorsDto, vendor);
+    return plainToInstance(GetVendorsWithAddressDto, vendor);
   }
 
   async update(id: string, updateVendorDto: UpdateVendorsWithAddressDto) {
