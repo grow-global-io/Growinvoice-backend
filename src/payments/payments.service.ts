@@ -3,7 +3,7 @@ import { InvoiceService } from '@/invoice/invoice.service';
 import { NotificationsService } from '@/notifications/notifications.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserService } from '@/user/user.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CreatePaymentsDto,
   Payments,
@@ -130,15 +130,15 @@ export class PaymentsService {
       where: { user_id, status: true, end_date: { gt: new Date() } },
     });
     if (user) {
-      throw new Error('Plan already exists');
+      throw new BadRequestException('Plan already exists');
     }
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
-      throw new Error('Plan not found');
+      throw new BadRequestException('Plan not found');
     }
     const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (!stripeKey) {
-      throw new Error('Stripe key not found');
+      throw new BadRequestException('Stripe key not found');
     }
     const stripe = new Stripe(stripeKey);
     const stripePaymentLink = await stripe.checkout.sessions.create({
