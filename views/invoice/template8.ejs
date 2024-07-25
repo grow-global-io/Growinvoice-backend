@@ -164,6 +164,20 @@
                       </td>
                     </tr>
                     <% } %>
+                    <tr >
+                      <td class="tm_width_3 tm_primary_color text-danger font-weight-bold">Due Amount </td>
+                      <td class="tm_width_3 tm_primary_color tm_text_right text-danger font-weight-bold">
+                        <%= invoice?.user?.currency?.symbol %>
+                        <%= invoice?.due_amount %>
+                      </td>
+                    </tr>
+                    <tr >
+                      <td class="tm_width_3 tm_primary_color text-success font-weight-bold">Paid Amount </td>
+                      <td class="tm_width_3 tm_primary_color tm_text_right text-success font-weight-bold">
+                        <%= invoice?.user?.currency?.symbol %>
+                        <%= invoice?.paid_amount %>
+                      </td>
+                    </tr>
                     <tr class="tm_accent_bg_20">
                       <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_accent_color">
                         Grand Total </td>
