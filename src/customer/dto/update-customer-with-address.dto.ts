@@ -1,5 +1,6 @@
 import { OmitType } from '@nestjs/swagger';
 import {
+  InvoiceDto,
   UpdateBillingAddressDto,
   UpdateCustomerDto,
   UpdateShippingAddressDto,
@@ -15,4 +16,9 @@ export class UpdateCustomerWithAddressDto extends OmitType(UpdateCustomerDto, [
 
   @Type(() => UpdateShippingAddressDto)
   shippingDetails?: UpdateShippingAddressDto;
+}
+
+export class CustomerWithInvocieDto {
+  @Type(() => InvoiceDto)
+  invoice: InvoiceDto[];
 }
