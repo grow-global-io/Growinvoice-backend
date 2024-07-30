@@ -7,7 +7,7 @@ import {
 } from './dto/profit-loss.dto';
 import { RangeSelectDto } from './dto/range-select.dto';
 import { CustomerWithInvocieDto } from '@/customer/dto/update-customer-with-address.dto';
-import { ExpensesDto, InvoiceProducts } from '@shared/models';
+import { ExpensesDto, InvoiceDto, InvoiceProducts } from '@shared/models';
 
 @Injectable()
 export class ReportsService {
@@ -238,6 +238,6 @@ export class ReportsService {
       },
     });
 
-    return plainToInstance(InvoiceProducts, invoices);
+    return plainToInstance(InvoiceDto, invoices);
   }
 }
