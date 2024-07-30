@@ -21,3 +21,8 @@ export class QuotationWithAllDataDto extends Quotation {
   })
   customerShippingAddress?: string;
 }
+
+export class QuotationTotalCountDto {
+  @ApiProperty()
+  total: number;
+}

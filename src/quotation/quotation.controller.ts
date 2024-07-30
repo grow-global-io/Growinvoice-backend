@@ -46,6 +46,11 @@ export class QuotationController {
     };
   }
 
+  @Get('countTotal')
+  async countTotal(@GetUser() user: User) {
+    return await this.quotationService.countTotal(user?.sub);
+  }
+
   @Get()
   async findAll(@GetUser() user: User) {
     return await this.quotationService.findAll(user?.sub);

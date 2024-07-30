@@ -6,7 +6,10 @@ import {
 } from './dto/create-quotation-with-products.dto';
 import { plainToInstance } from 'class-transformer';
 import { Quotation, QuotationDto } from '@shared/models';
-import { QuotationWithAllDataDto } from './dto/quotation-with-all-data.dto';
+import {
+  QuotationTotalCountDto,
+  QuotationWithAllDataDto,
+} from './dto/quotation-with-all-data.dto';
 import { QuotationsettingsService } from '@/quotationsettings/quotationsettings.service';
 import {
   formatCompanyAddress,
@@ -339,5 +342,12 @@ export class QuotationService {
         });
     }
     return quotationDetails;
+  }
+
+  async countTotal(user_id: string) {
+    const total = await this.prismaService.quotation.count({
+      where: { user_id },
+    });
+    return plainToInstance(QuotationTotalCountDto, { total });
   }
 }
