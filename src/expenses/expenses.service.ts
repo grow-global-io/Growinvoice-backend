@@ -2,6 +2,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import {
   CreateExpensesDto,
+  Expenses,
   ExpensesDto,
   UpdateExpensesDto,
 } from '@shared/models';
@@ -22,8 +23,11 @@ export class ExpensesService {
       where: {
         user_id,
       },
+      include: {
+        vendor: true,
+      },
     });
-    return expense.map((e) => plainToInstance(ExpensesDto, e));
+    return expense.map((e) => plainToInstance(Expenses, e));
   }
 
   async findOne(id: string) {
