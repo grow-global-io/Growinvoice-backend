@@ -13,6 +13,15 @@ export class CountInvoiceDto {
   })
   invoice?: number;
 }
+
+export class CountTotalDueDto {
+  @ApiProperty({
+    type: 'number',
+    required: false,
+  })
+  totalDue?: number;
+}
+
 export class GetCustomerWithAddressDto extends CustomerDto {
   @Type(() => BillingAddressDto)
   billingAddress?: BillingAddressDto;
@@ -22,4 +31,7 @@ export class GetCustomerWithAddressDto extends CustomerDto {
 
   @Type(() => CountInvoiceDto)
   _count?: CountInvoiceDto;
+
+  @Type(() => CountTotalDueDto)
+  totalDue?: CountTotalDueDto;
 }

@@ -53,7 +53,25 @@ export class CustomerService {
         },
       },
     });
-    return plainToInstance(GetCustomerWithAddressDto, customers);
+    const customerWithDueAmounts = await Promise.all(
+      customers.map(async (customer) => {
+        const totalDue = await this.prismaServie.invoice.aggregate({
+          _sum: {
+            due_amount: true,
+          },
+          where: {
+            customer_id: customer.id,
+            status: 'DUE', // assuming there's a 'status' field to filter due invoices
+          },
+        });
+
+        return {
+          ...customer,
+          totalDue: totalDue._sum.due_amount || 0,
+        };
+      }),
+    );
+    return plainToInstance(GetCustomerWithAddressDto, customerWithDueAmounts);
   }
 
   async findOne(id: string) {
