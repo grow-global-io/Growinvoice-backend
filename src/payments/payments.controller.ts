@@ -74,6 +74,12 @@ export class PaymentsController {
   }
 
   @IsPublic()
+  @Get('cancelPlans')
+  async cancelPlans(@Res() res: Response) {
+    return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
+  }
+
+  @IsPublic()
   @Get('successRazorpay')
   @ApiQuery({ name: 'razorpay_payment_id', required: true })
   @ApiQuery({ name: 'invoice_id', required: true })
