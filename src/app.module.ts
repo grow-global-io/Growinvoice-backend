@@ -32,6 +32,7 @@ import { PlansModule } from './plans/plans.module';
 import { UserplansModule } from './userplans/userplans.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { ExpensesModule } from './expenses/expenses.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { ExpensesModule } from './expenses/expenses.module';
     UserplansModule,
     VendorsModule,
     ExpensesModule,
+    ReportsModule,
   ],
   controllers: [MailController],
   providers: [MailService, TaskserviceService],
