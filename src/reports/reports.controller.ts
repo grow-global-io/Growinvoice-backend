@@ -72,4 +72,34 @@ export class ReportsController {
       end,
     });
   }
+
+  @Get('expense-reports')
+  @ApiQuery({ name: 'start', required: true })
+  @ApiQuery({ name: 'end', required: true })
+  async getExpenseReports(
+    @GetUser() user: User,
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
+    return this.reportsService.getExpenseReports({
+      userId: user.sub,
+      start,
+      end,
+    });
+  }
+
+  @Get('invoice-reports')
+  @ApiQuery({ name: 'start', required: true })
+  @ApiQuery({ name: 'end', required: true })
+  async getInvoiceReports(
+    @GetUser() user: User,
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
+    return this.reportsService.getInvoiceReports({
+      userId: user.sub,
+      start,
+      end,
+    });
+  }
 }

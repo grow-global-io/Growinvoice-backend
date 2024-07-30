@@ -7,7 +7,7 @@ import {
 } from './dto/profit-loss.dto';
 import { RangeSelectDto } from './dto/range-select.dto';
 import { CustomerWithInvocieDto } from '@/customer/dto/update-customer-with-address.dto';
-import { InvoiceProducts } from '@shared/models';
+import { ExpensesDto, InvoiceProducts } from '@shared/models';
 
 @Injectable()
 export class ReportsService {
@@ -195,5 +195,49 @@ export class ReportsService {
     const uniqueProducts = Array.from(productsWithInvoices);
 
     return plainToInstance(InvoiceProducts, uniqueProducts);
+  }
+
+  async getExpenseReports({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    const expenses = await this.prismaService.expenses.findMany({
+      where: {
+        user_id: userId,
+        expenseDate: {
+          gte: new Date(start),
+          lte: new Date(end),
+        },
+      },
+    });
+
+    return plainToInstance(ExpensesDto, expenses);
+  }
+
+  async getInvoiceReports({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    const invoices = await this.prismaService.invoice.findMany({
+      where: {
+        user_id: userId,
+        date: {
+          gte: new Date(start),
+          lte: new Date(end),
+        },
+      },
+    });
+
+    return plainToInstance(InvoiceProducts, invoices);
   }
 }
