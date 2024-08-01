@@ -88,6 +88,11 @@ export class ReportsController {
     });
   }
 
+  @Get('expense-range')
+  async getExpenseRange(@GetUser() user: User) {
+    return this.reportsService.getExpenseDateRange(user.sub);
+  }
+
   @Get('invoice-reports')
   @ApiQuery({ name: 'start', required: true })
   @ApiQuery({ name: 'end', required: true })

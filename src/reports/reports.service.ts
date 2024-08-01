@@ -6,8 +6,7 @@ import {
   ProfitLostReportsDto,
 } from './dto/profit-loss.dto';
 import { RangeSelectDto } from './dto/range-select.dto';
-import { CustomerWithInvocieDto } from '@/customer/dto/update-customer-with-address.dto';
-import { ExpensesDto, InvoiceDto, InvoiceProducts } from '@shared/models';
+import { Expenses, Invoice, InvoiceDto, InvoiceProducts } from '@shared/models';
 
 @Injectable()
 export class ReportsService {
@@ -115,8 +114,10 @@ export class ReportsService {
       },
     });
 
-    const invoiceDates = invoices.map((invoice) => invoice.date);
-    const expenseDates = expenses.map((expense) => expense.expenseDate);
+    const invoiceDates = invoices.map((invoice) => invoice.date?.toISOString());
+    const expenseDates = expenses.map((expense) =>
+      expense.expenseDate?.toISOString(),
+    );
 
     const allDates = [...invoiceDates, ...expenseDates].sort();
 
@@ -135,26 +136,38 @@ export class ReportsService {
     start: string;
     end: string;
   }) {
-    const customers = await this.prismaService.customer.findMany({
+    const invoices = await this.prismaService.invoice.findMany({
       where: {
         user_id: userId,
-      },
-      include: {
-        invoice: {
-          where: {
-            date: {
-              gte: new Date(start),
-              lte: new Date(end),
-            },
-          },
+        date: {
+          gte: new Date(start),
+          lte: new Date(end),
         },
       },
+      include: {
+        customer: true,
+      },
     });
+    // const customers = await this.prismaService.customer.findMany({
+    //   where: {
+    //     user_id: userId,
+    //   },
+    //   include: {
+    //     invoice: {
+    //       where: {
+    //         date: {
+    //           gte: new Date(start),
+    //           lte: new Date(end),
+    //         },
+    //       },
+    //     },
+    //   },
+    // });
 
-    const customersWithInvoices = customers.filter(
-      (customer) => customer.invoice.length > 0,
-    );
-    return plainToInstance(CustomerWithInvocieDto, customersWithInvoices);
+    // const customersWithInvoices = customers.filter(
+    //   (customer) => customer.invoice.length > 0,
+    // );
+    return plainToInstance(Invoice, invoices);
   }
 
   async getProductReports({
@@ -187,7 +200,10 @@ export class ReportsService {
     const productsWithInvoices = new Set();
     invoices.forEach((invoice) => {
       invoice.product.forEach((product) => {
-        productsWithInvoices.add(product);
+        productsWithInvoices.add({
+          ...product,
+          invoice: invoice,
+        });
       });
     });
 
@@ -214,9 +230,12 @@ export class ReportsService {
           lte: new Date(end),
         },
       },
+      include: {
+        currency: true,
+      },
     });
 
-    return plainToInstance(ExpensesDto, expenses);
+    return plainToInstance(Expenses, expenses);
   }
 
   async getInvoiceReports({
@@ -239,5 +258,24 @@ export class ReportsService {
     });
 
     return plainToInstance(InvoiceDto, invoices);
+  }
+
+  async getExpenseDateRange(userId: string) {
+    const expenses = await this.prismaService.expenses.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+
+    const expenseDates = expenses.map((expense) =>
+      expense.expenseDate?.toISOString(),
+    );
+
+    const allDates = expenseDates.sort();
+
+    return plainToInstance(RangeSelectDto, {
+      start: new Date(allDates[0]).toISOString(),
+      end: new Date(allDates[allDates.length - 1]).toISOString(),
+    });
   }
 }
