@@ -49,7 +49,9 @@ export class PaymentsController {
       invoice_id,
     );
     if (success) {
-      return res.redirect(`${process.env.FRONTEND_URL}/payment/success`);
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/invoice/invoicetemplate/${invoice_id}`,
+      );
     }
     return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
   }
