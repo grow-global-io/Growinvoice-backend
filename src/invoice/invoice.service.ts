@@ -1,5 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Invoice, InvoiceDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import {
@@ -21,6 +21,9 @@ export class InvoiceService {
     private invoiceSettings: InvoicesettingsService,
   ) {}
   async create(createInvoiceDto: CreateInvoiceWithProducts) {
+    if (createInvoiceDto?.product?.length === 0) {
+      throw new BadRequestException('Products are missing');
+    }
     const invoiceDetails = await this.prismaService.invoice.create({
       data: {
         ...createInvoiceDto,
