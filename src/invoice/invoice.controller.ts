@@ -10,7 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
-import { InvoiceDto } from '@shared/models';
+import { InvoiceDto, UserDto } from '@shared/models';
 import {
   ApiExtraModels,
   ApiHideProperty,
@@ -155,6 +155,18 @@ export class InvoiceController {
     await this.mailService.sendMail(createInvoiceDto);
     return {
       message: 'Invoice created and sent to mail successfully',
+      result: invoice,
+    };
+  }
+
+  @Post('markedAsRejected')
+  @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  async markedAsRejected(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<InvoiceDto>> {
+    const invoice = await this.invoiceService.statusToReject(id);
+    return {
+      message: 'Invoice Rejected successfully',
       result: invoice,
     };
   }

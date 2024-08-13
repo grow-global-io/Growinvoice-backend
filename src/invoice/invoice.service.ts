@@ -360,6 +360,15 @@ export class InvoiceService {
     });
   }
 
+  async statusToReject(id: string) {
+    return await this.prismaService.invoice.update({
+      where: { id },
+      data: {
+        status: 'Rejected',
+      },
+    });
+  }
+
   async statusToPaid(id: string) {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },

@@ -39,6 +39,12 @@ export class QuotationsettingsController {
     };
   }
 
+  // @IsPublic()
+  // @Get('userPublicFindAll')
+  // async userPublicFindAll() {
+  //   return await this.quotationsettingsService.findAllByUser();
+  // }
+
   @Get()
   async findAll(@GetUser() user: User) {
     return await this.quotationsettingsService.findAll(user?.sub);

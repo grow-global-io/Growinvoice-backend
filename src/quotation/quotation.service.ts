@@ -350,4 +350,30 @@ export class QuotationService {
     });
     return plainToInstance(QuotationTotalCountDto, { total });
   }
+
+  async findAllByUserAutoConvert(id: string) {
+    const users = await this.prismaService.user.findMany({
+      where: {
+        QuotationSettings: {
+          some: {
+            autoConvert: true,
+          },
+        },
+      },
+      include: {
+        quotation: {
+          where: {
+            id: id,
+          },
+        },
+      },
+    });
+
+    for (const user of users) {
+      for (const quotation of user.quotation)
+        if (quotation) {
+          await this.convertToInvoice(id);
+        }
+    }
+  }
 }
