@@ -39,6 +39,18 @@ export class InvoicesettingsController {
     };
   }
 
+  // @IsPublic()
+  // @Get('userPublicFindAll')
+  // async userPublicFindAll() {
+  //   return await this.invoicesettingsService.findAllByUser();
+  // }
+
+  // @IsPublic()
+  // @Get('userPublicFindAllDueDate')
+  // async userPublicFindAllDueDate() {
+  //   return await this.invoicesettingsService.findAllByUserDueDate();
+  // }
+
   @Get()
   async findAll(@GetUser() user: User) {
     return this.invoicesettingsService.findAll(user?.sub);

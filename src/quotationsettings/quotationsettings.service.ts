@@ -1,15 +1,24 @@
+import { MailService } from '@/mail/mail.service';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   CreateQuotationSettingsDto,
   QuotationSettingsDto,
   UpdateQuotationSettingsDto,
+  User,
 } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
+import * as moment from 'moment';
+import { Cron } from '@nestjs/schedule';
+import { QuotationService } from '@/quotation/quotation.service';
 
 @Injectable()
 export class QuotationsettingsService {
-  constructor(private prismaService: PrismaService) {}
+  private readonly logger = new Logger(PrismaService.name);
+  constructor(
+    private prismaService: PrismaService,
+    private mailService: MailService,
+  ) {}
   async create(createQuotationsettingDto: CreateQuotationSettingsDto) {
     const quotationsetting = await this.prismaService.quotationSettings.create({
       data: createQuotationsettingDto,
@@ -57,5 +66,100 @@ export class QuotationsettingsService {
         where: { user_id },
       });
     return plainToInstance(QuotationSettingsDto, quotationsetting);
+  }
+
+  @Cron('* * 0 * * *')
+  async findAllByUserToStatusUpdate() {
+    try {
+      const overdueDate = moment().subtract(30, 'days').toDate();
+      const users = await this.prismaService.user.findMany({
+        where: {
+          QuotationSettings: {
+            some: {
+              autoArchive: true,
+            },
+          },
+        },
+        include: {
+          quotation: {
+            where: {
+              status: 'Draft',
+              expiry_at: {
+                lt: overdueDate,
+              },
+            },
+          },
+        },
+      });
+      for (const user of users) {
+        await this.prismaService.quotation.updateMany({
+          where: {
+            user_id: user.id,
+            status: 'Draft',
+            expiry_at: {
+              lt: overdueDate,
+            },
+          },
+          data: {
+            status: 'Rejected',
+          },
+        });
+      }
+      this.logger.log(
+        'findAllByUserToStatusUpdate method executed successfully.',
+      );
+      return plainToInstance(User, users);
+    } catch (error) {
+      this.logger.error(
+        'Error executing findAllByUserToStatusUpdate method:',
+        error,
+      );
+    }
+  }
+
+  @Cron('* * 0 * * *')
+  async findAllByUserToMail() {
+    try {
+      const currentDate = moment().startOf('day');
+      const users = await this.prismaService.user.findMany({
+        where: {
+          QuotationSettings: {
+            some: {},
+          },
+        },
+        include: {
+          quotation: {
+            where: {
+              status: 'Draft',
+            },
+          },
+          QuotationSettings: true,
+        },
+      });
+
+      for (const user of users) {
+        const quotationSettings = user.QuotationSettings[0];
+        for (const quotation of user.quotation) {
+          const dueDate = moment(quotation.expiry_at);
+          const noticeDate = dueDate.subtract(
+            quotationSettings.dueNotice,
+            'days',
+          );
+          if (currentDate.isSame(noticeDate, 'day')) {
+            const sendMailDto = {
+              email: user.email,
+              subject: 'Quotation Expiry Notice',
+              body: `Dear ${user.name},<br><br>Your quotation will expiry at ${moment(quotation.expiry_at).format('YYYY-MM-DD')} is approaching its expiry date. Please take the necessary actions.<br><br>Best Regards,<br>Grow Global Strategies Pvt Ltd`,
+            };
+            await this.mailService.sendMail(sendMailDto);
+          }
+        }
+      }
+      this.logger.log('findAllByUserToMail method executed successfully.');
+    } catch (error) {
+      this.logger.error('Error executing findAllByUserToMail method:', error);
+    }
+
+    // return plainToInstance(User, users);
   }
 }

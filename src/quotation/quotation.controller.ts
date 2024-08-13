@@ -142,6 +142,7 @@ export class QuotationController {
     @Query('id') id: string,
   ): Promise<SuccessResponseDto<QuotationDto>> {
     const invoice = await this.quotationService.statusToAccepted(id);
+    await this.quotationService.findAllByUserAutoConvert(id);
     return {
       message: 'Quotation marked as accepted successfully',
       result: invoice,
