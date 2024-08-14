@@ -40,13 +40,13 @@ async function bootstrap() {
   });
 
   const firebaseConfig = {
-    apiKey: 'AIzaSyAkahSxMh-LXireld1WuRdsGRAZo-MwdQ4',
-    authDomain: 'sspraneeth-5523d.firebaseapp.com',
-    projectId: 'sspraneeth-5523d',
-    storageBucket: 'sspraneeth-5523d.appspot.com',
-    messagingSenderId: '755915828490',
-    appId: '1:755915828490:web:a3e5de6c21c49f77299ef3',
-    measurementId: 'G-5ZW76644LV',
+    apiKey: process.env.APIKEY_FIREBASE,
+    authDomain: `${process.env.PROJECT_ID}.firebaseapp.com`,
+    projectId: `${process.env.PROJECT_ID}`,
+    storageBucket: `${process.env.PROJECT_ID}.appspot.com`,
+    messagingSenderId: `${process.env.MESSAGING_SENDER_ID}`,
+    appId: `${process.env.APP_ID}`,
+    measurementId: `${process.env.MEASUREMENT_ID}`,
   };
   initializeApp(firebaseConfig);
 
