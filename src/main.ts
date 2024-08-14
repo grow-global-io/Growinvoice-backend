@@ -5,6 +5,7 @@ import { RequestLoggerMiddleware } from '@shared/middleware/logger.middleware';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as compression from 'compression';
+import { initializeApp } from '@firebase/app';
 
 // import { wakeDyno, wakeDynos } from 'heroku-keep-awake';
 
@@ -37,6 +38,17 @@ async function bootstrap() {
       displayRequestDuration: true,
     },
   });
+
+  const firebaseConfig = {
+    apiKey: 'AIzaSyAkahSxMh-LXireld1WuRdsGRAZo-MwdQ4',
+    authDomain: 'sspraneeth-5523d.firebaseapp.com',
+    projectId: 'sspraneeth-5523d',
+    storageBucket: 'sspraneeth-5523d.appspot.com',
+    messagingSenderId: '755915828490',
+    appId: '1:755915828490:web:a3e5de6c21c49f77299ef3',
+    measurementId: 'G-5ZW76644LV',
+  };
+  initializeApp(firebaseConfig);
 
   app.enableCors({
     origin: '*',

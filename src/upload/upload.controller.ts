@@ -30,27 +30,7 @@ export class UploadController {
     },
   })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const link = await this.uploadService.upload(file);
-    return link;
-  }
-
-  @IsPublic()
-  @Post('uploadPdf')
-  @UseInterceptors(FileInterceptor('file'))
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  async uploadPdf(@UploadedFile() file: Express.Multer.File) {
-    const link = await this.uploadService.uploadPdf(file);
+    const link = await this.uploadService.uploadFile(file);
     return link;
   }
 }
