@@ -24,6 +24,11 @@
         "include": "../public",
         "outDir": "dist/public",
         "watchAssets": true
+      },
+      {
+        "include": "../.well-known",
+        "outDir": "dist/.well-known",
+        "watchAssets": true
       }
     ],
     "watchAssets": true
