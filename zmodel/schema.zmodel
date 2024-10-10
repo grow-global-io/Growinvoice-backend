@@ -80,7 +80,7 @@ enum GateWayType {
 }
 
 enum PlanFeature {
-    
+
     Invoice
     Quotation
     Customer
