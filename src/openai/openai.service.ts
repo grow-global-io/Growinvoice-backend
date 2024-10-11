@@ -123,9 +123,7 @@ export class OpenaiService {
     const text = response?.text();
     const querySplit = text.split('```sql')[1].split('```')[0];
     const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
-    console.log(singleLineQuery);
     const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
-    console.log(resulta);
     return {
       query: singleLineQuery,
       result: resulta,
@@ -202,13 +200,11 @@ export class OpenaiService {
     unit: MONDD`;
     const resulta = await result?.sendMessage(msg);
     const response = await resulta?.response;
-    console.log(response);
     const text = response?.text();
     const checkisSQL = text?.includes('```sql');
     if (checkisSQL) {
       const querySplit = text.split('```sql')[1].split('```')[0];
       const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
-      console.log(singleLineQuery);
       const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
       return resulta;
     }

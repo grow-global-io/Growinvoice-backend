@@ -20,6 +20,5 @@ commands.forEach((cmd) => {
       console.error(err);
       return;
     }
-    console.log(stdout);
   });
 });

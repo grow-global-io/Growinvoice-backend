@@ -17,13 +17,11 @@ export class NotificationsGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connection', (socket) => {
-      console.log('Client connected', socket.id);
 
       socket.on('authenticate', (userId: string) => {
         if (userId) {
           socket.join(userId);
           socket.data.userId = userId;
-          console.log(`User ${userId} authenticated`);
         }
       });
 
