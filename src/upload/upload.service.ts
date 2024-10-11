@@ -27,7 +27,6 @@ export class UploadService {
     };
     const snapshot = await uploadBytesResumable(storageRef, file, metadata);
     const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log('File successfully uploaded.');
     return plainToInstance(UploadResponseDto, {
       link: downloadURL,
       message: 'File uploaded successfully',
@@ -66,7 +65,6 @@ export class UploadService {
       metadata,
     );
     const downloadURL = await getDownloadURL(snapshot.ref);
-    console.log('File successfully uploaded.');
     return plainToInstance(UploadResponseDto, {
       link: downloadURL,
       message: 'File uploaded successfully',

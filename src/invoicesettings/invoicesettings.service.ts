@@ -75,7 +75,6 @@ export class InvoicesettingsService {
   async findAllByUserToStatusUpdate() {
     try {
       const overdueDate = moment().subtract(30, 'days').toDate();
-      console.log(overdueDate, 'overdute');
       const users = await this.prismaService.user.findMany({
         where: {
           InvoiceSettings: {

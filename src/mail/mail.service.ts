@@ -46,7 +46,6 @@ export class MailService {
       'https://api.brevo.com/v3/smtp/email',
       options,
     );
-    console.log(response);
     // await this.transporter.sendMail({
     //   to: email,
     //   subject: 'Password Reset',
@@ -82,7 +81,6 @@ export class MailService {
       'https://api.brevo.com/v3/smtp/email',
       options,
     );
-    console.log(response);
 
     // await this.transporter.sendMail({
     //   to: sendMailDto.email,

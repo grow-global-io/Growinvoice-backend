@@ -14,7 +14,6 @@ async function main() {
   const countriesData = JSON.parse(fs.readFileSync(countriesPath, 'utf-8'));
   const statesData = JSON.parse(fs.readFileSync(statesPath, 'utf-8'));
   const invoiceData = JSON.parse(fs.readFileSync(invoicePath, 'utf-8'));
-  console.log('Seeding currencies...', currenciesData);
   const currenciesMap = currenciesData.map((currency) => {
     return {
       name: currency.name,
@@ -43,11 +42,8 @@ async function main() {
   dotenv.config();
   /// --------- Users ---------------
   await prisma.currencies.createMany({ data: currenciesMap });
-  console.log('Seeding countries...', countriesMap?.length);
   await prisma.country.createMany({ data: countriesMap });
-  console.log('Seeding states...', statesData?.length);
   await prisma.state.createMany({ data: statesMap });
-  console.log('Seeding invoice template...');
   await prisma.invoiceTemplate.createMany({
     data: invoiceData,
   });

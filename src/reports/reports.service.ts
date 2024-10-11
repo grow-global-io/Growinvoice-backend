@@ -53,8 +53,6 @@ export class ReportsService {
       0,
     );
 
-    console.log(totalExpenses);
-
     // Compute profit or loss
     const profitOrLoss = totalIncome - totalExpenses;
 
