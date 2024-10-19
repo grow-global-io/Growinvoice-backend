@@ -56,6 +56,12 @@ $ yarn run test:e2e
 
 # test coverage
 $ yarn run test:cov
+
+# to migrate database
+$  yarn run make:migration:dev
+
+# for adding records of state , country,cureencies
+$ yarn run seed
 ```
 
 ## Support
