@@ -51,6 +51,8 @@ export class CustomerService {
             invoice: true,
           },
         },
+        billingAddress: true,
+        shippingAddress: true,
       },
     });
     const customerWithDueAmounts = await Promise.all(
