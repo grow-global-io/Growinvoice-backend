@@ -35,7 +35,7 @@ generator nestjsDto {
 
 enum ProductType {
   Service
-  Good
+  Goods
 }
 
 enum CustomerOption {

@@ -38,7 +38,7 @@ datasource db {
 
 enum ProductType {
     Service
-    Good
+    Goods
 }
 
 enum CustomerOption {
