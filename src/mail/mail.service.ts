@@ -48,7 +48,7 @@ export class MailService {
     );
     // await this.transporter.sendMail({
     //   to: email,
-    //   subject: 'Password Reset',
+    //   subject: 'Password  Reset',
     //   html: `Click <a href="${url}">here</a> to reset your password`,
     // });
   }
