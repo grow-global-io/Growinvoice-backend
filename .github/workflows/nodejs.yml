@@ -27,7 +27,7 @@ jobs:
 
       # Debugging: Check if the secret is available
       - name: Debug Secret Length
-        run: echo "PROD_ENV_FILE length: ${#PROD_ENV_FILE}"
+        run: echo "PROD_ENV_FILE length ${#PROD_ENV_FILE}"
         env:
           PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
 
@@ -40,4 +40,3 @@ jobs:
       # Verify that the .env file was created (remove or modify for security)
       - name: Verify .env file
         run: cat .env
-  
