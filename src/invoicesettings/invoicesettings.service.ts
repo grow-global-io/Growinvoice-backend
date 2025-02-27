@@ -137,6 +137,7 @@ export class InvoicesettingsService {
             },
           },
           InvoiceSettings: true,
+          company: true,
         },
       });
 
@@ -154,7 +155,11 @@ export class InvoicesettingsService {
               subject: 'Invoice Due Date Notice',
               body: `Dear ${user.name},<br><br>Your invoice with due date ${moment(invoice.due_date).format('YYYY-MM-DD')} is approaching its due date. Please take the necessary actions.<br><br>Best Regards,<br>Grow Global Strategies Pvt Ltd`,
             };
-            await this.mailService.sendMail(sendMailDto);
+            await this.mailService.sendMail(
+              sendMailDto,
+              undefined,
+              user.company[0].name,
+            );
           }
         }
       }

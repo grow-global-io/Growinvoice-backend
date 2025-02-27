@@ -2,12 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 // import * as nodemailer from 'nodemailer';
 import { SendMailDto } from './dto/send-mail.dto';
+import { User } from '@shared/decorators/user.decorator';
+import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class MailService {
   // private transporter;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private readonly prismaService: PrismaService,
+  ) {
     // this.transporter = nodemailer.createTransport({
     //   host: this.configService.get<string>('SMTP_HOST'),
     //   port: this.configService.get<number>('SMTP_PORT'),
@@ -53,7 +58,26 @@ export class MailService {
     // });
   }
 
-  async sendMail(sendMailDto: SendMailDto) {
+  async sendMail(
+    sendMailDto: SendMailDto,
+    userId?: string,
+    companyName?: string,
+  ) {
+    let companyNameString = '';
+    if (userId) {
+      const userDetails = await this.prismaService.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          company: true,
+        },
+      });
+      companyNameString = userDetails.company[0].name ?? '';
+    }
+    if (companyName) {
+      companyNameString = companyName;
+    }
     const options = {
       method: 'POST',
       headers: {
@@ -63,7 +87,7 @@ export class MailService {
       },
       body: JSON.stringify({
         sender: {
-          name: 'Grow Global Strategies Pvt Ltd',
+          name: companyNameString ?? 'Grow Global Strategies Pvt Ltd',
           email: 'operations@growglobal.io',
         },
         to: [

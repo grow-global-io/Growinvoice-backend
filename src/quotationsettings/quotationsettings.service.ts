@@ -151,7 +151,7 @@ export class QuotationsettingsService {
               subject: 'Quotation Expiry Notice',
               body: `Dear ${user.name},<br><br>Your quotation will expiry at ${moment(quotation.expiry_at).format('YYYY-MM-DD')} is approaching its expiry date. Please take the necessary actions.<br><br>Best Regards,<br>Grow Global Strategies Pvt Ltd`,
             };
-            await this.mailService.sendMail(sendMailDto);
+            await this.mailService.sendMail(sendMailDto, user?.id);
           }
         }
       }

@@ -117,7 +117,7 @@ export class QuotationController {
     @Query('id') id: string,
   ): Promise<SuccessResponseDto<QuotationDto>> {
     const quotation = await this.quotationService.statusToMailed(id);
-    await this.mailService.sendMail(createInvoiceDto);
+    await this.mailService.sendMail(createInvoiceDto, quotation?.user_id);
     return {
       message: 'Quotation created and sent to mail successfully',
       result: quotation,

@@ -152,7 +152,7 @@ export class InvoiceController {
     @Query('id') id: string,
   ): Promise<SuccessResponseDto<InvoiceDto>> {
     const invoice = await this.invoiceService.statusToMailed(id);
-    await this.mailService.sendMail(createInvoiceDto);
+    await this.mailService.sendMail(createInvoiceDto, invoice?.user_id);
     return {
       message: 'Invoice created and sent to mail successfully',
       result: invoice,
