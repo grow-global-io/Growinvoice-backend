@@ -39,7 +39,11 @@ export class AuthService {
     const userData = await this.prismaService.user.findUnique({
       where: { id: user.sub },
       include: {
-        company: true,
+        company: {
+          include: {
+            country: true,
+          },
+        },
         currency: true,
         UserPlans: {
           where: {
