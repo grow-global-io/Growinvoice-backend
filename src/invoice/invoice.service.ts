@@ -303,10 +303,10 @@ export class InvoiceService {
     const invoices = await this.prismaService.invoice.findMany({
       where: { user_id },
       select: {
-        total: true,
+        due_amount: true,
       },
     });
-    return invoices.reduce((acc, curr) => acc + curr.total, 0);
+    return invoices.reduce((acc, curr) => acc + curr.due_amount, 0);
   }
 
   async invoiceCount(user_id: string) {
