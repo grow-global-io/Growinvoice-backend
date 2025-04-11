@@ -220,13 +220,17 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: { id },
-      include: {
-        company: true,
-        currency: true,
-      },
-    });
-    return plainToInstance(User, user);
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { id },
+        include: {
+          company: true,
+          currency: true,
+        },
+      });
+      return plainToInstance(User, user);
+    } catch (error) {
+      throw new BadRequestException('User not found');
+    }
   }
 }
