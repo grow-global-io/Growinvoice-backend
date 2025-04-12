@@ -16,6 +16,7 @@ import { RazorpayPaymentDto } from './dto/razorpay-payment-create.dto';
 import { PlansService } from '@/plans/plans.service';
 import { ConfigService } from '@nestjs/config';
 import { UserplansService } from '@/userplans/userplans.service';
+import * as bcrypt from 'bcrypt';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Razorpay = require('razorpay');
@@ -146,6 +147,15 @@ export class PaymentsService {
     const userDetails = await this.userService.findOne(user_id);
 
     // generate hash like : key+amount+currency+user_id+invoice_id
+    const hash = await bcrypt.hash(
+      `${growlimitlessPayment.key}${invoice.total}${userDetails?.currency?.short_code}${user_id}${invoice_id}`,
+      10,
+    );
+    const growlimitlessPaymentLink = `${process.env.GROWLIMITLESS_URL}/payment?key=${growlimitlessPayment.key}&amount=${Math.round(
+      invoice?.total * 100,
+    )}&currency=${userDetails?.currency?.short_code}&user_id=${user_id}&invoice_id=${invoice_id}&hash=${hash}`;
+
+    return growlimitlessPaymentLink;
   }
 
   async stripePaymentLinkForPlan(user_id: string, plan_id: string) {

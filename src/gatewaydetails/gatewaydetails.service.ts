@@ -8,6 +8,7 @@ import {
 } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import { PasswordMaskOptions, maskPassword } from 'maskdata';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class GatewaydetailsService {
