@@ -159,6 +159,19 @@ export class PaymentsController {
   }
 
   @IsPublic()
+  @Post('growlimitlessPayment')
+  async growlimitlessPayment(
+    @Query('user_id') user_id: string,
+    @Query('invoice_id') invoice_id: string,
+  ) {
+    const link = await this.paymentsService.growlimitlessPayment(
+      user_id,
+      invoice_id,
+    );
+    return link;
+  }
+
+  @IsPublic()
   @Post('stripePaymentForPlans')
   async stripePaymentForPlans(
     @Query('user_id') user_id: string,

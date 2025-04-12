@@ -74,6 +74,7 @@ enum paidStatus {
 enum GateWayType {
   Stripe
   Razorpay
+  Growlimitless
 }
 
 enum PlanFeature {

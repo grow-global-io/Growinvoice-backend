@@ -125,6 +125,29 @@ export class PaymentsService {
     return stripePaymentLink?.url;
   }
 
+  async growlimitlessPayment(user_id: string, invoice_id: string) {
+    const invoice = await this.invoiceService.findOne(invoice_id);
+    if (!invoice) {
+      throw new Error('Invoice not found');
+    }
+    if (invoice.user_id !== user_id) {
+      throw new Error('Unauthorized');
+    }
+    const growlimitlessPayment = await this.gateWayService.getbyuserIdandType(
+      user_id,
+      'Growlimitless',
+    );
+    if (!growlimitlessPayment) {
+      throw new Error('Stripe key not found');
+    }
+    if (growlimitlessPayment?.enabled === false) {
+      throw new Error('Stripe key not enabled');
+    }
+    const userDetails = await this.userService.findOne(user_id);
+
+    // generate hash like : key+amount+currency+user_id+invoice_id
+  }
+
   async stripePaymentLinkForPlan(user_id: string, plan_id: string) {
     const user = await this.prisma.userPlans.findFirst({
       where: { user_id, status: true, end_date: { gt: new Date() } },
