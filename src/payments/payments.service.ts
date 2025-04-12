@@ -139,10 +139,10 @@ export class PaymentsService {
       'Growlimitless',
     );
     if (!growlimitlessPayment) {
-      throw new Error('Stripe key not found');
+      throw new Error('Growlimitless key not found');
     }
     if (growlimitlessPayment?.enabled === false) {
-      throw new Error('Stripe key not enabled');
+      throw new Error('Growlimitless key not enabled');
     }
     const userDetails = await this.userService.findOne(user_id);
 
