@@ -57,7 +57,7 @@ export class PaymentsController {
   }
 
   @IsPublic()
-  @Get('success')
+  @Get('growlimitless/success')
   async growlimitlessSuccess(
     @Query('session_id') session_id: string,
     @Query('invoice_id') invoice_id: string,
