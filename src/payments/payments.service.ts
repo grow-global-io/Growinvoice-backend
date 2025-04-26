@@ -3,7 +3,11 @@ import { InvoiceService } from '@/invoice/invoice.service';
 import { NotificationsService } from '@/notifications/notifications.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserService } from '@/user/user.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   CreatePaymentsDto,
   Payments,
@@ -16,7 +20,7 @@ import { RazorpayPaymentDto } from './dto/razorpay-payment-create.dto';
 import { PlansService } from '@/plans/plans.service';
 import { ConfigService } from '@nestjs/config';
 import { UserplansService } from '@/userplans/userplans.service';
-import * as bcrypt from 'bcrypt';
+import axios from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Razorpay = require('razorpay');
@@ -127,35 +131,68 @@ export class PaymentsService {
   }
 
   async growlimitlessPayment(user_id: string, invoice_id: string) {
-    const invoice = await this.invoiceService.findOne(invoice_id);
-    if (!invoice) {
-      throw new Error('Invoice not found');
+    try {
+      const invoice = await this.invoiceService.findOne(invoice_id);
+      if (!invoice) {
+        throw new Error('Invoice not found');
+      }
+      if (invoice.user_id !== user_id) {
+        throw new Error('Unauthorized');
+      }
+      const growlimitlessPayment = await this.gateWayService.getbyuserIdandType(
+        user_id,
+        'Growlimitless',
+      );
+      if (!growlimitlessPayment) {
+        throw new Error('Growlimitless key not found');
+      }
+      if (growlimitlessPayment?.enabled === false) {
+        throw new Error('Growlimitless key not enabled');
+      }
+      const gll_Url = this.configService.get<string>('GROWLIMITLESS_URL');
+      const data = await axios.post(
+        `${gll_Url}/api/sessions`,
+        {
+          mode: 'payment',
+          line_items: [
+            {
+              price_data: {
+                currency: 'USD', //userDetails?.currency?.short_code
+                product_data: {
+                  name: 'Invoice Payment',
+                  description:
+                    'Payment for the invoice - ' + invoice?.invoice_number,
+                },
+                unit_amount: Math.round(invoice?.total * 100),
+              },
+              quantity: 1,
+            },
+          ],
+          success_url: `${process.env.BACKEND_URL}/api/payments/growlimitless/success?session_id={CHECKOUT_SESSION_ID}&user_id=${user_id}&invoice_id=${invoice_id}`,
+          cancel_url: `${process.env.BACKEND_URL}/api/payments/cancel?type=cancel`,
+          metadata: {
+            invoice_id,
+            user_id,
+          },
+          apiKey: growlimitlessPayment.key,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      if (data.status !== 201) {
+        throw new Error('Error creating payment link');
+      }
+      return data.data?.uri;
+    } catch (error) {
+      const message =
+        error?.response?.data ??
+        error?.message ??
+        'Error creating payment link';
+      throw new NotFoundException(message);
     }
-    if (invoice.user_id !== user_id) {
-      throw new Error('Unauthorized');
-    }
-    const growlimitlessPayment = await this.gateWayService.getbyuserIdandType(
-      user_id,
-      'Growlimitless',
-    );
-    if (!growlimitlessPayment) {
-      throw new Error('Growlimitless key not found');
-    }
-    if (growlimitlessPayment?.enabled === false) {
-      throw new Error('Growlimitless key not enabled');
-    }
-    const userDetails = await this.userService.findOne(user_id);
-
-    // generate hash like : key+amount+currency+user_id+invoice_id
-    const hash = await bcrypt.hash(
-      `${growlimitlessPayment.key}${invoice.total}${userDetails?.currency?.short_code}${user_id}${invoice_id}`,
-      10,
-    );
-    const growlimitlessPaymentLink = `${process.env.GROWLIMITLESS_URL}/payment?key=${growlimitlessPayment.key}&amount=${Math.round(
-      invoice?.total * 100,
-    )}&currency=${userDetails?.currency?.short_code}&user_id=${user_id}&invoice_id=${invoice_id}&hash=${hash}`;
-
-    return growlimitlessPaymentLink;
   }
 
   async stripePaymentLinkForPlan(user_id: string, plan_id: string) {
@@ -248,6 +285,62 @@ export class PaymentsService {
     const stripe = new Stripe(stripeKey?.key);
     const session = await stripe.checkout.sessions.retrieve(session_id);
     if (session.payment_status === 'paid') {
+      await this.create({
+        invoice_id,
+        user_id,
+        amount: invoice.total,
+        paymentDetails_id: invoice?.paymentId,
+        paymentDate: new Date(),
+        payment_type: 'Stripe',
+      });
+      await this.invoiceService.statusToPaid(invoice_id);
+      await this.notificationService.create({
+        user_id,
+        title: 'Payment Success',
+        body:
+          'Payment for invoice ' + invoice.invoice_number + ' is successful',
+      });
+      // redirect to success page
+      return true;
+    }
+    return false;
+  }
+
+  async growlimitlessSuccess(
+    session_id: string,
+    user_id: string,
+    invoice_id: string,
+  ) {
+    const invoice = await this.invoiceService.findOne(invoice_id);
+    if (!invoice) {
+      throw new Error('Invoice not found');
+    }
+    if (invoice.user_id !== user_id) {
+      throw new Error('Unauthorized');
+    }
+    const growlimitlessPayment = await this.gateWayService.getbyuserIdandType(
+      user_id,
+      'Growlimitless',
+    );
+    if (!growlimitlessPayment) {
+      throw new Error('Growlimitless key not found');
+    }
+    if (growlimitlessPayment?.enabled === false) {
+      throw new Error('Growlimitless key not enabled');
+    }
+    const gll_Url = this.configService.get<string>('GROWLIMITLESS_URL');
+    const data = await axios.get(
+      `${gll_Url}/api/sessions?sessionId=${session_id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (data.status !== 200) {
+      throw new Error('Error creating payment link');
+    }
+    if (data.data.paymentStatus === 'SUCCESS') {
       await this.create({
         invoice_id,
         user_id,

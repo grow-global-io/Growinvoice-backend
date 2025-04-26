@@ -57,6 +57,27 @@ export class PaymentsController {
   }
 
   @IsPublic()
+  @Get('success')
+  async growlimitlessSuccess(
+    @Query('session_id') session_id: string,
+    @Query('invoice_id') invoice_id: string,
+    @Query('user_id') user_id: string,
+    @Res() res: Response,
+  ) {
+    const success = await this.paymentsService.growlimitlessSuccess(
+      session_id,
+      user_id,
+      invoice_id,
+    );
+    if (success) {
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/invoice/invoicetemplate/${invoice_id}`,
+      );
+    }
+    return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
+  }
+
+  @IsPublic()
   @Get('successPlans')
   async successPlans(
     @Query('session_id') session_id: string,
