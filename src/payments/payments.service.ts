@@ -340,7 +340,7 @@ export class PaymentsService {
     if (data.status !== 200) {
       throw new Error('Error creating payment link');
     }
-    if (data.data.paymentStatus === 'SUCCESS') {
+    if (data.data?.[0].paymentStatus === 'SUCCESS') {
       await this.create({
         invoice_id,
         user_id,
