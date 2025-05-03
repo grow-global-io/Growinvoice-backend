@@ -45,6 +45,12 @@ export class InvoiceProducts {
   @ApiProperty({
     type: 'number',
     format: 'float',
+    nullable: true,
+  })
+  unitPrice: number | null;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
   })
   quantity: number;
   @ApiProperty({
