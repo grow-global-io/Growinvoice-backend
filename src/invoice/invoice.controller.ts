@@ -10,7 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
-import { InvoiceDto, UserDto } from '@shared/models';
+import { InvoiceDto } from '@shared/models';
 import {
   ApiExtraModels,
   ApiHideProperty,
