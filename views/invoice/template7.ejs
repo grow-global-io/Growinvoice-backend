@@ -44,6 +44,25 @@
               <div class="tm_border_right tm_border_none_sm">
                 <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
                 <p class="tm_m0">
+                  <% if (invoice?.customerBillingAddress ==="") { %>
+                  <b style="text-transform: capitalize;">
+                    <%= invoice?.customer?.name %>
+                  </b><br>
+                  <%= invoice?.customer?.billingAddress?.address %><br>
+                  <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
+                  <%= invoice?.customer?.billingAddress?.country?.name %><br>
+                  <%= invoice?.customer?.billingAddress?.zip %><br>
+                  <% } else { %>
+
+                  <%- invoice?.customerBillingAddress %>
+
+                  <% }  %>
+                </p>
+                
+              </div>
+              <div>
+                <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
+                <p class="tm_m0">
                   <% if (invoice?.companyAddress ==="") { %>
                   <b style="text-transform: capitalize;">
                     <%= invoice?.user?.company[0]?.name %>
@@ -59,24 +78,7 @@
 
                   <% }  %>
                 </p>
-              </div>
-              <div>
-                <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
-                <p class="tm_m0">
-                  <% if (invoice?.customerBillingAddress ==="") { %>
-                  <b style="text-transform: capitalize;">
-                    <%= invoice?.customer?.name %>
-                  </b><br>
-                  <%= invoice?.customer?.billingAddress?.address %><br>
-                  <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
-                  <%= invoice?.customer?.billingAddress?.country?.name %><br>
-                  <%= invoice?.customer?.billingAddress?.zip %><br>
-                  <% } else { %>
-
-                  <%- invoice?.customerBillingAddress %>
-
-                  <% }  %>
-                </p>
+                
               </div>
             </div>
             <div class="tm_table tm_style1">
@@ -136,7 +138,7 @@
                       <tr>
                         <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtoal</td>
                         <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">
-                          <%= invoice?.user?.currency?.symbol %>
+                          <%= invoice?.product[0]?.product?.currency?.symbol %>
                             <%= invoice?.sub_total %>
                         </td>
                       </tr>
@@ -146,7 +148,7 @@
                               class="tm_ternary_color">(<%= invoice?.tax?.percentage %>
                                 %)</span></td>
                           <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                            <%= invoice?.user?.currency?.symbol %>
+                            <%= invoice?.product[0]?.product?.currency?.symbol %>
                               <%= ((invoice?.tax?.percentage / 100) * invoice?.sub_total).toFixed(2) %>
                           </td>
                         </tr>
@@ -155,8 +157,7 @@
                             <tr>
                               <td class="tm_width_3 tm_danger_color tm_border_none tm_pt0">Discount <%=
                                   invoice?.discountPercentage %>%</td>
-                              <td class="tm_width_3 tm_danger_color tm_text_right tm_border_none tm_pt0">-<%=
-                                  invoice?.user?.currency?.symbol %>
+                              <td class="tm_width_3 tm_danger_color tm_text_right tm_border_none tm_pt0">-<%= invoice?.product[0]?.product?.currency?.symbol %>
                                   <%= ((invoice?.discountPercentage / 100) * invoice?.sub_total).toFixed(2) %>
                               </td>
 
@@ -165,14 +166,14 @@
                             <tr >
                               <td class="tm_width_3 tm_primary_color text-danger font-weight-bold">Due Amount </td>
                               <td class="tm_width_3 tm_primary_color tm_text_right text-danger font-weight-bold">
-                                <%= invoice?.user?.currency?.symbol %>
+                                <%= invoice?.product[0]?.product?.currency?.symbol %>
                                 <%= invoice?.due_amount %>
                               </td>
                             </tr>
                             <tr >
                               <td class="tm_width_3 tm_primary_color text-success font-weight-bold">Paid Amount </td>
                               <td class="tm_width_3 tm_primary_color tm_text_right text-success font-weight-bold">
-                                <%= invoice?.user?.currency?.symbol %>
+                                <%= invoice?.product[0]?.product?.currency?.symbol %>
                                 <%= invoice?.paid_amount %>
                               </td>
                             </tr>
@@ -183,7 +184,7 @@
                                   Grand Total </td>
                                 <td
                                   class="tm_width_3 tm_border_top_0 tm_bold tm_f18 tm_primary_color tm_text_right tm_gray_bg tm_radius_0_6_6_0">
-                                  <%= invoice?.user?.currency?.symbol %>
+                                  <%= invoice?.product[0]?.product?.currency?.symbol %>
                                     <%= invoice?.total %>
                                 </td>
                               </tr>
@@ -399,7 +400,7 @@
                             <%= new Date(invoice?.due_date)?.toISOString()?.split('T')[0] %>
                           </td>
                           <td>
-                            <%= invoice?.user?.currency?.symbol %>
+                            <%= invoice?.product[0]?.product?.currency?.symbol %>
                               <%= invoice?.total %>
                           </td>
                         </tr>
