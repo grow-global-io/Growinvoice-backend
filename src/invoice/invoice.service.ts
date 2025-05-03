@@ -108,9 +108,20 @@ export class InvoiceService {
       where: { user_id, paid_status: 'Unpaid' },
       include: {
         customer: true,
+        product: {
+          include: {
+            product: {
+              include: {
+                currency: true,
+                tax: true,
+                hsnCode: true,
+              },
+            },
+          },
+        },
       },
     });
-    return plainToInstance(Invoice, invoices);
+    return plainToInstance(InvoiceWithAllDataDto, invoices);
   }
 
   async findPaidInvoices(user_id: string) {
