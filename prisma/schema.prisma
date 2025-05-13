@@ -586,9 +586,6 @@ model InvoiceProducts {
   /// @DtoRelationIncludeId
   product_id String
   product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  /// @DtoCreateOptional
-  /// @DtoUpdateOptional
-  unitPrice  Float?
   quantity   Float
   /// @DtoRelationIncludeId
   tax_id     String?

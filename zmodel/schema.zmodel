@@ -320,7 +320,6 @@ model InvoiceProducts extends Base {
     invoice    Invoice  @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
     product_id String   @DtoRelationIncludeId
     product    Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
-    unitPrice  Float?   @DtoCreateOptional @DtoUpdateOptional
     quantity   Float
     tax_id     String?  @DtoRelationIncludeId
     tax        Tax?     @relation(fields: [tax_id], references: [id], onDelete: SetNull)

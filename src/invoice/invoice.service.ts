@@ -36,7 +36,6 @@ export class InvoiceService {
                 product_id: product.product_id,
                 quantity: product.quantity,
                 tax_id: product.tax_id,
-                unitPrice: product.unitPrice,
                 hsnCode_id: product.hsnCode_id,
                 price: product.price,
                 total: product.total,
@@ -84,7 +83,6 @@ export class InvoiceService {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,
-                unitPrice: product.unitPrice,
                 tax_id: product.tax_id,
                 hsnCode_id: product.hsnCode_id,
                 price: product.price,
