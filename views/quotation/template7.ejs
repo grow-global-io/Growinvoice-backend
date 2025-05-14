@@ -45,25 +45,6 @@
               <div class="tm_border_right tm_border_none_sm">
                 <p class="tm_mb2"><b class="tm_primary_color">Quotation To:</b></p>
                 <p class="tm_m0">
-                  <% if (quotation?.companyAddress==="" ) { %>
-                    <b style="text-transform: capitalize;">
-                      <%= quotation?.user?.company[0]?.name %>
-                    </b><br>
-                    <%= quotation?.user?.company[0]?.address %><br>
-                      <%= quotation?.user?.company[0]?.city %>, <%= quotation?.user?.company[0]?.state?.name %>, <%=
-                            quotation?.user?.company[0]?.country?.name %><br>
-                            <%= quotation?.user?.company[0]?.zip %><br>
-
-                              <% } else { %>
-
-                                <%- quotation?.companyAddress %>
-
-                                  <% } %>
-                </p>
-              </div>
-              <div>
-                <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
-                <p class="tm_m0">
                   <% if (quotation?.customerBillingAddress==="" ) { %>
                     <b style="text-transform: capitalize;">
                       <%= quotation?.customer?.name %>
@@ -78,6 +59,26 @@
                                 <%- quotation?.customerBillingAddress %>
 
                                   <% } %>
+                </p>
+              </div>
+              <div>
+                <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
+                <p class="tm_m0">
+                  <% if (quotation?.companyAddress==="" ) { %>
+                    <b style="text-transform: capitalize;">
+                      <%= quotation?.user?.company[0]?.name %>
+                    </b><br>
+                    <%= quotation?.user?.company[0]?.address %><br>
+                      <%= quotation?.user?.company[0]?.city %>, <%= quotation?.user?.company[0]?.state?.name %>, <%=
+                            quotation?.user?.company[0]?.country?.name %><br>
+                            <%= quotation?.user?.company[0]?.zip %><br>
+
+                              <% } else { %>
+
+                                <%- quotation?.companyAddress %>
+
+                                  <% } %>
+                  
                 </p>
               </div>
             </div>
@@ -114,7 +115,7 @@
                           </td>
                           <td class="tm_width_2">
                             <%= product?.product?.currency?.symbol %>
-                              <%= product?.product?.price %>
+                              <%= product?.price %>
                           </td>
                           <td class="tm_width_2 tm_text_right">
                             <%= product?.product?.currency?.symbol %>
@@ -138,7 +139,7 @@
                       <tr>
                         <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtoal</td>
                         <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">
-                          <%= quotation?.user?.currency?.symbol %>
+                           <%= quotation?.product[0]?.product?.currency?.symbol %>
                           <%= quotation?.sub_total %>
                         </td>
                       </tr>
@@ -148,7 +149,7 @@
                               class="tm_ternary_color">(<%=
                               quotation?.tax?.percentage %>%)</span></td>
                           <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">
-                            <%= quotation?.user?.currency?.symbol %>
+                             <%= quotation?.product[0]?.product?.currency?.symbol %>
                             <%= ((quotation?.tax?.percentage / 100) * quotation?.sub_total).toFixed(2) %>
                           </td>
                         </tr>
@@ -157,7 +158,7 @@
                             <tr>
                               <td class="tm_width_3 tm_danger_color tm_border_none tm_pt0">Discount (<%=
                                   quotation?.discountPercentage %>%)</td>
-                              <td class="tm_width_3 tm_danger_color tm_text_right tm_border_none tm_pt0"><%= quotation?.user?.currency?.symbol %>
+                              <td class="tm_width_3 tm_danger_color tm_text_right tm_border_none tm_pt0"> <%= quotation?.product[0]?.product?.currency?.symbol %>
                                 <%= ((quotation?.discountPercentage / 100) * quotation?.sub_total).toFixed(2) %>
                               </td>
 
@@ -174,7 +175,7 @@
                                   Grand Total </td>
                                 <td
                                   class="tm_width_3 tm_border_top_0 tm_bold tm_f18 tm_primary_color tm_text_right tm_gray_bg tm_radius_0_6_6_0">
-                                  <%= quotation?.user?.currency?.symbol %>
+                                   <%= quotation?.product[0]?.product?.currency?.symbol %>
                                   <%= quotation?.total %>
                                 </td>
                               </tr>
@@ -298,7 +299,7 @@
                             <%= new Date(quotation?.expiry_at)?.toISOString()?.split('T')[0] %>
                           </td>
                           <td>
-                            <%= quotation?.user?.currency?.symbol %>
+                             <%= quotation?.product[0]?.product?.currency?.symbol %>
                             <%= quotation?.total %>
                           </td>
                         </tr>

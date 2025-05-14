@@ -247,7 +247,11 @@
                   <tr>
                     <td class="w-50">
                       Recipient's
-                      <%= invoice?.payment?.paymentType %>
+                      <%= invoice?.payment?.paymentType ==="UPI"? invoice?.payment?.paymentType : invoice?.payment?.paymentType.replace(/([a-z])([A-Z])/g, "$1 $2")
+                    .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2") 
+                    .replace(/([a-z])([A-Z])/g, "$1 $2")
+                    .replace(/([A-Z])([A-Z])/g, "$1 $2")
+                    .trim();  %>
 
                       Details
                     </td>
@@ -264,7 +268,7 @@
                         <%= invoice?.payment?.ibanNumber %></span>
                       <% } %>
                       <% 
-                    if(invoice?.payment?.paymentType === 'IndianBank'){ %>
+                    if(invoice?.payment?.paymentType === 'IndianBanks'){ %>
                       %>
                       <span class="ibanNumberTitleTextField font-weight-bold">AC No.</span>
                       <span class="ibanNumberTextField">
