@@ -17,33 +17,35 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    return super.canActivate(context);
+  }
+
+  handleRequest<TUser = any>(
+    err: any,
+    user: any,
+    info: any,
+    context: ExecutionContext,
+  ): TUser {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
-      // 💡 See this condition
-      return true;
-    }
-    return super.canActivate(context);
-  }
 
-  handleRequest<TUser = any>(err: any, user: any, info: any): TUser {
+    if (isPublic) {
+      return user; // Allow public route to proceed without a user
+    }
+
     if (err) {
-      // Handle specific Passport errors (e.g., JWT expired)
       if (info && info.name === 'TokenExpiredError') {
         throw new UnauthorizedException('JWT token has expired.');
       } else if (info && info.name === 'JsonWebTokenError') {
         throw new UnauthorizedException('Invalid JWT token.');
       } else {
-        // General unauthorized error
         throw new UnauthorizedException(info?.message || 'Unauthorized');
       }
     }
-    if (info) throw new UnauthorizedException(info.message || 'Unauthorized');
 
     if (!user) {
-      // Throw error if no user is provided
       throw new UnauthorizedException('No user found with this JWT token.');
     }
 

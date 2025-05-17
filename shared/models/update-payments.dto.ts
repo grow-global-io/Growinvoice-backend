@@ -72,4 +72,12 @@ export class UpdatePaymentsDto {
   @IsOptional()
   @IsString()
   invoice_id?: string;
+  @ApiProperty({
+    type: 'string',
+    default: '',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  otherId?: string;
 }

@@ -918,6 +918,10 @@ model Payments {
   /// @DtoRelationIncludeId
   invoice_id        String
   invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  otherId           String         @default("")
 }
 
 /// @@deny('read', isExist == false)

@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { RequestLoggerMiddleware } from '@shared/middleware/logger.middleware';
@@ -6,12 +6,15 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as compression from 'compression';
 import { initializeApp } from '@firebase/app';
+import { JwtAuthGuard } from '@shared/guards/jwt.guard';
 
 // import { wakeDyno, wakeDynos } from 'heroku-keep-awake';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(compression());
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
 
   app.useStaticAssets(join(__dirname, '..', 'public'), {
     prefix: '/public/',

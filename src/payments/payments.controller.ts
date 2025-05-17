@@ -36,6 +36,25 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @IsPublic()
+  @Get('successGrowlimitlessPlans')
+  async successGrowlimitlessPlans(
+    @Query('session_id') session_id: string,
+    @Query('plan_id') plan_id: string,
+    @Query('user_id') user_id: string,
+    @Res() res: Response,
+  ) {
+    const success = await this.paymentsService.successGrowlimitlessPlans(
+      session_id,
+      user_id,
+      plan_id,
+    );
+    if (success) {
+      return res.redirect(`${process.env.FRONTEND_URL}/payment/success`);
+    }
+    return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
+  }
+
+  @IsPublic()
   @Get('success')
   async success(
     @Query('session_id') session_id: string,
@@ -54,6 +73,23 @@ export class PaymentsController {
       );
     }
     return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
+  }
+
+  @IsPublic()
+  @Post('growlimitlessPaymentForPlans')
+  @ApiResponse({
+    status: 200,
+    type: String,
+  })
+  async growlimitlessPyamentsForPlans(
+    @Query('user_id') user_id: string,
+    @Query('plan_id') plan_id: string,
+  ) {
+    const link = await this.paymentsService.growlimitlessPyamentsForPlans(
+      user_id,
+      plan_id,
+    );
+    return link;
   }
 
   @IsPublic()

@@ -481,6 +481,7 @@ model Payments extends Base {
     payment_type      PaymentType    @default(Cash) @DtoCreateOptional @DtoUpdateOptional
     invoice_id        String         @DtoRelationIncludeId
     invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+    otherId           String         @DtoRelationIncludeId @default("") @DtoCreateOptional @DtoUpdateOptional
 }
 
 enum DashboardTypes {

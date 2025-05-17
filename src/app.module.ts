@@ -33,6 +33,8 @@ import { UserplansModule } from './userplans/userplans.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { ReportsModule } from './reports/reports.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from '@shared/guards/jwt.guard';
 
 @Module({
   imports: [
@@ -71,6 +73,13 @@ import { ReportsModule } from './reports/reports.module';
     ReportsModule,
   ],
   controllers: [MailController],
-  providers: [MailService, TaskserviceService],
+  providers: [
+    MailService,
+    TaskserviceService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

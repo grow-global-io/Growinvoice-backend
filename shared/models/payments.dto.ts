@@ -62,4 +62,8 @@ export class PaymentsDto {
     type: 'string',
   })
   invoice_id: string;
+  @ApiProperty({
+    type: 'string',
+  })
+  otherId: string;
 }

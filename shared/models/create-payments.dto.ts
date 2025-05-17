@@ -72,4 +72,11 @@ export class CreatePaymentsDto {
   @IsNotEmpty()
   @IsString()
   invoice_id: string;
+  @ApiProperty({
+    type: 'string',
+    default: '',
+  })
+  @IsOptional()
+  @IsString()
+  otherId?: string;
 }

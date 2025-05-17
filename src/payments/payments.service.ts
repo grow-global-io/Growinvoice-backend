@@ -237,6 +237,58 @@ export class PaymentsService {
     return stripePaymentLink?.url;
   }
 
+  async growlimitlessPyamentsForPlans(user_id: string, plan_id: string) {
+    const user = await this.prisma.userPlans.findFirst({
+      where: { user_id, status: true, end_date: { gt: new Date() } },
+    });
+    if (user) {
+      throw new BadRequestException('Plan already exists');
+    }
+    const plan = await this.planService.findOne(plan_id);
+    if (!plan) {
+      throw new BadRequestException('Plan not found');
+    }
+    const growlimitlessKey = this.configService.get<string>(
+      'GROWLIMITLESS_API_KEY',
+    );
+    const gll_Url = this.configService.get<string>('GROWLIMITLESS_URL');
+    const data = await axios.post(
+      `${gll_Url}/api/sessions`,
+      {
+        mode: 'payment',
+        line_items: [
+          {
+            price_data: {
+              currency: 'USD',
+              product_data: {
+                name: `Payment for the plan - ${plan?.name}`,
+                description: 'Payment for the plan - ' + plan?.name,
+              },
+              unit_amount: Math.round(plan?.price * 100),
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${process.env.BACKEND_URL}/api/payments/successGrowlimitlessPlans?session_id={CHECKOUT_SESSION_ID}&user_id=${user_id}&plan_id=${plan_id}`,
+        cancel_url: `${process.env.BACKEND_URL}/api/payments/cancelPlans?type=cancel`,
+        metadata: {
+          plan_id,
+          user_id,
+        },
+        apiKey: growlimitlessKey,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (data.status !== 201) {
+      throw new Error('Error creating payment link');
+    }
+    return data.data?.uri;
+  }
+
   async successPlans(session_id: string, user_id: string, plan_id: string) {
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
@@ -249,6 +301,59 @@ export class PaymentsService {
     const stripe = new Stripe(stripeKey);
     const session = await stripe.checkout.sessions.retrieve(session_id);
     if (session.payment_status === 'paid') {
+      const end_date = new Date();
+      end_date.setDate(end_date.getDate() + plan.days);
+      await this.userplansService.create({
+        end_date: end_date,
+        plan_id,
+        start_date: new Date(),
+        session_id,
+        status: true,
+        user_id,
+      });
+      await this.notificationService.create({
+        user_id,
+        title: 'Payment Success',
+        body: 'Payment for plan ' + plan.name + ' is successful',
+      });
+      // redirect to success page
+      return true;
+    }
+    return false;
+  }
+
+  async successGrowlimitlessPlans(
+    session_id: string,
+    user_id: string,
+    plan_id: string,
+  ) {
+    const plan = await this.planService.findOne(plan_id);
+    if (!plan) {
+      throw new Error('Plan not found');
+    }
+    const growlimitlessPayment = await this.gateWayService.getbyuserIdandType(
+      user_id,
+      'Growlimitless',
+    );
+    if (!growlimitlessPayment) {
+      throw new Error('Growlimitless key not found');
+    }
+    if (growlimitlessPayment?.enabled === false) {
+      throw new Error('Growlimitless key not enabled');
+    }
+    const gll_Url = this.configService.get<string>('GROWLIMITLESS_URL');
+    const data = await axios.get(
+      `${gll_Url}/api/sessions?sessionId=${session_id}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    if (data.status !== 200) {
+      throw new Error('Error creating payment link');
+    }
+    if (data.data.paymentStatus === 'SUCCESS') {
       const end_date = new Date();
       end_date.setDate(end_date.getDate() + plan.days);
       await this.userplansService.create({
@@ -292,6 +397,7 @@ export class PaymentsService {
         paymentDetails_id: invoice?.paymentId,
         paymentDate: new Date(),
         payment_type: 'Stripe',
+        otherId: session_id,
       });
       await this.invoiceService.statusToPaid(invoice_id);
       await this.notificationService.create({
@@ -347,7 +453,8 @@ export class PaymentsService {
         amount: invoice.total,
         paymentDetails_id: invoice?.paymentId,
         paymentDate: new Date(),
-        payment_type: 'Stripe',
+        payment_type: 'GrowLimitLess',
+        otherId: session_id,
       });
       await this.invoiceService.statusToPaid(invoice_id);
       await this.notificationService.create({
@@ -398,6 +505,7 @@ export class PaymentsService {
         paymentDetails_id: invoice?.paymentId,
         paymentDate: new Date(),
         payment_type: 'Razorpay',
+        otherId: razorpay_payment_id,
       });
       await this.invoiceService.statusToPaid(invoice_id);
       await this.notificationService.create({

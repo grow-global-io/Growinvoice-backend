@@ -27,5 +27,6 @@ import { UserplansService } from '@/userplans/userplans.service';
     PlansService,
     UserplansService,
   ],
+  exports: [PaymentsService, PaymentsModule],
 })
 export class PaymentsModule {}

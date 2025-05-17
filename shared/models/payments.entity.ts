@@ -80,4 +80,8 @@ export class Payments {
     required: false,
   })
   invoice?: Invoice;
+  @ApiProperty({
+    type: 'string',
+  })
+  otherId: string;
 }
