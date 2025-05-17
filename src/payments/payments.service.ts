@@ -327,19 +327,25 @@ export class PaymentsService {
     user_id: string,
     plan_id: string,
   ) {
+    const checkSession = await this.prisma.userPlans.findFirst({
+      where: {
+        session_id,
+      },
+    });
+    if (checkSession) {
+      throw new Error('Session already exists');
+    }
+    const checkSessioninvoice = await this.prisma.payments.findFirst({
+      where: {
+        otherId: session_id,
+      },
+    });
+    if (checkSessioninvoice) {
+      throw new Error('Session already exists');
+    }
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
       throw new Error('Plan not found');
-    }
-    const growlimitlessPayment = await this.gateWayService.getbyuserIdandType(
-      user_id,
-      'Growlimitless',
-    );
-    if (!growlimitlessPayment) {
-      throw new Error('Growlimitless key not found');
-    }
-    if (growlimitlessPayment?.enabled === false) {
-      throw new Error('Growlimitless key not enabled');
     }
     const gll_Url = this.configService.get<string>('GROWLIMITLESS_URL');
     const data = await axios.get(
