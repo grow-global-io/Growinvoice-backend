@@ -323,9 +323,9 @@ export class PaymentsService {
   }
 
   async successGrowlimitlessPlans(
-    session_id: string,
     user_id: string,
     plan_id: string,
+    session_id?: string,
   ) {
     const checkSession = await this.prisma.userPlans.findFirst({
       where: {
@@ -346,6 +346,25 @@ export class PaymentsService {
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
       throw new Error('Plan not found');
+    }
+    if (plan.price === 0 && !session_id) {
+      const end_date = new Date();
+      end_date.setDate(end_date.getDate() + plan.days);
+      await this.userplansService.create({
+        end_date: end_date,
+        plan_id,
+        start_date: new Date(),
+        session_id: 'Test',
+        status: true,
+        user_id,
+      });
+      await this.notificationService.create({
+        user_id,
+        title: 'Payment Success',
+        body: 'Payment for plan ' + plan.name + ' is successful',
+      });
+      // redirect to success page
+      return true;
     }
     const gll_Url = this.configService.get<string>('GROWLIMITLESS_URL');
     const data = await axios.get(

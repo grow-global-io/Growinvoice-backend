@@ -38,15 +38,15 @@ export class PaymentsController {
   @IsPublic()
   @Get('successGrowlimitlessPlans')
   async successGrowlimitlessPlans(
-    @Query('session_id') session_id: string,
     @Query('plan_id') plan_id: string,
     @Query('user_id') user_id: string,
     @Res() res: Response,
+    @Query('session_id') session_id?: string,
   ) {
     const success = await this.paymentsService.successGrowlimitlessPlans(
-      session_id,
       user_id,
       plan_id,
+      session_id,
     );
     if (success) {
       return res.redirect(`${process.env.FRONTEND_URL}/payment/success`);
