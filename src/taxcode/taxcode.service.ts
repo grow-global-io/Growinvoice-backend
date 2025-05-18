@@ -1,13 +1,14 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { SharedService } from '@/shared/shared.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateTaxDto, TaxDto, UpdateTaxDto } from '@shared/models';
+import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class TaxcodeService {
   constructor(
-    private prismaService: PrismaService,
+    @Inject(ENHANCED_PRISMA) private prismaService: PrismaService,
     private readonly sharedService: SharedService,
   ) {}
   async create(createTaxcodeDto: CreateTaxDto) {

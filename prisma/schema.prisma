@@ -108,7 +108,10 @@ enum ExpenseCategory {
   Other
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Country {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -135,7 +138,10 @@ model Country {
   VendorsBillingAddress VendorsBillingAddress[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model State {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -161,7 +167,10 @@ model State {
   VendorsBillingAddress VendorsBillingAddress[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -226,7 +235,10 @@ model User {
   Expenses          Expenses[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Company {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -256,7 +268,10 @@ model Company {
   user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model HSNCode {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -283,7 +298,10 @@ model HSNCode {
   QuotationProducts QuotationProducts[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Tax {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -314,7 +332,10 @@ model Tax {
   QuotationProducts QuotationProducts[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model ProductUnit {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -334,7 +355,10 @@ model ProductUnit {
   Product   Product[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Product {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -375,7 +399,10 @@ model Product {
   Quatation   QuotationProducts[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model BillingAddress {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -400,7 +427,10 @@ model BillingAddress {
   customer   Customer[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model ShippingAddress {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -425,7 +455,10 @@ model ShippingAddress {
   customer   Customer[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Currencies {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -451,7 +484,10 @@ model Currencies {
   expense    Expenses[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Customer {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -487,7 +523,10 @@ model Customer {
   Quatation          Quotation[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model PaymentDetails {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -539,7 +578,10 @@ model PaymentDetails {
   Payments    Payments[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model GateWayDetails {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -568,7 +610,10 @@ model GateWayDetails {
   @@unique([type, user_id])
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model InvoiceProducts {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -597,7 +642,10 @@ model InvoiceProducts {
   total      Float
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Invoice {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -657,7 +705,10 @@ model Invoice {
   template_url       String?
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model invoiceTemplate {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -680,7 +731,10 @@ model invoiceTemplate {
   InvoiceSettings InvoiceSettings[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model InvoiceSettings {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -717,7 +771,10 @@ model InvoiceSettings {
   @@unique([user_id, id])
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model QuotationProducts {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -746,7 +803,10 @@ model QuotationProducts {
   total        Float
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Quotation {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -797,7 +857,10 @@ model Quotation {
   template_url       String?
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model QuotationTemplate {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -820,7 +883,10 @@ model QuotationTemplate {
   quotationSettings QuotationSettings[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model QuotationSettings {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -860,7 +926,10 @@ model QuotationSettings {
   @@unique([user_id, id])
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model OpenAiHistory {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -881,7 +950,10 @@ model OpenAiHistory {
   @@unique([user_id, query])
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Payments {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -924,7 +996,10 @@ model Payments {
   otherId           String         @default("")
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model AIDashboard {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -945,7 +1020,10 @@ model AIDashboard {
   type      DashboardTypes
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Notification {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -971,7 +1049,10 @@ model Notification {
   metaType  String?
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Plans {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -994,7 +1075,10 @@ model Plans {
   UserPlans    UserPlans[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model PlanFeatures {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -1013,7 +1097,10 @@ model PlanFeatures {
   count     Int
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model UserPlans {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -1041,7 +1128,10 @@ model UserPlans {
   status     Boolean   @default(false)
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Vendors {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -1068,7 +1158,10 @@ model Vendors {
   expenses          Expenses[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model VendorsBillingAddress {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
@@ -1093,7 +1186,10 @@ model VendorsBillingAddress {
   vendor     Vendors[]
 }
 
-/// @@deny('read', isExist == false)
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
 model Expenses {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden

@@ -1,5 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Invoice, InvoiceDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import {
@@ -14,12 +14,13 @@ import {
 } from '@shared/utils/formatAddress';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 import { SharedService } from '@/shared/shared.service';
+import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 
 @Injectable()
 export class InvoiceService {
   constructor(
     private sharedService: SharedService,
-    private prismaService: PrismaService,
+    @Inject(ENHANCED_PRISMA) private prismaService: PrismaService,
     private invoiceSettings: InvoicesettingsService,
   ) {}
 

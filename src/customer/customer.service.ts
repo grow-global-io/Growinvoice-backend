@@ -1,15 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateCustomerWithAddressDto } from './dto/create-customer-with-address.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { plainToInstance } from 'class-transformer';
 import { UpdateCustomerWithAddressDto } from './dto/update-customer-with-address.dto';
 import { GetCustomerWithAddressDto } from './dto/get-customer-with-address.dto';
 import { SharedService } from '@/shared/shared.service';
+import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 
 @Injectable()
 export class CustomerService {
   constructor(
-    private prismaServie: PrismaService,
+    @Inject(ENHANCED_PRISMA) private prismaServie: PrismaService,
     private readonly sharedService: SharedService, // Assuming you have a SharedService for common functionalities
   ) {}
 

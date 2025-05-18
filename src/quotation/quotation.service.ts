@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import {
   CreateQuotationWithProducts,
@@ -20,12 +20,13 @@ import { InvoiceService } from '@/invoice/invoice.service';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 import { InvoicetemplateService } from '@/invoicetemplate/invoicetemplate.service';
 import { SharedService } from '@/shared/shared.service';
+import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 
 @Injectable()
 export class QuotationService {
   constructor(
     private prismaService: PrismaService,
-    private quotationSetting: QuotationsettingsService,
+    @Inject(ENHANCED_PRISMA) private quotationSetting: QuotationsettingsService,
     private invoiceService: InvoiceService,
     private invoiceSettingService: InvoicesettingsService,
     private invoiceTemplateService: InvoicetemplateService,

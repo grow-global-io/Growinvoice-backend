@@ -1,17 +1,18 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { SharedService } from '@/shared/shared.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateProductUnitDto,
   ProductUnitDto,
   UpdateProductUnitDto,
 } from '@shared/models';
+import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ProductunitService {
   constructor(
-    private prismaService: PrismaService,
+    @Inject(ENHANCED_PRISMA) private prismaService: PrismaService,
     private sharedService: SharedService,
   ) {}
 

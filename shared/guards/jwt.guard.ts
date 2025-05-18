@@ -7,10 +7,14 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from '@shared/decorators/public.decorator';
 import { Observable } from 'rxjs';
+import { ClsService } from 'nestjs-cls';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private reflector: Reflector) {
+  constructor(
+    private reflector: Reflector,
+    private readonly cls: ClsService,
+  ) {
     super();
   }
 
@@ -21,7 +25,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       context.getHandler(),
       context.getClass(),
     ]);
-    console.log('isPublic', isPublic);
     if (isPublic) {
       // 💡 See this condition
       return true;
@@ -47,7 +50,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       // Throw error if no user is provided
       throw new UnauthorizedException('No user found with this JWT token.');
     }
-
+    // Set the user in the request context
+    this.cls.set('user', user);
     return user;
   }
 }

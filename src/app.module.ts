@@ -36,6 +36,10 @@ import { ReportsModule } from './reports/reports.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@shared/guards/jwt.guard';
 import { SharedModule } from './shared/shared.module';
+import { ClsModule, ClsService } from 'nestjs-cls';
+import { ZenStackModule } from '@zenstackhq/server/nestjs';
+import { PrismaService } from './prisma/prisma.service';
+import { enhance } from '@zenstackhq/runtime';
 
 @Module({
   imports: [
@@ -73,6 +77,22 @@ import { SharedModule } from './shared/shared.module';
     ExpensesModule,
     ReportsModule,
     SharedModule,
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true,
+      },
+    }),
+    ZenStackModule.registerAsync({
+      useFactory: (prisma: PrismaService) => {
+        return {
+          getEnhancedPrisma: () => enhance(prisma, { user: null }),
+        };
+      },
+      inject: [PrismaService, ClsService],
+      extraProviders: [PrismaService],
+      global: true,
+    }),
   ],
   controllers: [MailController],
   providers: [

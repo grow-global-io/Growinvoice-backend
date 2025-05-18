@@ -15,8 +15,12 @@ attribute @DtoRelationIncludeId()
 attribute @DtoTypeFullUpdate()
 
 abstract model Base {
-  createdAt DateTime @default(now()) @DtoCreateHidden() @DtoUpdateHidden()
+  createdAt DateTime  @default(now()) @DtoCreateHidden() @DtoUpdateHidden()
   updatedAt DateTime? @updatedAt @DtoCreateHidden() @DtoUpdateHidden()
-  isExist Boolean @default(true) @DtoCreateHidden() @DtoUpdateHidden()
-  @@deny('read', isExist == false)
+  isExist   Boolean   @default(true) @DtoCreateHidden() @DtoUpdateHidden()
+  // @@deny('read', isExist == false)
+  @@allow('read', isExist == true)
+  @@allow('create', isExist == true)
+  @@allow('update', isExist == true)
+  @@allow('delete', isExist == true)
 }

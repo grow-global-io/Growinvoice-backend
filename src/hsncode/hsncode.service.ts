@@ -1,14 +1,15 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { HSNCodeDto, UpdateHSNCodeDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import { CreateHSNCodeTaxDto } from './dto/create-hsn-code-tax.dto';
 import { SharedService } from '@/shared/shared.service';
+import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 
 @Injectable()
 export class HsncodeService {
   constructor(
-    private prismaService: PrismaService,
+    @Inject(ENHANCED_PRISMA) private prismaService: PrismaService,
     private readonly sharedService: SharedService, // Assuming SharedService is defined elsewhere
   ) {}
   async create(createHsncodeDto: CreateHSNCodeTaxDto) {
