@@ -3,12 +3,17 @@ import { Injectable } from '@nestjs/common';
 import { HSNCodeDto, UpdateHSNCodeDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import { CreateHSNCodeTaxDto } from './dto/create-hsn-code-tax.dto';
+import { SharedService } from '@/shared/shared.service';
 
 @Injectable()
 export class HsncodeService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly sharedService: SharedService, // Assuming SharedService is defined elsewhere
+  ) {}
   async create(createHsncodeDto: CreateHSNCodeTaxDto) {
-    const tax = this.prismaService.tax.create({
+    await this.sharedService.checkHsnCodeQuota(createHsncodeDto.user_id);
+    const tax = await this.prismaService.tax.create({
       data: {
         percentage: createHsncodeDto.tax,
         user_id: createHsncodeDto.user_id,

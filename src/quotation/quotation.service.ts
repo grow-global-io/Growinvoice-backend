@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import {
   CreateQuotationWithProducts,
@@ -19,6 +19,7 @@ import {
 import { InvoiceService } from '@/invoice/invoice.service';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 import { InvoicetemplateService } from '@/invoicetemplate/invoicetemplate.service';
+import { SharedService } from '@/shared/shared.service';
 
 @Injectable()
 export class QuotationService {
@@ -28,9 +29,14 @@ export class QuotationService {
     private invoiceService: InvoiceService,
     private invoiceSettingService: InvoicesettingsService,
     private invoiceTemplateService: InvoicetemplateService,
+    private sharedService: SharedService,
   ) {}
 
   async create(createQuotationDto: CreateQuotationWithProducts) {
+    await this.sharedService.checkQuotationQuota(createQuotationDto.user_id);
+    if (createQuotationDto?.product?.length === 0) {
+      throw new BadRequestException('Products are missing');
+    }
     const quotationDetails = await this.prismaService.quotation.create({
       data: {
         ...createQuotationDto,

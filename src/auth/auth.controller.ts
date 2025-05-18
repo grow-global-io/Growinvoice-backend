@@ -19,4 +19,9 @@ export class AuthController {
   getUser(@Query('id') id: string) {
     return this.authService.getUser(id);
   }
+
+  @Get('getUserQuota')
+  async getUserQuota(@GetUser() user: User) {
+    return await this.authService.getUserQuota(user);
+  }
 }

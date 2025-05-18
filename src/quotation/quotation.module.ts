@@ -7,6 +7,7 @@ import { MailService } from '@/mail/mail.service';
 import { InvoiceService } from '@/invoice/invoice.service';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 import { InvoicetemplateService } from '@/invoicetemplate/invoicetemplate.service';
+import { SharedService } from '@/shared/shared.service';
 
 @Module({
   controllers: [QuotationController],
@@ -18,6 +19,7 @@ import { InvoicetemplateService } from '@/invoicetemplate/invoicetemplate.servic
     InvoiceService,
     InvoicesettingsService,
     InvoicetemplateService,
+    SharedService,
   ],
 })
 export class QuotationModule {}

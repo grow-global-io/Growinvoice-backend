@@ -4,15 +4,20 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { plainToInstance } from 'class-transformer';
 import { UpdateCustomerWithAddressDto } from './dto/update-customer-with-address.dto';
 import { GetCustomerWithAddressDto } from './dto/get-customer-with-address.dto';
+import { SharedService } from '@/shared/shared.service';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prismaServie: PrismaService) {}
+  constructor(
+    private prismaServie: PrismaService,
+    private readonly sharedService: SharedService, // Assuming you have a SharedService for common functionalities
+  ) {}
 
-  create(createCustomerDto: CreateCustomerWithAddressDto) {
+  async create(createCustomerDto: CreateCustomerWithAddressDto) {
+    await this.sharedService.checkCustomerQuota(createCustomerDto.user_id);
     const { billingDetails, shippingDetails, ...customerDetails } =
       createCustomerDto;
-    return this.prismaServie.customer.create({
+    return await this.prismaServie.customer.create({
       data: {
         name: customerDetails.name,
         option: customerDetails?.option,

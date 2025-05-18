@@ -1,4 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
+import { SharedService } from '@/shared/shared.service';
 import { Injectable } from '@nestjs/common';
 import {
   CreateProductUnitDto,
@@ -9,9 +10,15 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ProductunitService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private sharedService: SharedService,
+  ) {}
 
   async create(createProductunitDto: CreateProductUnitDto) {
+    await this.sharedService.checkProductUnitQuota(
+      createProductunitDto.user_id,
+    );
     return await this.prismaService.productUnit.create({
       data: createProductunitDto,
     });

@@ -13,14 +13,18 @@ import {
   formatCustomerShippingAddress,
 } from '@shared/utils/formatAddress';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
+import { SharedService } from '@/shared/shared.service';
 
 @Injectable()
 export class InvoiceService {
   constructor(
+    private sharedService: SharedService,
     private prismaService: PrismaService,
     private invoiceSettings: InvoicesettingsService,
   ) {}
+
   async create(createInvoiceDto: CreateInvoiceWithProducts) {
+    await this.sharedService.checkInvoicesQuota(createInvoiceDto.user_id);
     if (createInvoiceDto?.product?.length === 0) {
       throw new BadRequestException('Products are missing');
     }

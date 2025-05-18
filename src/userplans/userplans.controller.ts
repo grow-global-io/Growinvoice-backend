@@ -4,10 +4,11 @@ import { CreateUserPlansDto, UserPlansDto } from '@shared/models';
 import { UpdateUserPlanCustomDto } from './dto/update-dto-custom.dto';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('userplans')
 @Controller('userplans')
+@ApiExtraModels(UserPlansDto)
 export class UserplansController {
   constructor(private readonly userplansService: UserplansService) {}
 

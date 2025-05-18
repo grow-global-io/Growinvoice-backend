@@ -21,8 +21,10 @@ export class TaxcodeController {
 
   @Post()
   @ApiSuccessResponse(TaxDto, { status: 201 })
-  create(@Body() createTaxcodeDto: CreateTaxDto): SuccessResponseDto<TaxDto> {
-    const taxcode = this.taxcodeService.create(createTaxcodeDto);
+  async create(
+    @Body() createTaxcodeDto: CreateTaxDto,
+  ): Promise<SuccessResponseDto<TaxDto>> {
+    const taxcode = await this.taxcodeService.create(createTaxcodeDto);
     return {
       result: taxcode,
       message: 'Tax Code created successfully',

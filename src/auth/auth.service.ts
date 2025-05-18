@@ -8,12 +8,15 @@ import { UserWithCompanyDto } from './dto/user-with-company.dto';
 import { plainToInstance } from 'class-transformer';
 import { UserDto } from '@shared/models';
 import { LoginSuccessDto } from '@/user/dto/login-success.dto';
+import { SharedService } from '@/shared/shared.service';
+import { UserQuotaDto } from './dto/user-quota.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
+    private readonly sharedService: SharedService,
   ) {}
 
   async loginUser(data: LoginUserDto) {
@@ -55,6 +58,9 @@ export class AuthService {
               gte: new Date(),
             },
           },
+          include: {
+            plan: true,
+          },
         },
       },
     });
@@ -72,5 +78,10 @@ export class AuthService {
       throw new BadRequestException('User not found');
     }
     return plainToInstance(UserDto, user);
+  }
+
+  async getUserQuota(user: User) {
+    const res = await this.sharedService.getQuota(user.sub);
+    return plainToInstance(UserQuotaDto, res);
   }
 }

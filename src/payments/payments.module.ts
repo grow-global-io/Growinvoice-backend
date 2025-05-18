@@ -11,6 +11,7 @@ import { NotificationsService } from '@/notifications/notifications.service';
 import { NotificationsGateway } from '@/notifications/notifications.gateway';
 import { PlansService } from '@/plans/plans.service';
 import { UserplansService } from '@/userplans/userplans.service';
+import { SharedService } from '@/shared/shared.service';
 
 @Module({
   controllers: [PaymentsController],
@@ -26,6 +27,7 @@ import { UserplansService } from '@/userplans/userplans.service';
     NotificationsGateway,
     PlansService,
     UserplansService,
+    SharedService,
   ],
   exports: [PaymentsService, PaymentsModule],
 })

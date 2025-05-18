@@ -4,6 +4,7 @@ import { InvoiceController } from './invoice.controller';
 import { PrismaService } from '@/prisma/prisma.service';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 import { MailService } from '@/mail/mail.service';
+import { SharedService } from '@/shared/shared.service';
 
 @Module({
   controllers: [InvoiceController],
@@ -12,6 +13,7 @@ import { MailService } from '@/mail/mail.service';
     PrismaService,
     InvoicesettingsService,
     MailService,
+    SharedService,
   ],
   exports: [InvoiceService],
 })

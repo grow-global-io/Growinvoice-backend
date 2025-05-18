@@ -3,13 +3,18 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { CreateProductDto, ProductDto, UpdateProductDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import { ProductWithAllDataDto } from './dto/product-with-allproperties.dto';
+import { SharedService } from '@/shared/shared.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly sharedService: SharedService, // Assuming you have a SharedService for common functionalities
+  ) {}
 
-  create(createProductDto: CreateProductDto) {
-    return this.prismaService.product.create({
+  async create(createProductDto: CreateProductDto) {
+    await this.sharedService.checkProductQuota(createProductDto.user_id);
+    return await this.prismaService.product.create({
       data: createProductDto,
     });
   }

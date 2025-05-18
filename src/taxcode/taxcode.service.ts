@@ -1,13 +1,18 @@
 import { PrismaService } from '@/prisma/prisma.service';
+import { SharedService } from '@/shared/shared.service';
 import { Injectable } from '@nestjs/common';
 import { CreateTaxDto, TaxDto, UpdateTaxDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class TaxcodeService {
-  constructor(private prismaService: PrismaService) {}
-  create(createTaxcodeDto: CreateTaxDto) {
-    const taxcode = this.prismaService.tax.create({
+  constructor(
+    private prismaService: PrismaService,
+    private readonly sharedService: SharedService,
+  ) {}
+  async create(createTaxcodeDto: CreateTaxDto) {
+    await this.sharedService.checkTaxCodeQuota(createTaxcodeDto.user_id);
+    const taxcode = await this.prismaService.tax.create({
       data: createTaxcodeDto,
     });
     return plainToInstance(TaxDto, taxcode);

@@ -10,6 +10,7 @@ import { LocalStrategy } from '../../shared/strategies/local.strategy';
 import { JwtStrategy } from '../../shared/strategies/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '../../shared/guards/jwt.guard';
+import { SharedService } from '@/shared/shared.service';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { JwtAuthGuard } from '../../shared/guards/jwt.guard';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    SharedService,
   ],
   exports: [AuthService],
 })

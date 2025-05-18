@@ -238,12 +238,6 @@ export class PaymentsService {
   }
 
   async growlimitlessPyamentsForPlans(user_id: string, plan_id: string) {
-    const user = await this.prisma.userPlans.findFirst({
-      where: { user_id, status: true, end_date: { gt: new Date() } },
-    });
-    if (user) {
-      throw new BadRequestException('Plan already exists');
-    }
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
       throw new BadRequestException('Plan not found');

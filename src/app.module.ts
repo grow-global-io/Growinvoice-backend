@@ -35,6 +35,7 @@ import { ExpensesModule } from './expenses/expenses.module';
 import { ReportsModule } from './reports/reports.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@shared/guards/jwt.guard';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { JwtAuthGuard } from '@shared/guards/jwt.guard';
     VendorsModule,
     ExpensesModule,
     ReportsModule,
+    SharedModule,
   ],
   controllers: [MailController],
   providers: [
