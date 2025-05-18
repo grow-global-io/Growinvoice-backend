@@ -327,22 +327,6 @@ export class PaymentsService {
     plan_id: string,
     session_id?: string,
   ) {
-    const checkSession = await this.prisma.userPlans.findFirst({
-      where: {
-        session_id,
-      },
-    });
-    if (checkSession) {
-      throw new Error('Session already exists');
-    }
-    const checkSessioninvoice = await this.prisma.payments.findFirst({
-      where: {
-        otherId: session_id,
-      },
-    });
-    if (checkSessioninvoice) {
-      throw new Error('Session already exists');
-    }
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
       throw new Error('Plan not found');
@@ -366,6 +350,23 @@ export class PaymentsService {
       // redirect to success page
       return true;
     }
+    const checkSession = await this.prisma.userPlans.findFirst({
+      where: {
+        session_id,
+      },
+    });
+    if (checkSession) {
+      throw new Error('Session already exists');
+    }
+    const checkSessioninvoice = await this.prisma.payments.findFirst({
+      where: {
+        otherId: session_id,
+      },
+    });
+    if (checkSessioninvoice) {
+      throw new Error('Session already exists');
+    }
+
     const gll_Url = this.configService.get<string>('GROWLIMITLESS_URL');
     const data = await axios.get(
       `${gll_Url}/api/sessions?sessionId=${session_id}`,
