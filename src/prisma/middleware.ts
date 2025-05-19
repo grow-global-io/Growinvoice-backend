@@ -5,7 +5,15 @@ export function SoftDeleteMiddleware<T>(): Prisma.Middleware {
     params: Prisma.MiddlewareParams,
     next: (params: Prisma.MiddlewareParams) => Promise<T>,
   ): Promise<T> => {
-    const blackList: Prisma.ModelName[] = [Prisma.ModelName.Invoice];
+    const blackList: Prisma.ModelName[] = [
+      Prisma.ModelName.Invoice,
+      Prisma.ModelName.Customer,
+      Prisma.ModelName.HSNCode,
+      Prisma.ModelName.Product,
+      Prisma.ModelName.ProductUnit,
+      Prisma.ModelName.Quotation,
+      Prisma.ModelName.Tax,
+    ];
 
     if (params.model && !blackList.includes(params.model)) {
       // Ignore queries for models in the white list
