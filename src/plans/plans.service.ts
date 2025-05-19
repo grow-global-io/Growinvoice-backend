@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   CreatePlanWithFeaturesDto,
   UpdatePlanWithFeaturesDto,
@@ -7,10 +7,13 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { plainToInstance } from 'class-transformer';
 import { PlansDto } from '@shared/models';
 import { PlanWithFeaturesDto } from './dto/plan-with-features.dto';
+import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 
 @Injectable()
 export class PlansService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @Inject(ENHANCED_PRISMA) private readonly prismaService: PrismaService,
+  ) {}
   async create(createPlanDto: CreatePlanWithFeaturesDto) {
     const plan = await this.prismaService.plans.create({
       data: {
