@@ -29,6 +29,19 @@ export class InvoiceService {
     if (createInvoiceDto?.product?.length === 0) {
       throw new BadRequestException('Products are missing');
     }
+    const checkInvoiceNumberExists = await this.prismaService.invoice.findFirst(
+      {
+        where: {
+          invoice_number: createInvoiceDto.invoice_number,
+          user_id: createInvoiceDto.user_id,
+        },
+      },
+    );
+    if (checkInvoiceNumberExists) {
+      throw new BadRequestException(
+        'Invoice number already exists. Please use a different one.',
+      );
+    }
     const invoiceDetails = await this.prismaService.invoice.create({
       data: {
         ...createInvoiceDto,

@@ -38,6 +38,18 @@ export class QuotationService {
     if (createQuotationDto?.product?.length === 0) {
       throw new BadRequestException('Products are missing');
     }
+    const checkQuotationNumberExists =
+      await this.prismaService.quotation.findFirst({
+        where: {
+          quatation_number: createQuotationDto.quatation_number,
+          user_id: createQuotationDto.user_id,
+        },
+      });
+    if (checkQuotationNumberExists) {
+      throw new BadRequestException(
+        'Quotation number already exists, please use a different one',
+      );
+    }
     const quotationDetails = await this.prismaService.quotation.create({
       data: {
         ...createQuotationDto,
