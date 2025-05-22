@@ -180,9 +180,11 @@ export class QuotationService {
 
   async quotationSettingsWithFormat(quotation: QuotationWithAllDataDto) {
     const a = quotation;
-    const quotationSettings = await this.quotationSetting?.findOne(
-      quotation?.user?.id,
-    );
+    console.log('quotation', quotation);
+    const quotationSettings =
+      await this.prismaService.quotationSettings.findFirst({
+        where: { user_id: a?.user?.id },
+      });
     if (quotationSettings === null || a?.user?.id === null) {
       a.companyAddress = '';
       a.customerBillingAddress = '';

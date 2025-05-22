@@ -36,8 +36,12 @@ export class QuotationsettingsService {
 
   async findOne(id: string) {
     const quotationsetting =
-      await this.prismaService.quotationSettings.findUnique({
-        where: { id },
+      await this.prismaService.quotationSettings.findFirst({
+        where: {
+          user: {
+            id,
+          },
+        },
       });
     return plainToInstance(QuotationSettingsDto, quotationsetting);
   }
