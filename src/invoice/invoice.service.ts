@@ -398,17 +398,25 @@ export class InvoiceService {
     });
   }
 
-  async statusToPaid(id: string) {
+  async statusToPaid(id: string, amount?: number) {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },
     });
     return await this.prismaService.invoice.update({
       where: { id },
       data: {
-        due_amount: 0,
-        paid_amount: invoice.total,
-        status: 'Paid',
-        paid_status: 'Paid',
+        due_amount: amount ? invoice.total - amount : 0,
+        paid_amount: amount ? invoice.paid_amount + amount : invoice.total,
+        status: amount
+          ? invoice.total - amount === 0
+            ? 'Paid'
+            : 'Draft'
+          : 'Paid',
+        paid_status: amount
+          ? invoice.total - amount === 0
+            ? 'Paid'
+            : 'PartiallyPaid'
+          : 'Paid',
       },
     });
   }

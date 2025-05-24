@@ -73,6 +73,7 @@ enum PaymentType {
 enum paidStatus {
     Paid
     Unpaid
+    PartiallyPaid
 }
 
 enum GateWayType {

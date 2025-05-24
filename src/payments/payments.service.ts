@@ -42,7 +42,10 @@ export class PaymentsService {
     const payments = await this.prisma.payments.create({
       data: createPaymentDto,
     });
-    await this.invoiceService.statusToPaid(payments.invoice_id);
+    await this.invoiceService.statusToPaid(
+      payments.invoice_id,
+      payments.amount,
+    );
     return plainToInstance(PaymentsDto, payments);
   }
 
@@ -419,7 +422,7 @@ export class PaymentsService {
         payment_type: 'Stripe',
         otherId: session_id,
       });
-      await this.invoiceService.statusToPaid(invoice_id);
+      await this.invoiceService.statusToPaid(invoice_id, invoice.total);
       await this.notificationService.create({
         user_id,
         title: 'Payment Success',
@@ -476,7 +479,7 @@ export class PaymentsService {
         payment_type: 'GrowLimitLess',
         otherId: session_id,
       });
-      await this.invoiceService.statusToPaid(invoice_id);
+      await this.invoiceService.statusToPaid(invoice_id, invoice.total);
       await this.notificationService.create({
         user_id,
         title: 'Payment Success',
@@ -527,7 +530,7 @@ export class PaymentsService {
         payment_type: 'Razorpay',
         otherId: razorpay_payment_id,
       });
-      await this.invoiceService.statusToPaid(invoice_id);
+      await this.invoiceService.statusToPaid(invoice_id, invoice.total);
       await this.notificationService.create({
         user_id,
         title: 'Payment Success',
