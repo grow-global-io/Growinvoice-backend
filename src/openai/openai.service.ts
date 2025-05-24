@@ -47,7 +47,7 @@ export class OpenaiService {
     );
 
     this.genAiProModel = this.genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash-preview-05-20',
       generationConfig: {
         temperature: 0.4,
         topP: 1,
@@ -58,7 +58,7 @@ export class OpenaiService {
     });
 
     this.genAiProJsonModel = this.genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.5-flash-preview-05-20',
       generationConfig: {
         temperature: 0.4,
         topP: 1,
@@ -83,6 +83,8 @@ export class OpenaiService {
     - respond only with SQL query for PostgreSQL DB.
     - STRICTLY FOLLOW THE ABOVE REQUIREMENTS.
     - STRICTLY RESPOND ONLY WITH SQL QUERY. DONOT RESPOND WITH ANY OTHER INFORMATION or with text.
+    - ENSURE TO NOT QUERY UNNECESSARY DATA LIKE ID, createdAt, updatedAt, etc.
+    - YOU CAN JOIN TABLES IF REQUIRED.
     """"`;
 
   chartDataDescribe = `"""
