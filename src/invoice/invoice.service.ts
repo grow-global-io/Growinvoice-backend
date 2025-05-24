@@ -123,7 +123,12 @@ export class InvoiceService {
 
   async findDueInvoices(user_id: string) {
     const invoices = await this.prismaService.invoice.findMany({
-      where: { user_id, paid_status: 'Unpaid' },
+      where: {
+        user_id,
+        paid_status: {
+          not: 'Paid',
+        },
+      },
       include: {
         customer: true,
         product: {
@@ -410,7 +415,7 @@ export class InvoiceService {
         status: amount
           ? invoice.total - amount === 0
             ? 'Paid'
-            : 'Draft'
+            : 'Due'
           : 'Paid',
         paid_status: amount
           ? invoice.total - amount === 0
