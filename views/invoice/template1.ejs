@@ -25,12 +25,12 @@
             <div class="tm_invoice_left">
               <div class="tm_logo">
                 <% if (invoice?.user?.company[0]?.logo===null ||invoice?.user?.company[0]?.logo==="" ) { %>
-                <h4 style="width: 80%; margin-top: 35px;">
-                  <%= invoice?.user?.company[0]?.name %>
-                </h4>
-                <% } else { %>
-                <img src="<%= invoice?.user?.company[0]?.logo %>" alt="Logo">
-                <% } %>
+                  <h4 style="width: 80%; margin-top: 35px;">
+                    <%= invoice?.user?.company[0]?.name %>
+                  </h4>
+                  <% } else { %>
+                    <img src="<%= invoice?.user?.company[0]?.logo %>" alt="Logo">
+                    <% } %>
               </div>
             </div>
             <div class="tm_invoice_right tm_text_right tm_mobile_hide">
@@ -43,7 +43,8 @@
               <%= invoice?.payment?.paymentType %>
             </div>
             <div class="tm_invoice_info_list tm_white_color">
-              <p class="tm_invoice_number tm_m0">Invoice No: <b>#<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %></b></p>
+              <p class="tm_invoice_number tm_m0">Invoice No: <b>#<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%=
+                      invoice?.invoice_number %></b></p>
               <p class="tm_invoice_date tm_m0">Date: <b>
                   <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %>
                 </b></p>
@@ -55,20 +56,21 @@
               <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
               <div class="templateTo">
                 <p>
-                  <% if (invoice?.customerBillingAddress ==="") { %>
-                  <b style="text-transform: capitalize;">
-                    <%= invoice?.customer?.name %>
-                  </b><br>
-                  <%= invoice?.customer?.billingAddress?.address %><br>
-                  <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
-                  <%= invoice?.customer?.billingAddress?.country?.name %><br>
-                  <%= invoice?.customer?.billingAddress?.zip %><br>
-                  <% } else { %>
-  
-                  <%- invoice?.customerBillingAddress %>
-  
-                  <% }  %>
-  
+                  <% if (invoice?.customerBillingAddress==="" ) { %>
+                    <b style="text-transform: capitalize;">
+                      <%= invoice?.customer?.name %>
+                    </b><br>
+                    <%= invoice?.customer?.billingAddress?.address %><br>
+                      <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name
+                          %>,
+                          <%= invoice?.customer?.billingAddress?.country?.name %><br>
+                            <%= invoice?.customer?.billingAddress?.zip %><br>
+                              <% } else { %>
+
+                                <%- invoice?.customerBillingAddress %>
+
+                                  <% } %>
+
                 </p>
               </div>
             </div>
@@ -76,20 +78,20 @@
               <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
               <div class="templateTo">
                 <p>
-                  <% if (invoice?.companyAddress ==="") { %>
-                  <b style="text-transform: capitalize;">
-                    <%= invoice?.user?.company[0]?.name %>
-                  </b><br>
-                  <%= invoice?.user?.company[0]?.address %><br>
-                  <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
-                          invoice?.user?.company[0]?.country?.name %><br>
-                  <%= invoice?.user?.company[0]?.zip %><br>
-  
-                  <% } else { %>
-  
-                  <%- invoice?.companyAddress %>
-  
-                  <% }  %>
+                  <% if (invoice?.companyAddress==="" ) { %>
+                    <b style="text-transform: capitalize;">
+                      <%= invoice?.user?.company[0]?.name %>
+                    </b><br>
+                    <%= invoice?.user?.company[0]?.address %><br>
+                      <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
+                            invoice?.user?.company[0]?.country?.name %><br>
+                            <%= invoice?.user?.company[0]?.zip %><br>
+
+                              <% } else { %>
+
+                                <%- invoice?.companyAddress %>
+
+                                  <% } %>
                 </p>
               </div>
             </div>
@@ -100,6 +102,8 @@
                 <table>
                   <thead>
                     <tr class="tm_accent_bg">
+                      <!-- S. No -->
+                      <th class="tm_width_2 tm_semi_bold tm_white_color">S. No</th>
                       <th class="tm_width_3 tm_semi_bold tm_white_color">Item</th>
                       <th class="tm_width_1 tm_semi_bold tm_white_color">Qty</th>
                       <th class="tm_width_1 tm_semi_bold tm_white_color">HSN</th>
@@ -110,30 +114,33 @@
                   </thead>
                   <tbody>
                     <% invoice?.product?.forEach(product=> { %>
-                    <tr>
-                      <td class="tm_width_3">
-                        <%= product?.product?.name %>
-                      </td>
-                      <td class="tm_width_1">
-                        <%= product?.quantity %>
-                      </td>
-                      <td class="tm_width_1">
-                        <%= product?.product?.hsnCode?.code %>
-                      </td>
-                      <td class="tm_width_1">
-                        <%= product?.product?.tax?.percentage %>%
-                      </td>
-                      <td class="tm_width_2">
-                        <%= product?.product?.currency?.symbol %>
-                        <%= product?.price %>
-                      </td>
-                      <td class="tm_width_2 tm_text_right">
-                        <%= product?.product?.currency?.symbol %>
-                        <%= product?.total %>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td class="tm_width_2">
+                          <%= invoice?.product?.indexOf(product) + 1 %>
+                        </td>
+                        <td class="tm_width_3">
+                          <%= product?.product?.name %>
+                        </td>
+                        <td class="tm_width_1">
+                          <%= product?.quantity %>
+                        </td>
+                        <td class="tm_width_1">
+                          <%= product?.product?.hsnCode?.code %>
+                        </td>
+                        <td class="tm_width_1">
+                          <%= product?.product?.tax?.percentage %>%
+                        </td>
+                        <td class="tm_width_2">
+                          <%= product?.product?.currency?.symbol %>
+                            <%= product?.price %>
+                        </td>
+                        <td class="tm_width_2 tm_text_right">
+                          <%= product?.product?.currency?.symbol %>
+                            <%= product?.total %>
+                        </td>
+                      </tr>
 
-                    <% }) %>
+                      <% }) %>
                   </tbody>
                 </table>
               </div>
@@ -148,51 +155,51 @@
                       <td class="tm_width_3 tm_primary_color tm_bold">Subtoal</td>
                       <td class="tm_width_3 tm_primary_color tm_bold tm_text_right">
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.sub_total %>
+                          <%= invoice?.sub_total %>
                       </td>
                     </tr>
                     <% if(invoice?.tax_id !==null ){ %>
 
-                    <tr class="tm_gray_bg">
-                      <td class="tm_width_3 tm_primary_color">Tax <span class="tm_ternary_color">(<%=
+                      <tr class="tm_gray_bg">
+                        <td class="tm_width_3 tm_primary_color">Tax <span class="tm_ternary_color">(<%=
                               invoice?.tax?.percentage %>%)</span></td>
-                      <td class="tm_width_3 tm_primary_color tm_text_right">
-                       <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= ((invoice?.tax?.percentage / 100) * invoice?.sub_total).toFixed(2) %>
-                      </td>
-                    </tr>
-                    <% } %>
-                    <% if(invoice?.discountPercentage !==null || invoice?.discountPercentage >0 ){ %>
-                    <tr class="tm_gray_bg">
-                      <td class="tm_width_3 tm_primary_color">Discount <span class="tm_ternary_color">(<%=
+                        <td class="tm_width_3 tm_primary_color tm_text_right">
+                          <%= invoice?.product[0]?.product?.currency?.symbol %>
+                            <%= ((invoice?.tax?.percentage / 100) * invoice?.sub_total).toFixed(2) %>
+                        </td>
+                      </tr>
+                      <% } %>
+                        <% if(invoice?.discountPercentage !==null || invoice?.discountPercentage>0 ){ %>
+                          <tr class="tm_gray_bg">
+                            <td class="tm_width_3 tm_primary_color">Discount <span class="tm_ternary_color">(<%=
                                   invoice?.discountPercentage %>%)</span></td>
-                      <td class="tm_width_3 tm_primary_color tm_text_right">
-                        <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= ((invoice?.discountPercentage / 100) * invoice?.sub_total).toFixed(2) %>
-                      </td>
-                    </tr>
-                    <% } %>
-                    <tr class="tm_gray_bg">
-                      <td class="tm_width_3 tm_primary_color text-danger font-weight-bold">Due Amount </td>
-                      <td class="tm_width_3 tm_primary_color tm_text_right text-danger font-weight-bold">
-                        <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.due_amount %>
-                      </td>
-                    </tr>
-                    <tr class="tm_gray_bg">
-                      <td class="tm_width_3 tm_primary_color text-success font-weight-bold">Paid Amount </td>
-                      <td class="tm_width_3 tm_primary_color tm_text_right text-success font-weight-bold">
-                        <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.paid_amount %>
-                      </td>
-                    </tr>
-                    <tr class="tm_accent_bg">
-                      <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color">Grand Total </td>
-                      <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color tm_text_right">
-                        <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.total %>
-                      </td>
-                    </tr>
+                            <td class="tm_width_3 tm_primary_color tm_text_right">
+                              <%= invoice?.product[0]?.product?.currency?.symbol %>
+                                <%= ((invoice?.discountPercentage / 100) * invoice?.sub_total).toFixed(2) %>
+                            </td>
+                          </tr>
+                          <% } %>
+                            <tr class="tm_gray_bg">
+                              <td class="tm_width_3 tm_primary_color text-danger font-weight-bold">Due Amount </td>
+                              <td class="tm_width_3 tm_primary_color tm_text_right text-danger font-weight-bold">
+                                <%= invoice?.product[0]?.product?.currency?.symbol %>
+                                  <%= invoice?.due_amount %>
+                              </td>
+                            </tr>
+                            <tr class="tm_gray_bg">
+                              <td class="tm_width_3 tm_primary_color text-success font-weight-bold">Paid Amount </td>
+                              <td class="tm_width_3 tm_primary_color tm_text_right text-success font-weight-bold">
+                                <%= invoice?.product[0]?.product?.currency?.symbol %>
+                                  <%= invoice?.paid_amount %>
+                              </td>
+                            </tr>
+                            <tr class="tm_accent_bg">
+                              <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color">Grand Total </td>
+                              <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color tm_text_right">
+                                <%= invoice?.product[0]?.product?.currency?.symbol %>
+                                  <%= invoice?.total %>
+                              </td>
+                            </tr>
                   </tbody>
                 </table>
               </div>
@@ -210,9 +217,9 @@
                     <td class="font-weight-bold">Address:</td>
                     <td>
                       <%= invoice?.user?.company[0]?.address %><br>
-                      <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
+                        <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
                               invoice?.user?.company[0]?.country?.name %><br>
-                      <%= invoice?.user?.company[0]?.zip %><br>
+                              <%= invoice?.user?.company[0]?.zip %><br>
                     </td>
                   </tr>
                   <tr>
@@ -248,91 +255,90 @@
                 <tr>
                   <td class="w-50">
                     Recipient's
-                    <%= invoice?.payment?.paymentType ==="UPI"? invoice?.payment?.paymentType : invoice?.payment?.paymentType.replace(/([a-z])([A-Z])/g, "$1 $2")
-                    .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2") 
-                    .replace(/([a-z])([A-Z])/g, "$1 $2")
-                    .replace(/([A-Z])([A-Z])/g, "$1 $2")
-                    .trim();  %>
+                    <%= invoice?.payment?.paymentType==="UPI" ? invoice?.payment?.paymentType :
+                      invoice?.payment?.paymentType.replace(/([a-z])([A-Z])/g, "$1 $2" )
+                      .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2" ) .replace(/([a-z])([A-Z])/g, "$1 $2" )
+                      .replace(/([A-Z])([A-Z])/g, "$1 $2" ) .trim(); %>
 
-                    Details
+                      Details
                   </td>
                   <td class="w-50">
-                    <% 
-                    if(invoice?.payment?.paymentType === 'EuropeanBank'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">IBAN</span>
-                    <span class="ibanNumberTextField">
-                      <%= invoice?.payment?.ibanNumber %>
-                    </span>
-                    <span class="bicNumberTitleTextField font-weight-bold">BIC</span>
-                    <span class="bicNumberTextField">
-                      <%= invoice?.payment?.ibanNumber %></span>
-                    <% } %>
-                    <% 
-                    if(invoice?.payment?.paymentType === 'IndianBanks'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">AC No.</span>
-                    <span class="ibanNumberTextField">
-                      <%= invoice?.payment?.account_no %></span>
-                    <br>
-                    <span class="bicNumberTitleTextField font-weight-bold">IFSC</span>
-                    <span class="bicNumberTextField">
-                      <%= invoice?.payment?.ifscCode %></span>
-                    <% } %>
-                    <% 
-                    if(invoice?.payment?.paymentType === 'UPI'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">UPI Id:</span>
-                    <span class="ibanNumberTextField">
-                      <%= invoice?.payment?.upiId %>
-                    </span>
-                    <% } %>
+                    <% if(invoice?.payment?.paymentType==='EuropeanBank' ){ %>
+                      %>
+                      <span class="ibanNumberTitleTextField font-weight-bold">IBAN</span>
+                      <span class="ibanNumberTextField">
+                        <%= invoice?.payment?.ibanNumber %>
+                      </span>
+                      <span class="bicNumberTitleTextField font-weight-bold">BIC</span>
+                      <span class="bicNumberTextField">
+                        <%= invoice?.payment?.ibanNumber %>
+                      </span>
+                      <% } %>
+                        <% if(invoice?.payment?.paymentType==='IndianBanks' ){ %>
+                          %>
+                          <span class="ibanNumberTitleTextField font-weight-bold">AC No.</span>
+                          <span class="ibanNumberTextField">
+                            <%= invoice?.payment?.account_no %>
+                          </span>
+                          <br>
+                          <span class="bicNumberTitleTextField font-weight-bold">IFSC</span>
+                          <span class="bicNumberTextField">
+                            <%= invoice?.payment?.ifscCode %>
+                          </span>
+                          <% } %>
+                            <% if(invoice?.payment?.paymentType==='UPI' ){ %>
+                              %>
+                              <span class="ibanNumberTitleTextField font-weight-bold">UPI Id:</span>
+                              <span class="ibanNumberTextField">
+                                <%= invoice?.payment?.upiId %>
+                              </span>
+                              <% } %>
 
-                    <% 
-                    if(invoice?.payment?.paymentType === 'SwiftCode'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">Swift Code</span>
-                    <span class="ibanNumberTextField swiftCodeValue">
-                      <%= invoice?.payment?.swiftCode %></span>
-                    <% } %>
-                    <% 
-                    if(invoice?.payment?.paymentType === 'Paypal'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">Paypal</span>
-                    <span class="ibanNumberTextField swiftCodeValue">
-                      <%= invoice?.payment?.paypalId %></span>
-                    <% } %>
-                    <% 
-                    if(invoice?.payment?.paymentType === 'Stripe'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">Stripe</span>
-                    <span class="ibanNumberTextField swiftCodeValue">
-                      <%= invoice?.payment?.stripeId %></span>
-                    <% } %>
-                    <% 
-                    if(invoice?.payment?.paymentType === 'Razorpay'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">Razorpay</span>
-                    <span class="ibanNumberTextField swiftCodeValue">
-                      <%= invoice?.payment?.razorpayId %></span>
-                    <% } %>
-                    <% 
-                    if(invoice?.payment?.paymentType === 'Mollie'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">Mollie</span>
-                    <span class="ibanNumberTextField swiftCodeValue">
-                      <%= invoice?.payment?.mollieId %></span>
-                    <% } %>
-                    <% 
-                    if(invoice?.payment?.paymentType === 'Cash'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">Cash</span>
-                    <% } %>
-                    <% 
-                    if(invoice?.payment?.paymentType === 'Cheque'){ %>
-                    %>
-                    <span class="ibanNumberTitleTextField font-weight-bold">Cheque</span>
-                    <% } %>
+                                <% if(invoice?.payment?.paymentType==='SwiftCode' ){ %>
+                                  %>
+                                  <span class="ibanNumberTitleTextField font-weight-bold">Swift Code</span>
+                                  <span class="ibanNumberTextField swiftCodeValue">
+                                    <%= invoice?.payment?.swiftCode %>
+                                  </span>
+                                  <% } %>
+                                    <% if(invoice?.payment?.paymentType==='Paypal' ){ %>
+                                      %>
+                                      <span class="ibanNumberTitleTextField font-weight-bold">Paypal</span>
+                                      <span class="ibanNumberTextField swiftCodeValue">
+                                        <%= invoice?.payment?.paypalId %>
+                                      </span>
+                                      <% } %>
+                                        <% if(invoice?.payment?.paymentType==='Stripe' ){ %>
+                                          %>
+                                          <span class="ibanNumberTitleTextField font-weight-bold">Stripe</span>
+                                          <span class="ibanNumberTextField swiftCodeValue">
+                                            <%= invoice?.payment?.stripeId %>
+                                          </span>
+                                          <% } %>
+                                            <% if(invoice?.payment?.paymentType==='Razorpay' ){ %>
+                                              %>
+                                              <span class="ibanNumberTitleTextField font-weight-bold">Razorpay</span>
+                                              <span class="ibanNumberTextField swiftCodeValue">
+                                                <%= invoice?.payment?.razorpayId %>
+                                              </span>
+                                              <% } %>
+                                                <% if(invoice?.payment?.paymentType==='Mollie' ){ %>
+                                                  %>
+                                                  <span class="ibanNumberTitleTextField font-weight-bold">Mollie</span>
+                                                  <span class="ibanNumberTextField swiftCodeValue">
+                                                    <%= invoice?.payment?.mollieId %>
+                                                  </span>
+                                                  <% } %>
+                                                    <% if(invoice?.payment?.paymentType==='Cash' ){ %>
+                                                      %>
+                                                      <span
+                                                        class="ibanNumberTitleTextField font-weight-bold">Cash</span>
+                                                      <% } %>
+                                                        <% if(invoice?.payment?.paymentType==='Cheque' ){ %>
+                                                          %>
+                                                          <span
+                                                            class="ibanNumberTitleTextField font-weight-bold">Cheque</span>
+                                                          <% } %>
                   </td>
                 </tr>
                 <tr>
@@ -340,20 +346,20 @@
                   <td>
                     <div class="templateTo">
                       <p>
-                        <% if (invoice?.companyAddress ==="") { %>
-                        <b style="text-transform: capitalize;">
-                          <%= invoice?.user?.company[0]?.name %>
-                        </b><br>
-                        <%= invoice?.user?.company[0]?.address %><br>
-                        <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
-                          invoice?.user?.company[0]?.country?.name %><br>
-                        <%= invoice?.user?.company[0]?.zip %><br>
+                        <% if (invoice?.companyAddress==="" ) { %>
+                          <b style="text-transform: capitalize;">
+                            <%= invoice?.user?.company[0]?.name %>
+                          </b><br>
+                          <%= invoice?.user?.company[0]?.address %><br>
+                            <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
+                                  invoice?.user?.company[0]?.country?.name %><br>
+                                  <%= invoice?.user?.company[0]?.zip %><br>
 
-                        <% } else { %>
+                                    <% } else { %>
 
-                        <%- invoice?.companyAddress %>
+                                      <%- invoice?.companyAddress %>
 
-                        <% }  %>
+                                        <% } %>
                       </p>
                     </div>
                   </td>
@@ -363,19 +369,20 @@
                   <td>
                     <div class="templateTo">
                       <p>
-                        <% if (invoice?.customerBillingAddress ==="") { %>
-                        <b style="text-transform: capitalize;">
-                          <%= invoice?.customer?.name %>
-                        </b><br>
-                        <%= invoice?.customer?.billingAddress?.address %><br>
-                        <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
-                        <%= invoice?.customer?.billingAddress?.country?.name %><br>
-                        <%= invoice?.customer?.billingAddress?.zip %><br>
-                        <% } else { %>
+                        <% if (invoice?.customerBillingAddress==="" ) { %>
+                          <b style="text-transform: capitalize;">
+                            <%= invoice?.customer?.name %>
+                          </b><br>
+                          <%= invoice?.customer?.billingAddress?.address %><br>
+                            <%= invoice?.customer?.billingAddress?.city %>, <%=
+                                invoice?.customer?.billingAddress?.state?.name %>,
+                                <%= invoice?.customer?.billingAddress?.country?.name %><br>
+                                  <%= invoice?.customer?.billingAddress?.zip %><br>
+                                    <% } else { %>
 
-                        <%- invoice?.customerBillingAddress %>
+                                      <%- invoice?.customerBillingAddress %>
 
-                        <% }  %>
+                                        <% } %>
 
                       </p>
                     </div>
@@ -404,17 +411,31 @@
                         </td>
                         <td>
                           <%= invoice?.product[0]?.product?.currency?.symbol %>
-                          <%= invoice?.total %>
+                            <%= invoice?.total %>
                         </td>
                       </tr>
                     </table>
                   </td>
                 </tr>
+                <tr>
+                  <!-- note section -->
+                  <td colspan="2" class="p-0">
+                    <table class="w-100">
+                      <tr>
+                        <td class="tm_note tm text_center tm_font_style_normal">
+                          <b class="tm_primary_color">Note:</b>
+                          <%= invoice?.notes ?? "Thank you for your business!" %>
+                        </td>
+                      </tr>
+                    </table>
+                </tr>
               </table>
             </div>
             <div class="row">
               <div class="col">
-                <%- invoiceSettings?.footer ?? "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer." %>
+                <%- invoiceSettings?.footer
+                  ?? "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer."
+                  %>
               </div>
             </div>
           </div>

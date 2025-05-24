@@ -17,6 +17,6 @@
     "editor.defaultFormatter": "zenstack.zenstack"
   },
   "[html]": {
-    "editor.defaultFormatter": "j69.ejs-beautify"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

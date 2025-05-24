@@ -97,6 +97,7 @@
                 <table>
                   <thead>
                     <tr class="tm_accent_bg">
+                      <th class="tm_width_2 tm_semi_bold tm_white_color">S. No</th>
                       <th class="tm_width_3 tm_semi_bold tm_white_color">Item</th>
                       <th class="tm_width_1 tm_semi_bold tm_white_color">Qty</th>
                       <th class="tm_width_1 tm_semi_bold tm_white_color">HSN</th>
@@ -108,6 +109,9 @@
                   <tbody>
                     <% quotation?.product?.forEach(product=> { %>
                     <tr>
+                      <td class="tm_width_2">
+                        <%= quotation?.product?.indexOf(product) + 1 %>
+                      </td>
                       <td class="tm_width_3">
                         <%= product?.product?.name %>
                       </td>
@@ -309,6 +313,18 @@
                       </tr>
                     </table>
                   </td>
+                </tr>
+                <tr>
+                  <!-- note section -->
+                  <td colspan="2" class="p-0">
+                    <table class="w-100">
+                      <tr>
+                        <td class="tm_note tm text_center tm_font_style_normal">
+                          <b class="tm_primary_color">Note:</b>
+                          <%= quotation?.notes ?? "Thank you for your business!" %>
+                        </td>
+                      </tr>
+                    </table>
                 </tr>
               </table>
             </div>
