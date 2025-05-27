@@ -1,3 +1,4 @@
+import { invoiceHeadingType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class InvoiceSettingsDto {
@@ -20,6 +21,10 @@ export class InvoiceSettingsDto {
     type: 'string',
   })
   id: string;
+  @ApiProperty({
+    enum: invoiceHeadingType,
+  })
+  invoiceHeadingType: invoiceHeadingType;
   @ApiProperty({
     type: 'string',
   })

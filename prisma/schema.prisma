@@ -95,6 +95,11 @@ enum PlanFeature {
   AIDashboard
 }
 
+enum invoiceHeadingType {
+  COMPANY_NAME
+  COMPANY_LOGO
+}
+
 enum DashboardTypes {
   Table
   Chart
@@ -739,24 +744,27 @@ model invoiceTemplate {
 model InvoiceSettings {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt                       DateTime        @default(now())
+  createdAt                       DateTime           @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt                       DateTime?       @updatedAt()
+  updatedAt                       DateTime?          @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist                         Boolean         @default(true)
-  id                              String          @id() @default(cuid())
+  isExist                         Boolean            @default(true)
+  id                              String             @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  invoiceHeadingType              invoiceHeadingType @default(COMPANY_NAME)
   /// @DtoRelationIncludeId
   user_id                         String
-  user                            User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user                            User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   invoiceTemplateId               String
-  invoiceTemplate                 invoiceTemplate @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
+  invoiceTemplate                 invoiceTemplate    @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
   invoicePrefix                   String
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  autoArchive                     Boolean         @default(false)
+  autoArchive                     Boolean            @default(false)
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   footer                          String?

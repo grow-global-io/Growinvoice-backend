@@ -1,7 +1,15 @@
+import { invoiceHeadingType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class UpdateInvoiceSettingsDto {
+  @ApiProperty({
+    enum: invoiceHeadingType,
+    default: 'COMPANY_NAME',
+    required: false,
+  })
+  @IsOptional()
+  invoiceHeadingType?: invoiceHeadingType;
   @ApiProperty({
     type: 'string',
     required: false,

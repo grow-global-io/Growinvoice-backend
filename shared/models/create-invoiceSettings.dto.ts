@@ -1,3 +1,4 @@
+import { invoiceHeadingType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
@@ -8,6 +9,12 @@ import {
 } from 'class-validator';
 
 export class CreateInvoiceSettingsDto {
+  @ApiProperty({
+    enum: invoiceHeadingType,
+    default: 'COMPANY_NAME',
+  })
+  @IsOptional()
+  invoiceHeadingType?: invoiceHeadingType;
   @ApiProperty({
     type: 'string',
   })
