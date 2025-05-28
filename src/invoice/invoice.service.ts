@@ -66,9 +66,9 @@ export class InvoiceService {
     return plainToInstance(InvoiceDto, invoiceDetails);
   }
 
-  async findAll(user_id: string) {
+  async findAll(user_id: string, customerId?: string) {
     const invoices = await this.prismaService.invoice.findMany({
-      where: { user_id },
+      where: { user_id, customer_id: customerId ? customerId : undefined },
       include: {
         customer: true,
       },
@@ -121,13 +121,14 @@ export class InvoiceService {
     return plainToInstance(InvoiceDto, invoice);
   }
 
-  async findDueInvoices(user_id: string) {
+  async findDueInvoices(user_id: string, customerId?: string) {
     const invoices = await this.prismaService.invoice.findMany({
       where: {
         user_id,
         paid_status: {
           not: 'Paid',
         },
+        customer_id: customerId ? customerId : undefined,
       },
       include: {
         customer: true,
@@ -147,9 +148,13 @@ export class InvoiceService {
     return plainToInstance(InvoiceWithAllDataDto, invoices);
   }
 
-  async findPaidInvoices(user_id: string) {
+  async findPaidInvoices(user_id: string, customerId?: string) {
     const invoices = await this.prismaService.invoice.findMany({
-      where: { user_id, paid_status: 'Paid' },
+      where: {
+        user_id,
+        paid_status: 'Paid',
+        customer_id: customerId ? customerId : undefined,
+      },
       include: {
         customer: true,
       },

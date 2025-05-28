@@ -14,6 +14,7 @@ import { InvoiceDto } from '@shared/models';
 import {
   ApiExtraModels,
   ApiHideProperty,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -77,18 +78,44 @@ export class InvoiceController {
   }
 
   @Get()
-  async findAll(@GetUser() user: User) {
-    return await this.invoiceService.findAll(user.sub);
+  @ApiQuery({
+    name: 'customerId',
+    required: false,
+    description: 'Filter by customer ID',
+    type: String,
+  })
+  async findAll(
+    @GetUser() user: User,
+    @Query('customerId') customerId?: string,
+  ) {
+    return await this.invoiceService.findAll(user.sub, customerId);
   }
 
   @Get('due')
-  async findDueInvoices(@GetUser() user: User) {
-    return await this.invoiceService.findDueInvoices(user.sub);
+  @ApiQuery({
+    name: 'customerId',
+    required: false,
+    description: 'Filter by customer ID',
+    type: String,
+  })
+  async findDueInvoices(
+    @GetUser() user: User,
+    @Query('customerId') customerId?: string,
+  ) {
+    return await this.invoiceService.findDueInvoices(user.sub, customerId);
   }
 
   @Get('paid')
-  async findPaidInvoices(@GetUser() user: User) {
-    return await this.invoiceService.findPaidInvoices(user.sub);
+  @ApiQuery({
+    name: 'customerId',
+    required: false,
+    description: 'Filter by customer ID',
+    type: String,
+  })
+  async findPaidInvoices(@GetUser() user: User,
+    @Query('customerId') customerId?: string,
+) {
+    return await this.invoiceService.findPaidInvoices(user.sub, customerId);
   }
 
   @Get(':id')
