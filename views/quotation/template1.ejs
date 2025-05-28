@@ -141,10 +141,10 @@
             </div>
             <div class="tm_invoice_footer tm_border_top tm_mb15 tm_m0_md">
               <div class="tm_left_footer">
-                <% if(invoice?.notes !==null && invoice?.notes !=="" ){ %>
+                <% if(quotation?.notes !==null && quotation?.notes !=="" ){ %>
                   <div class="tm_note tm_font_style_normal border p-2 m-0">
                     <b class="tm_primary_color">Note:</b>
-                    <%= invoice?.notes ?? "Thank you for your business!" %>
+                    <%= quotation?.notes ?? "Thank you for your business!" %>
                   </div>
                   <% } %>
                 <!-- <p class="tm_mb2"><b class="tm_primary_color">Payment info:</b></p>
@@ -319,18 +319,6 @@
                       </tr>
                     </table>
                   </td>
-                </tr>
-                <tr>
-                  <!-- note section -->
-                  <td colspan="2" class="p-0">
-                    <table class="w-100">
-                      <tr>
-                        <td class="tm_note tm text_center tm_font_style_normal">
-                          <b class="tm_primary_color">Note:</b>
-                          <%= quotation?.notes ?? "Thank you for your business!" %>
-                        </td>
-                      </tr>
-                    </table>
                 </tr>
               </table>
             </div>
