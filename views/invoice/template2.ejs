@@ -21,13 +21,13 @@
           <div class="tm_invoice_head tm_align_center tm_mb20">
             <div class="tm_invoice_left">
               <div class="tm_logo">
-                <% if (invoice?.user?.company[0]?.logo===null ||invoice?.user?.company[0]?.logo==="" ) { %>
-                <h4 style="color: #fff;">
-                  <%= invoice?.user?.company[0]?.name %>
-                </h4>
-                <% } else { %>
-                <img src="<%= invoice?.user?.company[0]?.logo %>" alt="Logo">
-                <% } %>
+                <% if (invoice?.user?.company[0]?.logo && invoiceSettings?.invoiceHeadingType ==="COMPANY_LOGO" ) { %>
+                  <img src="<%= invoice?.user?.company[0]?.logo %>" alt="Logo">
+                  <% } else { %>
+                    <h4 style="color: #fff;">
+                      <%= invoice?.user?.company[0]?.name %>
+                    </h4>
+                    <% } %>
               </div>
             </div>
             <div class="tm_invoice_right tm_text_right">

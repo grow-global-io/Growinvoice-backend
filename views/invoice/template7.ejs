@@ -22,12 +22,12 @@
             <div class="tm_invoice_head tm_mb10 tm_border_none">
               <div class="tm_invoice_left">
                 <div class="tm_logo">
-                  <% if (invoice?.user?.company[0]?.logo===null ||invoice?.user?.company[0]?.logo==="" ) { %>
-                    <h4>
-                      <%= invoice?.user?.company[0]?.name %>
-                    </h4>
+                  <% if (invoice?.user?.company[0]?.logo && invoiceSettings?.invoiceHeadingType ==="COMPANY_LOGO" ) { %>
+                    <img src="<%= invoice?.user?.company[0]?.logo %>" alt="Logo">
                     <% } else { %>
-                      <img src="<%= invoice?.user?.company[0]?.logo %>" alt="Logo">
+                      <h4 >
+                        <%= invoice?.user?.company[0]?.name %>
+                      </h4>
                       <% } %>
                 </div>
               </div>
