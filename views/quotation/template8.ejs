@@ -136,7 +136,12 @@
             </div>
             <div class="tm_invoice_footer tm_border_top tm_mb15 tm_m0_md">
               <div class="tm_left_footer">
-
+                <% if(invoice?.notes !==null && invoice?.notes !=="" ){ %>
+                  <div class="tm_note tm_font_style_normal border p-2 m-0">
+                    <b class="tm_primary_color">Note:</b>
+                    <%= invoice?.notes ?? "Thank you for your business!" %>
+                  </div>
+                  <% } %>
               </div>
               <div class="tm_right_footer">
                 <table class="tm_mb15">
