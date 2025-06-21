@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { QuotationProducts } from './quotationProducts.entity';
+import { Tax } from './tax.entity';
 
-export class QuotationProductsDto {
+export class TaxForQuotationProducts {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -23,29 +25,19 @@ export class QuotationProductsDto {
   @ApiProperty({
     type: 'string',
   })
-  quotation_id: string;
+  quotationProduct_id: string;
+  @ApiProperty({
+    type: () => QuotationProducts,
+    required: false,
+  })
+  quotationProduct?: QuotationProducts;
   @ApiProperty({
     type: 'string',
   })
-  product_id: string;
+  tax_id: string;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: () => Tax,
+    required: false,
   })
-  quantity: number;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  hsnCode_id: string | null;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  price: number;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  total: number;
+  tax?: Tax;
 }

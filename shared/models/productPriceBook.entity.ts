@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Product } from './product.entity';
+import { Currencies } from './currencies.entity';
 
-export class QuotationProductsDto {
+export class ProductPriceBook {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -23,29 +25,24 @@ export class QuotationProductsDto {
   @ApiProperty({
     type: 'string',
   })
-  quotation_id: string;
-  @ApiProperty({
-    type: 'string',
-  })
   product_id: string;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: () => Product,
+    required: false,
   })
-  quantity: number;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  hsnCode_id: string | null;
+  product?: Product;
   @ApiProperty({
     type: 'number',
     format: 'float',
   })
   price: number;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
+    type: 'string',
   })
-  total: number;
+  currency_id: string;
+  @ApiProperty({
+    type: () => Currencies,
+    required: false,
+  })
+  currency?: Currencies;
 }

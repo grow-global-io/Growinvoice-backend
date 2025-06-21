@@ -31,18 +31,9 @@ export class ProductDto {
   })
   description: string | null;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
-  })
-  price: number;
-  @ApiProperty({
     enum: ProductType,
   })
   type: ProductType;
-  @ApiProperty({
-    type: 'string',
-  })
-  currency_id: string;
   @ApiProperty({
     type: 'string',
   })

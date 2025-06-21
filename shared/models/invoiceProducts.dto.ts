@@ -37,11 +37,6 @@ export class InvoiceProductsDto {
     type: 'string',
     nullable: true,
   })
-  tax_id: string | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
   hsnCode_id: string | null;
   @ApiProperty({
     type: 'number',

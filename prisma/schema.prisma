@@ -311,34 +311,34 @@ model HSNCode {
 model Tax {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt         DateTime            @default(now())
+  createdAt               DateTime                  @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt         DateTime?           @updatedAt()
+  updatedAt               DateTime?                 @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist           Boolean             @default(true)
-  id                String              @id() @default(cuid())
+  isExist                 Boolean                   @default(true)
+  id                      String                    @id() @default(cuid())
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  name              String?
-  percentage        Float
-  description       String?
+  name                    String?
+  percentage              Float
+  description             String?
   /// @DtoRelationIncludeId
-  user_id           String
-  user              User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id                 String
+  user                    User                      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
-  Invoice           Invoice[]
+  Invoice                 Invoice[]
   /// @DtoApiHidden
-  Quatation         Quotation[]
+  Quatation               Quotation[]
   /// @DtoApiHidden
-  hsnCode           HSNCode[]
+  hsnCode                 HSNCode[]
   /// @DtoApiHidden
-  InvoiceProducts   InvoiceProducts[]
+  TaxForProduct           TaxForProduct[]
   /// @DtoApiHidden
-  QuotationProducts QuotationProducts[]
+  TaxForInvoiceProducts   TaxForInvoiceProducts[]
   /// @DtoApiHidden
-  TaxForProduct     TaxForProduct[]
+  TaxForQuotationProducts TaxForQuotationProducts[]
 }
 
 /// @@allow('read', isExist == true)
@@ -381,11 +381,7 @@ model Product {
   id          String              @id() @default(cuid())
   name        String
   description String?
-  price       Float
   type        ProductType
-  /// @DtoRelationIncludeId
-  currency_id String
-  currency    Currencies          @relation(fields: [currency_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   unit_id     String
   unit        ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
@@ -403,6 +399,36 @@ model Product {
   Quatation   QuotationProducts[]
   /// @DtoApiHidden
   tax         TaxForProduct[]
+  /// @DtoApiHidden
+  priceBook   ProductPriceBook[]
+}
+
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
+model ProductPriceBook {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt   DateTime   @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt   DateTime?  @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist     Boolean    @default(true)
+  id          String     @id() @default(cuid())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  /// @DtoRelationIncludeId
+  product_id  String
+  product     Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  price       Float
+  /// @DtoRelationIncludeId
+  currency_id String
+  currency    Currencies @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+
+  @@unique([product_id, currency_id])
 }
 
 /// @@allow('read', isExist == true)
@@ -493,14 +519,14 @@ model ShippingAddress {
 model Currencies {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime   @default(now())
+  createdAt  DateTime           @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime?  @updatedAt()
+  updatedAt  DateTime?          @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean    @default(true)
-  id         String     @id() @default(cuid())
+  isExist    Boolean            @default(true)
+  id         String             @id() @default(cuid())
   name       String
   symbol     String
   code       String
@@ -510,9 +536,9 @@ model Currencies {
   /// @DtoApiHidden
   user       User[]
   /// @DtoApiHidden
-  product    Product[]
-  /// @DtoApiHidden
   expense    Expenses[]
+  /// @DtoApiHidden
+  priceBook  ProductPriceBook[]
 }
 
 /// @@allow('read', isExist == true)
@@ -648,29 +674,51 @@ model GateWayDetails {
 model InvoiceProducts {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime  @default(now())
+  createdAt              DateTime                @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime? @updatedAt()
+  updatedAt              DateTime?               @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean   @default(true)
-  id         String    @id() @default(cuid())
+  isExist                Boolean                 @default(true)
+  id                     String                  @id() @default(cuid())
   /// @DtoRelationIncludeId
-  invoice_id String
-  invoice    Invoice   @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+  invoice_id             String
+  invoice                Invoice                 @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  product_id String
-  product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  quantity   Float
+  product_id             String
+  product                Product                 @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  quantity               Float
   /// @DtoRelationIncludeId
-  tax_id     String?
-  tax        Tax?      @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+  hsnCode_id             String?
+  hsnCode                HSNCode?                @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
+  price                  Float
+  total                  Float
+  /// @DtoApiHidden
+  tax_forInvoiceProducts TaxForInvoiceProducts[]
+}
+
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
+model TaxForInvoiceProducts {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime        @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?       @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean         @default(true)
+  id                String          @id() @default(cuid())
   /// @DtoRelationIncludeId
-  hsnCode_id String?
-  hsnCode    HSNCode?  @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
-  price      Float
-  total      Float
+  invoiceProduct_id String
+  invoiceProduct    InvoiceProducts @relation(fields: [invoiceProduct_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  tax_id            String
+  tax               Tax             @relation(fields: [tax_id], references: [id], onDelete: Cascade)
 }
 
 /// @@allow('read', isExist == true)
@@ -812,29 +860,51 @@ model InvoiceSettings {
 model QuotationProducts {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt    DateTime  @default(now())
+  createdAt                DateTime                  @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt    DateTime? @updatedAt()
+  updatedAt                DateTime?                 @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist      Boolean   @default(true)
-  id           String    @id() @default(cuid())
+  isExist                  Boolean                   @default(true)
+  id                       String                    @id() @default(cuid())
   /// @DtoRelationIncludeId
-  quotation_id String
-  quotation    Quotation @relation(fields: [quotation_id], references: [id], onDelete: Cascade)
+  quotation_id             String
+  quotation                Quotation                 @relation(fields: [quotation_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  product_id   String
-  product      Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  quantity     Float
+  product_id               String
+  product                  Product                   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  quantity                 Float
   /// @DtoRelationIncludeId
-  tax_id       String?
-  tax          Tax?      @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+  hsnCode_id               String?
+  hsnCode                  HSNCode?                  @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
+  price                    Float
+  total                    Float
+  /// @DtoApiHidden
+  tax_forQuotationProducts TaxForQuotationProducts[]
+}
+
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
+model TaxForQuotationProducts {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt           DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt           DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist             Boolean           @default(true)
+  id                  String            @id() @default(cuid())
   /// @DtoRelationIncludeId
-  hsnCode_id   String?
-  hsnCode      HSNCode?  @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
-  price        Float
-  total        Float
+  quotationProduct_id String
+  quotationProduct    QuotationProducts @relation(fields: [quotationProduct_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  tax_id              String
+  tax                 Tax               @relation(fields: [tax_id], references: [id], onDelete: Cascade)
 }
 
 /// @@allow('read', isExist == true)

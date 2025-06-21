@@ -16,23 +16,28 @@ export class ProductService {
   ) {}
 
   async create(createProductDto: CreateProductWithTaxDto) {
-    const { tax, ...prodyctData } = createProductDto;
+    const { tax, priceBook, ...prodyctData } = createProductDto;
     await this.sharedService.checkProductQuota(createProductDto.user_id);
     const product = await this.prismaService.product.create({
       data: {
         ...prodyctData,
         user_id: createProductDto.user_id,
+        tax: {
+          createMany: {
+            data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
+          },
+        },
+        priceBook: {
+          createMany: {
+            data:
+              priceBook?.map((price) => ({
+                product_id: product.id,
+                ...price,
+              })) || [],
+          },
+        },
       },
     });
-
-    if (tax && tax.length > 0) {
-      await this.prismaService.taxForProduct.createMany({
-        data: tax.map((taxId) => ({
-          product_id: product.id,
-          tax_id: taxId,
-        })),
-      });
-    }
     return plainToInstance(ProductWithAllDataDto, product);
   }
 
@@ -41,10 +46,14 @@ export class ProductService {
       where: { user_id },
       include: {
         unit: true,
-        currency: true,
         tax: {
           include: {
             tax: true,
+          },
+        },
+        priceBook: {
+          include: {
+            currency: true,
           },
         },
       },
@@ -61,27 +70,30 @@ export class ProductService {
   }
 
   async update(id: string, updateProductDto: UpdateProductWithTaxDto) {
-    const { tax, ...updateData } = updateProductDto;
+    const { tax, priceBook, ...updateData } = updateProductDto;
     const product = await this.prismaService.product.update({
       where: { id },
       data: {
         ...updateData,
         user_id: updateProductDto.user_id, // Ensure user_id is updated if provided
+        tax: {
+          deleteMany: {}, // Remove all existing tax associations
+          createMany: {
+            data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
+          },
+        },
+        priceBook: {
+          deleteMany: {}, // Remove all existing priceBook associations
+          createMany: {
+            data:
+              priceBook?.map((price) => ({
+                product_id: id,
+                ...price,
+              })) || [],
+          },
+        },
       },
     });
-    if (tax && tax.length > 0) {
-      // Remove existing tax associations
-      await this.prismaService.taxForProduct.deleteMany({
-        where: { product_id: id },
-      });
-      // Create new tax associations
-      await this.prismaService.taxForProduct.createMany({
-        data: tax.map((taxId) => ({
-          product_id: id,
-          tax_id: taxId,
-        })),
-      });
-    }
     return plainToInstance(ProductWithAllDataDto, product);
   }
 

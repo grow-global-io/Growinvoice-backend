@@ -1,6 +1,6 @@
 import { ProductType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateProductDto {
   @ApiProperty({
@@ -19,26 +19,11 @@ export class UpdateProductDto {
   @IsString()
   description?: string | null;
   @ApiProperty({
-    type: 'number',
-    format: 'float',
-    required: false,
-  })
-  @IsOptional()
-  @IsNumber()
-  price?: number;
-  @ApiProperty({
     enum: ProductType,
     required: false,
   })
   @IsOptional()
   type?: ProductType;
-  @ApiProperty({
-    type: 'string',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  currency_id?: string;
   @ApiProperty({
     type: 'string',
     required: false,

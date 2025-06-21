@@ -53,7 +53,6 @@ export class InvoiceService {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,
-                tax_id: product.tax_id,
                 hsnCode_id: product.hsnCode_id,
                 price: product.price,
                 total: product.total,
@@ -113,7 +112,6 @@ export class InvoiceService {
               return {
                 product_id: product.product_id,
                 quantity: product.quantity,
-                tax_id: product.tax_id,
                 hsnCode_id: product.hsnCode_id,
                 price: product.price,
                 total: product.total,
@@ -148,9 +146,13 @@ export class InvoiceService {
           include: {
             product: {
               include: {
-                currency: true,
                 tax: true,
                 hsnCode: true,
+                priceBook: {
+                  include: {
+                    currency: true,
+                  },
+                },
               },
             },
           },
@@ -185,7 +187,11 @@ export class InvoiceService {
           include: {
             product: {
               include: {
-                currency: true,
+                priceBook: {
+                  include: {
+                    currency: true,
+                  },
+                },
                 tax: {
                   include: {
                     tax: true,
@@ -267,9 +273,13 @@ export class InvoiceService {
           const productDetails = await this.prismaService.product.findUnique({
             where: { id: product.product_id },
             include: {
-              currency: true,
               tax: true,
               hsnCode: true,
+              priceBook: {
+                include: {
+                  currency: true,
+                },
+              },
             },
           });
           return {

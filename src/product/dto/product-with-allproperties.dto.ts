@@ -1,6 +1,7 @@
 import {
   CurrenciesDto,
   ProductDto,
+  ProductPriceBook,
   ProductUnitDto,
   TaxForProduct,
 } from '@shared/models';
@@ -15,4 +16,7 @@ export class ProductWithAllDataDto extends ProductDto {
 
   @Type(() => TaxForProduct)
   tax?: TaxForProduct[];
+
+  @Type(() => ProductPriceBook)
+  priceBook?: ProductPriceBook[];
 }

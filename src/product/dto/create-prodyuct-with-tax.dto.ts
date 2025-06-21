@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateProductDto } from '@shared/models';
+import { CreateProductDto, CreateProductPriceBookDto } from '@shared/models';
 
 export class CreateProductWithTaxDto extends CreateProductDto {
   @ApiProperty({
@@ -12,4 +12,6 @@ export class CreateProductWithTaxDto extends CreateProductDto {
     nullable: true,
   })
   tax: string[];
+
+  priceBook: CreateProductPriceBookDto[];
 }

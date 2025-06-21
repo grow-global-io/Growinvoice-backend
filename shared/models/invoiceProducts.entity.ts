@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Invoice } from './invoice.entity';
 import { Product } from './product.entity';
-import { Tax } from './tax.entity';
 import { HSNCode } from './hSNCode.entity';
+import { TaxForInvoiceProducts } from './taxForInvoiceProducts.entity';
 
 export class InvoiceProducts {
   @ApiProperty({
@@ -51,17 +51,6 @@ export class InvoiceProducts {
     type: 'string',
     nullable: true,
   })
-  tax_id: string | null;
-  @ApiProperty({
-    type: () => Tax,
-    required: false,
-    nullable: true,
-  })
-  tax?: Tax | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
   hsnCode_id: string | null;
   @ApiProperty({
     type: () => HSNCode,
@@ -79,4 +68,6 @@ export class InvoiceProducts {
     format: 'float',
   })
   total: number;
+  @ApiHideProperty()
+  tax_forInvoiceProducts?: TaxForInvoiceProducts[];
 }

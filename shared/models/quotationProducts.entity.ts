@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Quotation } from './quotation.entity';
 import { Product } from './product.entity';
-import { Tax } from './tax.entity';
 import { HSNCode } from './hSNCode.entity';
+import { TaxForQuotationProducts } from './taxForQuotationProducts.entity';
 
 export class QuotationProducts {
   @ApiProperty({
@@ -51,17 +51,6 @@ export class QuotationProducts {
     type: 'string',
     nullable: true,
   })
-  tax_id: string | null;
-  @ApiProperty({
-    type: () => Tax,
-    required: false,
-    nullable: true,
-  })
-  tax?: Tax | null;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
   hsnCode_id: string | null;
   @ApiProperty({
     type: () => HSNCode,
@@ -79,4 +68,6 @@ export class QuotationProducts {
     format: 'float',
   })
   total: number;
+  @ApiHideProperty()
+  tax_forQuotationProducts?: TaxForQuotationProducts[];
 }
