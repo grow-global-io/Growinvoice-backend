@@ -28,6 +28,11 @@ export class Tax {
   })
   id: string;
   @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  name: string | null;
+  @ApiProperty({
     type: 'number',
     format: 'float',
   })

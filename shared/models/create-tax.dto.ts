@@ -3,6 +3,14 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTaxDto {
   @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  name?: string | null;
+  @ApiProperty({
     type: 'number',
     format: 'float',
   })
