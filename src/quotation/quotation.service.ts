@@ -88,7 +88,19 @@ export class QuotationService {
     const invoice = await this.prismaService.quotation.findUnique({
       where: { id },
       include: {
-        product: true,
+        product: {
+          include: {
+            product: {
+              include: {
+                tax: {
+                  include: {
+                    tax: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         customer: true,
       },
     });
@@ -140,7 +152,11 @@ export class QuotationService {
             product: {
               include: {
                 currency: true,
-                tax: true,
+                tax: {
+                  include: {
+                    tax: true,
+                  },
+                },
                 hsnCode: true,
               },
             },
@@ -175,7 +191,24 @@ export class QuotationService {
         },
       },
     });
-    return plainToInstance(QuotationWithAllDataDto, quotation);
+    const mapNew = {
+      ...quotation,
+      product: [
+        ...quotation.product.map((item) => ({
+          ...item,
+          product: {
+            ...item.product,
+            tax: {
+              percentage:
+                item?.product?.tax
+                  ?.map((tax) => tax.tax?.percentage)
+                  .reduce((acc, curr) => acc + curr, 0) ?? 0,
+            },
+          },
+        })),
+      ],
+    };
+    return plainToInstance(QuotationWithAllDataDto, mapNew);
   }
 
   async quotationSettingsWithFormat(quotation: QuotationWithAllDataDto) {

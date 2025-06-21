@@ -112,9 +112,10 @@ export class InvoiceController {
     description: 'Filter by customer ID',
     type: String,
   })
-  async findPaidInvoices(@GetUser() user: User,
+  async findPaidInvoices(
+    @GetUser() user: User,
     @Query('customerId') customerId?: string,
-) {
+  ) {
     return await this.invoiceService.findPaidInvoices(user.sub, customerId);
   }
 
@@ -161,7 +162,7 @@ export class InvoiceController {
     const invoiceSettingsWithFormat =
       await this.invoiceService.invoiceSettingsWithFormat(invoice);
     return res.render(
-      'invoice/' + invoice?.template?.view ?? 'template1',
+      'invoice/' + (invoice?.template?.view ?? 'template1'),
       invoiceSettingsWithFormat,
     );
   }
@@ -246,7 +247,7 @@ export class InvoiceController {
     const invoiceSettings =
       await this.invoiceService?.invoiceSettingsWithFormat(invoice);
     return res.render(
-      'invoice/' + invoice?.template?.view ?? 'template1',
+      'invoice/' + (invoice?.template?.view ?? 'template1'),
       invoiceSettings,
     );
   }

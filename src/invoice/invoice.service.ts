@@ -80,7 +80,19 @@ export class InvoiceService {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },
       include: {
-        product: true,
+        product: {
+          include: {
+            product: {
+              include: {
+                tax: {
+                  include: {
+                    tax: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         customer: true,
       },
     });
@@ -174,7 +186,11 @@ export class InvoiceService {
             product: {
               include: {
                 currency: true,
-                tax: true,
+                tax: {
+                  include: {
+                    tax: true,
+                  },
+                },
                 hsnCode: true,
               },
             },
@@ -209,7 +225,25 @@ export class InvoiceService {
         },
       },
     });
-    return plainToInstance(InvoiceWithAllDataDto, invoice);
+
+    const mapNew = {
+      ...invoice,
+      product: [
+        ...invoice.product.map((item) => ({
+          ...item,
+          product: {
+            ...item.product,
+            tax: {
+              percentage:
+                item?.product?.tax
+                  ?.map((tax) => tax.tax?.percentage)
+                  .reduce((acc, curr) => acc + curr, 0) ?? 0,
+            },
+          },
+        })),
+      ],
+    };
+    return plainToInstance(InvoiceWithAllDataDto, mapNew);
   }
 
   async createInvoicePreview(createInvoiceDto: CreateInvoiceWithProducts) {

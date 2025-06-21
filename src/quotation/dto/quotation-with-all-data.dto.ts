@@ -1,10 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ProductWithAllDataDto } from '@/product/dto/product-with-allproperties.dto';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Quotation, QuotationProducts } from '@shared/models';
 import { Type } from 'class-transformer';
 
+export class QuotationProductsWithAllDataDto extends OmitType(
+  QuotationProducts,
+  ['product'],
+) {
+  @Type(() => ProductWithAllDataDto)
+  product?: ProductWithAllDataDto;
+}
+
 export class QuotationWithAllDataDto extends Quotation {
-  @Type(() => QuotationProducts)
-  product?: QuotationProducts[];
+  @Type(() => QuotationProductsWithAllDataDto)
+  product?: QuotationProductsWithAllDataDto[];
 
   @ApiProperty({
     nullable: true,
