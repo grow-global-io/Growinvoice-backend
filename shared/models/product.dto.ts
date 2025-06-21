@@ -54,11 +54,6 @@ export class ProductDto {
   hsnCode_id: string | null;
   @ApiProperty({
     type: 'string',
-    nullable: true,
-  })
-  tax_id: string | null;
-  @ApiProperty({
-    type: 'string',
   })
   user_id: string;
 }

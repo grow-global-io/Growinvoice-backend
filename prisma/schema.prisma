@@ -328,8 +328,6 @@ model Tax {
   user_id           String
   user              User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
-  Product           Product[]
-  /// @DtoApiHidden
   Invoice           Invoice[]
   /// @DtoApiHidden
   Quatation         Quotation[]
@@ -339,6 +337,8 @@ model Tax {
   InvoiceProducts   InvoiceProducts[]
   /// @DtoApiHidden
   QuotationProducts QuotationProducts[]
+  /// @DtoApiHidden
+  TaxForProduct     TaxForProduct[]
 }
 
 /// @@allow('read', isExist == true)
@@ -395,17 +395,39 @@ model Product {
   hsnCode_id  String?
   hsnCode     HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  /// @DtoCreateOptional
-  /// @DtoUpdateOptional
-  tax_id      String?
-  tax         Tax?                @relation(fields: [tax_id], references: [id], onDelete: Cascade)
-  /// @DtoRelationIncludeId
   user_id     String
   user        User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
   invoice     InvoiceProducts[]
   /// @DtoApiHidden
   Quatation   QuotationProducts[]
+  /// @DtoApiHidden
+  tax         TaxForProduct[]
+}
+
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
+model TaxForProduct {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  product_id String
+  product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  tax_id     String
+  tax        Tax       @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+
+  @@unique([product_id, tax_id])
 }
 
 /// @@allow('read', isExist == true)

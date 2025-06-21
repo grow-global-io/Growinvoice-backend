@@ -3,10 +3,10 @@ import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Currencies } from './currencies.entity';
 import { ProductUnit } from './productUnit.entity';
 import { HSNCode } from './hSNCode.entity';
-import { Tax } from './tax.entity';
 import { User } from './user.entity';
 import { InvoiceProducts } from './invoiceProducts.entity';
 import { QuotationProducts } from './quotationProducts.entity';
+import { TaxForProduct } from './taxForProduct.entity';
 
 export class Product {
   @ApiProperty({
@@ -77,17 +77,6 @@ export class Product {
   hsnCode?: HSNCode | null;
   @ApiProperty({
     type: 'string',
-    nullable: true,
-  })
-  tax_id: string | null;
-  @ApiProperty({
-    type: () => Tax,
-    required: false,
-    nullable: true,
-  })
-  tax?: Tax | null;
-  @ApiProperty({
-    type: 'string',
   })
   user_id: string;
   @ApiProperty({
@@ -99,4 +88,6 @@ export class Product {
   invoice?: InvoiceProducts[];
   @ApiHideProperty()
   Quatation?: QuotationProducts[];
+  @ApiHideProperty()
+  tax?: TaxForProduct[];
 }

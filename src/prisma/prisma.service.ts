@@ -19,13 +19,11 @@ export class PrismaService extends PrismaClient<
   }
 
   getClient(user?) {
-    return user.id === 'system'
-      ? this
-      : enhance(this, { user }, { logPrismaQuery: true });
+    return user.id === 'system' ? this : enhance(this, { user });
   }
 
   getPaginatedClient(user?) {
     const paginatedPrisma = this.$extends(PaginationPaginate);
-    return enhance(paginatedPrisma, { user }, { logPrismaQuery: true });
+    return enhance(paginatedPrisma, { user });
   }
 }

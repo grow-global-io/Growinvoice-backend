@@ -1,10 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
-import { CreateProductDto, ProductDto, UpdateProductDto } from '@shared/models';
+import { ProductDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import { ProductWithAllDataDto } from './dto/product-with-allproperties.dto';
 import { SharedService } from '@/shared/shared.service';
 import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
+import { CreateProductWithTaxDto } from './dto/create-prodyuct-with-tax.dto';
+import { UpdateProductWithTaxDto } from './dto/update-prodyct-with-tax.dto';
 
 @Injectable()
 export class ProductService {
@@ -13,11 +15,25 @@ export class ProductService {
     private readonly sharedService: SharedService, // Assuming you have a SharedService for common functionalities
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductWithTaxDto) {
+    const { tax, ...prodyctData } = createProductDto;
     await this.sharedService.checkProductQuota(createProductDto.user_id);
-    return await this.prismaService.product.create({
-      data: createProductDto,
+    const product = await this.prismaService.product.create({
+      data: {
+        ...prodyctData,
+        user_id: createProductDto.user_id,
+      },
     });
+
+    if (tax && tax.length > 0) {
+      await this.prismaService.taxForProduct.createMany({
+        data: tax.map((taxId) => ({
+          product_id: product.id,
+          tax_id: taxId,
+        })),
+      });
+    }
+    return plainToInstance(ProductWithAllDataDto, product);
   }
 
   async findAll(user_id: string) {
@@ -26,7 +42,13 @@ export class ProductService {
       include: {
         unit: true,
         currency: true,
+        tax: {
+          include: {
+            tax: true,
+          },
+        },
       },
+      orderBy: { createdAt: 'desc' },
     });
     return plainToInstance(ProductWithAllDataDto, products);
   }
@@ -38,11 +60,29 @@ export class ProductService {
     return plainToInstance(ProductDto, product);
   }
 
-  update(id: string, updateProductDto: UpdateProductDto) {
-    return this.prismaService.product.update({
+  async update(id: string, updateProductDto: UpdateProductWithTaxDto) {
+    const { tax, ...updateData } = updateProductDto;
+    const product = await this.prismaService.product.update({
       where: { id },
-      data: updateProductDto,
+      data: {
+        ...updateData,
+        user_id: updateProductDto.user_id, // Ensure user_id is updated if provided
+      },
     });
+    if (tax && tax.length > 0) {
+      // Remove existing tax associations
+      await this.prismaService.taxForProduct.deleteMany({
+        where: { product_id: id },
+      });
+      // Create new tax associations
+      await this.prismaService.taxForProduct.createMany({
+        data: tax.map((taxId) => ({
+          product_id: id,
+          tax_id: taxId,
+        })),
+      });
+    }
+    return plainToInstance(ProductWithAllDataDto, product);
   }
 
   async remove(id: string) {
