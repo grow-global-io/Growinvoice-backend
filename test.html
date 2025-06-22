@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - [Your Company Name]</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #555;
+            background: #FFF;
+            line-height: 1.6em;
+            padding: 10px;
+        }
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            font-size: 16px;
+        }
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+            border-collapse: collapse;
+        }
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+        .invoice-box table tr td:nth-child(2) {
+            text-align: right;
+        }
+        .invoice-box table tr.top table td {
+            padding-bottom: 20px;
+        }
+        .invoice-box table tr.top table td.title {
+            font-size: 45px;
+            line-height: 45px;
+            color: #333;
+        }
+        .invoice-box table tr.information table td {
+            padding-bottom: 40px;
+        }
+        .invoice-box table tr.heading td {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+        .invoice-box table tr.details td {
+            padding-bottom: 20px;
+        }
+        .invoice-box table tr.item td {
+            border-bottom: 1px solid #eee;
+        }
+        .invoice-box table tr.item.last td {
+            border-bottom: none;
+        }
+        .invoice-box table tr.total td:nth-child(2) {
+            border-top: 2px solid #eee;
+            font-weight: bold;
+        }
+        .company-logo {
+            width: 100%;
+            max-width: 300px;
+        }
+        .company-details {
+            text-align: right;
+        }
+        .text-right {
+            text-align: right;
+        }
+
+        /* For Print */
+        @media print {
+            .invoice-box {
+                box-shadow: none;
+                border: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-box">
+        <table>
+            <tr class="top">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td class="title">
+                                <!-- Replace with your logo -->
+                                <img src="https://via.placeholder.com/150x50.png?text=Your+Logo" alt="Company Logo" class="company-logo">
+                            </td>
+                            <td class="company-details">
+                                Invoice #: 123-456<br>
+                                Created: January 1, 2024<br>
+                                Due: February 1, 2024
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        <tr>
+                            <td>
+                                <strong>From:</strong><br>
+                                [Your Company Name]<br>
+                                [Your Street Address]<br>
+                                [Your City, State, ZIP]
+                            </td>
+                            <td class="text-right">
+                                <strong>Bill To:</strong><br>
+                                [Client Company Name]<br>
+                                [Client Name]<br>
+                                [Client Street Address]<br>
+                                [Client City, State, ZIP]
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="heading">
+                <td>Item</td>
+                <td class="text-right">Price</td>
+            </tr>
+
+            <tr class="item">
+                <td>Website Design</td>
+                <td class="text-right">$1,200.00</td>
+            </tr>
+
+            <tr class="item">
+                <td>Hosting (3 months)</td>
+                <td class="text-right">$75.00</td>
+            </tr>
+
+            <tr class="item last">
+                <td>Domain Name (1 year)</td>
+                <td class="text-right">$15.00</td>
+            </tr>
+
+            <tr class="total">
+                <td></td>
+                <td class="text-right">
+                   <strong>Subtotal:</strong> $1,290.00
+                </td>
+            </tr>
+             <tr class="total">
+                <td></td>
+                <td class="text-right">
+                   <strong>Tax (10%):</strong> $129.00
+                </td>
+            </tr>
+             <tr class="total">
+                <td></td>
+                <td class="text-right">
+                   <strong>Total:</strong> $1,419.00
+                </td>
+            </tr>
+        </table>
+        
+        <div style="margin-top: 50px;">
+            <strong>Payment Terms:</strong> Net 30 Days <br><br>
+            <strong>Notes:</strong><br>
+            Thank you for your business. Please make payments to:<br>
+            [Your Bank Name], Account #: [Your Account Number]
+        </div>
+    </div>
+</body>
+</html>
