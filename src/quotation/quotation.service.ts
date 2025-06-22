@@ -197,6 +197,7 @@ export class QuotationService {
     const quotation = await this.prismaService.quotation.findUnique({
       where: { id },
       include: {
+        currency: true,
         tax: true,
         template: true,
         product: {
@@ -265,6 +266,9 @@ export class QuotationService {
                   (acc, tax) => acc + tax.tax.percentage,
                   0,
                 ) || 0,
+            },
+            currency: {
+              ...quotation.currency,
             },
           },
         })),
@@ -423,6 +427,9 @@ export class QuotationService {
               },
             },
           });
+          const currency = await this.prismaService.currencies.findUnique({
+            where: { id: quotationDetails?.currency_id },
+          });
           return {
             ...product,
             product: {
@@ -436,6 +443,9 @@ export class QuotationService {
                 },
                 { percentage: 0 },
               ),
+            },
+            currency: {
+              ...currency,
             },
           };
         }),

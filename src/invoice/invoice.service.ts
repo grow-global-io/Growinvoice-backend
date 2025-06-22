@@ -105,6 +105,13 @@ export class InvoiceService {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },
       include: {
+        payment: true,
+        user: {
+          include: {
+            company: true,
+          },
+        },
+        currency: true,
         product: {
           include: {
             tax_forInvoiceProducts: {
@@ -246,6 +253,7 @@ export class InvoiceService {
     const invoice = await this.prismaService.invoice.findUnique({
       where: { id },
       include: {
+        currency: true,
         tax: true,
         template: true,
         payment: true,
@@ -311,6 +319,9 @@ export class InvoiceService {
                   ?.map((tax) => tax.tax?.percentage)
                   .reduce((acc, curr) => acc + curr, 0) ?? 0,
             },
+            currency: {
+              ...invoice.currency,
+            },
           },
         })),
       ],
@@ -355,6 +366,9 @@ export class InvoiceService {
               },
             },
           });
+          const currency = await this.prismaService.currencies.findUnique({
+            where: { id: invoiceDetails.currency_id },
+          });
           return {
             ...product,
             product: {
@@ -368,6 +382,9 @@ export class InvoiceService {
                 },
                 { percentage: 0 },
               ),
+              currency: {
+                ...currency,
+              },
             },
           };
         }),

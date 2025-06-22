@@ -104,14 +104,13 @@ export class PaymentsService {
     if (stripeKey?.enabled === false) {
       throw new Error('Stripe key not enabled');
     }
-    const userDetails = await this.userService.findOne(user_id);
     const stripe = new Stripe(stripeKey?.key);
     const stripePaymentLink = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [
         {
           price_data: {
-            currency: userDetails?.currency?.short_code,
+            currency: invoice.currency.short_code || 'USD', // Fallback to USD if currency is not set
             product_data: {
               name: 'Invoice Payment',
               description:
@@ -160,7 +159,7 @@ export class PaymentsService {
           line_items: [
             {
               price_data: {
-                currency: 'USD', //userDetails?.currency?.short_code
+                currency: invoice.currency.short_code || 'USD', // Fallback to USD if currency is not set
                 product_data: {
                   name: 'Invoice Payment',
                   description:
