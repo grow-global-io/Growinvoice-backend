@@ -281,6 +281,8 @@ model Currencies extends Base {
     user       User[]             @DtoApiHidden
     expense    Expenses[]         @DtoApiHidden
     priceBook  ProductPriceBook[] @DtoApiHidden
+    invoice    Invoice[]          @DtoApiHidden
+    Quotation  Quotation[]        @DtoApiHidden
 }
 
 
@@ -362,6 +364,8 @@ model Invoice extends Base {
     id                 String            @id @default(cuid())
     customer_id        String            @DtoRelationIncludeId
     customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+    currency_id        String?           @DtoRelationIncludeId
+    currency           Currencies?       @relation(fields: [currency_id], references: [id], onDelete: SetNull)
     user_id            String            @DtoRelationIncludeId
     user               User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
     invoice_number     String
@@ -450,6 +454,8 @@ model Quotation extends Base {
     id                 String              @id @default(cuid())
     customer_id        String              @DtoRelationIncludeId
     customer           Customer            @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+    currency_id        String?             @DtoRelationIncludeId
+    currency           Currencies?         @relation(fields: [currency_id], references: [id], onDelete: SetNull)
     user_id            String              @DtoRelationIncludeId
     user               User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
     quatation_number   String

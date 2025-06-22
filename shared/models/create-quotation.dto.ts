@@ -16,6 +16,14 @@ export class CreateQuotationDto {
   customer_id: string;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  currency_id?: string | null;
+  @ApiProperty({
+    type: 'string',
   })
   @IsNotEmpty()
   @IsString()

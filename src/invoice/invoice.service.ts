@@ -42,26 +42,52 @@ export class InvoiceService {
         'Invoice number already exists. Please use a different one.',
       );
     }
+    const { product, ...invoiceData } = createInvoiceDto;
     const invoiceDetails = await this.prismaService.invoice.create({
       data: {
-        ...createInvoiceDto,
+        ...invoiceData,
         invoice_number: createInvoiceDto.invoice_number,
         tax_id: createInvoiceDto.tax_id ? createInvoiceDto.tax_id : null,
-        product: {
-          createMany: {
-            data: createInvoiceDto.product.map((product) => {
-              return {
-                product_id: product.product_id,
-                quantity: product.quantity,
-                hsnCode_id: product.hsnCode_id,
-                price: product.price,
-                total: product.total,
-              };
-            }),
-          },
-        },
+        // product: {
+        //   createMany: {
+        //     data: createInvoiceDto.product.map((product) => {
+        //       return {
+        //         product_id: product.product_id,
+        //         quantity: product.quantity,
+        //         hsnCode_id: product.hsnCode_id,
+        //         price: product.price,
+        //         total: product.total,
+        //         tax_forInvoiceProducts: {
+        //           createMany: {
+        //             data:
+        //               product.taxes?.map((taxId) => ({ tax_id: taxId })) || [],
+        //           },
+        //         },
+        //       };
+        //     }),
+        //   },
+        // },
       },
     });
+    await Promise.all(
+      product.map(async (product) => {
+        return await this.prismaService.invoiceProducts.create({
+          data: {
+            product_id: product.product_id,
+            quantity: product.quantity,
+            hsnCode_id: product.hsnCode_id,
+            price: product.price,
+            total: product.total,
+            invoice_id: invoiceDetails.id,
+            tax_forInvoiceProducts: {
+              createMany: {
+                data: product.taxes?.map((taxId) => ({ tax_id: taxId })) || [],
+              },
+            },
+          },
+        });
+      }),
+    );
     return plainToInstance(InvoiceDto, invoiceDetails);
   }
 
@@ -81,6 +107,11 @@ export class InvoiceService {
       include: {
         product: {
           include: {
+            tax_forInvoiceProducts: {
+              include: {
+                tax: true,
+              },
+            },
             product: {
               include: {
                 tax: {
@@ -99,28 +130,58 @@ export class InvoiceService {
   }
 
   async update(id: string, updateInvoiceDto: UpdateInvoiceWithProducts) {
+    const { product, ...invoiceData } = updateInvoiceDto;
     const invoice = await this.prismaService.invoice.update({
       where: { id },
       data: {
-        ...updateInvoiceDto,
+        ...invoiceData,
         invoice_number: updateInvoiceDto.invoice_number,
         tax_id: updateInvoiceDto.tax_id ? updateInvoiceDto.tax_id : null,
-        product: {
-          deleteMany: {},
-          createMany: {
-            data: updateInvoiceDto.product.map((product) => {
-              return {
-                product_id: product.product_id,
-                quantity: product.quantity,
-                hsnCode_id: product.hsnCode_id,
-                price: product.price,
-                total: product.total,
-              };
-            }),
-          },
-        },
+        // product: {
+        //   deleteMany: {},
+        //   createMany: {
+        //     data: updateInvoiceDto.product.map((product) => {
+        //       return {
+        //         product_id: product.product_id,
+        //         quantity: product.quantity,
+        //         hsnCode_id: product.hsnCode_id,
+        //         price: product.price,
+        //         total: product.total,
+        //         tax_forInvoiceProducts: {
+        //           deleteMany: {},
+        //           createMany: {
+        //             data:
+        //               product.taxes?.map((taxId) => ({ tax_id: taxId })) || [],
+        //           },
+        //         },
+        //       };
+        //     }),
+        //   },
+        // },
       },
     });
+    await this.prismaService.invoiceProducts.deleteMany({
+      where: { invoice_id: id },
+    });
+    await Promise.all(
+      product.map(async (product) => {
+        return await this.prismaService.invoiceProducts.create({
+          data: {
+            product_id: product.product_id,
+            quantity: product.quantity,
+            hsnCode_id: product.hsnCode_id,
+            price: product.price,
+            total: product.total,
+            invoice_id: id,
+            tax_forInvoiceProducts: {
+              createMany: {
+                data: product.taxes?.map((taxId) => ({ tax_id: taxId })) || [],
+              },
+            },
+          },
+        });
+      }),
+    );
     return plainToInstance(InvoiceDto, invoice);
   }
 
@@ -144,6 +205,11 @@ export class InvoiceService {
         customer: true,
         product: {
           include: {
+            tax_forInvoiceProducts: {
+              include: {
+                tax: true,
+              },
+            },
             product: {
               include: {
                 tax: true,
@@ -282,10 +348,26 @@ export class InvoiceService {
               },
             },
           });
+          const taxDetails = await this.prismaService.tax.findMany({
+            where: {
+              id: {
+                in: product.taxes || [],
+              },
+            },
+          });
           return {
             ...product,
             product: {
               ...productDetails,
+              tax: taxDetails.reduce(
+                (acc, curr) => {
+                  return {
+                    ...acc,
+                    percentage: acc.percentage + (curr.percentage || 0),
+                  };
+                },
+                { percentage: 0 },
+              ),
             },
           };
         }),

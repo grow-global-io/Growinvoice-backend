@@ -26,6 +26,11 @@ export class QuotationDto {
   customer_id: string;
   @ApiProperty({
     type: 'string',
+    nullable: true,
+  })
+  currency_id: string | null;
+  @ApiProperty({
+    type: 'string',
   })
   user_id: string;
   @ApiProperty({

@@ -1,6 +1,7 @@
 import { InvoiceRecurring, paidStatus } from '@prisma/client';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Customer } from './customer.entity';
+import { Currencies } from './currencies.entity';
 import { User } from './user.entity';
 import { PaymentDetails } from './paymentDetails.entity';
 import { InvoiceProducts } from './invoiceProducts.entity';
@@ -37,6 +38,17 @@ export class Invoice {
     required: false,
   })
   customer?: Customer;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  currency_id: string | null;
+  @ApiProperty({
+    type: () => Currencies,
+    required: false,
+    nullable: true,
+  })
+  currency?: Currencies | null;
   @ApiProperty({
     type: 'string',
   })

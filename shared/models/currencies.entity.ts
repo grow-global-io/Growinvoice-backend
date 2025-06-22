@@ -3,6 +3,8 @@ import { Customer } from './customer.entity';
 import { User } from './user.entity';
 import { Expenses } from './expenses.entity';
 import { ProductPriceBook } from './productPriceBook.entity';
+import { Invoice } from './invoice.entity';
+import { Quotation } from './quotation.entity';
 
 export class Currencies {
   @ApiProperty({
@@ -48,4 +50,8 @@ export class Currencies {
   expense?: Expenses[];
   @ApiHideProperty()
   priceBook?: ProductPriceBook[];
+  @ApiHideProperty()
+  invoice?: Invoice[];
+  @ApiHideProperty()
+  Quotation?: Quotation[];
 }

@@ -1,5 +1,6 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Customer } from './customer.entity';
+import { Currencies } from './currencies.entity';
 import { User } from './user.entity';
 import { QuotationProducts } from './quotationProducts.entity';
 import { Tax } from './tax.entity';
@@ -34,6 +35,17 @@ export class Quotation {
     required: false,
   })
   customer?: Customer;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  currency_id: string | null;
+  @ApiProperty({
+    type: () => Currencies,
+    required: false,
+    nullable: true,
+  })
+  currency?: Currencies | null;
   @ApiProperty({
     type: 'string',
   })

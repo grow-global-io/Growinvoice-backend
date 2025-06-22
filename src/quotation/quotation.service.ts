@@ -50,26 +50,50 @@ export class QuotationService {
         'Quotation number already exists, please use a different one',
       );
     }
+    const { product, ...rest } = createQuotationDto;
     const quotationDetails = await this.prismaService.quotation.create({
       data: {
-        ...createQuotationDto,
+        ...rest,
         quatation_number: createQuotationDto.quatation_number,
         tax_id: createQuotationDto.tax_id ? createQuotationDto.tax_id : null,
-        product: {
-          createMany: {
-            data: createQuotationDto.product.map((product) => {
-              return {
-                product_id: product.product_id,
-                quantity: product.quantity,
-                hsnCode_id: product.hsnCode_id,
-                price: product.price,
-                total: product.total,
-              };
-            }),
-          },
-        },
+        // product: {
+        //   createMany: {
+        //     data: createQuotationDto.product.map((product) => {
+        //       return {
+        //         product_id: product.product_id,
+        //         quantity: product.quantity,
+        //         hsnCode_id: product.hsnCode_id,
+        //         price: product.price,
+        //         total: product.total,
+        //       };
+        //     }),
+        //   },
+        // },
       },
     });
+
+    await Promise.all(
+      product.map(async (product) => {
+        await this.prismaService.quotationProducts.create({
+          data: {
+            product_id: product.product_id,
+            quantity: product.quantity,
+            hsnCode_id: product.hsnCode_id,
+            price: product.price,
+            total: product.total,
+            quotation_id: quotationDetails.id,
+            tax_forQuotationProducts: {
+              createMany: {
+                data: product.taxes.map((tax) => ({
+                  tax_id: tax,
+                })),
+              },
+            },
+          },
+        });
+      }),
+    );
+
     return plainToInstance(QuotationDto, quotationDetails);
   }
 
@@ -89,6 +113,11 @@ export class QuotationService {
       include: {
         product: {
           include: {
+            tax_forQuotationProducts: {
+              include: {
+                tax: true,
+              },
+            },
             product: {
               include: {
                 tax: {
@@ -107,28 +136,53 @@ export class QuotationService {
   }
 
   async update(id: string, updateQuotationDto: UpdateQuotationWithProducts) {
+    const { product, ...rest } = updateQuotationDto;
     const invoice = await this.prismaService.quotation.update({
       where: { id },
       data: {
-        ...updateQuotationDto,
+        ...rest,
         quatation_number: updateQuotationDto.quatation_number,
         tax_id: updateQuotationDto.tax_id ? updateQuotationDto.tax_id : null,
-        product: {
-          deleteMany: {},
-          createMany: {
-            data: updateQuotationDto.product.map((product) => {
-              return {
-                product_id: product.product_id,
-                quantity: product.quantity,
-                hsnCode_id: product.hsnCode_id,
-                price: product.price,
-                total: product.total,
-              };
-            }),
-          },
-        },
+        // product: {
+        //   deleteMany: {},
+        //   createMany: {
+        //     data: updateQuotationDto.product.map((product) => {
+        //       return {
+        //         product_id: product.product_id,
+        //         quantity: product.quantity,
+        //         hsnCode_id: product.hsnCode_id,
+        //         price: product.price,
+        //         total: product.total,
+        //       };
+        //     }),
+        //   },
+        // },
       },
     });
+    await this.prismaService.quotationProducts.deleteMany({
+      where: { quotation_id: id },
+    });
+    await Promise.all(
+      product.map(async (product) => {
+        await this.prismaService.quotationProducts.create({
+          data: {
+            product_id: product.product_id,
+            quantity: product.quantity,
+            hsnCode_id: product.hsnCode_id,
+            price: product.price,
+            total: product.total,
+            quotation_id: invoice.id,
+            tax_forQuotationProducts: {
+              createMany: {
+                data: product.taxes.map((tax) => ({
+                  tax_id: tax,
+                })),
+              },
+            },
+          },
+        });
+      }),
+    );
     return plainToInstance(QuotationDto, invoice);
   }
 
@@ -147,6 +201,11 @@ export class QuotationService {
         template: true,
         product: {
           include: {
+            tax_forQuotationProducts: {
+              include: {
+                tax: true,
+              },
+            },
             product: {
               include: {
                 priceBook: {
@@ -202,9 +261,10 @@ export class QuotationService {
             ...item.product,
             tax: {
               percentage:
-                item?.product?.tax
-                  ?.map((tax) => tax.tax?.percentage)
-                  .reduce((acc, curr) => acc + curr, 0) ?? 0,
+                item?.tax_forQuotationProducts?.reduce(
+                  (acc, tax) => acc + tax.tax.percentage,
+                  0,
+                ) || 0,
             },
           },
         })),
@@ -215,7 +275,6 @@ export class QuotationService {
 
   async quotationSettingsWithFormat(quotation: QuotationWithAllDataDto) {
     const a = quotation;
-    console.log('quotation', quotation);
     const quotationSettings =
       await this.prismaService.quotationSettings.findFirst({
         where: { user_id: a?.user?.id },
@@ -285,7 +344,11 @@ export class QuotationService {
     const quotation = await this.prismaService.quotation.findUnique({
       where: { id },
       include: {
-        product: true,
+        product: {
+          include: {
+            tax_forQuotationProducts: true,
+          },
+        },
       },
     });
     const invoiceSettings = await this.invoiceSettingService.findFirst(
@@ -307,6 +370,7 @@ export class QuotationService {
           hsnCode_id: product.hsnCode_id,
           price: product.price,
           total: product.total,
+          taxes: product.tax_forQuotationProducts.map((tax) => tax.tax_id),
         };
       }),
       sub_total: quotation.sub_total,
@@ -340,6 +404,13 @@ export class QuotationService {
     if (createQuotationDto?.product?.length > 0) {
       quotationDetails.product = await Promise.all(
         createQuotationDto.product.map(async (product) => {
+          const taxDetails = await this.prismaService.tax.findMany({
+            where: {
+              id: {
+                in: product.taxes,
+              },
+            },
+          });
           const productDetails = await this.prismaService.product.findUnique({
             where: { id: product.product_id },
             include: {
@@ -356,6 +427,15 @@ export class QuotationService {
             ...product,
             product: {
               ...productDetails,
+              tax: taxDetails.reduce(
+                (acc, curr) => {
+                  return {
+                    ...acc,
+                    percentage: acc.percentage + (curr.percentage || 0),
+                  };
+                },
+                { percentage: 0 },
+              ),
             },
           };
         }),

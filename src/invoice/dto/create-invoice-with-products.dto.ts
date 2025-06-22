@@ -8,7 +8,9 @@ import { Type } from 'class-transformer';
 
 class OmitCreateInvoiceProductsDto extends OmitType(CreateInvoiceProductsDto, [
   'invoice_id',
-] as const) {}
+] as const) {
+  taxes?: string[];
+}
 
 export class CreateInvoiceWithProducts extends CreateInvoiceDto {
   @Type(() => OmitCreateInvoiceProductsDto)

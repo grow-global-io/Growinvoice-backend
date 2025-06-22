@@ -31,7 +31,6 @@ export class ProductService {
           createMany: {
             data:
               priceBook?.map((price) => ({
-                product_id: product.id,
                 ...price,
               })) || [],
           },
@@ -87,7 +86,6 @@ export class ProductService {
           createMany: {
             data:
               priceBook?.map((price) => ({
-                product_id: id,
                 ...price,
               })) || [],
           },

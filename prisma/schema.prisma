@@ -539,6 +539,10 @@ model Currencies {
   expense    Expenses[]
   /// @DtoApiHidden
   priceBook  ProductPriceBook[]
+  /// @DtoApiHidden
+  invoice    Invoice[]
+  /// @DtoApiHidden
+  Quotation  Quotation[]
 }
 
 /// @@allow('read', isExist == true)
@@ -740,6 +744,9 @@ model Invoice {
   customer_id        String
   customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
+  currency_id        String?
+  currency           Currencies?       @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+  /// @DtoRelationIncludeId
   user_id            String
   user               User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
   invoice_number     String
@@ -925,6 +932,9 @@ model Quotation {
   /// @DtoRelationIncludeId
   customer_id        String
   customer           Customer            @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  currency_id        String?
+  currency           Currencies?         @relation(fields: [currency_id], references: [id], onDelete: SetNull)
   /// @DtoRelationIncludeId
   user_id            String
   user               User                @relation(fields: [user_id], references: [id], onDelete: Cascade)

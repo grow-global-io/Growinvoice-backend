@@ -1,6 +1,10 @@
 import { ProductWithAllDataDto } from '@/product/dto/product-with-allproperties.dto';
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { Invoice, InvoiceProducts } from '@shared/models';
+import {
+  Invoice,
+  InvoiceProducts,
+  TaxForInvoiceProducts,
+} from '@shared/models';
 import { Type } from 'class-transformer';
 
 export class InvoiceProductWithAllDataDto extends OmitType(InvoiceProducts, [
@@ -8,6 +12,9 @@ export class InvoiceProductWithAllDataDto extends OmitType(InvoiceProducts, [
 ]) {
   @Type(() => ProductWithAllDataDto)
   product?: ProductWithAllDataDto;
+
+  @Type(() => TaxForInvoiceProducts)
+  tax_forInvoiceProducts?: TaxForInvoiceProducts[];
 }
 
 export class InvoiceWithAllDataDto extends OmitType(Invoice, ['product']) {

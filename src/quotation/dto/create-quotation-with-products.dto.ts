@@ -9,7 +9,9 @@ import { Type } from 'class-transformer';
 class OmitCreateQuotationProductsDto extends OmitType(
   CreateQuotationProductsDto,
   ['quotation_id'] as const,
-) {}
+) {
+  taxes?: string[];
+}
 
 export class CreateQuotationWithProducts extends CreateQuotationDto {
   @Type(() => OmitCreateQuotationProductsDto)

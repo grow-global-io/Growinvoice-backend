@@ -19,6 +19,14 @@ export class UpdateInvoiceDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  currency_id?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
   })
   @IsOptional()
   @IsString()
