@@ -257,6 +257,7 @@ export class InvoiceService {
         tax: true,
         template: true,
         payment: true,
+
         product: {
           include: {
             product: {
@@ -271,7 +272,11 @@ export class InvoiceService {
                     tax: true,
                   },
                 },
-                hsnCode: true,
+                hsnCode: {
+                  include: {
+                    tax: true,
+                  },
+                },
               },
             },
           },

@@ -3,190 +3,193 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Grow Invoice Template</title>
+    <title>Receipt</title>
     <style>
       body {
-        font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-        color: #555;
+        font-family: 'Courier New', Courier, monospace;
+        color: #000;
         background: #fff;
-        line-height: 1.6em;
-        padding: 10px;
+        line-height: 1.5em;
       }
-      .invoice-box {
-        max-width: 800px;
+      .receipt-box {
+        max-width: 400px;
         margin: auto;
-        padding: 30px;
-        border: 1px solid #eee;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-        font-size: 16px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+        font-size: 14px;
       }
-      .invoice-box table {
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .header .logo {
+        font-size: 40px;
+        font-weight: bold;
+        background-color: #f0e6d2; /* A beige-like color from the image */
+        color: #000;
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        margin-bottom: 10px;
+      }
+      .header h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .header h3 {
+        margin: 5px 0;
+        font-size: 16px;
+        font-weight: normal;
+      }
+      .header p {
+        margin: 2px 0;
+        font-size: 12px;
+      }
+      .invoice-title {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 15px;
+        border-top: 1px dashed #000;
+        border-bottom: 1px dashed #000;
+        padding: 5px 0;
+      }
+      .receipt-box table {
         width: 100%;
         line-height: inherit;
         text-align: left;
         border-collapse: collapse;
       }
-      .invoice-box table td {
+      .receipt-box table td {
         padding: 5px;
         vertical-align: top;
       }
-      /* This rule is no longer necessary with the new structure, but is harmless */
-      .invoice-box table tr td:nth-child(2) {
-        /* text-align: right; */ /* Commented out as we use a class now */
+      .info-table td {
+        padding: 1px 0;
       }
-      .invoice-box table tr.top table td {
-        padding-bottom: 20px;
-      }
-      .invoice-box table tr.top table td.title {
-        font-size: 45px;
-        line-height: 45px;
-        color: #333;
-      }
-      .invoice-box table tr.information table td {
-        padding-bottom: 40px;
-      }
-      .invoice-box table tr.heading td {
-        background: #eee;
-        border-bottom: 1px solid #ddd;
+      .items-table th {
+        background: #fff;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
         font-weight: bold;
+        text-align: left;
+        padding: 5px;
       }
-      .invoice-box table tr.details td {
-        padding-bottom: 20px;
+      .items-table td {
+        border-bottom: 1px dashed #ccc;
+        padding: 8px 5px;
       }
-      .invoice-box table tr.item td {
-        border-bottom: 1px solid #eee;
-      }
-      .invoice-box table tr.item.last td {
+      .items-table .item.last td {
         border-bottom: none;
       }
-      /* Modified total to only apply top border on the final value cell */
-      .invoice-box table tr.total td:last-child {
-        border-top: 2px solid #eee;
+      .totals-table td {
+        padding: 2px 5px;
+      }
+      .totals-table tr.final-total td {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
         font-weight: bold;
-      }
-      .company-logo {
-        width: 100%;
-        max-width: 300px;
-      }
-      .company-details {
-        text-align: right;
-        width: 300px
+        padding: 8px 5px;
       }
       .text-right {
         text-align: right;
       }
-
-      /* For Print */
-      @media print {
-        .invoice-box {
-          box-shadow: none;
-          border: 0;
-        }
+      .footer {
+        margin-top: 20px;
+        text-transform: uppercase;
       }
     </style>
   </head>
 
   <body>
-    <div class="invoice-box">
-      <table>
-        <tr class="top">
-          <td colspan="4">
-            <table>
-              <tr>
-                <td class="title">
-                  <% if (invoice?.user?.company[0]?.logo && invoiceSettings?.invoiceHeadingType ==="COMPANY_LOGO" ) { %>
-                    <img src="<%= invoice?.user?.company[0]?.logo %>" alt="Logo" class="company-logo">
-                  <% } else { %>
-                    <h4 style="width: 80%;"><%= invoice?.user?.company[0]?.name %></h4>
-                  <% } %>
-                </td>
-                <td class="company-details">
-                  Invoice #: <%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %><br />
-                  Created: <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %><br />
-                  Due: <%= new Date(invoice?.due_date)?.toISOString()?.split('T')[0] %>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
+    <div class="receipt-box">
+      <div class="header"><% if (invoice?.user?.company[0]?.logo && invoiceSettings?.invoiceHeadingType ==="COMPANY_LOGO" ) { %>
+        <img src="<%= invoice?.user?.company[0]?.logo %>" alt="Logo" class="logo" style="width: 50px; height: 50px; object-fit: cover;">
+        <% }%>
+        <h2> <%= invoice?.user?.company[0]?.name %></h2>
+        <h3> <%= invoice?.user?.company[0]?.address %></h3>
+        <p><%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
+          invoice?.user?.company[0]?.country?.name %></p>
+        <p> <%= invoice?.user?.company[0]?.zip %></p>
+        <p> <%- invoice?.companyAddress %></p>
+      </div>
 
-        <tr class="information">
-          <td colspan="4">
-            <table>
-              <tr>
-                <td>
-                  <strong>From:</strong><br />
-                  <% if (invoice?.companyAddress==="" ) { %>
-                    <b style="text-transform: capitalize;"><%= invoice?.user?.company[0]?.name %></b><br>
-                    <%= invoice?.user?.company[0]?.address %><br>
-                    <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%= invoice?.user?.company[0]?.country?.name %><br>
-                    <%= invoice?.user?.company[0]?.zip %><br>
-                  <% } else { %>
-                    <%- invoice?.companyAddress %>
-                  <% } %>
-                </td>
-                <td class="text-right">
-                  <strong>Bill To:</strong><br />
-                  <% if (invoice?.customerBillingAddress==="" ) { %>
-                    <b style="text-transform: capitalize;"><%= invoice?.customer?.name %></b><br>
-                    <%= invoice?.customer?.billingAddress?.address %><br>
-                    <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>, <%= invoice?.customer?.billingAddress?.country?.name %><br>
-                    <%= invoice?.customer?.billingAddress?.zip %><br>
-                  <% } else { %>
-                    <%- invoice?.customerBillingAddress %>
-                  <% } %>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
+      <div class="invoice-title">Tax Invoice</div>
 
-        <tr class="heading">
-          <td>Item</td>
-          <td>QTY</td>
-          <td>Tax(%)</td>
-          <td class="text-right">Total</td>
+      <table class="info-table" style="margin-bottom: 15px;">
+        <tr>
+          <td>DATE:  <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %></td>
+          <td class="text-right">KOTBOT: <%= invoice?.payment?.paymentType %></td>
         </tr>
-
-        <% invoice?.product?.forEach(product=> { %>
-          <tr class="item">
-            <td><%= product?.product?.name %></td>
-            <td><%= product?.quantity %></td>
-            <td><%= product?.product?.tax?.percentage %>%</td>
-            <td class="text-right">
-              <%= product?.product?.currency?.symbol %>
-              <%= product?.total %>
-            </td>
-          </tr>
-        <% }) %>
-
-        <!-- CORRECTED TOTALS SECTION -->
-        <tr class="total">
-            <td colspan="3" class="text-right"><strong>Subtotal:</strong></td>
-            <td class="text-right">
-                <%= invoice?.product[0]?.product?.currency?.symbol %>
-                <%= invoice?.sub_total %>
-            </td>
-        </tr>
-        <tr class="total">
-            <td colspan="3" class="text-right"><strong>Tax (<%= invoice?.tax?.percentage ?? 0 %>%)</strong></td>
-            <td class="text-right">
-                <%= invoice?.product[0]?.product?.currency?.symbol %>
-                <%= invoice?.tax ? ((invoice?.tax?.percentage / 100) * invoice?.sub_total).toFixed(2) : "0.00" %>
-            </td>
-        </tr>
-        <tr class="total">
-            <td colspan="3" class="text-right"><strong>Total:</strong></td>
-            <td class="text-right">
-                <%= invoice?.product[0]?.product?.currency?.symbol %>
-                <%= invoice?.total %>
-            </td>
+        <tr>
+          <td>INVOICE NO: #<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%=
+            invoice?.invoice_number %></td>
         </tr>
       </table>
 
-      <div style="margin-top: 50px">
-        <strong>Notes:</strong><br />
-        <%= invoice?.notes ?? "Thank you for your business!" %>
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th class="text-right">Tax(%)</th>
+            <th class="text-right">HSN</th>
+            <th class="text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% invoice?.product?.forEach(product=> { %>
+            <tr class="item">
+              <td >
+                <%= product?.product?.name %>
+              </td>
+              <td>
+                <%= product?.quantity %>
+              </td>
+              <td class="text-right">
+                <%= product?.product?.tax?.percentage %>%
+              </td>
+              <td>
+                <%= product?.product?.hsnCode?.code %>-<%= product?.product?.hsnCode?.tax?.percentage %>%
+              </td>
+              <td class="text-right">
+                <%= product?.product?.currency?.symbol %>
+                  <%= product?.total %>
+              </td>
+            </tr>
+
+            <% }) %>
+        </tbody>
+      </table>
+
+      <table class="totals-table" style="margin-top: 15px;">
+        <tr>
+          <td>Sub Total</td>
+          <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
+            <%= invoice?.sub_total %></td>
+        </tr>
+        <tr>
+          <td>Tax <span class="tm_ternary_color">(<%= invoice?.tax?.percentage ?? 0 %>%)</span></td>
+          <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
+            <%= ((invoice?.tax?.percentage ?? 0 / 100) * invoice?.sub_total).toFixed(2) %></td>
+        </tr>
+        <tr>
+          <td>Tax Discount <span class="tm_ternary_color">(<%=
+            invoice?.discountPercentage %>%)</span></td>
+          <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
+            <%= ((invoice?.discountPercentage ?? 0 / 100) * invoice?.sub_total).toFixed(2) %></td>
+        </tr>
+        <tr class="final-total">
+          <td>Net Bill Amount:</td>
+          <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
+            <%= invoice?.total %>
+        </tr>
+      </table>
+
+      <div class="footer">
+        <p><%= invoice?.notes ?? "Thank you for your business!" %></p>
       </div>
     </div>
   </body>
