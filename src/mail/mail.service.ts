@@ -59,6 +59,10 @@ export class MailService {
       to: email,
       subject: 'Password  Reset',
       html: `Click <a href="${url}">here</a> to reset your password`,
+      sender: {
+        name: 'Grow Global Strategies Pvt Ltd',
+        address: 'no-reply@growinvoice.com',
+      },
     });
   }
 
