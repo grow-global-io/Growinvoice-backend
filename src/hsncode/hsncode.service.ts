@@ -1,6 +1,6 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { Inject, Injectable } from '@nestjs/common';
-import { HSNCodeDto, UpdateHSNCodeDto } from '@shared/models';
+import { HSNCode, HSNCodeDto, UpdateHSNCodeDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import { CreateHSNCodeTaxDto } from './dto/create-hsn-code-tax.dto';
 import { SharedService } from '@/shared/shared.service';
@@ -32,8 +32,11 @@ export class HsncodeService {
   async findAll(user_id: string) {
     const hsncode = await this.prismaService.hSNCode.findMany({
       where: { user_id },
+      include: {
+        tax: true,
+      },
     });
-    return plainToInstance(HSNCodeDto, hsncode);
+    return plainToInstance(HSNCode, hsncode);
   }
 
   async findOne(id: string) {

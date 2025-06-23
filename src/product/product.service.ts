@@ -50,6 +50,11 @@ export class ProductService {
             tax: true,
           },
         },
+        hsnCode: {
+          include: {
+            tax: true,
+          },
+        },
         priceBook: {
           include: {
             currency: true,

@@ -1,5 +1,6 @@
 import {
   CurrenciesDto,
+  HSNCode,
   ProductDto,
   ProductPriceBook,
   ProductUnitDto,
@@ -13,6 +14,9 @@ export class ProductWithAllDataDto extends ProductDto {
 
   @Type(() => CurrenciesDto)
   currency?: CurrenciesDto;
+
+  @Type(() => HSNCode)
+  hsnCode?: HSNCode;
 
   @Type(() => TaxForProduct)
   tax?: TaxForProduct[];
