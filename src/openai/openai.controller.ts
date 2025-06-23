@@ -47,16 +47,16 @@ export class OpenaiController {
     return await this.openaiService.createGraph(createOpenaiDto, user?.sub);
   }
 
-  @Post('chat')
-  async chat(
-    @GetUser() user: User,
-    @Body() chatHistoryDto: RequestBodyOpenaiDto[],
-  ) {
-    return await this.openaiService.getChatWithOpenAI(
-      user?.sub,
-      chatHistoryDto,
-    );
-  }
+  // @Post('chat')
+  // async chat(
+  //   @GetUser() user: User,
+  //   @Body() chatHistoryDto: RequestBodyOpenaiDto[],
+  // ) {
+  //   return await this.openaiService.getChatWithOpenAI(
+  //     user?.sub,
+  //     chatHistoryDto,
+  //   );
+  // }
 
   @Get('dashboardDataGet/:id')
   async dashboardDataGet(@Param('id') id: string) {

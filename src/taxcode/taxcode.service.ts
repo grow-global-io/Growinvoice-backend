@@ -22,6 +22,11 @@ export class TaxcodeService {
   async findAll(user_id: string) {
     const taxcode = await this.prismaService.tax.findMany({
       where: { user_id },
+      include: {
+        hsnCode: {
+          take: 1,
+        },
+      },
     });
     return plainToInstance(TaxDto, taxcode);
   }

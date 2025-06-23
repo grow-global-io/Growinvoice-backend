@@ -11,12 +11,14 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { camelCaseToNormalString, chartData } from '@shared/utils/constants';
 import { DashboardsService } from '@/dashboards/dashboards.service';
+import OpenAI from 'openai';
 
 @Injectable()
 export class OpenaiService {
   private genAI: GoogleGenerativeAI;
   private genAiProModel: GenerativeModel;
   private genAiProJsonModel: GenerativeModel;
+  private openai: OpenAI; // OpenAI client instance
 
   private safetySettings = [
     {
@@ -42,31 +44,34 @@ export class OpenaiService {
     private readonly configService: ConfigService,
     private readonly dashboardService: DashboardsService,
   ) {
-    this.genAI = new GoogleGenerativeAI(
-      this.configService.get('GOOGLE_API_KEY'),
-    );
+    // this.genAI = new GoogleGenerativeAI(
+    //   this.configService.get('GOOGLE_API_KEY'),
+    // );
 
-    this.genAiProModel = this.genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash-lite',
-      generationConfig: {
-        temperature: 0.4,
-        topP: 1,
-        topK: 32,
-        maxOutputTokens: 4096,
-      },
-      safetySettings: this?.safetySettings,
-    });
+    // this.genAiProModel = this.genAI.getGenerativeModel({
+    //   model: 'gemini-2.0-flash-lite',
+    //   generationConfig: {
+    //     temperature: 0.4,
+    //     topP: 1,
+    //     topK: 32,
+    //     maxOutputTokens: 4096,
+    //   },
+    //   safetySettings: this?.safetySettings,
+    // });
 
-    this.genAiProJsonModel = this.genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash-lite',
-      generationConfig: {
-        temperature: 0.4,
-        topP: 1,
-        topK: 32,
-        maxOutputTokens: 4096,
-        responseMimeType: 'application/json',
-      },
-      safetySettings: this?.safetySettings,
+    // this.genAiProJsonModel = this.genAI.getGenerativeModel({
+    //   model: 'gemini-2.0-flash-lite',
+    //   generationConfig: {
+    //     temperature: 0.4,
+    //     topP: 1,
+    //     topK: 32,
+    //     maxOutputTokens: 4096,
+    //     responseMimeType: 'application/json',
+    //   },
+    //   safetySettings: this?.safetySettings,
+    // });
+    this.openai = new OpenAI({
+      apiKey: this.configService.get<string>('OPENAI_API_KEY'),
     });
   }
 
@@ -112,57 +117,68 @@ export class OpenaiService {
     - MAKE SURE TO GIVE USER-FRIENDLY NAMES FOR THE DATA.
 """`;
 
+  // ================== BIGINT & DATE FIX STARTS HERE ==================
+  convertRecursively = (obj: any): any => {
+    if (obj === null || obj === undefined) {
+      return obj;
+    }
+
+    // IMPORTANT: Check for Date objects and return them directly
+    // This must come BEFORE the generic 'object' check.
+    if (obj instanceof Date) {
+      return obj;
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map((item) => this.convertRecursively(item));
+    }
+
+    if (typeof obj === 'object') {
+      const newObj: { [key: string]: any } = {};
+      for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          const value = obj[key];
+          if (typeof value === 'bigint') {
+            newObj[key] = value.toString();
+          } else {
+            // Recurse on the value
+            newObj[key] = this.convertRecursively(value);
+          }
+        }
+      }
+      return newObj;
+    }
+
+    return obj;
+  };
+
   async create(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
-    // ... (your AI and query generation logic remains the same)
-    const chatgpt = this.chatGptDescribe.replaceAll('{{ user_id }}', user_id);
-    const result = await this.genAiProModel.generateContent([
-      chatgpt,
-      createOpenaiDto?.prompt,
-    ]);
-    const response = await result?.response;
-    const text = response?.text();
-    const querySplit = text.split('```sql')[1].split('```')[0];
-    const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
+    const systemPrompt = this.chatGptDescribe.replaceAll(
+      '{{ user_id }}',
+      user_id,
+    );
+    const completion = await this.openai.chat.completions.create({
+      model: 'o4-mini-2025-04-16', // Or 'gpt-3.5-turbo' for a faster, cheaper option
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: createOpenaiDto.prompt },
+      ],
+    });
+    const queryText = completion.choices[0].message.content.trim();
+    // // ... (your AI and query generation logic remains the same)
+    // const chatgpt = this.chatGptDescribe.replaceAll('{{ user_id }}', user_id);
+    // const result = await this.genAiProModel.generateContent([
+    //   chatgpt,
+    //   createOpenaiDto?.prompt,
+    // ]);
+    // const response = await result?.response;
+    const text = queryText;
+    const singleLineQuery = text;
 
     const rawResult: any[] =
       await this.prismaServe.$queryRawUnsafe(singleLineQuery);
 
-    // ================== BIGINT & DATE FIX STARTS HERE ==================
-    const convertRecursively = (obj: any): any => {
-      if (obj === null || obj === undefined) {
-        return obj;
-      }
-
-      // IMPORTANT: Check for Date objects and return them directly
-      // This must come BEFORE the generic 'object' check.
-      if (obj instanceof Date) {
-        return obj;
-      }
-
-      if (Array.isArray(obj)) {
-        return obj.map((item) => convertRecursively(item));
-      }
-
-      if (typeof obj === 'object') {
-        const newObj: { [key: string]: any } = {};
-        for (const key in obj) {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            const value = obj[key];
-            if (typeof value === 'bigint') {
-              newObj[key] = value.toString();
-            } else {
-              // Recurse on the value
-              newObj[key] = convertRecursively(value);
-            }
-          }
-        }
-        return newObj;
-      }
-
-      return obj;
-    };
-
-    const serializableResult = convertRecursively(rawResult);
+    const serializableResult = this.convertRecursively(rawResult);
     // =================== BIGINT & DATE FIX ENDS HERE ===================
 
     return {
@@ -173,27 +189,34 @@ export class OpenaiService {
   }
 
   async createGraph(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
-    const resulta = await this.create(createOpenaiDto, user_id);
-    const query = resulta?.query;
-    const graphGenPrompt = this.chartDataDescribe.replaceAll(
-      '{{ user_request_prompt }}',
-      createOpenaiDto?.prompt,
-    );
-    const graphResulted = graphGenPrompt.replaceAll(
-      '{{ generated_data }}',
-      JSON.stringify(resulta?.result),
-    );
+    const { query, result } = await this.create(createOpenaiDto, user_id);
+    const systemPrompt = this.chartDataDescribe
+      .replaceAll('{{ user_request_prompt }}', createOpenaiDto.prompt)
+      .replaceAll('{{ generated_data }}', JSON.stringify(result));
+    // const graphGenPrompt = this.chartDataDescribe.replaceAll(
+    //   '{{ user_request_prompt }}',
+    //   createOpenaiDto?.prompt,
+    // );
+    // const graphResulted = graphGenPrompt.replaceAll(
+    //   '{{ generated_data }}',
+    //   JSON.stringify(resulta?.result),
+    // );
 
-    const graphResult = await this.genAiProJsonModel.generateContent([
-      graphResulted,
-      createOpenaiDto?.prompt,
-    ]);
-    const graphResponse = await graphResult?.response;
-    const graphText = graphResponse?.text();
-    const graphSplit = graphText?.startsWith('```json')
-      ? graphText.split('```json')[1].split('```')[0]
-      : graphText;
-    const graphData = JSON.parse(graphSplit);
+    const completion = await this.openai.chat.completions.create({
+      model: 'o4-mini-2025-04-16', // Using a powerful model for better JSON structuring
+      messages: [
+        { role: 'system', content: systemPrompt },
+        {
+          role: 'user',
+          content:
+            'Generate the graph JSON for the data provided in the system prompt.',
+        },
+      ],
+      // Use OpenAI's built-in JSON mode for reliable JSON output
+      response_format: { type: 'json_object' },
+    });
+    const graphJsonString = completion.choices[0].message.content;
+    const graphData = JSON.parse(graphJsonString);
     return {
       query,
       prompt: createOpenaiDto?.prompt,
@@ -201,56 +224,56 @@ export class OpenaiService {
     };
   }
 
-  async getChatWithOpenAI(
-    user_id: string,
-    createOpenaiDto: RequestBodyOpenaiDto[],
-  ) {
-    const schema = fs.readFileSync('./prisma/schema.prisma', 'utf8');
-    const messages = `Prisma.js Schema is: ${schema}. i want to do a chat with you for {prompt}. respond if you require any other information frome me. if you need any other information from me then please ask me for that. OR if you want to know about any other thing then please ask me for that. once you get all the information then please RESPOND only with SQL QUERY for POSTGRESQL DB OR respond what you need. i want to create the record only for the user with ID: ${user_id}`;
+  // async getChatWithOpenAI(
+  //   user_id: string,
+  //   createOpenaiDto: RequestBodyOpenaiDto[],
+  // ) {
+  //   const schema = fs.readFileSync('./prisma/schema.prisma', 'utf8');
+  //   const messages = `Prisma.js Schema is: ${schema}. i want to do a chat with you for {prompt}. respond if you require any other information frome me. if you need any other information from me then please ask me for that. OR if you want to know about any other thing then please ask me for that. once you get all the information then please RESPOND only with SQL QUERY for POSTGRESQL DB OR respond what you need. i want to create the record only for the user with ID: ${user_id}`;
 
-    const result = await this.genAiProModel.startChat({
-      history: [
-        {
-          role: 'user',
-          parts: [{ text: 'Hello' }],
-        },
-        {
-          role: 'model',
-          parts: [
-            {
-              text: 'Hello, may I know how can I help you today',
-            },
-          ],
-        },
-        {
-          role: 'user',
-          parts: [
-            { text: messages?.replace('{prompt}', createOpenaiDto[0]?.prompt) },
-          ],
-        },
-      ],
-    });
+  //   const result = await this.genAiProModel.startChat({
+  //     history: [
+  //       {
+  //         role: 'user',
+  //         parts: [{ text: 'Hello' }],
+  //       },
+  //       {
+  //         role: 'model',
+  //         parts: [
+  //           {
+  //             text: 'Hello, may I know how can I help you today',
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         role: 'user',
+  //         parts: [
+  //           { text: messages?.replace('{prompt}', createOpenaiDto[0]?.prompt) },
+  //         ],
+  //       },
+  //     ],
+  //   });
 
-    const msg = `i want to create a product with the following details:
-    name: "Product Name",
-    description: "Product Description",
-    price: 100,
-    user_id: ${user_id},
-    type: Service,
-    currencies: INR,
-    unit: MONDD`;
-    const resulta = await result?.sendMessage(msg);
-    const response = await resulta?.response;
-    const text = response?.text();
-    const checkisSQL = text?.includes('```sql');
-    if (checkisSQL) {
-      const querySplit = text.split('```sql')[1].split('```')[0];
-      const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
-      const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
-      return resulta;
-    }
-    return text;
-  }
+  //   const msg = `i want to create a product with the following details:
+  //   name: "Product Name",
+  //   description: "Product Description",
+  //   price: 100,
+  //   user_id: ${user_id},
+  //   type: Service,
+  //   currencies: INR,
+  //   unit: MONDD`;
+  //   const resulta = await result?.sendMessage(msg);
+  //   const response = await resulta?.response;
+  //   const text = response?.text();
+  //   const checkisSQL = text?.includes('```sql');
+  //   if (checkisSQL) {
+  //     const querySplit = text.split('```sql')[1].split('```')[0];
+  //     const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
+  //     const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
+  //     return resulta;
+  //   }
+  //   return text;
+  // }
 
   async getChatWithOpenAIForDashboard(dashboard_id: string) {
     const dashboardData = await this.dashboardService.findOne(dashboard_id);
@@ -258,7 +281,7 @@ export class OpenaiService {
       dashboardData?.query,
     );
     if (dashboardData?.type === 'Table') {
-      return resulta;
+      return this.convertRecursively(resulta);
     } else {
       const graphGenPrompt = this.chartDataDescribe.replaceAll(
         '{{ user_request_prompt }}',
