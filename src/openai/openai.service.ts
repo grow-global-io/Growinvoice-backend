@@ -71,22 +71,18 @@ export class OpenaiService {
   }
 
   chatGptDescribe = `"""
-    You are an expert SQL Specialist. Convert natural language queries to SQL QUERY  for PostgreSQL, ensuring they only access data related to user with ID {{ user_id }}.
-    Schema (Prisma.js): ${fs.readFileSync('./prisma/schema.prisma', 'utf8')}.
-    Requirements:
-    - Use table names exactly as in the schema (with capital letters).
-    - Use table names in double quotes ("") to avoid case sensitivity issues.
-    - For BigInt or Count, cast results to text (CAST(count(*) AS TEXT)).
-    - Ensure queries are safe, secure, user-specific (only data for user ID {{ user_id }}) and DONOT INCLUDE OTHERS DATA EVEN USER REQUESTED it should be user-specific (only data for user ID {{ user_id }}).
-    - Format date-related queries appropriately.
-    - EVEN USER REQUESTED NOT RELATED TO HIS DATA THEN RESPOND WITH NO DATA.
-    - respond only with SQL query for PostgreSQL DB.
-    - STRICTLY FOLLOW THE ABOVE REQUIREMENTS.
-    - STRICTLY RESPOND ONLY WITH SQL QUERY. DONOT RESPOND WITH ANY OTHER INFORMATION or with text.
-    - ENSURE TO NOT QUERY UNNECESSARY DATA LIKE ID, createdAt, updatedAt, etc.
-    - YOU CAN JOIN TABLES IF REQUIRED.
-    - MAKE SURE TO GIVE USER-FRIENDLY NAMES FOR THE COLUMNS.
-    """"`;
+  You are an expert SQL Specialist. Convert natural language queries to SQL QUERY for PostgreSQL, ensuring they only access data related to user with ID {{ user_id }}.
+  Schema (Prisma.js): ${fs.readFileSync('./prisma/schema.prisma', 'utf8')}.
+  Requirements:
+  - Use table names exactly as in the schema (with capital letters) and enclose them in double quotes ("").
+  - **Crucially, any column that is a BigInt or the result of an aggregation like COUNT must be cast to TEXT. For example, CAST("someBigIntColumn" AS TEXT) or CAST(COUNT(*) AS TEXT). This is a strict requirement to prevent serialization errors.**
+  - Ensure all queries are user-specific (WHERE "userId" = '{{ user_id }}') and secure. Do not include data for other users, even if requested. If a request is not for the user's data, respond with a query that returns no rows, like 'SELECT 1 WHERE false;'.
+  - Format date-related queries appropriately.
+  - DO NOT query for unnecessary columns like id, createdAt, updatedAt unless specifically asked.
+  - You can and should JOIN tables when required to fulfill the user's request.
+  - Use user-friendly column aliases where appropriate (e.g., SELECT "firstName" AS "First Name").
+  - **STRICTLY RESPOND ONLY WITH THE SQL QUERY.** Do not include any other text, explanations, or markdown formatting like \`\`\`sql.
+  """"`;
 
   chartDataDescribe = `"""
     You are an expert JSON Specialist. Convert SQL query results to JSON data format for graphing. Ensure the JSON matches the sample data format.
@@ -117,8 +113,8 @@ export class OpenaiService {
 """`;
 
   async create(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
+    // ... (your AI and query generation logic remains the same)
     const chatgpt = this.chatGptDescribe.replaceAll('{{ user_id }}', user_id);
-
     const result = await this.genAiProModel.generateContent([
       chatgpt,
       createOpenaiDto?.prompt,
@@ -127,10 +123,51 @@ export class OpenaiService {
     const text = response?.text();
     const querySplit = text.split('```sql')[1].split('```')[0];
     const singleLineQuery = querySplit.replace(/\s+/g, ' ').trim();
-    const resulta = await this.prismaServe.$queryRawUnsafe(singleLineQuery);
+
+    const rawResult: any[] =
+      await this.prismaServe.$queryRawUnsafe(singleLineQuery);
+
+    // ================== BIGINT & DATE FIX STARTS HERE ==================
+    const convertRecursively = (obj: any): any => {
+      if (obj === null || obj === undefined) {
+        return obj;
+      }
+
+      // IMPORTANT: Check for Date objects and return them directly
+      // This must come BEFORE the generic 'object' check.
+      if (obj instanceof Date) {
+        return obj;
+      }
+
+      if (Array.isArray(obj)) {
+        return obj.map((item) => convertRecursively(item));
+      }
+
+      if (typeof obj === 'object') {
+        const newObj: { [key: string]: any } = {};
+        for (const key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            const value = obj[key];
+            if (typeof value === 'bigint') {
+              newObj[key] = value.toString();
+            } else {
+              // Recurse on the value
+              newObj[key] = convertRecursively(value);
+            }
+          }
+        }
+        return newObj;
+      }
+
+      return obj;
+    };
+
+    const serializableResult = convertRecursively(rawResult);
+    // =================== BIGINT & DATE FIX ENDS HERE ===================
+
     return {
       query: singleLineQuery,
-      result: resulta,
+      result: serializableResult, // This will now work correctly
       prompt: createOpenaiDto?.prompt,
     };
   }
