@@ -21,6 +21,7 @@ import { PlansService } from '@/plans/plans.service';
 import { ConfigService } from '@nestjs/config';
 import { UserplansService } from '@/userplans/userplans.service';
 import axios from 'axios';
+import { MailService } from '@/mail/mail.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Razorpay = require('razorpay');
@@ -36,6 +37,7 @@ export class PaymentsService {
     private planService: PlansService,
     private configService: ConfigService,
     private userplansService: UserplansService,
+    private readonly mailService: MailService,
   ) {}
 
   async create(createPaymentDto: CreatePaymentsDto) {
@@ -244,6 +246,21 @@ export class PaymentsService {
     if (!plan) {
       throw new BadRequestException('Plan not found');
     }
+    const user = await this.prisma.user.findFirst({
+      where: { id: user_id },
+      include: {
+        UserPlans: {
+          include: {
+            plan: true,
+          },
+        },
+      },
+    });
+
+    if (plan.isOneTime && user?.UserPlans?.find((p) => p.plan.isOneTime)) {
+      throw new BadRequestException('Already purchased a one-time plan');
+    }
+
     const growlimitlessKey = this.configService.get<string>(
       'GROWLIMITLESS_API_KEY',
     );
@@ -330,6 +347,11 @@ export class PaymentsService {
     if (plan.price === 0 && !session_id) {
       const end_date = new Date();
       end_date.setDate(end_date.getDate() + plan.days);
+      const user = await this.prisma.user.findFirst({
+        where: {
+          id: user_id,
+        },
+      });
       await this.userplansService.create({
         end_date: end_date,
         plan_id,
@@ -342,6 +364,28 @@ export class PaymentsService {
         user_id,
         title: 'Payment Success',
         body: 'Payment for plan ' + plan.name + ' is successful',
+      });
+      await this.mailService.sendMail({
+        email: user.email,
+        subject: 'Payment Success',
+        // body: `Payment for plan ${plan.name} is successful. Your plan will be active for ${plan.days} days. Thank you for choosing our service!`,
+        body: `
+          <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <h2>Payment Success</h2>
+            <p>Dear ${user.name},</p>
+            <p>
+              We are pleased to inform you that your payment for the plan <strong>${plan.name}</strong> has been successfully processed.
+            </p>
+            <p>
+              Your plan will be active for <strong>${plan.days} days</strong>.
+            </p>
+            <p>
+              Thank you for choosing our service!
+            </p>
+            <p>Best regards,</p>
+            <p>Grow Global Strategies Pvt Ltd</p>
+          </div>
+        `,
       });
       // redirect to success page
       return true;

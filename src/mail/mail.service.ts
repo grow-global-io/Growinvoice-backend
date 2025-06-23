@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { SendMailDto } from './dto/send-mail.dto';
-import { User } from '@shared/decorators/user.decorator';
 import { PrismaService } from '@/prisma/prisma.service';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 

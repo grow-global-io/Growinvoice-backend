@@ -1181,6 +1181,9 @@ model Plans {
   name         String
   description  String
   is_active    Boolean
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  isOneTime    Boolean        @default(false)
   price        Float
   days         Int
   /// @DtoApiHidden

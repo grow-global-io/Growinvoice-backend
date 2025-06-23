@@ -35,6 +35,10 @@ export class Plans {
   })
   is_active: boolean;
   @ApiProperty({
+    type: 'boolean',
+  })
+  isOneTime: boolean;
+  @ApiProperty({
     type: 'number',
     format: 'float',
   })

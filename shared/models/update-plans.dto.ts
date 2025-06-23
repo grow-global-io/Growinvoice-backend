@@ -30,6 +30,14 @@ export class UpdatePlansDto {
   @IsBoolean()
   is_active?: boolean;
   @ApiProperty({
+    type: 'boolean',
+    default: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isOneTime?: boolean;
+  @ApiProperty({
     type: 'number',
     format: 'float',
     required: false,

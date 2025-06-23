@@ -563,6 +563,7 @@ model Plans extends Base {
     name         String
     description  String
     is_active    Boolean
+    isOneTime    Boolean        @default(false) @DtoCreateOptional @DtoUpdateOptional
     price        Float
     days         Int
     PlanFeatures PlanFeatures[] @DtoApiHidden

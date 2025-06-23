@@ -4,6 +4,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 
@@ -26,6 +27,13 @@ export class CreatePlansDto {
   @IsNotEmpty()
   @IsBoolean()
   is_active: boolean;
+  @ApiProperty({
+    type: 'boolean',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isOneTime?: boolean;
   @ApiProperty({
     type: 'number',
     format: 'float',
