@@ -47,7 +47,7 @@ export class OpenaiService {
     );
 
     this.genAiProModel = this.genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash-preview-05-20',
+      model: 'gemini-2.0-flash-lite',
       generationConfig: {
         temperature: 0.4,
         topP: 1,
@@ -58,7 +58,7 @@ export class OpenaiService {
     });
 
     this.genAiProJsonModel = this.genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash-preview-05-20',
+      model: 'gemini-2.0-flash-lite',
       generationConfig: {
         temperature: 0.4,
         topP: 1,
@@ -85,6 +85,7 @@ export class OpenaiService {
     - STRICTLY RESPOND ONLY WITH SQL QUERY. DONOT RESPOND WITH ANY OTHER INFORMATION or with text.
     - ENSURE TO NOT QUERY UNNECESSARY DATA LIKE ID, createdAt, updatedAt, etc.
     - YOU CAN JOIN TABLES IF REQUIRED.
+    - MAKE SURE TO GIVE USER-FRIENDLY NAMES FOR THE COLUMNS.
     """"`;
 
   chartDataDescribe = `"""
@@ -112,6 +113,7 @@ export class OpenaiService {
     Ensure the JSON matches the corresponding sample data and is generated from the query result: {{ generated_data }}. If no data is available, generate an empty graph JSON format. if data is available only for a few, but the user requested more data, respond with "no data" or 0.
     
     Make sure every detail is related to the user request: {{ user_request_prompt }}. Respond only with the JSON data format for the graph.
+    - MAKE SURE TO GIVE USER-FRIENDLY NAMES FOR THE DATA.
 """`;
 
   async create(createOpenaiDto: RequestBodyOpenaiDto, user_id: string) {
