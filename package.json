@@ -19,8 +19,7 @@
     "start:prod": "yarn run make:migration:dev && yarn run build && pm2 start dist/src/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "generate": "rimraf shared/models && zenstack generate --schema zmodel/schema.zmodel",
-    "make:migration": "node make-migration.js",
-    "make:migration:dev": "zenstack format && yarn run generate && yarn run migrate",
+    "make:migration": "zenstack format && yarn run generate && yarn run migrate",
     "migrate": "prisma format && npx prisma generate && prisma migrate dev",
     "seed": "ts-node prisma/seeder/seeder.ts"
   },

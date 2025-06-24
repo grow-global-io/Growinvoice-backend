@@ -272,7 +272,7 @@ export class PaymentsService {
         line_items: [
           {
             price_data: {
-              currency: 'USD',
+              currency: 'INR',
               product_data: {
                 name: `Payment for the plan - ${plan?.name}`,
                 description: 'Payment for the plan - ' + plan?.name,
