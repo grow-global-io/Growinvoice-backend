@@ -40,5 +40,9 @@ jobs:
       # Verify that the .env file was created (remove or modify for security)
       - name: Verify .env file
         run: cat .env
+      - name: Run pm2 stop
+        run: pm2 stop all
+      - name: Run pm2 delete
+        run: pm2 delete all
       - name: Run pm2 start
         run: yarn run start:prod
