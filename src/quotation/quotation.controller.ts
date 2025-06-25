@@ -185,7 +185,7 @@ export class QuotationController {
     const quotationSettings =
       await this.quotationService?.quotationSettingsWithFormat(quotation);
     return res.render(
-      'quotation/' + quotation?.template?.view ?? 'template1',
+      'quotation/' + (quotation?.template?.view ?? 'template1'),
       quotationSettings,
     );
   }

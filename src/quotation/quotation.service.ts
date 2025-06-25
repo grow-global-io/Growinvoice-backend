@@ -443,6 +443,9 @@ export class QuotationService {
                 },
                 { percentage: 0 },
               ),
+              currency: {
+                ...currency,
+              },
             },
             currency: {
               ...currency,
