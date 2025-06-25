@@ -50,6 +50,11 @@ export class Customer {
   })
   website: string | null;
   @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  gstIn: string | null;
+  @ApiProperty({
     enum: CustomerOption,
   })
   option: CustomerOption;

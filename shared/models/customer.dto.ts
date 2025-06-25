@@ -44,6 +44,11 @@ export class CustomerDto {
   })
   website: string | null;
   @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  gstIn: string | null;
+  @ApiProperty({
     enum: CustomerOption,
   })
   option: CustomerOption;

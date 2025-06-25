@@ -22,6 +22,7 @@ export class CustomerService {
       data: {
         name: customerDetails.name,
         option: customerDetails?.option,
+        gstIn: customerDetails.gstIn,
         billingAddress: {
           create: billingDetails,
         },
@@ -106,6 +107,7 @@ export class CustomerService {
       data: {
         name: customerDetails.name,
         option: customerDetails?.option,
+        gstIn: customerDetails.gstIn,
         billingAddress: {
           update: billingDetails,
         },

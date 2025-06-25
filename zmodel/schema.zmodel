@@ -294,6 +294,7 @@ model Customer extends Base {
     email              String
     phone              String?
     website            String?
+    gstIn              String?         @DtoCreateOptional @DtoUpdateOptional
     option             CustomerOption
     currencies_id      String          @DtoRelationIncludeId
     currencies         Currencies      @relation(fields: [currencies_id], references: [id])

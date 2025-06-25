@@ -38,6 +38,14 @@ export class CreateCustomerDto {
   @IsString()
   website?: string | null;
   @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  gstIn?: string | null;
+  @ApiProperty({
     enum: CustomerOption,
   })
   @IsNotEmpty()

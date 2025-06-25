@@ -565,6 +565,9 @@ model Customer {
   email              String
   phone              String?
   website            String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  gstIn              String?
   option             CustomerOption
   /// @DtoRelationIncludeId
   currencies_id      String
