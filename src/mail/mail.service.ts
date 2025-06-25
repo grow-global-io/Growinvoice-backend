@@ -4,16 +4,21 @@ import * as nodemailer from 'nodemailer';
 import { SendMailDto } from './dto/send-mail.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import axios from 'axios';
 
 @Injectable()
 export class MailService {
-  private transporter: nodemailer.Transporter<
+  private readonly transporter: nodemailer.Transporter<
     SMTPTransport.SentMessageInfo,
     SMTPTransport.Options
   >;
 
+  private readonly url: string = 'https://api.zeptomail.eu/v1.1/email/template';
+  private readonly zeptoMailApiKey: string;
+  private readonly zeptoMailSender: string = 'no-reply@growinvoice.com';
+
   constructor(
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
     private readonly prismaService: PrismaService,
   ) {
     this.transporter = nodemailer.createTransport({
@@ -24,36 +29,11 @@ export class MailService {
         pass: this.configService.get<string>('SMTP_PASS'),
       },
     });
+    this.zeptoMailApiKey = this.configService.get<string>('ZEPTO_MAIL_API_KEY');
   }
 
   async sendEmail(email: string, token: string) {
     const url = `${this.configService.get<string>('FRONTEND_URL')}/reset-password?token=${token}`;
-    // const options = {
-    //   method: 'POST',
-    //   headers: {
-    //     accept: 'application/json',
-    //     'content-type': 'application/json',
-    //     'api-key': this.configService.get<string>('BREVO_API_KEY'),
-    //   },
-    //   body: JSON.stringify({
-    //     sender: {
-    //       name: 'Grow Global Strategies Pvt Ltd',
-    //       email: 'operations@growglobal.io',
-    //     },
-    //     to: [
-    //       {
-    //         email: email,
-    //         name: email,
-    //       },
-    //     ],
-    //     subject: 'Password Reset',
-    //     htmlContent: `Click <a href="${url}">here</a> to reset your password`,
-    //   }),
-    // };
-    // const response = await fetch(
-    //   'https://api.brevo.com/v3/smtp/email',
-    //   options,
-    // );
     await this.transporter.sendMail({
       to: email,
       subject: 'Password  Reset',
@@ -85,33 +65,6 @@ export class MailService {
     if (companyName) {
       companyNameString = companyName;
     }
-    // const options = {
-    //   method: 'POST',
-    //   headers: {
-    //     accept: 'application/json',
-    //     'content-type': 'application/json',
-    //     'api-key': this.configService.get<string>('BREVO_API_KEY'),
-    //   },
-    //   body: JSON.stringify({
-    //     sender: {
-    //       name: companyNameString ?? 'Grow Global Strategies Pvt Ltd',
-    //       email: 'operations@growglobal.io',
-    //     },
-    //     to: [
-    //       {
-    //         email: sendMailDto?.email,
-    //         name: sendMailDto?.email,
-    //       },
-    //     ],
-    //     subject: sendMailDto.subject,
-    //     htmlContent: sendMailDto.body,
-    //   }),
-    // };
-
-    // const response = await fetch(
-    //   'https://api.brevo.com/v3/smtp/email',
-    //   options,
-    // );
 
     await this.transporter.sendMail({
       to: sendMailDto.email,
@@ -122,5 +75,48 @@ export class MailService {
         address: 'no-reply@growinvoice.com',
       },
     });
+  }
+
+  async sendWelcomeMail(email: string, name: string) {
+    try {
+      const mail = await axios.post(
+        this.url,
+        {
+          template_key:
+            '13ef.32ea17bec9bd91a9.k1.911711c0-50bb-11f0-a3d5-66e0c45c7bae.197a06584dc',
+          from: {
+            address: this.zeptoMailSender,
+            name: 'Growinvoice',
+          },
+          to: [
+            {
+              email_address: {
+                address: email,
+                name: `${name}`,
+              },
+            },
+          ],
+          merge_info: {
+            name: `${name}`,
+            product_name: 'GrowInvoice',
+            login_url_text: `Click Here`,
+            login_url_link: `${this.configService.get<string>('FRONTEND_URL')}/login`,
+            email: email,
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: this.zeptoMailApiKey,
+            Accept: 'application/json',
+          },
+        },
+      );
+
+      return mail.data;
+    } catch (error) {
+      console.error('Error sending welcome mail:', error?.error?.response);
+      throw new Error('Failed to send welcome mail');
+    }
   }
 }

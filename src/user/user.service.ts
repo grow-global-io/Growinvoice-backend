@@ -66,6 +66,7 @@ export class UserService {
     await this.validateCreateUserDto(data);
     await this.checkIfUserExists(data.email);
     const hashedPassword = await bcrypt.hash(data.password, 12);
+    await this.mailService.sendWelcomeMail(data.email, data.name);
     const result = await this.prismaService.user.create({
       data: {
         email: data.email,
