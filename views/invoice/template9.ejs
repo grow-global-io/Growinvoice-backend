@@ -5,19 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Receipt</title>
     <style>
+      /* print style to portait */
+      @media print {
+        @page {
+          size: auto;
+          margin: 0;
+        }
+        body {
+          margin: 0;
+          padding: 0;
+          font-size: 12px;
+        }
+        #html_content {
+          width: 100%;
+          height: 100%;
+        }
+        .receipt-box {
+          width: 100%;
+          max-width: 100%;
+          margin: 0;
+          padding: 0;
+          border: none;
+          box-shadow: none;
+        }
+        .receipt-box .header {
+          margin-bottom: 10px;
+        }
+        .receipt-box .header .logo {
+          width: 50px;
+          height: 50px;
+          line-height: 50px;
+          font-size: 40px;
+        }
+        .receipt-box .header h2 {
+          font-size: 18px;
+        }
+        .receipt-box .header h3 {
+          font-size: 16px;
+        }
+        .receipt-box .header p {
+          font-size: 12px;
+        }
+        .receipt-box .invoice-title {
+          font-size: 16px;
+          margin-bottom: 10px;
+        }
+        .receipt-box table {
+          width: 100%;
+          font-size: 12px;
+        }
+        .receipt-box table td {
+          padding: 2px;
+        }
+        .receipt-box .items-table th {
+          font-size: 12px;
+        }
+        .receipt-box .items-table td {
+          font-size: 12px;
+          padding: 4px 2px;
+        }
+        .receipt-box .totals-table td {
+          font-size: 12px;
+          padding: 2px 2px;
+        }
+        .receipt-box .totals-table tr.final-total td {
+          font-size: 14px;
+          padding: 4px 2px;
+        }
+        .receipt-box .footer {
+          font-size: 12px;
+          margin-top: 10px;
+        }
+        /* print layout = portrait */
+        @page {
+          size: portrait;
+        }
+      }
       body {
         font-family: 'Courier New', Courier, monospace;
         color: #000;
         background: #fff;
         line-height: 1.5em;
+        margin: 0;
+        padding: 0;
       }
       .receipt-box {
-        max-width: auto;
+        /* MODIFICATION: Set a max-width suitable for 80mm thermal printers */
+        max-width: 300px;
         margin: auto;
-        padding: 20px;
+        /* MODIFICATION: Adjust padding and font size for the smaller format */
+        padding: 10px;
         border: 1px solid #ccc;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
-        font-size: 14px;
+        font-size: 12px;
       }
       .header {
         text-align: center;
@@ -77,8 +157,9 @@
         text-align: left;
         padding: 5px;
       }
+      /* MODIFICATION: Remove default border from item rows */
       .items-table td {
-        border-bottom: 1px dashed #ccc;
+        border-bottom: none;
         padding: 8px 5px;
       }
       .items-table .item.last td {
@@ -118,49 +199,37 @@
 
       <div class="invoice-title">Tax Invoice</div>
 
-      <table class="info-table" style="margin-bottom: 15px;">
-        <tr>
-          <td>DATE:  <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %></td>
-          <td class="text-right">KOTBOT: <%= invoice?.payment?.paymentType %></td>
-        </tr>
-        <tr>
-          <td>INVOICE NO: #<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%=
-            invoice?.invoice_number %></td>
-        </tr>
+      <!-- MODIFICATION: Information is now stacked vertically to prevent overflow -->
+      <table class="info-table" style="margin-bottom: 15px;" aria-hidden="true">
+        <tr><td>DATE: <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %></td></tr>
+        <tr><td>INVOICE NO: #<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %></td></tr>
+        <tr><td>Payment Type: <%= invoice?.payment?.paymentType %></td></tr>
       </table>
 
+      <!-- MODIFICATION: Items table is restructured for narrow receipts -->
       <table class="items-table">
         <thead>
           <tr>
             <th>Item</th>
-            <th>Qty</th>
-            <th class="text-right">Tax(%)</th>
-            <th class="text-right">HSN</th>
             <th class="text-right">Amount</th>
           </tr>
         </thead>
         <tbody>
           <% invoice?.product?.forEach(product=> { %>
             <tr class="item">
-              <td >
+              <td style="padding-bottom: 2px;">
                 <%= product?.product?.name %>
               </td>
-              <td>
-                <%= product?.quantity %>
-              </td>
-              <td class="text-right">
-                <%= product?.product?.tax?.percentage %>%
-              </td>
-              <td>
-                <%= product?.product?.hsnCode?.code %>-<%= product?.product?.hsnCode?.tax?.percentage %>%
-              </td>
-              <td class="text-right">
-                <%= product?.product?.currency?.symbol %>
-                  <%= product?.total %>
+              <td class="text-right" style="padding-bottom: 2px;">
+                <%= product?.product?.currency?.symbol %> <%= product?.total %>
               </td>
             </tr>
-
-            <% }) %>
+            <tr class="item-details">
+              <td colspan="2" style="padding-top: 0; font-size: 11px; border-bottom: 1px dashed #ccc;">
+                Qty: <%= product?.quantity %> | HSN: <%= product?.product?.hsnCode?.code %> | Tax: <%= product?.product?.tax?.percentage %>%
+              </td>
+            </tr>
+          <% }) %>
         </tbody>
       </table>
 

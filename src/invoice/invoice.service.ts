@@ -231,6 +231,9 @@ export class InvoiceService {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
     return plainToInstance(InvoiceWithAllDataDto, invoices);
   }
