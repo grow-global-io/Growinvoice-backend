@@ -5,6 +5,7 @@ import { SendMailDto } from './dto/send-mail.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import axios from 'axios';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class MailService {
@@ -34,15 +35,47 @@ export class MailService {
 
   async sendEmail(email: string, token: string) {
     const url = `${this.configService.get<string>('FRONTEND_URL')}/reset-password?token=${token}`;
-    await this.transporter.sendMail({
-      to: email,
-      subject: 'Password  Reset',
-      html: `Click <a href="${url}">here</a> to reset your password`,
-      sender: {
-        name: 'Grow Global Strategies Pvt Ltd',
-        address: 'no-reply@growinvoice.com',
+    const cutHttps = url.replace('https://', '');
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email,
       },
     });
+
+    const mail = await axios.post(
+      this.url,
+      {
+        template_key:
+          '13ef.32ea17bec9bd91a9.k1.9ec0ff80-50b0-11f0-a3d5-66e0c45c7bae.197a01dc778',
+        from: {
+          address: this.zeptoMailSender,
+          name: 'Growinvoice',
+        },
+        to: [
+          {
+            email_address: {
+              address: email,
+              name: `${user?.name}`,
+            },
+          },
+        ],
+        merge_info: {
+          'product name': `GrowInvoice`,
+          product_name: 'GrowInvoice',
+          link: cutHttps,
+          data_time: moment().add(10, 'minutes').format('DD/MM/YYYY HH:mm'),
+        },
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: this.zeptoMailApiKey,
+          Accept: 'application/json',
+        },
+      },
+    );
+
+    return mail.data;
   }
 
   async sendMail(
