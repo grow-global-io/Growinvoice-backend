@@ -138,8 +138,10 @@ export class StoreService {
     const existingCustomer = await this.prismaService.customer.findFirst({
       where: {
         email: body.email,
+        user_id: body.user_id,
       },
     });
+    console.log('Existing Customer:', existingCustomer);
 
     const customer = await this.prismaService.customer.upsert({
       where: {
