@@ -246,7 +246,7 @@ export class StoreService {
         user_id: body.user_id,
         customer_id: customer.id,
         currency_id: currencyDetails.id,
-        invoice_number: `INV-${Date.now()}`,
+        invoice_number: `${Date.now()}`,
         date: new Date(),
         due_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
         due_amount: body.products.reduce(
