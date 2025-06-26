@@ -37,5 +37,13 @@ export class CreateUserDto {
   })
   @IsOptional()
   @IsString()
+  storeName?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
   currency_id?: string | null;
 }

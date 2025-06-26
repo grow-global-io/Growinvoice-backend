@@ -63,6 +63,11 @@ export class User {
     type: 'string',
     nullable: true,
   })
+  storeName: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
   resetToken: string | null;
   @ApiProperty({
     type: 'string',

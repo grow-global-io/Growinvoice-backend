@@ -128,6 +128,7 @@ model User extends Base {
     name              String?
     phone             String?
     password          String
+    storeName         String?             @DtoCreateOptional @DtoUpdateOptional
     resetToken        String?             @DtoCreateHidden @DtoUpdateHidden
     resetTokenExpiry  DateTime?           @DtoCreateHidden @DtoUpdateHidden
     currency_id       String?             @DtoRelationIncludeId

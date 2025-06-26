@@ -192,6 +192,9 @@ model User {
   name              String?
   phone             String?
   password          String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  storeName         String?
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
   resetToken        String?
