@@ -2,11 +2,15 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { UserWithProducts } from './dto/user-with-products.dto';
-import { CheckoutInvoiceCreateDto } from './dto/checkout-invoice.dto';
+import {
+  CheckoutInvoiceCreateDto,
+  CreateStoreDto,
+} from './dto/checkout-invoice.dto';
 import { InvoiceDto } from '@shared/models';
 import { MailService } from '@/mail/mail.service';
 import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@prisma/client';
+import { User } from '@shared/decorators/user.decorator';
 
 @Injectable()
 export class StoreService {
@@ -17,8 +21,8 @@ export class StoreService {
   ) {}
 
   async getStore(userId: string, currency: string): Promise<UserWithProducts> {
-    const user = await this.prismaService.user.findUnique({
-      where: { id: userId },
+    const user = await this.prismaService.user.findFirst({
+      where: { storeName: userId },
       include: {
         product: {
           where: {
@@ -124,6 +128,7 @@ export class StoreService {
 
     return users
       ?.filter((user) => user.product.length > 0) // Filter out users with no products
+      ?.filter((user) => user?.storeName)
       .map((user) => plainToInstance(UserWithProducts, user));
   }
 
@@ -131,6 +136,10 @@ export class StoreService {
     const currencyDetails = await this.prismaService.currencies.findFirst({
       where: { short_code: body.currency },
     });
+    const user = await this.prismaService.user.findFirst({
+      where: { storeName: body.user_id },
+    });
+    body.user_id = user?.id;
     if (!currencyDetails) {
       throw new BadRequestException('Currency not found');
     }
@@ -315,5 +324,22 @@ export class StoreService {
     });
 
     return plainToInstance(InvoiceDto, invoice);
+  }
+
+  async createUpdateStore(body: CreateStoreDto, user: User) {
+    const userStore = await this.prismaService.user.findFirst({
+      where: {
+        storeName: body.storeName,
+      },
+    });
+    if (userStore) {
+      throw new BadRequestException('Store name already exists');
+    }
+    return await this.prismaService.user.update({
+      where: { id: user?.sub },
+      data: {
+        storeName: body.storeName,
+      },
+    });
   }
 }

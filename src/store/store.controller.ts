@@ -3,13 +3,26 @@ import { StoreService } from './store.service';
 import { ApiExtraModels, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { UserWithProducts } from './dto/user-with-products.dto';
 import { IsPublic } from '@shared/decorators/public.decorator';
-import { CheckoutInvoiceCreateDto } from './dto/checkout-invoice.dto';
+import {
+  CheckoutInvoiceCreateDto,
+  CreateStoreDto,
+} from './dto/checkout-invoice.dto';
+import { GetUser, User } from '@shared/decorators/user.decorator';
 
 @Controller('store')
 @ApiTags('Store')
 @ApiExtraModels(UserWithProducts)
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
+
+  @Post('create-update-store')
+  async createUpdateStore(@Body() body: CreateStoreDto, @GetUser() user: User) {
+    const data = await this.storeService.createUpdateStore(body, user);
+    return {
+      message: 'Store created successfully',
+      result: data,
+    };
+  }
 
   @IsPublic()
   @Post('checkout')

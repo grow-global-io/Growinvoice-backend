@@ -124,3 +124,7 @@ export class CheckoutInvoiceCreateDto {
   @IsNotEmpty()
   currency: string;
 }
+
+export class CreateStoreDto {
+  storeName: string;
+}
