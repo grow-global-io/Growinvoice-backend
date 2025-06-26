@@ -139,7 +139,6 @@ export class StoreService {
     const user = await this.prismaService.user.findFirst({
       where: { storeName: body.user_id },
     });
-    body.user_id = user?.id;
     if (!currencyDetails) {
       throw new BadRequestException('Currency not found');
     }
@@ -147,10 +146,9 @@ export class StoreService {
     const existingCustomer = await this.prismaService.customer.findFirst({
       where: {
         email: body.email,
-        user_id: body.user_id,
+        user_id: user?.id,
       },
     });
-    console.log('Existing Customer:', existingCustomer);
 
     const customer = await this.prismaService.customer.upsert({
       where: {
@@ -188,7 +186,7 @@ export class StoreService {
         },
         user: {
           connect: {
-            id: body.user_id,
+            id: user?.id,
           },
         },
       },
@@ -224,7 +222,7 @@ export class StoreService {
         },
         user: {
           connect: {
-            id: body.user_id,
+            id: user?.id,
           },
         },
       },
@@ -236,7 +234,7 @@ export class StoreService {
     const template = await this.prismaService.invoiceTemplate.findFirst();
     const payment = await this.prismaService.paymentDetails.findFirst({
       where: {
-        user_id: body.user_id,
+        user_id: user?.id,
         OR: [
           {
             paymentType: 'UPI',
@@ -252,7 +250,7 @@ export class StoreService {
 
     const invoice = await this.prismaService.invoice.create({
       data: {
-        user_id: body.user_id,
+        user_id: user.id,
         customer_id: customer.id,
         currency_id: currencyDetails.id,
         invoice_number: `${Date.now()}`,
