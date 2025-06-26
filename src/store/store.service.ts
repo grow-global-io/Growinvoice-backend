@@ -147,83 +147,85 @@ export class StoreService {
       },
     });
 
-    const customer = await this.prismaService.customer.upsert({
-      where: {
-        id: existingCustomer ? existingCustomer.id : undefined,
-      },
-      create: {
-        name: body.name,
-        option: 'Freelancer',
-        gstIn: '',
-        billingAddress: {
-          create: {
-            address: body.shippingDetails.address,
-            city: body.shippingDetails.city,
-            country_id: body.shippingDetails.country_id,
-            state_id: body.shippingDetails.state_id,
-            zip: body.shippingDetails.zip,
+    let customer;
+    if (existingCustomer) {
+      customer = await this.prismaService.customer.update({
+        where: { id: existingCustomer.id },
+        data: {
+          name: body.name,
+          option: 'Freelancer',
+          billingAddress: {
+            update: {
+              address: body.shippingDetails.address,
+              city: body.shippingDetails.city,
+              country_id: body.shippingDetails.country_id,
+              state_id: body.shippingDetails.state_id,
+              zip: body.shippingDetails.zip,
+            },
+          },
+          shippingAddress: {
+            update: {
+              address: body.shippingDetails.address,
+              city: body.shippingDetails.city,
+              country_id: body.shippingDetails.country_id,
+              state_id: body.shippingDetails.state_id,
+              zip: body.shippingDetails.zip,
+            },
+          },
+          display_name: body.name,
+          email: body.email,
+          phone: body.phone,
+          currencies: {
+            connect: {
+              id: currencyDetails.id,
+            },
+          },
+          user: {
+            connect: {
+              id: body.user_id,
+            },
           },
         },
-        shippingAddress: {
-          create: {
-            address: body.shippingDetails.address,
-            city: body.shippingDetails.city,
-            country_id: body.shippingDetails.country_id,
-            state_id: body.shippingDetails.state_id,
-            zip: body.shippingDetails.zip,
+      });
+    } else {
+      customer = await this.prismaService.customer.create({
+        data: {
+          name: body.name,
+          option: 'Freelancer',
+          billingAddress: {
+            create: {
+              address: body.shippingDetails.address,
+              city: body.shippingDetails.city,
+              country_id: body.shippingDetails.country_id,
+              state_id: body.shippingDetails.state_id,
+              zip: body.shippingDetails.zip,
+            },
+          },
+          shippingAddress: {
+            create: {
+              address: body.shippingDetails.address,
+              city: body.shippingDetails.city,
+              country_id: body.shippingDetails.country_id,
+              state_id: body.shippingDetails.state_id,
+              zip: body.shippingDetails.zip,
+            },
+          },
+          display_name: body.name,
+          email: body.email,
+          phone: body.phone,
+          currencies: {
+            connect: {
+              id: currencyDetails.id,
+            },
+          },
+          user: {
+            connect: {
+              id: body.user_id,
+            },
           },
         },
-        display_name: body.name,
-        email: body.email,
-        phone: body.phone,
-        currencies: {
-          connect: {
-            id: currencyDetails.id,
-          },
-        },
-        user: {
-          connect: {
-            id: body.user_id,
-          },
-        },
-      },
-      update: {
-        name: body.name,
-        option: 'Freelancer',
-        gstIn: '',
-        billingAddress: {
-          update: {
-            address: body.shippingDetails.address,
-            city: body.shippingDetails.city,
-            country_id: body.shippingDetails.country_id,
-            state_id: body.shippingDetails.state_id,
-            zip: body.shippingDetails.zip,
-          },
-        },
-        shippingAddress: {
-          update: {
-            address: body.shippingDetails.address,
-            city: body.shippingDetails.city,
-            country_id: body.shippingDetails.country_id,
-            state_id: body.shippingDetails.state_id,
-            zip: body.shippingDetails.zip,
-          },
-        },
-        display_name: body.name,
-        email: body.email,
-        phone: body.phone,
-        currencies: {
-          connect: {
-            id: currencyDetails.id,
-          },
-        },
-        user: {
-          connect: {
-            id: body.user_id,
-          },
-        },
-      },
-    });
+      });
+    }
 
     if (!customer) {
       throw new BadRequestException('Customer creation failed');
