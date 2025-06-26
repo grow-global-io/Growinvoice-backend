@@ -48,25 +48,6 @@ export class InvoiceService {
         ...invoiceData,
         invoice_number: createInvoiceDto.invoice_number,
         tax_id: createInvoiceDto.tax_id ? createInvoiceDto.tax_id : null,
-        // product: {
-        //   createMany: {
-        //     data: createInvoiceDto.product.map((product) => {
-        //       return {
-        //         product_id: product.product_id,
-        //         quantity: product.quantity,
-        //         hsnCode_id: product.hsnCode_id,
-        //         price: product.price,
-        //         total: product.total,
-        //         tax_forInvoiceProducts: {
-        //           createMany: {
-        //             data:
-        //               product.taxes?.map((taxId) => ({ tax_id: taxId })) || [],
-        //           },
-        //         },
-        //       };
-        //     }),
-        //   },
-        // },
       },
     });
     await Promise.all(

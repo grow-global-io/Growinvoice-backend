@@ -33,4 +33,27 @@ export class UploadController {
     const link = await this.uploadService.uploadFile(file);
     return link;
   }
+
+  @IsPublic()
+  @Post('multiple')
+  @UseInterceptors(FileInterceptor('files'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  async uploadMultipleFiles(@UploadedFile() files: Express.Multer.File[]) {
+    const links = await this.uploadService.uploadMultipleFiles(files);
+    return links;
+  }
 }

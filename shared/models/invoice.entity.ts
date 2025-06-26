@@ -30,6 +30,10 @@ export class Invoice {
   })
   id: string;
   @ApiProperty({
+    type: 'boolean',
+  })
+  fromStore: boolean;
+  @ApiProperty({
     type: 'string',
   })
   customer_id: string;

@@ -1,7 +1,6 @@
-import { ProductType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ProductDto {
+export class CouponsDto {
   @ApiProperty({
     type: 'string',
     format: 'date-time',
@@ -23,35 +22,27 @@ export class ProductDto {
   id: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
   })
-  image: string | null;
+  code: string;
   @ApiProperty({
-    type: 'string',
+    type: 'number',
+    format: 'float',
   })
-  name: string;
-  @ApiProperty({
-    type: 'string',
-    nullable: true,
-  })
-  description: string | null;
-  @ApiProperty({
-    enum: ProductType,
-  })
-  type: ProductType;
+  discount: number;
   @ApiProperty({
     type: 'boolean',
   })
-  includeStore: boolean;
+  is_active: boolean;
   @ApiProperty({
     type: 'string',
+    format: 'date-time',
   })
-  unit_id: string;
+  start_date: Date;
   @ApiProperty({
     type: 'string',
-    nullable: true,
+    format: 'date-time',
   })
-  hsnCode_id: string | null;
+  end_date: Date;
   @ApiProperty({
     type: 'string',
   })

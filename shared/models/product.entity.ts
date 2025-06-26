@@ -30,6 +30,11 @@ export class Product {
   id: string;
   @ApiProperty({
     type: 'string',
+    nullable: true,
+  })
+  image: string | null;
+  @ApiProperty({
+    type: 'string',
   })
   name: string;
   @ApiProperty({
@@ -41,6 +46,10 @@ export class Product {
     enum: ProductType,
   })
   type: ProductType;
+  @ApiProperty({
+    type: 'boolean',
+  })
+  includeStore: boolean;
   @ApiProperty({
     type: 'string',
   })

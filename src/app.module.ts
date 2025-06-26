@@ -40,6 +40,8 @@ import { ClsModule, ClsService } from 'nestjs-cls';
 import { ZenStackModule } from '@zenstackhq/server/nestjs';
 import { PrismaService } from './prisma/prisma.service';
 import { enhance } from '@zenstackhq/runtime';
+import { StoreModule } from './store/store.module';
+import { CouponsModule } from './coupons/coupons.module';
 
 @Module({
   imports: [
@@ -93,6 +95,8 @@ import { enhance } from '@zenstackhq/runtime';
       extraProviders: [PrismaService],
       global: true,
     }),
+    StoreModule,
+    CouponsModule,
   ],
   controllers: [MailController],
   providers: [

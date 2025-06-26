@@ -10,6 +10,14 @@ import {
 
 export class UpdateInvoiceDto {
   @ApiProperty({
+    type: 'boolean',
+    default: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  fromStore?: boolean;
+  @ApiProperty({
     type: 'string',
     required: false,
   })

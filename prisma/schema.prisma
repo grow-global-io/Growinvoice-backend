@@ -239,6 +239,8 @@ model User {
   Vendors           Vendors[]
   /// @DtoApiHidden
   Expenses          Expenses[]
+  /// @DtoApiHidden
+  Coupons           Coupons[]
 }
 
 /// @@allow('read', isExist == true)
@@ -371,36 +373,42 @@ model ProductUnit {
 model Product {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt   DateTime            @default(now())
+  createdAt    DateTime            @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt   DateTime?           @updatedAt()
+  updatedAt    DateTime?           @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist     Boolean             @default(true)
-  id          String              @id() @default(cuid())
-  name        String
-  description String?
-  type        ProductType
+  isExist      Boolean             @default(true)
+  id           String              @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  image        String?
+  name         String
+  description  String?
+  type         ProductType
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  includeStore Boolean             @default(false)
   /// @DtoRelationIncludeId
-  unit_id     String
-  unit        ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
+  unit_id      String
+  unit         ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  hsnCode_id  String?
-  hsnCode     HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+  hsnCode_id   String?
+  hsnCode      HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  user_id     String
-  user        User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id      String
+  user         User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
-  invoice     InvoiceProducts[]
+  invoice      InvoiceProducts[]
   /// @DtoApiHidden
-  Quatation   QuotationProducts[]
+  Quatation    QuotationProducts[]
   /// @DtoApiHidden
-  tax         TaxForProduct[]
+  tax          TaxForProduct[]
   /// @DtoApiHidden
-  priceBook   ProductPriceBook[]
+  priceBook    ProductPriceBook[]
 }
 
 /// @@allow('read', isExist == true)
@@ -560,6 +568,9 @@ model Customer {
   /// @DtoUpdateHidden
   isExist            Boolean         @default(true)
   id                 String          @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  fromStore          Boolean         @default(false)
   name               String
   display_name       String
   email              String
@@ -743,6 +754,9 @@ model Invoice {
   /// @DtoUpdateHidden
   isExist            Boolean           @default(true)
   id                 String            @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  fromStore          Boolean           @default(false)
   /// @DtoRelationIncludeId
   customer_id        String
   customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
@@ -1339,4 +1353,35 @@ model Expenses {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   notes       String?
+}
+
+/// @@allow('read', isExist == true)
+/// @@allow('create', isExist == true)
+/// @@allow('update', isExist == true)
+/// @@allow('delete', isExist == true)
+model Coupons {
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  code       String    @unique()
+  discount   Float
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  is_active  Boolean   @default(true)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  start_date DateTime
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  end_date   DateTime
+  /// @DtoRelationIncludeId
+  user_id    String
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

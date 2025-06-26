@@ -1,8 +1,16 @@
 import { ProductType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateProductDto {
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  image?: string | null;
   @ApiProperty({
     type: 'string',
   })
@@ -22,6 +30,13 @@ export class CreateProductDto {
   })
   @IsNotEmpty()
   type: ProductType;
+  @ApiProperty({
+    type: 'boolean',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  includeStore?: boolean;
   @ApiProperty({
     type: 'string',
   })

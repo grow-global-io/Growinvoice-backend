@@ -11,6 +11,13 @@ import {
 
 export class CreateInvoiceDto {
   @ApiProperty({
+    type: 'boolean',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  fromStore?: boolean;
+  @ApiProperty({
     type: 'string',
   })
   @IsNotEmpty()

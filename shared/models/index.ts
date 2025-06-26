@@ -178,3 +178,8 @@ export * from './create-expenses.dto';
 export * from './update-expenses.dto';
 export * from './expenses.entity';
 export * from './expenses.dto';
+export * from './connect-coupons.dto';
+export * from './create-coupons.dto';
+export * from './update-coupons.dto';
+export * from './coupons.entity';
+export * from './coupons.dto';

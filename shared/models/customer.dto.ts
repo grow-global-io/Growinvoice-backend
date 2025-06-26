@@ -22,6 +22,10 @@ export class CustomerDto {
   })
   id: string;
   @ApiProperty({
+    type: 'boolean',
+  })
+  fromStore: boolean;
+  @ApiProperty({
     type: 'string',
   })
   name: string;

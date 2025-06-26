@@ -70,4 +70,11 @@ export class UploadService {
       message: 'File uploaded successfully',
     });
   }
+
+  async uploadMultipleFiles(
+    files: Express.Multer.File[],
+  ): Promise<UploadResponseDto[]> {
+    const uploadPromises = files.map((file) => this.uploadFile(file));
+    return Promise.all(uploadPromises);
+  }
 }

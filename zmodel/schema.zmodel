@@ -151,6 +151,7 @@ model User extends Base {
     UserPlans         UserPlans[]         @DtoApiHidden
     Vendors           Vendors[]           @DtoApiHidden
     Expenses          Expenses[]          @DtoApiHidden
+    Coupons           Coupons[]           @DtoApiHidden
 }
 
 model Company extends Base {
@@ -206,20 +207,22 @@ model ProductUnit extends Base {
 }
 
 model Product extends Base {
-    id          String              @id @default(cuid())
-    name        String
-    description String?
-    type        ProductType
-    unit_id     String              @DtoRelationIncludeId
-    unit        ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
-    hsnCode_id  String?             @DtoRelationIncludeId @DtoCreateOptional @DtoUpdateOptional
-    hsnCode     HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
-    user_id     String              @DtoRelationIncludeId
-    user        User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    invoice     InvoiceProducts[]   @DtoApiHidden
-    Quatation   QuotationProducts[] @DtoApiHidden
-    tax         TaxForProduct[]     @DtoApiHidden
-    priceBook   ProductPriceBook[]  @DtoApiHidden
+    id           String              @id @default(cuid())
+    image        String?             @DtoCreateOptional @DtoUpdateOptional
+    name         String
+    description  String?
+    type         ProductType
+    includeStore Boolean             @default(false) @DtoCreateOptional @DtoUpdateOptional
+    unit_id      String              @DtoRelationIncludeId
+    unit         ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
+    hsnCode_id   String?             @DtoRelationIncludeId @DtoCreateOptional @DtoUpdateOptional
+    hsnCode      HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+    user_id      String              @DtoRelationIncludeId
+    user         User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    invoice      InvoiceProducts[]   @DtoApiHidden
+    Quatation    QuotationProducts[] @DtoApiHidden
+    tax          TaxForProduct[]     @DtoApiHidden
+    priceBook    ProductPriceBook[]  @DtoApiHidden
 }
 
 model ProductPriceBook extends Base {
@@ -289,6 +292,7 @@ model Currencies extends Base {
 
 model Customer extends Base {
     id                 String          @id @default(cuid())
+    fromStore          Boolean         @default(false) @DtoCreateOptional @DtoUpdateOptional
     name               String
     display_name       String
     email              String
@@ -363,6 +367,7 @@ model TaxForInvoiceProducts extends Base {
 
 model Invoice extends Base {
     id                 String            @id @default(cuid())
+    fromStore          Boolean           @default(false) @DtoCreateOptional @DtoUpdateOptional
     customer_id        String            @DtoRelationIncludeId
     customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
     currency_id        String?           @DtoRelationIncludeId
@@ -639,4 +644,15 @@ model Expenses extends Base {
     currency_id String          @DtoRelationIncludeId
     currency    Currencies      @relation(fields: [currency_id], references: [id], onDelete: Cascade)
     notes       String?         @DtoCreateOptional @DtoUpdateOptional
+}
+
+model Coupons extends Base {
+    id         String   @id @default(cuid())
+    code       String   @unique
+    discount   Float
+    is_active  Boolean  @default(true) @DtoCreateOptional @DtoUpdateOptional
+    start_date DateTime @DtoCreateOptional @DtoUpdateOptional
+    end_date   DateTime @DtoCreateOptional @DtoUpdateOptional
+    user_id    String   @DtoRelationIncludeId
+    user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
