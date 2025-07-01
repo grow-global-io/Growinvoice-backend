@@ -200,12 +200,17 @@ export class PaymentsService {
   }
 
   async stripePaymentLinkForPlan(user_id: string, plan_id: string) {
-    const user = await this.prisma.userPlans.findFirst({
-      where: { user_id, status: true, end_date: { gt: new Date() } },
-    });
-    if (user) {
-      throw new BadRequestException('Plan already exists');
-    }
+    // const user = await this.prisma.userPlans.findFirst({
+    //   where: {
+    //     user_id,
+    //     status: true,
+    //     end_date: { gt: new Date() },
+    //     plan_id: plan_id,
+    //   },
+    // });
+    // if (user) {
+    //   throw new BadRequestException('Plan already exists');
+    // }
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
       throw new BadRequestException('Plan not found');
@@ -265,41 +270,49 @@ export class PaymentsService {
       'GROWLIMITLESS_API_KEY',
     );
     const gll_Url = this.configService.get<string>('GROWLIMITLESS_URL');
-    const data = await axios.post(
-      `${gll_Url}/api/sessions`,
-      {
-        mode: 'payment',
-        line_items: [
-          {
-            price_data: {
-              currency: 'INR',
-              product_data: {
-                name: `Payment for the plan - ${plan?.name}`,
-                description: 'Payment for the plan - ' + plan?.name,
+    try {
+      const data = await axios.post(
+        `${gll_Url}/api/sessions`,
+        {
+          mode: 'payment',
+          line_items: [
+            {
+              price_data: {
+                currency: 'INR',
+                product_data: {
+                  name: `Payment for the plan - ${plan?.name}`,
+                  description: 'Payment for the plan - ' + plan?.name,
+                },
+                unit_amount: Math.round(plan?.price * 100),
               },
-              unit_amount: Math.round(plan?.price * 100),
+              quantity: 1,
             },
-            quantity: 1,
+          ],
+          success_url: `${process.env.BACKEND_URL}/api/payments/successGrowlimitlessPlans?session_id={CHECKOUT_SESSION_ID}&user_id=${user_id}&plan_id=${plan_id}`,
+          cancel_url: `${process.env.BACKEND_URL}/api/payments/cancelPlans?type=cancel`,
+          metadata: {
+            plan_id,
+            user_id,
           },
-        ],
-        success_url: `${process.env.BACKEND_URL}/api/payments/successGrowlimitlessPlans?session_id={CHECKOUT_SESSION_ID}&user_id=${user_id}&plan_id=${plan_id}`,
-        cancel_url: `${process.env.BACKEND_URL}/api/payments/cancelPlans?type=cancel`,
-        metadata: {
-          plan_id,
-          user_id,
+          apiKey: growlimitlessKey,
         },
-        apiKey: growlimitlessKey,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      },
-    );
-    if (data.status !== 201) {
-      throw new Error('Error creating payment link');
+      );
+      if (data.status !== 201) {
+        throw new Error('Error creating payment link');
+      }
+      return data.data?.uri;
+    } catch (error) {
+      const message =
+        error?.response?.data ??
+        error?.message ??
+        'Error creating payment link';
+      throw new NotFoundException(message);
     }
-    return data.data?.uri;
   }
 
   async successPlans(session_id: string, user_id: string, plan_id: string) {
