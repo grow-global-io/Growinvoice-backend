@@ -43,6 +43,10 @@ export class PlansService {
       include: {
         PlanFeatures: true,
       },
+      orderBy: {
+        // based on price
+        price: 'asc',
+      },
     });
 
     return plans.map((plan) => plainToInstance(PlanWithFeaturesDto, plan));
