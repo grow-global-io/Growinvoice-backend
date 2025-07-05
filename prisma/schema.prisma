@@ -253,30 +253,36 @@ model User {
 model Company {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime  @default(now())
+  createdAt         DateTime  @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime? @updatedAt()
+  updatedAt         DateTime? @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean   @default(true)
-  id         String    @id() @default(cuid())
-  name       String
-  address    String?
-  phone      String?
+  isExist           Boolean   @default(true)
+  id                String    @id() @default(cuid())
+  name              String
+  address           String?
+  phone             String?
   /// @DtoRelationIncludeId
-  country_id String?
-  country    Country?  @relation(fields: [country_id], references: [id])
+  country_id        String?
+  country           Country?  @relation(fields: [country_id], references: [id])
   /// @DtoRelationIncludeId
-  state_id   String?
-  state      State?    @relation(fields: [state_id], references: [id])
-  city       String?
-  zip        String?
-  vat        String?
-  logo       String?
+  state_id          String?
+  state             State?    @relation(fields: [state_id], references: [id])
+  city              String?
+  zip               String?
+  vat               String?
+  logo              String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  lineOfBusiness    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  short_description String?
   /// @DtoRelationIncludeId
-  user_id    String    @unique()
-  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id           String    @unique()
+  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 /// @@allow('read', isExist == true)

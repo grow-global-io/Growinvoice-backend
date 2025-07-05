@@ -81,6 +81,16 @@ export class Company {
   logo: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
+  })
+  lineOfBusiness: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  short_description: string | null;
+  @ApiProperty({
+    type: 'string',
   })
   user_id: string;
   @ApiProperty({

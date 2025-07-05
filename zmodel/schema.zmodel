@@ -156,20 +156,22 @@ model User extends Base {
 }
 
 model Company extends Base {
-    id         String   @id @default(cuid())
-    name       String
-    address    String?
-    phone      String?
-    country_id String?  @DtoRelationIncludeId
-    country    Country? @relation(fields: [country_id], references: [id])
-    state_id   String?  @DtoRelationIncludeId
-    state      State?   @relation(fields: [state_id], references: [id])
-    city       String?
-    zip        String?
-    vat        String?
-    logo       String?
-    user_id    String   @unique @DtoRelationIncludeId
-    user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    id                String   @id @default(cuid())
+    name              String
+    address           String?
+    phone             String?
+    country_id        String?  @DtoRelationIncludeId
+    country           Country? @relation(fields: [country_id], references: [id])
+    state_id          String?  @DtoRelationIncludeId
+    state             State?   @relation(fields: [state_id], references: [id])
+    city              String?
+    zip               String?
+    vat               String?
+    logo              String?
+    lineOfBusiness    String?  @DtoCreateOptional @DtoUpdateOptional
+    short_description String?  @DtoCreateOptional @DtoUpdateOptional
+    user_id           String   @unique @DtoRelationIncludeId
+    user              User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model HSNCode extends Base {
