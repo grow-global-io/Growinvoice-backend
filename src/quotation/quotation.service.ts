@@ -497,8 +497,15 @@ export class QuotationService {
   }
 
   async countTotal(user_id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: user_id },
+    });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
     const total = await this.prismaService.quotation.count({
-      where: { user_id },
+      where: { user_id: user?.isAdmin ? undefined : user_id },
     });
     return plainToInstance(QuotationTotalCountDto, { total });
   }

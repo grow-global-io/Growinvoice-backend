@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { ErrorMessageDto } from '@shared/dto/errorMessage.dto';
@@ -103,6 +103,28 @@ export class UserController {
     return {
       message: 'User updated successfully',
       result,
+    };
+  }
+
+  @Get('userCount')
+  async userCount(@GetUser() user: UserTokenDetails) {
+    return await this.userService.userCount(user?.sub);
+  }
+
+  @Get('getUsersList')
+  async getUsersList(@GetUser() user: UserTokenDetails) {
+    return await this.userService.getUsersList(user?.sub);
+  }
+
+  @Put('blockUser/:id')
+  @ApiSuccessResponse(UserDto, { status: 200 })
+  async blockUser(
+    @Param('id') id: string,
+  ): Promise<SuccessResponseDto<UserDto>> {
+    const user = await this.userService.blockUser(id);
+    return {
+      message: 'User blocked successfully',
+      result: user,
     };
   }
 }

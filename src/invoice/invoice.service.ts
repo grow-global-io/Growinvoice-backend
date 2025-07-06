@@ -73,10 +73,18 @@ export class InvoiceService {
   }
 
   async findAll(user_id: string, customerId?: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: user_id },
+    });
     const invoices = await this.prismaService.invoice.findMany({
-      where: { user_id, customer_id: customerId ? customerId : undefined },
+      where: {
+        user_id: user.isAdmin ? undefined : user_id,
+        customer_id: customerId ? customerId : undefined,
+      },
       include: {
         customer: true,
+        currency: true,
+        user: true,
       },
     });
     return plainToInstance(Invoice, invoices);
@@ -481,8 +489,15 @@ export class InvoiceService {
   }
 
   async invoiceCount(user_id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: user_id },
+    });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
     return await this.prismaService.invoice.count({
-      where: { user_id },
+      where: { user_id: user?.isAdmin ? undefined : user_id },
     });
   }
 

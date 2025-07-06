@@ -12,6 +12,7 @@ import { ResetPasswordTokenDto } from './dto/reset-password-token.dto';
 import { plainToInstance } from 'class-transformer';
 import { updateCurrencyCompanyDto } from './dto/update-currency-company.dto';
 import { User as UserTokenDetails } from '@shared/decorators/user.decorator';
+import { AdminUsersListDto } from './dto/admin-users-list.dto';
 
 @Injectable()
 export class UserService {
@@ -221,17 +222,73 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    try {
-      const user = await this.prismaService.user.findUnique({
-        where: { id },
-        include: {
-          company: true,
-          currency: true,
-        },
-      });
-      return plainToInstance(User, user);
-    } catch (error) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        currency: true,
+      },
+    });
+    return plainToInstance(User, user);
+  }
+
+  async userCount(user_id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: user_id },
+    });
+    if (!user) {
       throw new BadRequestException('User not found');
     }
+
+    return await this.prismaService.user.count({
+      where: { id: user?.isAdmin ? undefined : user_id },
+    });
+  }
+
+  async getUsersList(user_id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: user_id },
+    });
+    if (!user || !user.isAdmin) {
+      throw new BadRequestException('User not found');
+    }
+
+    const users = await this.prismaService.user.findMany({
+      where: {
+        isAdmin: false, // Only fetch non-admin users
+      },
+      include: {
+        company: {
+          include: {
+            country: true,
+            state: true,
+          },
+        },
+        currency: true,
+        UserPlans: {
+          include: {
+            plan: {
+              include: {
+                PlanFeatures: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return plainToInstance(AdminUsersListDto, users);
+  }
+
+  async blockUser(id: string) {
+    const userExists = await this.prismaService.user.findUnique({
+      where: { id },
+    });
+    const user = await this.prismaService.user.update({
+      where: { id },
+      data: {
+        isActive: !userExists.isActive, // Toggle isActive status
+      },
+    });
+    return plainToInstance(UserDto, user);
   }
 }

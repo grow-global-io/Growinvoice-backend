@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateCustomerWithAddressDto } from './dto/create-customer-with-address.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 import { plainToInstance } from 'class-transformer';
@@ -141,9 +141,17 @@ export class CustomerService {
   }
 
   async customerCount(userId: string) {
+    const user = await this.prismaServie.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
     return await this.prismaServie.customer.count({
       where: {
-        user_id: userId,
+        user_id: user?.isAdmin ? undefined : userId,
       },
     });
   }

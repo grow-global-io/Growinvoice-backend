@@ -80,8 +80,15 @@ export class AuthService {
     return plainToInstance(UserDto, user);
   }
 
-  async getUserQuota(user: User) {
-    const res = await this.sharedService.getQuota(user.sub);
+  async getUserQuota(user_id: string, userId?: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: user_id },
+    });
+    if (user?.isAdmin && userId) {
+      const res = await this.sharedService.getQuota(userId);
+      return plainToInstance(UserQuotaDto, res);
+    }
+    const res = await this.sharedService.getQuota(user_id);
     return plainToInstance(UserQuotaDto, res);
   }
 }

@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import { AuthService } from './auth.service';
 import { IsPublic } from '@shared/decorators/public.decorator';
@@ -21,7 +21,13 @@ export class AuthController {
   }
 
   @Get('getUserQuota')
-  async getUserQuota(@GetUser() user: User) {
-    return await this.authService.getUserQuota(user);
+  @ApiQuery({
+    name: 'userId',
+    required: false,
+    description: 'ID of the user to get quota for',
+    type: String,
+  })
+  async getUserQuota(@GetUser() user: User, @Query('userId') userId?: string) {
+    return await this.authService.getUserQuota(user.sub, userId);
   }
 }

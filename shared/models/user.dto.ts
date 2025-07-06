@@ -55,6 +55,14 @@ export class UserDto {
   })
   resetTokenExpiry: Date | null;
   @ApiProperty({
+    type: 'boolean',
+  })
+  isAdmin: boolean;
+  @ApiProperty({
+    type: 'boolean',
+  })
+  isActive: boolean;
+  @ApiProperty({
     type: 'string',
     nullable: true,
   })
