@@ -42,14 +42,6 @@ export class UpdateUserDto {
   storeName?: string | null;
   @ApiProperty({
     type: 'boolean',
-    default: false,
-    required: false,
-  })
-  @IsOptional()
-  @IsBoolean()
-  isAdmin?: boolean;
-  @ApiProperty({
-    type: 'boolean',
     default: true,
     required: false,
   })

@@ -201,8 +201,8 @@ model User {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
   resetTokenExpiry  DateTime?
-  /// @DtoCreateOptional
-  /// @DtoUpdateOptional
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
   isAdmin           Boolean             @default(false)
   /// @DtoCreateOptional
   /// @DtoUpdateOptional

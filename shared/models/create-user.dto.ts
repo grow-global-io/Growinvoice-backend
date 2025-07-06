@@ -40,13 +40,6 @@ export class CreateUserDto {
   storeName?: string | null;
   @ApiProperty({
     type: 'boolean',
-    default: false,
-  })
-  @IsOptional()
-  @IsBoolean()
-  isAdmin?: boolean;
-  @ApiProperty({
-    type: 'boolean',
     default: true,
   })
   @IsOptional()
