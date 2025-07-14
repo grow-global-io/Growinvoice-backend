@@ -46,4 +46,8 @@ export class PlansDto {
     format: 'int32',
   })
   days: number;
+  @ApiProperty({
+    type: 'string',
+  })
+  currency_id: string;
 }

@@ -200,17 +200,6 @@ export class PaymentsService {
   }
 
   async stripePaymentLinkForPlan(user_id: string, plan_id: string) {
-    // const user = await this.prisma.userPlans.findFirst({
-    //   where: {
-    //     user_id,
-    //     status: true,
-    //     end_date: { gt: new Date() },
-    //     plan_id: plan_id,
-    //   },
-    // });
-    // if (user) {
-    //   throw new BadRequestException('Plan already exists');
-    // }
     const plan = await this.planService.findOne(plan_id);
     if (!plan) {
       throw new BadRequestException('Plan not found');
@@ -225,7 +214,7 @@ export class PaymentsService {
       line_items: [
         {
           price_data: {
-            currency: 'USD',
+            currency: plan.currency.short_code || 'USD',
             product_data: {
               name: `Payment for the plan - ${plan?.name}`,
               description: 'Payment for the plan - ' + plan?.name,
@@ -278,7 +267,7 @@ export class PaymentsService {
           line_items: [
             {
               price_data: {
-                currency: 'INR',
+                currency: plan.currency.short_code || 'USD',
                 product_data: {
                   name: `Payment for the plan - ${plan?.name}`,
                   description: 'Payment for the plan - ' + plan?.name,
@@ -597,6 +586,82 @@ export class PaymentsService {
       return true;
     }
     return false;
+  }
+
+  async successRazorpayForPlans(
+    razorpay_payment_id: string,
+    user_id: string,
+    plan_id: string,
+  ) {
+    const plan = await this.planService.findOne(plan_id);
+    if (!plan) {
+      throw new Error('Plan not found');
+    }
+    const razorpayKey = this.configService.get<string>('RAZORPAY_KEY');
+    const razorpaySecret = this.configService.get<string>('RAZORPAY_SECRET');
+    if (!razorpayKey || !razorpaySecret) {
+      throw new Error('Razorpay key not found');
+    }
+    const razorpay = new Razorpay({
+      key_id: razorpayKey,
+      key_secret: razorpaySecret,
+    });
+    const payment = await razorpay.payments.fetch(razorpay_payment_id);
+    if (payment.status === 'captured') {
+      const end_date = new Date();
+      end_date.setDate(end_date.getDate() + plan.days);
+      await this.userplansService.create({
+        end_date: end_date,
+        plan_id,
+        start_date: new Date(),
+        session_id: razorpay_payment_id,
+        status: true,
+        user_id,
+      });
+      await this.notificationService.create({
+        user_id,
+        title: 'Payment Success',
+        body: 'Payment for plan ' + plan.name + ' is successful',
+      });
+      // redirect to success page
+      return true;
+    }
+    return false;
+  }
+
+  async razorpayPaymentForPlans(user_id: string, plan_id: string) {
+    const plan = await this.planService.findOne(plan_id);
+    if (!plan) {
+      throw new Error('Plan not found');
+    }
+    const razorpayKey = this.configService.get<string>('RAZORPAY_KEY');
+    const razorpaySecret = this.configService.get<string>('RAZORPAY_SECRET');
+    if (!razorpayKey || !razorpaySecret) {
+      throw new Error('Razorpay key not found');
+    }
+    const razorpay = new Razorpay({
+      key_id: razorpayKey,
+      key_secret: razorpaySecret,
+    });
+    const rand4digit = Math.floor(1000 + Math.random() * 9000);
+
+    const order = await razorpay.orders.create({
+      amount: Math.round(plan?.price * 100),
+      currency: plan.currency.short_code || 'INR',
+      receipt: `plan-${rand4digit}`,
+      payment_capture: true,
+    });
+
+    if (!order || !order.id) {
+      throw new Error('Error creating Razorpay order');
+    }
+
+    return plainToInstance(RazorpayPaymentDto, {
+      id: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      receipt: order.receipt,
+    });
   }
 
   async razorpayPayment(user_id: string, invoice_id: string) {

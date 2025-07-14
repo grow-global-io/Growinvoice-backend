@@ -59,6 +59,7 @@ export class PlansService {
       },
       include: {
         PlanFeatures: true,
+        currency: true, // Include currency details
       },
     });
 

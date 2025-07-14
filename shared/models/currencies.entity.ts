@@ -5,6 +5,7 @@ import { Expenses } from './expenses.entity';
 import { ProductPriceBook } from './productPriceBook.entity';
 import { Invoice } from './invoice.entity';
 import { Quotation } from './quotation.entity';
+import { Plans } from './plans.entity';
 
 export class Currencies {
   @ApiProperty({
@@ -54,4 +55,6 @@ export class Currencies {
   invoice?: Invoice[];
   @ApiHideProperty()
   Quotation?: Quotation[];
+  @ApiHideProperty()
+  Plans?: Plans[];
 }

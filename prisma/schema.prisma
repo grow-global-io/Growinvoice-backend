@@ -566,6 +566,8 @@ model Currencies {
   invoice    Invoice[]
   /// @DtoApiHidden
   Quotation  Quotation[]
+  /// @DtoApiHidden
+  Plans      Plans[]
 }
 
 /// @@allow('read', isExist == true)
@@ -1218,6 +1220,11 @@ model Plans {
   isOneTime    Boolean        @default(false)
   price        Float
   days         Int
+  /// @DtoRelationIncludeId
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  currency_id  String         @default("cm5wa4fki001r21tydt35127s")
+  currency     Currencies     @relation(fields: [currency_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
   PlanFeatures PlanFeatures[]
   /// @DtoApiHidden

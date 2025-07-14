@@ -53,4 +53,12 @@ export class UpdatePlansDto {
   @IsOptional()
   @IsInt()
   days?: number;
+  @ApiProperty({
+    type: 'string',
+    default: 'cm5wa4fki001r21tydt35127s',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  currency_id?: string;
 }

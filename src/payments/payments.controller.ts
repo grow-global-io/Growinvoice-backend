@@ -242,6 +242,39 @@ export class PaymentsController {
   }
 
   @IsPublic()
+  @Post('razorpayPaymentForPlans')
+  async razorpayPaymentForPlans(
+    @Query('user_id') user_id: string,
+    @Query('plan_id') plan_id: string,
+  ) {
+    const link = await this.paymentsService.razorpayPaymentForPlans(
+      user_id,
+      plan_id,
+    );
+    return link;
+  }
+
+  @IsPublic()
+  @Post('successrazorpayPayment')
+  async successrazorpayPayment(
+    @Query('razorpay_payment_id') razorpay_payment_id: string,
+    @Query('plan_id') plan_id: string,
+    @Query('user_id') user_id: string,
+    @Res() res: Response,
+  ) {
+    const success = await this.paymentsService.successRazorpayForPlans(
+      razorpay_payment_id,
+      user_id,
+      plan_id,
+    );
+
+    if (success) {
+      return res.redirect(`${process.env.FRONTEND_URL}/payment/success`);
+    }
+    return res.redirect(`${process.env.FRONTEND_URL}/payment/failure`);
+  }
+
+  @IsPublic()
   @Post('razorpayPayment')
   async razorpayPayment(
     @Query('user_id') user_id: string,

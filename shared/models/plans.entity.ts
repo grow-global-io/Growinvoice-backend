@@ -1,4 +1,5 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Currencies } from './currencies.entity';
 import { PlanFeatures } from './planFeatures.entity';
 import { UserPlans } from './userPlans.entity';
 
@@ -48,6 +49,15 @@ export class Plans {
     format: 'int32',
   })
   days: number;
+  @ApiProperty({
+    type: 'string',
+  })
+  currency_id: string;
+  @ApiProperty({
+    type: () => Currencies,
+    required: false,
+  })
+  currency?: Currencies;
   @ApiHideProperty()
   PlanFeatures?: PlanFeatures[];
   @ApiHideProperty()
