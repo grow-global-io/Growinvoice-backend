@@ -398,7 +398,7 @@ model Product {
   id           String              @id() @default(cuid())
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  image        String?
+  images       String[]
   name         String
   description  String?
   type         ProductType

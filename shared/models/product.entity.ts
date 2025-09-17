@@ -30,9 +30,9 @@ export class Product {
   id: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
+    isArray: true,
   })
-  image: string | null;
+  images: string[];
   @ApiProperty({
     type: 'string',
   })

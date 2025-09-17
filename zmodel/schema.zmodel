@@ -213,7 +213,7 @@ model ProductUnit extends Base {
 
 model Product extends Base {
     id           String              @id @default(cuid())
-    image        String?             @DtoCreateOptional @DtoUpdateOptional
+    images       String[]            @DtoCreateOptional @DtoUpdateOptional
     name         String
     description  String?
     type         ProductType

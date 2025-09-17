@@ -23,9 +23,9 @@ export class ProductDto {
   id: string;
   @ApiProperty({
     type: 'string',
-    nullable: true,
+    isArray: true,
   })
-  image: string | null;
+  images: string[];
   @ApiProperty({
     type: 'string',
   })
