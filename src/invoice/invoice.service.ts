@@ -600,7 +600,9 @@ export class InvoiceService {
       args: ['--no-sandbox', '--disable-setuid-sandbox'], // useful for servers
     });
     const page = await browser.newPage();
-    const htmlFetchLink = `https://api-dev.growinvoice.com/api/invoice/test/${id}`;
+    const htmlFetchLink = `${
+      process.env.BACKEND_URL || 'http://localhost:5001'
+    }/api/invoice/test/${id}`;
     await page.goto(htmlFetchLink, {
       waitUntil: 'networkidle0',
     });
