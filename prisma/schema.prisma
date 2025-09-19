@@ -577,38 +577,38 @@ model Currencies {
 model Customer {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt          DateTime        @default(now())
+  createdAt          DateTime         @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt          DateTime?       @updatedAt()
+  updatedAt          DateTime?        @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist            Boolean         @default(true)
-  id                 String          @id() @default(cuid())
+  isExist            Boolean          @default(true)
+  id                 String           @id() @default(cuid())
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  fromStore          Boolean         @default(false)
+  fromStore          Boolean          @default(false)
   name               String
   display_name       String
-  email              String
-  phone              String?
+  email              String?
+  phone              String
   website            String?
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   gstIn              String?
   option             CustomerOption
   /// @DtoRelationIncludeId
-  currencies_id      String
-  currencies         Currencies      @relation(fields: [currencies_id], references: [id])
+  currencies_id      String?
+  currencies         Currencies?      @relation(fields: [currencies_id], references: [id])
   /// @DtoRelationIncludeId
-  billingAddress_id  String
-  billingAddress     BillingAddress  @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
+  billingAddress_id  String?
+  billingAddress     BillingAddress?  @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  shippingAddress_id String
-  shippingAddress    ShippingAddress @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
+  shippingAddress_id String?
+  shippingAddress    ShippingAddress? @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
   user_id            String
-  user               User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoApiHidden
   invoice            Invoice[]
   /// @DtoApiHidden

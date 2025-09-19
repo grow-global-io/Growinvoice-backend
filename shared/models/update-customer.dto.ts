@@ -28,18 +28,18 @@ export class UpdateCustomerDto {
   @ApiProperty({
     type: 'string',
     required: false,
-  })
-  @IsOptional()
-  @IsString()
-  email?: string;
-  @ApiProperty({
-    type: 'string',
-    required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  phone?: string | null;
+  email?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  phone?: string;
   @ApiProperty({
     type: 'string',
     required: false,
@@ -65,24 +65,27 @@ export class UpdateCustomerDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  currencies_id?: string;
+  currencies_id?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  billingAddress_id?: string;
+  billingAddress_id?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  shippingAddress_id?: string;
+  shippingAddress_id?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,

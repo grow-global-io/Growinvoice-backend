@@ -24,18 +24,18 @@ export class CreateCustomerDto {
   display_name: string;
   @ApiProperty({
     type: 'string',
-  })
-  @IsNotEmpty()
-  @IsString()
-  email: string;
-  @ApiProperty({
-    type: 'string',
     required: false,
     nullable: true,
   })
   @IsOptional()
   @IsString()
-  phone?: string | null;
+  email?: string | null;
+  @ApiProperty({
+    type: 'string',
+  })
+  @IsNotEmpty()
+  @IsString()
+  phone: string;
   @ApiProperty({
     type: 'string',
     required: false,
@@ -59,22 +59,28 @@ export class CreateCustomerDto {
   option: CustomerOption;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  currencies_id: string;
+  currencies_id?: string | null;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  billingAddress_id: string;
+  billingAddress_id?: string | null;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  shippingAddress_id: string;
+  shippingAddress_id?: string | null;
   @ApiProperty({
     type: 'string',
   })

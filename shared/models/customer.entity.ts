@@ -41,13 +41,13 @@ export class Customer {
   display_name: string;
   @ApiProperty({
     type: 'string',
-  })
-  email: string;
-  @ApiProperty({
-    type: 'string',
     nullable: true,
   })
-  phone: string | null;
+  email: string | null;
+  @ApiProperty({
+    type: 'string',
+  })
+  phone: string;
   @ApiProperty({
     type: 'string',
     nullable: true,
@@ -64,31 +64,37 @@ export class Customer {
   option: CustomerOption;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  currencies_id: string;
+  currencies_id: string | null;
   @ApiProperty({
     type: () => Currencies,
     required: false,
+    nullable: true,
   })
-  currencies?: Currencies;
+  currencies?: Currencies | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  billingAddress_id: string;
+  billingAddress_id: string | null;
   @ApiProperty({
     type: () => BillingAddress,
     required: false,
+    nullable: true,
   })
-  billingAddress?: BillingAddress;
+  billingAddress?: BillingAddress | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  shippingAddress_id: string;
+  shippingAddress_id: string | null;
   @ApiProperty({
     type: () => ShippingAddress,
     required: false,
+    nullable: true,
   })
-  shippingAddress?: ShippingAddress;
+  shippingAddress?: ShippingAddress | null;
   @ApiProperty({
     type: 'string',
   })

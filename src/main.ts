@@ -8,10 +8,12 @@ import * as compression from 'compression';
 import { initializeApp } from '@firebase/app';
 import { JwtAuthGuard } from '@shared/guards/jwt.guard';
 import { ClsService } from 'nestjs-cls';
+import { Logger } from '@nestjs/common';
 
 // import { wakeDyno, wakeDynos } from 'heroku-keep-awake';
 
 async function bootstrap() {
+  const logger = new Logger('Main');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(compression());
   const reflector = app.get(Reflector);
@@ -61,6 +63,10 @@ async function bootstrap() {
     origin: '*',
   });
 
-  await app.listen(process.env.PORT || 5000, () => {});
+  await app.listen(process.env.PORT || 5000, () => {
+    logger.log(
+      `Server running on port: http://localhost:${process.env.PORT || 5000}`,
+    );
+  });
 }
 bootstrap();

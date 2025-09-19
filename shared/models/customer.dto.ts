@@ -35,13 +35,13 @@ export class CustomerDto {
   display_name: string;
   @ApiProperty({
     type: 'string',
-  })
-  email: string;
-  @ApiProperty({
-    type: 'string',
     nullable: true,
   })
-  phone: string | null;
+  email: string | null;
+  @ApiProperty({
+    type: 'string',
+  })
+  phone: string;
   @ApiProperty({
     type: 'string',
     nullable: true,
@@ -58,16 +58,19 @@ export class CustomerDto {
   option: CustomerOption;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  currencies_id: string;
+  currencies_id: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  billingAddress_id: string;
+  billingAddress_id: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  shippingAddress_id: string;
+  shippingAddress_id: string | null;
   @ApiProperty({
     type: 'string',
   })
