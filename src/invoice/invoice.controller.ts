@@ -168,6 +168,20 @@ export class InvoiceController {
   }
 
   @IsPublic()
+  @ApiHideProperty()
+  @Get('test-pdf-gen/:id')
+  @ApiResponse({ status: 200, type: String })
+  async testPDFGen(@Param('id') id: string, @Res() res?: Response) {
+    const pdfBuffer = await this.invoiceService.testPDFGen(id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=invoice.pdf',
+      'Content-Length': pdfBuffer.length,
+    });
+    res.end(pdfBuffer);
+  }
+
+  @IsPublic()
   @Get('invoicePublicFindOne/:id')
   async invoicePublicFindOne(@Param('id') id: string) {
     return await this.invoiceService.findOne(id);

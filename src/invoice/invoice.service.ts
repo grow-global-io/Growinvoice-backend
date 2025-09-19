@@ -15,6 +15,7 @@ import {
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 import { SharedService } from '@/shared/shared.service';
 import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
+import * as puppeteer from 'puppeteer';
 
 @Injectable()
 export class InvoiceService {
@@ -591,5 +592,31 @@ export class InvoiceService {
         paid_status: 'Unpaid',
       },
     });
+  }
+
+  async testPDFGen(id: string) {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // useful for servers
+    });
+    const page = await browser.newPage();
+    const htmlFetchLink = `https://api-dev.growinvoice.com/api/invoice/test/${id}`;
+    await page.goto(htmlFetchLink, {
+      waitUntil: 'networkidle0',
+    });
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+      },
+    });
+
+    await browser.close();
+
+    return pdfBuffer;
   }
 }
