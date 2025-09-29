@@ -117,7 +117,7 @@ export class QuotationController {
     const pdfBuffer = await this.quotationService.testPDFGen(id);
     res.set({
       'Content-Type': 'application/pdf',
-      'Content-Disposition': 'attachment; filename=invoice.pdf',
+      'Content-Disposition': 'attachment; filename=quotation.pdf',
       'Content-Length': pdfBuffer.length,
     });
     res.end(pdfBuffer);
