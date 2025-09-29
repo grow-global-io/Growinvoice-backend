@@ -200,6 +200,7 @@ export class InvoiceService {
       },
       include: {
         customer: true,
+        currency: true,
         product: {
           include: {
             tax_forInvoiceProducts: {
@@ -237,6 +238,7 @@ export class InvoiceService {
       },
       include: {
         customer: true,
+        currency: true,
       },
     });
     return plainToInstance(Invoice, invoices);
