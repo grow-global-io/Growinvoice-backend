@@ -176,16 +176,21 @@ export class UserService {
 
   async updateUser(data: UpdateUserCompany, id: string) {
     if (data?.old_password === '' && data.password === '') {
-      const result = await this.prismaService.user.update({
-        where: { id },
-        data: {
-          email: data.email,
-          name: data.name,
-          phone: data.phone,
-          currency_id: data.currency_id,
-        },
-      });
-      return plainToInstance(UserDto, result);
+      try {
+        const result = await this.prismaService.user.update({
+          where: { id },
+          data: {
+            email: data.email,
+            name: data.name,
+            phone: data.phone,
+            currency_id: data.currency_id,
+          },
+        });
+        return plainToInstance(UserDto, result);
+      } catch (error) {
+        console.log(error);
+        throw new BadRequestException('Email already exists');
+      }
     } else {
       const checkPassword = await this.prismaService.user.findUnique({
         where: { id },
