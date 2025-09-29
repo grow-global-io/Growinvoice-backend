@@ -10,7 +10,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { QuotationService } from './quotation.service';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiHideProperty,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { QuotationDto } from '@shared/models';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import {
@@ -102,6 +107,20 @@ export class QuotationController {
       await this.quotationService.quotationSettingsWithFormat(a);
     const templateName = quotation?.template?.view ?? 'template1';
     return res.render('quotation/' + templateName, quotationSettingsWithFormat);
+  }
+
+  @IsPublic()
+  @ApiHideProperty()
+  @Get('test-pdf-gen/:id')
+  @ApiResponse({ status: 200, type: String })
+  async testPDFGen(@Param('id') id: string, @Res() res?: Response) {
+    const pdfBuffer = await this.quotationService.testPDFGen(id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=invoice.pdf',
+      'Content-Length': pdfBuffer.length,
+    });
+    res.end(pdfBuffer);
   }
 
   @IsPublic()
