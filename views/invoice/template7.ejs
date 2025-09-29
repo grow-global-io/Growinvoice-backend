@@ -271,9 +271,10 @@
                         <span class="ibanNumberTextField">
                           <%= invoice?.payment?.ibanNumber %>
                         </span>
+                        <br>
                         <span class="bicNumberTitleTextField font-weight-bold">BIC</span>
                         <span class="bicNumberTextField">
-                          <%= invoice?.payment?.ibanNumber %>
+                          <%= invoice?.payment?.bicNumber %>
                         </span>
                         <% } %>
                           <% if(invoice?.payment?.paymentType==='IndianBanks' ){ %>
