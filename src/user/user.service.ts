@@ -175,23 +175,8 @@ export class UserService {
   }
 
   async updateUser(data: UpdateUserCompany, id: string) {
-    if (data?.old_password === '' && data.password === '') {
-      try {
-        const result = await this.prismaService.user.update({
-          where: { id },
-          data: {
-            email: data.email,
-            name: data.name,
-            phone: data.phone,
-            currency_id: data.currency_id,
-          },
-        });
-        return plainToInstance(UserDto, result);
-      } catch (error) {
-        console.log(error);
-        throw new BadRequestException('Email already exists');
-      }
-    } else {
+    let hashedPassword: string;
+    if (data?.old_password && data.password) {
       const checkPassword = await this.prismaService.user.findUnique({
         where: { id },
         select: { password: true },
@@ -210,8 +195,10 @@ export class UserService {
         throw new BadRequestException('Invalid password');
       }
 
-      const hashedPassword = await bcrypt.hash(data.password, 10);
+      hashedPassword = await bcrypt.hash(data.password, 10);
+    }
 
+    try {
       const result = await this.prismaService.user.update({
         where: { id },
         data: {
@@ -223,6 +210,8 @@ export class UserService {
         },
       });
       return plainToInstance(UserDto, result);
+    } catch (error) {
+      throw new BadRequestException('Email already in use');
     }
   }
 
