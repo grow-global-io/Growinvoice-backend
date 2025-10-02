@@ -24,7 +24,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       });
       payload.sub = user.id;
     }
-    console.log('JWT Payload:', payload); // Debugging line
     return payload;
   }
 }
