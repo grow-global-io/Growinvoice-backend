@@ -10,6 +10,8 @@ import { UserDto } from '@shared/models';
 import { LoginSuccessDto } from '@/user/dto/login-success.dto';
 import { SharedService } from '@/shared/shared.service';
 import { UserQuotaDto } from './dto/user-quota.dto';
+import { OAuth2Client } from 'google-auth-library';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +19,7 @@ export class AuthService {
     private prismaService: PrismaService,
     private jwtService: JwtService,
     private readonly sharedService: SharedService,
+    private readonly configService: ConfigService,
   ) {}
 
   async loginUser(data: LoginUserDto) {
@@ -90,5 +93,32 @@ export class AuthService {
     }
     const res = await this.sharedService.getQuota(user_id);
     return plainToInstance(UserQuotaDto, res);
+  }
+
+  async verifyGoogleToken(token: string): Promise<LoginSuccessDto> {
+    const client = new OAuth2Client(
+      this.configService.get<string>('GOOGLE_CLIENT_ID'),
+    );
+    try {
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: this.configService.get<string>('GOOGLE_CLIENT_ID'), // Specify the CLIENT_ID of the app that calls the backend.
+      });
+      const payload = ticket.getPayload();
+      const user = await this.prismaService.user.findUnique({
+        where: { email: payload.email },
+      });
+      const payloadDb = { sub: user.id, email: user.email };
+      if (!user) {
+        throw new BadRequestException('User not found');
+      }
+      return {
+        message: 'Login successful',
+        authToken: await this.jwtService.signAsync(payloadDb),
+      };
+    } catch (error) {
+      console.error('Error verifying ID token:', error);
+      return null;
+    }
   }
 }
