@@ -39,6 +39,7 @@ export class UserController {
     @Body() createUserDto: CreateUserCompany,
   ): Promise<SuccessResponseDto<User>> {
     const result = await this.userService.createUser(createUserDto);
+
     return {
       message: 'User created successfully',
       result,
