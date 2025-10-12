@@ -128,4 +128,9 @@ export class UserController {
       result: user,
     };
   }
+
+  @Get('dashboard-count')
+  async getDashboardCount(@GetUser() user: UserTokenDetails) {
+    return await this.authService.getDashboardCount(user?.sub);
+  }
 }

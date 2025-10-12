@@ -12,6 +12,8 @@ import { SharedService } from '@/shared/shared.service';
 import { UserQuotaDto } from './dto/user-quota.dto';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
+import moment from 'moment';
+import { DashboardCount } from '@/user/dto/dashboard-count.dto';
 
 @Injectable()
 export class AuthService {
@@ -120,5 +122,108 @@ export class AuthService {
       console.error('Error verifying ID token:', error);
       return null;
     }
+  }
+
+  async getDashboardCount(user_id: string) {
+    const currentMonthStart =
+      moment().startOf('month').format('YYYY-MM-DD') + 'T00:00:00.000Z';
+    const currentMonthEnd =
+      moment().endOf('month').format('YYYY-MM-DD') + 'T23:59:59.999Z';
+
+    const lastMonthStart =
+      moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD') +
+      'T00:00:00.000Z';
+    const lastMonthEnd =
+      moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD') +
+      'T23:59:59.999Z';
+
+    const customer = await this.prismaService.customer.findMany({
+      where: { user_id },
+    });
+
+    const invoice = await this.prismaService.invoice.findMany({
+      where: { user_id },
+    });
+
+    const quotation = await this.prismaService.quotation.findMany({
+      where: { user_id },
+    });
+
+    const res = {
+      customer: {
+        currentMonth: customer.filter((c) => {
+          const createdAt = new Date(c.createdAt);
+          return (
+            createdAt >= new Date(currentMonthStart) &&
+            createdAt <= new Date(currentMonthEnd)
+          );
+        }).length,
+        lastMonth: customer.filter((c) => {
+          const createdAt = new Date(c.createdAt);
+          return (
+            createdAt >= new Date(lastMonthStart) &&
+            createdAt <= new Date(lastMonthEnd)
+          );
+        }).length,
+        total: customer.length,
+      },
+      invoiceCount: {
+        currentMonth: invoice.filter((i) => {
+          const createdAt = new Date(i.createdAt);
+          return (
+            createdAt >= new Date(currentMonthStart) &&
+            createdAt <= new Date(currentMonthEnd)
+          );
+        }).length,
+        lastMonth: invoice.filter((i) => {
+          const createdAt = new Date(i.createdAt);
+          return (
+            createdAt >= new Date(lastMonthStart) &&
+            createdAt <= new Date(lastMonthEnd)
+          );
+        }).length,
+        total: invoice.length,
+      },
+      quotationCount: {
+        currentMonth: quotation.filter((q) => {
+          const createdAt = new Date(q.createdAt);
+          return (
+            createdAt >= new Date(currentMonthStart) &&
+            createdAt <= new Date(currentMonthEnd)
+          );
+        }).length,
+        lastMonth: quotation.filter((q) => {
+          const createdAt = new Date(q.createdAt);
+          return (
+            createdAt >= new Date(lastMonthStart) &&
+            createdAt <= new Date(lastMonthEnd)
+          );
+        }).length,
+        total: quotation.length,
+      },
+      dueAmount: {
+        currentMonth: invoice
+          .filter((i) => {
+            const createdAt = new Date(i.createdAt);
+            return (
+              createdAt >= new Date(currentMonthStart) &&
+              createdAt <= new Date(currentMonthEnd)
+            );
+          })
+          .reduce((acc, curr) => acc + curr.due_amount, 0),
+        lastMonth: invoice
+          .filter((i) => {
+            const createdAt = new Date(i.createdAt);
+            return (
+              createdAt >= new Date(lastMonthStart) &&
+              createdAt <= new Date(lastMonthEnd)
+            );
+          })
+          .reduce((acc, curr) => acc + curr.due_amount, 0),
+        total: invoice.reduce((acc, curr) => acc + curr.due_amount, 0),
+      },
+    };
+
+    return plainToInstance(DashboardCount, res);
   }
 }
