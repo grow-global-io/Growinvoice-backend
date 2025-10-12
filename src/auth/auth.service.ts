@@ -12,7 +12,7 @@ import { SharedService } from '@/shared/shared.service';
 import { UserQuotaDto } from './dto/user-quota.dto';
 import { OAuth2Client } from 'google-auth-library';
 import { ConfigService } from '@nestjs/config';
-import moment from 'moment';
+import * as moment from 'moment-timezone';
 import { DashboardCount } from '@/user/dto/dashboard-count.dto';
 
 @Injectable()
