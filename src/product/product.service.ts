@@ -18,15 +18,29 @@ export class ProductService {
   async create(createProductDto: CreateProductWithTaxDto) {
     const { tax, priceBook, ...prodyctData } = createProductDto;
     await this.sharedService.checkProductQuota(createProductDto.user_id);
+    if (!Object.keys(prodyctData).includes('description')) {
+      prodyctData.description = '';
+    }
+    if (!Object.keys(prodyctData).includes('hsnCode_id')) {
+      prodyctData.hsnCode_id = null;
+    }
+    if (!Object.keys(prodyctData).includes('images')) {
+      prodyctData.images = [];
+    }
+    if (!Object.keys(prodyctData).includes('includeStore')) {
+      prodyctData.includeStore = false;
+    }
     const product = await this.prismaService.product.create({
       data: {
         ...prodyctData,
         user_id: createProductDto.user_id,
-        tax: {
-          createMany: {
-            data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
+        ...(tax && {
+          tax: {
+            createMany: {
+              data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
+            },
           },
-        },
+        }),
         priceBook: {
           createMany: {
             data:
