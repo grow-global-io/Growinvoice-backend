@@ -1,5 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Inject } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { UserWithProducts } from './dto/user-with-products.dto';
 import {
@@ -11,11 +11,12 @@ import { MailService } from '@/mail/mail.service';
 import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@prisma/client';
 import { User } from '@shared/decorators/user.decorator';
+import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 
 @Injectable()
 export class StoreService {
   constructor(
-    private readonly prismaService: PrismaService,
+    @Inject(ENHANCED_PRISMA) private readonly prismaService: PrismaService,
     private readonly mailService: MailService,
     private readonly configService: ConfigService,
   ) {}
