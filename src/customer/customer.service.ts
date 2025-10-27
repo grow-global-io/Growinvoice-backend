@@ -18,32 +18,61 @@ export class CustomerService {
     await this.sharedService.checkCustomerQuota(createCustomerDto.user_id);
     const { billingDetails, shippingDetails, ...customerDetails } =
       createCustomerDto;
-    return await this.prismaServie.customer.create({
-      data: {
-        name: customerDetails.name,
-        option: customerDetails?.option,
-        gstIn: customerDetails.gstIn,
-        billingAddress: {
-          create: billingDetails,
-        },
-        shippingAddress: {
-          create: shippingDetails,
-        },
-        display_name: customerDetails.display_name,
-        email: customerDetails.email,
-        phone: customerDetails.phone,
-        website: customerDetails.website,
-        currencies: {
-          connect: {
-            id: customerDetails.currencies_id,
-          },
-        },
-        user: {
-          connect: {
-            id: customerDetails.user_id,
-          },
+
+    // Helper function to check if address has meaningful data
+    const hasAddressData = (address: any) => {
+      return (
+        address &&
+        address.address &&
+        address.address.trim() !== '' &&
+        address.city &&
+        address.city.trim() !== '' &&
+        address.country_id &&
+        address.country_id.trim() !== '' &&
+        address.state_id &&
+        address.state_id.trim() !== '' &&
+        address.zip &&
+        address.zip.trim() !== ''
+      );
+    };
+
+    // Prepare the customer data
+    const customerData: any = {
+      name: customerDetails.name,
+      option: customerDetails?.option,
+      gstIn: customerDetails.gstIn,
+      display_name: customerDetails.display_name,
+      email: customerDetails.email,
+      phone: customerDetails.phone,
+      website: customerDetails.website,
+      currencies: {
+        connect: {
+          id: customerDetails.currencies_id,
         },
       },
+      user: {
+        connect: {
+          id: customerDetails.user_id,
+        },
+      },
+    };
+
+    // Only create billing address if it has meaningful data
+    if (hasAddressData(billingDetails)) {
+      customerData.billingAddress = {
+        create: billingDetails,
+      };
+    }
+
+    // Only create shipping address if it has meaningful data
+    if (hasAddressData(shippingDetails)) {
+      customerData.shippingAddress = {
+        create: shippingDetails,
+      };
+    }
+
+    return await this.prismaServie.customer.create({
+      data: customerData,
     });
   }
 
@@ -100,35 +129,92 @@ export class CustomerService {
     const { billingDetails, shippingDetails, ...customerDetails } =
       updateCustomerDto;
 
+    // Helper function to check if address has meaningful data
+    const hasAddressData = (address: any) => {
+      return (
+        address &&
+        address.address &&
+        address.address.trim() !== '' &&
+        address.city &&
+        address.city.trim() !== '' &&
+        address.country_id &&
+        address.country_id.trim() !== '' &&
+        address.state_id &&
+        address.state_id.trim() !== '' &&
+        address.zip &&
+        address.zip.trim() !== ''
+      );
+    };
+
+    // First, get the current customer to check if addresses exist
+    const currentCustomer = await this.prismaServie.customer.findUnique({
+      where: { id },
+      include: {
+        billingAddress: true,
+        shippingAddress: true,
+      },
+    });
+
+    if (!currentCustomer) {
+      throw new BadRequestException('Customer not found');
+    }
+
+    // Prepare the customer data
+    const customerData: any = {
+      name: customerDetails.name,
+      option: customerDetails?.option,
+      gstIn: customerDetails.gstIn,
+      display_name: customerDetails.display_name,
+      email: customerDetails.email,
+      phone: customerDetails.phone,
+      website: customerDetails.website,
+      currencies: {
+        connect: {
+          id: customerDetails.currencies_id,
+        },
+      },
+      user: {
+        connect: {
+          id: customerDetails.user_id,
+        },
+      },
+    };
+
+    // Handle billing address
+    if (hasAddressData(billingDetails)) {
+      if (currentCustomer.billingAddress) {
+        // Update existing billing address
+        customerData.billingAddress = {
+          update: billingDetails,
+        };
+      } else {
+        // Create new billing address
+        customerData.billingAddress = {
+          create: billingDetails,
+        };
+      }
+    }
+
+    // Handle shipping address
+    if (hasAddressData(shippingDetails)) {
+      if (currentCustomer.shippingAddress) {
+        // Update existing shipping address
+        customerData.shippingAddress = {
+          update: shippingDetails,
+        };
+      } else {
+        // Create new shipping address
+        customerData.shippingAddress = {
+          create: shippingDetails,
+        };
+      }
+    }
+
     return await this.prismaServie.customer.update({
       where: {
         id,
       },
-      data: {
-        name: customerDetails.name,
-        option: customerDetails?.option,
-        gstIn: customerDetails.gstIn,
-        billingAddress: {
-          update: billingDetails,
-        },
-        shippingAddress: {
-          update: shippingDetails,
-        },
-        display_name: customerDetails.display_name,
-        email: customerDetails.email,
-        phone: customerDetails.phone,
-        website: customerDetails.website,
-        currencies: {
-          connect: {
-            id: customerDetails.currencies_id,
-          },
-        },
-        user: {
-          connect: {
-            id: customerDetails.user_id,
-          },
-        },
-      },
+      data: customerData,
     });
   }
 
