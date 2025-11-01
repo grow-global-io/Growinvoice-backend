@@ -3,9 +3,22 @@ import { CreateCustomerWithAddressDto } from './dto/create-customer-with-address
 import { PrismaService } from '@/prisma/prisma.service';
 import { plainToInstance } from 'class-transformer';
 import { UpdateCustomerWithAddressDto } from './dto/update-customer-with-address.dto';
-import { GetCustomerWithAddressDto } from './dto/get-customer-with-address.dto';
+import {
+  BulkCustomerDto,
+  Fulfilled,
+  GetCustomerWithAddressDto,
+  Rejected,
+} from './dto/get-customer-with-address.dto';
 import { SharedService } from '@/shared/shared.service';
 import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
+// import admin from 'firebase-admin';
+import {
+  getStorage,
+  getDownloadURL,
+  ref,
+  deleteObject,
+} from '@firebase/storage';
+import { CreateBillingAddressDto } from '@shared/models';
 
 @Injectable()
 export class CustomerService {
@@ -15,24 +28,42 @@ export class CustomerService {
   ) {}
 
   async create(createCustomerDto: CreateCustomerWithAddressDto) {
+    const customerExists = await this.prismaServie.customer.findFirst({
+      where: {
+        email: createCustomerDto.email,
+        user_id: createCustomerDto.user_id,
+      },
+    });
+    if (customerExists) {
+      throw new BadRequestException('Customer with this email already exists');
+    }
     await this.sharedService.checkCustomerQuota(createCustomerDto.user_id);
     const { billingDetails, shippingDetails, ...customerDetails } =
       createCustomerDto;
 
     // Helper function to check if address has meaningful data
-    const hasAddressData = (address: any) => {
+    const hasAddressData = (address: CreateBillingAddressDto) => {
       return (
-        address &&
-        address.address &&
-        address.address.trim() !== '' &&
-        address.city &&
-        address.city.trim() !== '' &&
-        address.country_id &&
-        address.country_id.trim() !== '' &&
-        address.state_id &&
-        address.state_id.trim() !== '' &&
-        address.zip &&
-        address.zip.trim() !== ''
+        (address &&
+          address.address &&
+          address.address.trim() !== '' &&
+          address.city &&
+          address.city.trim() !== '' &&
+          address.country_id &&
+          address.country_id.trim() !== '' &&
+          address.state_id &&
+          address.state_id.trim() !== '' &&
+          address.zip &&
+          address.zip.trim() !== '') ||
+        (address &&
+          address.address &&
+          address.city &&
+          address.country_name &&
+          address.country_name.trim() !== '' &&
+          address.state_name &&
+          address.state_name.trim() !== '' &&
+          address.zip &&
+          address.zip.trim() !== '')
       );
     };
 
@@ -74,6 +105,34 @@ export class CustomerService {
     return await this.prismaServie.customer.create({
       data: customerData,
     });
+  }
+
+  async createBulk(bulkCustomerDto: BulkCustomerDto) {
+    const fulfilled: Fulfilled[] = [];
+    const rejected: Rejected[] = [];
+    const firebaseStoragePath = bulkCustomerDto.firebaseStoragePath;
+    const storage = getStorage();
+    const fileRef = ref(storage, firebaseStoragePath);
+    const fileContent = await getDownloadURL(fileRef);
+    const response = await fetch(fileContent);
+    const customers: CreateCustomerWithAddressDto[] = await response.json();
+
+    for (const customerDto of customers) {
+      try {
+        const customer = await this.create(customerDto);
+        fulfilled.push({
+          email: customer.email,
+          uId: customer.id,
+        });
+      } catch (error) {
+        rejected.push({
+          email: customerDto.email,
+          reason: error.message,
+        });
+      }
+    }
+    await deleteObject(fileRef);
+    return { fulfilled, rejected };
   }
 
   async findAll(userId: string) {

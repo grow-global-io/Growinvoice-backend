@@ -174,4 +174,12 @@ export class UpdateInvoiceDto {
   @IsOptional()
   @IsString()
   template_url?: string | null;
+  @ApiProperty({
+    type: 'boolean',
+    default: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  termsAccepted?: boolean;
 }

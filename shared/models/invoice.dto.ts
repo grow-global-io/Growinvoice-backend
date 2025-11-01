@@ -126,4 +126,8 @@ export class InvoiceDto {
     nullable: true,
   })
   template_url: string | null;
+  @ApiProperty({
+    type: 'boolean',
+  })
+  termsAccepted: boolean;
 }

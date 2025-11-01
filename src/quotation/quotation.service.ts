@@ -363,7 +363,8 @@ export class QuotationService {
     const invoiceTemplates = await this.invoiceTemplateService?.findAll();
     const invoice = await this.invoiceService.create({
       invoice_number: quotation.quatation_number,
-      customer_id: quotation.customer_id,
+      // customer_id: quotation.customer_id,
+      customer_ids: [quotation.customer_id],
       date: quotation.date,
       due_date: quotation.expiry_at,
       is_recurring: false,

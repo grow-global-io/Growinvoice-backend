@@ -19,17 +19,35 @@ export class UpdateShippingAddressDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  state_id?: string;
+  state_id?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  country_id?: string;
+  state_name?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  country_id?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  country_name?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,

@@ -3,6 +3,7 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Invoice, InvoiceDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import {
+  CreateDirectInvoiceWithProducts,
   CreateInvoiceWithProducts,
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
@@ -16,6 +17,9 @@ import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.servic
 import { SharedService } from '@/shared/shared.service';
 import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
 import * as puppeteer from 'puppeteer';
+import * as moment from 'moment-timezone';
+import { MailService } from '@/mail/mail.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class InvoiceService {
@@ -23,10 +27,16 @@ export class InvoiceService {
     private sharedService: SharedService,
     @Inject(ENHANCED_PRISMA) private prismaService: PrismaService,
     private invoiceSettings: InvoicesettingsService,
+    private readonly mailService: MailService,
+    private readonly conf: ConfigService,
   ) {}
 
   async create(createInvoiceDto: CreateInvoiceWithProducts) {
-    await this.sharedService.checkInvoicesQuota(createInvoiceDto.user_id);
+    const count = await this.prismaService.invoice.count();
+    await this.sharedService.checkInvoicesQuota(
+      createInvoiceDto.user_id,
+      createInvoiceDto?.customer_ids?.length,
+    );
     if (createInvoiceDto?.product?.length === 0) {
       throw new BadRequestException('Products are missing');
     }
@@ -43,34 +53,45 @@ export class InvoiceService {
         'Invoice number already exists. Please use a different one.',
       );
     }
-    const { product, ...invoiceData } = createInvoiceDto;
-    const invoiceDetails = await this.prismaService.invoice.create({
-      data: {
-        ...invoiceData,
-        invoice_number: createInvoiceDto.invoice_number,
-        tax_id: createInvoiceDto.tax_id ? createInvoiceDto.tax_id : null,
-      },
-    });
-    await Promise.all(
-      product.map(async (product) => {
-        return await this.prismaService.invoiceProducts.create({
-          data: {
-            product_id: product.product_id,
-            quantity: product.quantity,
-            hsnCode_id: product.hsnCode_id,
-            price: product.price,
-            total: product.total,
-            invoice_id: invoiceDetails.id,
-            tax_forInvoiceProducts: {
-              createMany: {
-                data: product.taxes?.map((taxId) => ({ tax_id: taxId })) || [],
+    const { product, customer_ids, ...invoiceData } = createInvoiceDto;
+    const invoicedata: InvoiceDto[] = [];
+    for (const custId of customer_ids || []) {
+      const invoiceDetails = await this.prismaService.invoice.create({
+        data: {
+          ...invoiceData,
+          customer_id: custId,
+          invoice_number: Array.isArray(createInvoiceDto.customer_ids)
+            ? `${Number(moment().format('YYYY')) + count + 1 + customer_ids.indexOf(custId)}`
+            : createInvoiceDto.invoice_number,
+          reference_number: Array.isArray(createInvoiceDto.customer_ids)
+            ? `${Number(moment().format('YYYY')) + count + 1 + customer_ids.indexOf(custId)}`
+            : createInvoiceDto.reference_number,
+          tax_id: createInvoiceDto.tax_id ? createInvoiceDto.tax_id : null,
+        },
+      });
+      invoicedata.push(invoiceDetails);
+      await Promise.all(
+        product.map(async (product) => {
+          return await this.prismaService.invoiceProducts.create({
+            data: {
+              product_id: product.product_id,
+              quantity: product.quantity,
+              hsnCode_id: product.hsnCode_id,
+              price: product.price,
+              total: product.total,
+              invoice_id: invoiceDetails.id,
+              tax_forInvoiceProducts: {
+                createMany: {
+                  data:
+                    product.taxes?.map((taxId) => ({ tax_id: taxId })) || [],
+                },
               },
             },
-          },
-        });
-      }),
-    );
-    return plainToInstance(InvoiceDto, invoiceDetails);
+          });
+        }),
+      );
+    }
+    return plainToInstance(InvoiceDto, invoicedata);
   }
 
   async findAll(user_id: string, customerId?: string) {
@@ -329,7 +350,9 @@ export class InvoiceService {
     return plainToInstance(InvoiceWithAllDataDto, mapNew);
   }
 
-  async createInvoicePreview(createInvoiceDto: CreateInvoiceWithProducts) {
+  async createInvoicePreview(
+    createInvoiceDto: CreateDirectInvoiceWithProducts,
+  ) {
     const invoiceDetails: any = {
       ...createInvoiceDto,
     };
@@ -622,5 +645,75 @@ export class InvoiceService {
     await browser.close();
 
     return pdfBuffer;
+  }
+
+  async termsAcceptedByUser(id: string) {
+    return await this.prismaService.invoice.update({
+      where: { id },
+      data: {
+        termsAccepted: true,
+      },
+    });
+  }
+
+  async bulkInvoiceSentToMail(ids: string[]) {
+    const sentInvoices: InvoiceDto[] = [];
+    const invoices = await this.prismaService.invoice.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+      include: {
+        customer: true,
+        user: {
+          include: {
+            company: true,
+          },
+        },
+      },
+    });
+    if (invoices.length !== ids.length) {
+      throw new BadRequestException('One or more invoice IDs are invalid');
+    }
+    const mailformat = invoices
+      ?.filter((invoice) => invoice.customer?.email)
+      .map((invoice) => {
+        const companyName =
+          invoice.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd';
+        const to = invoice.customer?.email;
+        const subject = `Invoice from ${companyName} - Invoice No: ${invoice.invoice_number}`;
+        // <p>Please find attached the invoice <strong>${invoice.invoice_number}</strong> for your reference.</p>
+        const fromtend =
+          this.conf.get<string>('FRONTEND_URL') +
+          '/invoice/invoicetemplate/' +
+          invoice.id;
+        const html = `
+      <p>Dear ${invoice.customer?.name || 'Customer'},</p>
+      <p>
+        You have received an invoice <strong>${invoice.invoice_number}</strong> from ${companyName}. Please <i><a href="${fromtend}" target="_blank">click here</a></i> to view and download your invoice.
+      </p>
+      <p>If you have any questions or need further assistance, feel free to reach out to us.</p>
+
+      <footer>
+        <p>This invoice is processed by GrowInvoice.com on behalf of ${companyName}. GrowInvoice.com/fi/ is a GDPR-compliant invoicing service hosted in the EU (AWS Stockholm). Your personal data is used solely for billing and record-keeping purposes. View our <a href="https://www.growinvoice.com/fi/privacy-policy" target="_blank">Privacy Policy</a></p>
+      </footer>
+
+      <p>Best regards,</p>
+      <p>${companyName}</p>
+      `;
+        return {
+          to: to,
+          subject: subject,
+          html: html,
+          userId: invoice.user?.id,
+          companyName: invoice.user?.company[0]?.name,
+        };
+      });
+    await this.mailService.bulkSendMail({
+      body: mailformat,
+      companyName: mailformat[0].companyName,
+    });
+    return plainToInstance(InvoiceDto, sentInvoices);
   }
 }

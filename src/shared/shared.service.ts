@@ -45,7 +45,7 @@ export class SharedService {
     return userData;
   }
 
-  async checkInvoicesQuota(user_id: string) {
+  async checkInvoicesQuota(user_id: string, invoicesToBeAdded = 1) {
     const userPlan = await this.getUserPlan(user_id);
     const quotaCount = userPlan?.UserPlans?.reduce((acc, curr) => {
       return (
@@ -64,7 +64,10 @@ export class SharedService {
       },
     });
 
-    if (quotaCount && invoicesCount >= quotaCount) {
+    // if (quotaCount && invoicesCount >= quotaCount) {
+    //   throw new BadRequestException(this.message);
+    // }
+    if (quotaCount && invoicesCount + invoicesToBeAdded > quotaCount) {
       throw new BadRequestException(this.message);
     }
     return true; // Quota available
@@ -137,6 +140,7 @@ export class SharedService {
       },
     });
     if (quotaCount && productsCount >= quotaCount) {
+      throw new Error(this.message);
       throw new BadRequestException(this.message);
     }
     return true; // Quota available

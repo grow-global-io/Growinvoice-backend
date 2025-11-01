@@ -71,102 +71,102 @@ export class InvoicesettingsService {
     });
   }
 
-  @Cron('* * 0 * * *')
-  async findAllByUserToStatusUpdate() {
-    try {
-      const overdueDate = moment().subtract(30, 'days').toDate();
-      const users = await this.prismaService.user.findMany({
-        where: {
-          InvoiceSettings: {
-            some: {
-              autoArchive: true,
-            },
-          },
-        },
-        include: {
-          invoice: {
-            where: {
-              paid_status: 'Unpaid',
-              due_date: {
-                lt: overdueDate,
-              },
-            },
-          },
-        },
-      });
-      for (const user of users) {
-        await this.prismaService.invoice.updateMany({
-          where: {
-            user_id: user.id,
-            paid_status: 'Unpaid',
-            due_date: {
-              lt: overdueDate,
-            },
-          },
-          data: {
-            status: 'Rejected',
-          },
-        });
-      }
-      this.logger.log(
-        'findAllByUserToStatusUpdate method executed successfully.',
-      );
-    } catch (error) {
-      this.logger.error(
-        'Error executing findAllByUserToStatusUpdate method:',
-        error,
-      );
-    }
-    // return plainToInstance(User, users);
-  }
+  // @Cron('* * 0 * * *')
+  // async findAllByUserToStatusUpdate() {
+  //   try {
+  //     const overdueDate = moment().subtract(30, 'days').toDate();
+  //     const users = await this.prismaService.user.findMany({
+  //       where: {
+  //         InvoiceSettings: {
+  //           some: {
+  //             autoArchive: true,
+  //           },
+  //         },
+  //       },
+  //       include: {
+  //         invoice: {
+  //           where: {
+  //             paid_status: 'Unpaid',
+  //             due_date: {
+  //               lt: overdueDate,
+  //             },
+  //           },
+  //         },
+  //       },
+  //     });
+  //     for (const user of users) {
+  //       await this.prismaService.invoice.updateMany({
+  //         where: {
+  //           user_id: user.id,
+  //           paid_status: 'Unpaid',
+  //           due_date: {
+  //             lt: overdueDate,
+  //           },
+  //         },
+  //         data: {
+  //           status: 'Rejected',
+  //         },
+  //       });
+  //     }
+  //     this.logger.log(
+  //       'findAllByUserToStatusUpdate method executed successfully.',
+  //     );
+  //   } catch (error) {
+  //     this.logger.error(
+  //       'Error executing findAllByUserToStatusUpdate method:',
+  //       error,
+  //     );
+  //   }
+  //   // return plainToInstance(User, users);
+  // }
 
-  @Cron('* * 0 * * *')
-  async findAllByUserToMail() {
-    try {
-      const currentDate = moment().startOf('day');
-      const users = await this.prismaService.user.findMany({
-        where: {
-          InvoiceSettings: {
-            some: {},
-          },
-        },
-        include: {
-          invoice: {
-            where: {
-              paid_status: 'Unpaid',
-            },
-          },
-          InvoiceSettings: true,
-          company: true,
-        },
-      });
+  // @Cron('* * 0 * * *')
+  // async findAllByUserToMail() {
+  //   try {
+  //     const currentDate = moment().startOf('day');
+  //     const users = await this.prismaService.user.findMany({
+  //       where: {
+  //         InvoiceSettings: {
+  //           some: {},
+  //         },
+  //       },
+  //       include: {
+  //         invoice: {
+  //           where: {
+  //             paid_status: 'Unpaid',
+  //           },
+  //         },
+  //         InvoiceSettings: true,
+  //         company: true,
+  //       },
+  //     });
 
-      for (const user of users) {
-        const invoiceSettings = user.InvoiceSettings[0];
-        for (const invoice of user.invoice) {
-          const dueDate = moment(invoice.due_date);
-          const noticeDate = dueDate.subtract(
-            invoiceSettings.dueNotice,
-            'days',
-          );
-          if (currentDate.isSame(noticeDate, 'day')) {
-            const sendMailDto = {
-              email: user.email,
-              subject: 'Invoice Due Date Notice',
-              body: `Dear ${user.name},<br><br>Your invoice with due date ${moment(invoice.due_date).format('YYYY-MM-DD')} is approaching its due date. Please take the necessary actions.<br><br>Best Regards,<br>Grow Global Strategies Pvt Ltd`,
-            };
-            await this.mailService.sendMail(
-              sendMailDto,
-              undefined,
-              user.company[0].name,
-            );
-          }
-        }
-      }
-      this.logger.log('findAllByUserToMail method executed successfully.');
-    } catch (error) {
-      this.logger.error('Error executing findAllByUserToMail method:', error);
-    }
-    // return plainToInstance(User, users);
-  }
+  //     for (const user of users) {
+  //       const invoiceSettings = user.InvoiceSettings[0];
+  //       for (const invoice of user.invoice) {
+  //         const dueDate = moment(invoice.due_date);
+  //         const noticeDate = dueDate.subtract(
+  //           invoiceSettings.dueNotice,
+  //           'days',
+  //         );
+  //         if (currentDate.isSame(noticeDate, 'day')) {
+  //           const sendMailDto = {
+  //             email: user.email,
+  //             subject: 'Invoice Due Date Notice',
+  //             body: `Dear ${user.name},<br><br>Your invoice with due date ${moment(invoice.due_date).format('YYYY-MM-DD')} is approaching its due date. Please take the necessary actions.<br><br>Best Regards,<br>Grow Global Strategies Pvt Ltd`,
+  //           };
+  //           await this.mailService.sendMail(
+  //             sendMailDto,
+  //             undefined,
+  //             user.company[0].name,
+  //           );
+  //         }
+  //       }
+  //     }
+  //     this.logger.log('findAllByUserToMail method executed successfully.');
+  //   } catch (error) {
+  //     this.logger.error('Error executing findAllByUserToMail method:', error);
+  //   }
+  //   // return plainToInstance(User, users);
+  // }
 }

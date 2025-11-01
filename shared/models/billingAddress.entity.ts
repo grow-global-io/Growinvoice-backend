@@ -33,22 +33,36 @@ export class BillingAddress {
   city: string;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  state_id: string;
+  state_id: string | null;
   @ApiProperty({
     type: () => State,
     required: false,
+    nullable: true,
   })
-  state?: State;
+  state?: State | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  country_id: string;
+  state_name: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  country_id: string | null;
   @ApiProperty({
     type: () => Country,
     required: false,
+    nullable: true,
   })
-  country?: Country;
+  country?: Country | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
+  country_name: string | null;
   @ApiProperty({
     type: 'string',
   })

@@ -61,9 +61,12 @@
                       <%= invoice?.customer?.name %>
                     </b><br>
                     <%= invoice?.customer?.billingAddress?.address %><br>
-                      <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name
+                      <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state_name 
+                      ?? invoice?.customer?.billingAddress?.state?.name
                           %>,
-                          <%= invoice?.customer?.billingAddress?.country?.name %><br>
+                          <%= invoice?.customer?.billingAddress?.country?.name
+                            ?? invoice?.customer?.billingAddress?.country_name
+                          %><br>
                             <%= invoice?.customer?.billingAddress?.zip %><br>
                               <% } else { %>
 
@@ -429,17 +432,19 @@
             </div>
             <div class="row">
               <div class="col">
-                <%- invoiceSettings?.footer
-                  ?? "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer."
-                  %>
+                <%= footer.text %>
+                
+                  
               </div>
             </div>
+            <br/>
           </div>
-          <div class="tm_note tm_text_center tm_font_style_normal">
-            <hr class="tm_mb15">
-            <p class="tm_mb2"><b class="tm_primary_color">Terms & Conditions:</b></p>
-            <p class="tm_m0">All claims relating to quantity or shipping errors shall be waived by Buyer unless made in
-              writing to <br>Seller within thirty (30) days after delivery of goods to the address stated.</p>
+          <div class="row">
+            <div class="col">
+              <%- invoiceSettings?.footer
+                ?? "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer."
+                %>
+            </div>
           </div>
         </div>
       </div>

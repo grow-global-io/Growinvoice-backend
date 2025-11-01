@@ -42,6 +42,9 @@ enum CustomerOption {
   Freelancer
   BusinessWithGST
   BusinessWithoutGST
+  Individual
+  BusinessWithVAT
+  BusinessWithoutVAT
 }
 
 enum InvoiceRecurring {
@@ -486,25 +489,31 @@ model TaxForProduct {
 model BillingAddress {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime   @default(now())
+  createdAt    DateTime   @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime?  @updatedAt()
+  updatedAt    DateTime?  @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean    @default(true)
-  id         String     @id() @default(cuid())
-  address    String
-  city       String
+  isExist      Boolean    @default(true)
+  id           String     @id() @default(cuid())
+  address      String
+  city         String
   /// @DtoRelationIncludeId
-  state_id   String
-  state      State      @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  state_id     String?
+  state        State?     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  state_name   String?
   /// @DtoRelationIncludeId
-  country_id String
-  country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade)
-  zip        String
+  country_id   String?
+  country      Country?   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  country_name String?
+  zip          String
   /// @DtoApiHidden
-  customer   Customer[]
+  customer     Customer[]
 }
 
 /// @@allow('read', isExist == true)
@@ -514,25 +523,31 @@ model BillingAddress {
 model ShippingAddress {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime   @default(now())
+  createdAt    DateTime   @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime?  @updatedAt()
+  updatedAt    DateTime?  @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean    @default(true)
-  id         String     @id() @default(cuid())
-  address    String
-  city       String
+  isExist      Boolean    @default(true)
+  id           String     @id() @default(cuid())
+  address      String
+  city         String
   /// @DtoRelationIncludeId
-  state_id   String
-  state      State      @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  state_id     String?
+  state        State?     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  state_name   String?
   /// @DtoRelationIncludeId
-  country_id String
-  country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade)
-  zip        String
+  country_id   String?
+  country      Country?   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  country_name String?
+  zip          String
   /// @DtoApiHidden
-  customer   Customer[]
+  customer     Customer[]
 }
 
 /// @@allow('read', isExist == true)
@@ -591,7 +606,7 @@ model Customer {
   name               String
   display_name       String
   email              String?
-  phone              String
+  phone              String?
   website            String?
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
@@ -823,6 +838,9 @@ model Invoice {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   template_url       String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  termsAccepted      Boolean           @default(false)
 }
 
 /// @@allow('read', isExist == true)

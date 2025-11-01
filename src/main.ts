@@ -48,6 +48,7 @@ async function bootstrap() {
     },
   });
 
+  // Initialize Firebase Client SDK (if needed for client-side operations)
   const firebaseConfig = {
     apiKey: process.env.APIKEY_FIREBASE,
     authDomain: `${process.env.PROJECT_ID}.firebaseapp.com`,

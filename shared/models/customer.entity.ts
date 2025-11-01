@@ -46,8 +46,9 @@ export class Customer {
   email: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  phone: string;
+  phone: string | null;
   @ApiProperty({
     type: 'string',
     nullable: true,

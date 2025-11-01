@@ -6,19 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { UpdateCustomerDto } from '@shared/models';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiTags } from '@nestjs/swagger';
 import { CreateCustomerWithAddressDto } from './dto/create-customer-with-address.dto';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
-import { GetCustomerWithAddressDto } from './dto/get-customer-with-address.dto';
+import {
+  BulkCustomerDto,
+  GetCustomerWithAddressDto,
+  ResBulkCustomerDto,
+} from './dto/get-customer-with-address.dto';
 
 @ApiTags('customer')
 @Controller('customer')
+@ApiExtraModels(GetCustomerWithAddressDto, ResBulkCustomerDto)
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
@@ -28,10 +34,28 @@ export class CustomerController {
   async create(
     @Body() createCustomerDto: CreateCustomerWithAddressDto,
   ): Promise<SuccessResponseDto<GetCustomerWithAddressDto>> {
-    const customer = await this.customerService.create(createCustomerDto);
+    try {
+      const customer = await this.customerService.create(createCustomerDto);
+      return {
+        result: customer,
+        message: 'Customer created successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  @Post('bulk')
+  @ApiSuccessResponse(ResBulkCustomerDto, { status: 201 })
+  async createBulk(
+    @Body() createCustomerDtos: BulkCustomerDto,
+  ): Promise<SuccessResponseDto<ResBulkCustomerDto>> {
+    const customers = await this.customerService.createBulk(createCustomerDtos);
     return {
-      result: customer,
-      message: 'Customer created successfully',
+      result: customers,
+      message: customers?.rejected?.length
+        ? 'Some customers were not created successfully'
+        : 'All customers created successfully',
     };
   }
 

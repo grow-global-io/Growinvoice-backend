@@ -78,6 +78,68 @@ export class MailService {
     return mail.data;
   }
 
+  async bulkSendMail({
+    body,
+    userId,
+    companyName,
+  }: {
+    body: {
+      to: string;
+      subject: string;
+      html: string;
+      userId?: string;
+      companyName?: string;
+    }[];
+    userId?: string;
+    companyName?: string;
+  }) {
+    const bulkTransporter = nodemailer.createTransport({
+      host: this.configService.get<string>('SMTP_HOST'),
+      port: this.configService.get<number>('SMTP_PORT'),
+      auth: {
+        user: this.configService.get<string>('SMTP_USER'),
+        pass: this.configService.get<string>('SMTP_PASS'),
+      },
+      pool: true, // Enable connection pooling
+      maxMessages: Infinity, // Keep connections in the pool
+      maxConnections: 5, // Adjust as needed
+    });
+    if (companyName) {
+      companyName = companyName;
+    }
+    if (userId) {
+      const userDetails = await this.prismaService.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          company: true,
+        },
+      });
+      companyName = userDetails.company[0].name ?? '';
+    }
+    const emailPromises = body.map(async (mail) => {
+      const companyNameString = companyName;
+
+      return bulkTransporter.sendMail({
+        to: mail.to,
+        subject: mail.subject,
+        html: mail.html,
+        sender: {
+          name: companyNameString ?? 'Grow Global Strategies Pvt Ltd',
+          address: 'no-reply@growinvoice.com',
+        },
+      });
+    });
+    try {
+      await Promise.all(emailPromises);
+    } catch (error) {
+      console.error('Error sending bulk emails:', error);
+    } finally {
+      bulkTransporter.close();
+    }
+  }
+
   async sendMail(
     sendMailDto: SendMailDto,
     userId?: string,

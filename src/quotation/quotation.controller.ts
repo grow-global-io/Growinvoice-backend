@@ -188,7 +188,7 @@ export class QuotationController {
     const invoice = await this.quotationService.convertToInvoice(id);
     return {
       message: 'Quotation converted to invoice successfully',
-      result: invoice,
+      result: invoice[0],
     };
   }
 

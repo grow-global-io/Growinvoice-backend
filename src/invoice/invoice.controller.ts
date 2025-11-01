@@ -8,6 +8,7 @@ import {
   Res,
   Put,
   Query,
+  ParseArrayPipe,
 } from '@nestjs/common';
 import { InvoiceService } from './invoice.service';
 import { InvoiceDto } from '@shared/models';
@@ -21,6 +22,7 @@ import {
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import {
+  CreateDirectInvoiceWithProducts,
   CreateInvoiceWithProducts,
   UpdateInvoiceWithProducts,
 } from './dto/create-invoice-with-products.dto';
@@ -48,7 +50,7 @@ export class InvoiceController {
     const invoice = await this.invoiceService.create(createInvoiceDto);
     return {
       message: 'Invoice created successfully',
-      result: invoice,
+      result: invoice[0],
     };
   }
 
@@ -159,11 +161,29 @@ export class InvoiceController {
       });
     }
     a.user.company[0].logo = await convertLogoToBase64(a.user.company[0].logo);
+    if (a.customer?.billingAddress?.country_name) {
+      a.customer.billingAddress.country = {
+        name: a.customer.billingAddress.country_name,
+        ...a.customer.billingAddress?.country,
+      };
+      a.customer.billingAddress.state = {
+        name: a.customer.billingAddress.state_name,
+        ...a.customer.billingAddress?.state,
+      };
+    }
     const invoiceSettingsWithFormat =
       await this.invoiceService.invoiceSettingsWithFormat(invoice);
+    // (invoice as any)?.footer?.text =
+    //   `By viewing this invoice, you acknowledge that the data displayed is processed by ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} on behalf of ${invoice.customer?.name || 'Customer'} for the purpose of billing and record-keeping in accordance with applicable data protection laws (GDPR).`;
+    const newInvoice = {
+      ...invoiceSettingsWithFormat,
+      footer: {
+        text: `By viewing this invoice, you acknowledge that the data displayed is processed by ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} on behalf of ${invoice.customer?.name || 'Customer'} for the purpose of billing and record-keeping in accordance with applicable data protection laws (GDPR).`,
+      },
+    };
     return res.render(
       'invoice/' + (invoice?.template?.view ?? 'template1'),
-      invoiceSettingsWithFormat,
+      newInvoice,
     );
   }
 
@@ -201,6 +221,29 @@ export class InvoiceController {
     };
   }
 
+  @Post('bulkInvoiceSentToMail')
+  @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  @ApiQuery({
+    name: 'ids',
+    required: true,
+    description: 'Array of Invoice IDs',
+    isArray: true,
+    type: String,
+  })
+  async bulkInvoiceSentToMail(
+    @Query(
+      'ids',
+      new ParseArrayPipe({ items: String, separator: ',', optional: false }),
+    )
+    ids: string[],
+  ) {
+    const res = await this.invoiceService.bulkInvoiceSentToMail(ids);
+    return {
+      message: 'Invoices sent to customers successfully',
+      result: res,
+    };
+  }
+
   @Post('markedAsRejected')
   @ApiSuccessResponse(InvoiceDto, { status: 200 })
   async markedAsRejected(
@@ -209,6 +252,19 @@ export class InvoiceController {
     const invoice = await this.invoiceService.statusToReject(id);
     return {
       message: 'Invoice Rejected successfully',
+      result: invoice,
+    };
+  }
+
+  @IsPublic()
+  @Post('termsAcceptedByUser')
+  @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  async termsAcceptedByUser(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<InvoiceDto>> {
+    const invoice = await this.invoiceService.termsAcceptedByUser(id);
+    return {
+      message: 'Invoice terms accepted successfully',
       result: invoice,
     };
   }
@@ -253,16 +309,22 @@ export class InvoiceController {
   @Post('invoicePreviewFromBody')
   @ApiResponse({ status: 200, type: String })
   async invoicePreviewFromBody(
-    @Body() createInvoiceDto: CreateInvoiceWithProducts,
+    @Body() createInvoiceDto: CreateDirectInvoiceWithProducts,
     @Res() res?: Response,
   ) {
     const invoice =
       await this.invoiceService.createInvoicePreview(createInvoiceDto);
     const invoiceSettings =
       await this.invoiceService?.invoiceSettingsWithFormat(invoice);
+    const newInvoice = {
+      ...invoiceSettings,
+      footer: {
+        text: `By viewing this invoice, you acknowledge that the data displayed is processed by ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} on behalf of ${invoice.customer?.name || 'Customer'} for the purpose of billing and record-keeping in accordance with applicable data protection laws (GDPR).`,
+      },
+    };
     return res.render(
       'invoice/' + (invoice?.template?.view ?? 'template1'),
-      invoiceSettings,
+      newInvoice,
     );
   }
 }

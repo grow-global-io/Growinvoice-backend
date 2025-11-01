@@ -36,10 +36,11 @@ export class UpdateCustomerDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
   })
   @IsOptional()
   @IsString()
-  phone?: string;
+  phone?: string | null;
   @ApiProperty({
     type: 'string',
     required: false,

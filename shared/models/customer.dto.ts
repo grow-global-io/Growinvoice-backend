@@ -40,8 +40,9 @@ export class CustomerDto {
   email: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  phone: string;
+  phone: string | null;
   @ApiProperty({
     type: 'string',
     nullable: true,

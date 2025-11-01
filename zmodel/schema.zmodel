@@ -45,6 +45,9 @@ enum CustomerOption {
     Freelancer
     BusinessWithGST
     BusinessWithoutGST
+    Individual
+    BusinessWithVAT
+    BusinessWithoutVAT
 }
 
 enum InvoiceRecurring {
@@ -256,27 +259,31 @@ model TaxForProduct extends Base {
 
 
 model BillingAddress extends Base {
-    id         String     @id @default(cuid())
-    address    String
-    city       String
-    state_id   String     @DtoRelationIncludeId
-    state      State      @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    country_id String     @DtoRelationIncludeId
-    country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade)
-    zip        String
-    customer   Customer[] @DtoApiHidden
+    id           String     @id @default(cuid())
+    address      String
+    city         String
+    state_id     String?    @DtoRelationIncludeId
+    state        State?     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    state_name   String?    @DtoCreateOptional @DtoUpdateOptional
+    country_id   String?    @DtoRelationIncludeId
+    country      Country?   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    country_name String?    @DtoCreateOptional @DtoUpdateOptional
+    zip          String
+    customer     Customer[] @DtoApiHidden
 }
 
 model ShippingAddress extends Base {
-    id         String     @id @default(cuid())
-    address    String
-    city       String
-    state_id   String     @DtoRelationIncludeId
-    state      State      @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    country_id String     @DtoRelationIncludeId
-    country    Country    @relation(fields: [country_id], references: [id], onDelete: Cascade)
-    zip        String
-    customer   Customer[] @DtoApiHidden
+    id           String     @id @default(cuid())
+    address      String
+    city         String
+    state_id     String?    @DtoRelationIncludeId
+    state        State?     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    state_name   String?    @DtoCreateOptional @DtoUpdateOptional
+    country_id   String?    @DtoRelationIncludeId
+    country      Country?   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    country_name String?    @DtoCreateOptional @DtoUpdateOptional
+    zip          String
+    customer     Customer[] @DtoApiHidden
 }
 
 model Currencies extends Base {
@@ -302,7 +309,7 @@ model Customer extends Base {
     name               String
     display_name       String
     email              String?
-    phone              String
+    phone              String?
     website            String?
     gstIn              String?          @DtoCreateOptional @DtoUpdateOptional
     option             CustomerOption
@@ -403,6 +410,7 @@ model Invoice extends Base {
     template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
     Payments           Payments[]        @DtoApiHidden
     template_url       String?           @DtoCreateOptional @DtoUpdateOptional
+    termsAccepted      Boolean           @default(false) @DtoCreateOptional @DtoUpdateOptional
 }
 
 
