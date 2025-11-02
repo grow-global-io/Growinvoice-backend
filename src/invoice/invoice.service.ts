@@ -666,6 +666,7 @@ export class InvoiceService {
       },
       include: {
         customer: true,
+        currency: true,
         user: {
           include: {
             company: true,
@@ -689,19 +690,113 @@ export class InvoiceService {
           '/invoice/invoicetemplate/' +
           invoice.id;
         const html = `
-      <p>Dear ${invoice.customer?.name || 'Customer'},</p>
-      <p>
-        You have received an invoice <strong>${invoice.invoice_number}</strong> from ${companyName}. Please <i><a href="${fromtend}" target="_blank">click here</a></i> to view and download your invoice.
-      </p>
-      <p>If you have any questions or need further assistance, feel free to reach out to us.</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Invoice from ${companyName}</title>
+  <style>
+    /* Basic reset */
+    body { margin:0; padding:0; background:#f4f6f8; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#333; }
+    a { color:#1a73e8; text-decoration:none; }
+    .container { width:100%; padding:20px 12px; }
+    .email-wrapper { max-width:600px; margin:0 auto; background:#ffffff; border-radius:8px; overflow:hidden; box-shadow:0 2px 6px rgba(16,24,40,0.08); }
+    .header { background:linear-gradient(90deg,#0b74de,#0b4fde); color:#fff; padding:20px; display:flex; align-items:center; gap:12px; }
+    .logo { width:48px; height:48px; border-radius:6px; background:#fff; display:inline-block; text-align:center; line-height:48px; font-weight:700; color:#0b4fde; }
+    .org-name { font-size:18px; font-weight:700; }
+    .content { padding:24px; }
+    .greeting { font-size:16px; margin-bottom:8px; }
+    .intro { color:#555; font-size:14px; line-height:1.45; margin-bottom:18px; }
+    .card { border:1px solid #eef2f7; border-radius:8px; padding:16px; margin-bottom:18px; background:#fbfdff; }
+    .meta { font-size:14px; color:#444; }
+    .btn-wrap { text-align:center; margin:18px 0; }
+    .btn { background:#0b74de; color:#fff; padding:12px 20px; border-radius:6px; display:inline-block; font-weight:600; }
+    .small { font-size:13px; color:#6b7280; line-height:1.4; }
+    .footer { background:#f8fafc; padding:16px 24px; font-size:12px; color:#6b7280; }
+    .legal { font-size:11px; color:#94a3b8; margin-top:10px; line-height:1.4; }
+    @media (max-width:420px){ .meta {flex-direction:column; align-items:flex-start;} .header {padding:14px} .content {padding:16px} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="email-wrapper" role="article" aria-roledescription="email">
+      <div class="header">
+        <div>
+          <div class="org-name">${companyName}</div>
+          <div style="font-size:12px;opacity:0.95;">Invoice notification</div>
+        </div>
+      </div>
 
-      <footer>
-        <p>This invoice is processed by GrowInvoice.com on behalf of ${companyName}. GrowInvoice.com/fi/ is a GDPR-compliant invoicing service hosted in the EU (AWS Stockholm). Your personal data is used solely for billing and record-keeping purposes. View our <a href="https://www.growinvoice.com/fi/privacy-policy" target="_blank">Privacy Policy</a></p>
-      </footer>
+      <div class="content">
+        <div class="greeting">Hello ${invoice.customer?.name || 'Customer'},</div>
 
-      <p>Best regards,</p>
-      <p>${companyName}</p>
-      `;
+        <div class="intro">
+          You have received a new invoice from <strong>${companyName}</strong>.
+          Please review the invoice details below and use the button to view or download the invoice.
+        </div>
+
+        <div class="card" role="group" aria-label="Invoice details">
+          <div style="font-size:15px;font-weight:700;margin-bottom:8px;">Invoice #${invoice.invoice_number}</div>
+          <div class="meta">
+            <div><strong>Status:</strong> <span style="color:#0b74de">Unpaid</span></div>
+
+            <div><strong>Amount:</strong> <span>${invoice?.total.toLocaleString(
+              'en-US',
+              {
+                style: 'currency',
+                currency: invoice.currency?.short_code,
+              },
+            )}</span></div>
+          </div>
+
+          <!-- Optional additional details (date, due date) -->
+          <div style="margin-top:12px;color:#475569;font-size:13px">
+            <div><strong>Date:</strong> ${moment(invoice?.date).format('MMMM D, YYYY')}</div>
+            <div><strong>Due date:</strong> ${moment(invoice?.due_date).format('MMMM D, YYYY')}</div>
+          </div>
+
+          <div class="btn-wrap">
+            <a class="btn" href="${fromtend}" target="_blank" rel="noopener noreferrer" aria-label="View invoice ${invoice.invoice_number}" style="cursor:pointer; color:#fff !important;">
+              View & Download Invoice
+            </a>
+          </div>
+
+          <div class="small">
+            Invoice number: <strong>${invoice.invoice_number}</strong><br/>
+            If the link does not work, copy & paste this URL into your browser:<br/>
+            <a href="${fromtend}" target="_blank" rel="noopener noreferrer">${fromtend}</a>
+          </div>
+        </div>
+
+        <div class="small">
+          If you have any questions, contact us at
+          <a href="mailto:${invoice.user?.email || 'support@growinvoice.com'}">${invoice.user?.email || 'support@growinvoice.com'}</a>.
+        </div>
+
+        <div class="legal">
+          Best regards,<br/>
+          <strong>${companyName}</strong>
+        </div>
+      </div>
+
+      <div class="footer">
+
+        <div style="margin-top:10px" class="small">
+          <i>
+            GrowInvoice.com is a GDPR-compliant invoicing service hosted in the EU (AWS Stockholm). Your personal data is used solely for billing and record-keeping purposes. View our <a href="https://growinvoice.com/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+          </i>
+          <br/>
+          <i>
+            GrowInvoice.com on GDPR:n mukainen laskutuspalvelu, joka toimii EU:ssa (AWS Stockholm). Henkilötietojasi käytetään ainoastaan laskutusta ja kirjanpitoa varten. <a href="https://growinvoice.com/privacy-policy" target="_blank" rel="noopener noreferrer">Lue tietosuojaseloste</a>.
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
         return {
           to: to,
           subject: subject,
@@ -714,6 +809,17 @@ export class InvoiceService {
       body: mailformat,
       companyName: mailformat[0].companyName,
     });
+    await this.prismaService.invoice.updateMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+      data: {
+        status: 'Mailed to customer',
+      },
+    });
+    invoices.forEach((invoice) => sentInvoices.push(invoice));
     return plainToInstance(InvoiceDto, sentInvoices);
   }
 }
