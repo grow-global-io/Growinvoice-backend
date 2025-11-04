@@ -16,20 +16,22 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - uses: actions/checkout@v4
-
-      - run: yarn install --frozen-lockfile
-
-      # Debugging: Check if the secret is available
+      
       - name: Debug Secret Length
         run: echo "PROD_ENV_FILE length ${#PROD_ENV_FILE}"
         env:
           PROD_ENV_FILE: ${{ secrets.PROD_ENV_FILE }}
 
-      # Properly write the secret to the .env file (handles multiline secrets)
       - name: Create .env file
         run: |
           touch .env
           printf "%s" "${{ secrets.PROD_ENV_FILE }}" > .env
+          
+      - run: yarn install --frozen-lockfile
+
+      # Debugging: Check if the secret is available
+
+      # Properly write the secret to the .env file (handles multiline secrets)
 
       # Verify that the .env file was created (remove or modify for security)
       - name: Verify .env file
