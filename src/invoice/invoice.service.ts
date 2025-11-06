@@ -276,6 +276,11 @@ export class InvoiceService {
 
         product: {
           include: {
+            tax_forInvoiceProducts: {
+              include: {
+                tax: true,
+              },
+            },
             product: {
               include: {
                 priceBook: {
@@ -293,6 +298,7 @@ export class InvoiceService {
                     tax: true,
                   },
                 },
+                unit: true,
               },
             },
           },
