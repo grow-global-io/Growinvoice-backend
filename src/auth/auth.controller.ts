@@ -45,4 +45,25 @@ export class AuthController {
   ): Promise<LoginSuccessDto> {
     return await this.authService.verifyGoogleToken(body.token);
   }
+
+  @IsPublic()
+  @Get('google-client-id')
+  @ApiResponse({
+    status: 200,
+    description: 'Returns Google OAuth Client ID for frontend configuration',
+    schema: {
+      type: 'object',
+      properties: {
+        clientId: {
+          type: 'string',
+          description: 'Google OAuth Client ID',
+        },
+      },
+    },
+  })
+  async getGoogleClientId() {
+    return {
+      clientId: this.authService.getGoogleClientId(),
+    };
+  }
 }

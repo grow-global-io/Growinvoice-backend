@@ -97,30 +97,97 @@ export class AuthService {
     return plainToInstance(UserQuotaDto, res);
   }
 
+  getGoogleClientId(): string {
+    const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
+    if (!clientId) {
+      throw new BadRequestException(
+        'Google OAuth is not configured. GOOGLE_CLIENT_ID is missing.',
+      );
+    }
+    return clientId;
+  }
+
   async verifyGoogleToken(token: string): Promise<LoginSuccessDto> {
-    const client = new OAuth2Client(
-      this.configService.get<string>('GOOGLE_CLIENT_ID'),
-    );
+    const clientId = this.getGoogleClientId();
+    const client = new OAuth2Client(clientId);
     try {
       const ticket = await client.verifyIdToken({
         idToken: token,
-        audience: this.configService.get<string>('GOOGLE_CLIENT_ID'), // Specify the CLIENT_ID of the app that calls the backend.
+        audience: clientId, // Specify the CLIENT_ID of the app that calls the backend.
       });
       const payload = ticket.getPayload();
-      const user = await this.prismaService.user.findUnique({
+      if (!payload || !payload.email) {
+        throw new BadRequestException('Invalid Google token: missing email');
+      }
+
+      // Check if user exists
+      let user = await this.prismaService.user.findUnique({
         where: { email: payload.email },
       });
-      const payloadDb = { sub: user.id, email: user.email };
+
+      // If user doesn't exist, create a new user with Google data
       if (!user) {
-        throw new BadRequestException('User not found');
+        // Generate a random password for Google OAuth users (they won't use it)
+        const randomPassword = await bcrypt.hash(
+          Math.random().toString(36).slice(-12) + Date.now().toString(),
+          12,
+        );
+
+        // Create user with data from Google
+        try {
+          user = await this.prismaService.user.create({
+            data: {
+              email: payload.email,
+              name:
+                payload.name ||
+                payload.given_name ||
+                payload.email.split('@')[0],
+              phone: null, // Google doesn't always provide phone
+              password: randomPassword, // Random password since they use Google OAuth
+              // Create a default company for the user
+              company: {
+                create: {
+                  name: payload.name || payload.given_name || 'My Company',
+                },
+              },
+            },
+          });
+
+          if (!user || !user.id) {
+            throw new BadRequestException(
+              'Failed to create user account. Please try again.',
+            );
+          }
+
+          console.log(`✅ New user created via Google OAuth: ${user.email}`);
+        } catch (createError: any) {
+          console.error('Error creating user:', createError);
+          throw new BadRequestException(
+            `Failed to create user account: ${createError.message || 'Unknown error'}`,
+          );
+        }
       }
+
+      // Ensure user exists and has an id before proceeding
+      if (!user || !user.id) {
+        throw new BadRequestException(
+          'User account is invalid. Please contact support.',
+        );
+      }
+
+      const payloadDb = { sub: user.id, email: user.email };
       return {
         message: 'Login successful',
         authToken: await this.jwtService.signAsync(payloadDb),
       };
     } catch (error) {
       console.error('Error verifying ID token:', error);
-      return null;
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new BadRequestException(
+        'Failed to verify Google token. Please try again.',
+      );
     }
   }
 
