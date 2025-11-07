@@ -13,12 +13,15 @@ import { plainToInstance } from 'class-transformer';
 import { updateCurrencyCompanyDto } from './dto/update-currency-company.dto';
 import { User as UserTokenDetails } from '@shared/decorators/user.decorator';
 import { AdminUsersListDto } from './dto/admin-users-list.dto';
+import { JwtService } from '@nestjs/jwt';
+import { LoginSuccessDto } from './dto/login-success.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     private prismaService: PrismaService,
     private mailService: MailService,
+    private jwtService: JwtService,
   ) {}
 
   private async validateCreateUserDto(data: CreateUserDto) {
@@ -54,18 +57,37 @@ export class UserService {
     return passwordRegex.test(password);
   }
 
-  private async checkIfUserExists(email: string) {
-    const existingUser = await this.prismaService.user.findUnique({
-      where: { email },
-    });
-    if (existingUser) {
-      throw new BadRequestException('User already exists');
-    }
-  }
-
   async createUser(data: CreateUserCompany) {
     await this.validateCreateUserDto(data);
-    await this.checkIfUserExists(data.email);
+
+    // Check if user already exists
+    const existingUser = await this.prismaService.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      // User exists - verify password and log them in
+      const passwordMatch = await bcrypt.compare(
+        data.password,
+        existingUser.password,
+      );
+
+      if (!passwordMatch) {
+        throw new BadRequestException('Invalid email or password');
+      }
+
+      // Generate JWT token for login
+      const payload = { sub: existingUser.id, email: existingUser.email };
+      const authToken = await this.jwtService.signAsync(payload);
+
+      // Return login response format
+      return plainToInstance(LoginSuccessDto, {
+        message: 'Login successful',
+        authToken,
+      });
+    }
+
+    // User doesn't exist - create new user
     const hashedPassword = await bcrypt.hash(data.password, 12);
     await this.mailService.sendWelcomeMail(data.email, data.name);
     const result = await this.prismaService.user.create({
@@ -81,7 +103,16 @@ export class UserService {
         },
       },
     });
-    return plainToInstance(User, result);
+
+    // Generate JWT token for new user
+    const payload = { sub: result.id, email: result.email };
+    const authToken = await this.jwtService.signAsync(payload);
+
+    // Return login response format for new user too
+    return plainToInstance(LoginSuccessDto, {
+      message: 'User created and logged in successfully',
+      authToken,
+    });
   }
 
   async forgotPassword(email: string) {

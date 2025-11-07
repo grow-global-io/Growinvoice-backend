@@ -32,18 +32,16 @@ export class UserController {
 
   @IsPublic()
   @Post('create')
-  @ApiSuccessResponse(User, {
-    status: 201,
+  @ApiResponse({
+    status: 200,
+    description: 'User created or logged in successfully',
+    type: LoginSuccessDto,
   })
   async createUser(
     @Body() createUserDto: CreateUserCompany,
-  ): Promise<SuccessResponseDto<User>> {
-    const result = await this.userService.createUser(createUserDto);
-
-    return {
-      message: 'User created successfully',
-      result,
-    };
+  ): Promise<LoginSuccessDto> {
+    // This now returns LoginSuccessDto (with authToken) whether user exists or not
+    return await this.userService.createUser(createUserDto);
   }
 
   @IsPublic()
