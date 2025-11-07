@@ -15,7 +15,17 @@ jobs:
         node-version: [22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
+      # Clean up workspace before checkout
+      - name: Clean workspace
+        run: |
+          sudo rm -rf node_modules || true
+          sudo rm -rf dist || true
+          sudo rm -rf .env || true
+        continue-on-error: true
+
       - uses: actions/checkout@v4
+        with:
+          clean: true
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -23,7 +33,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install -g pm2 yarn
 
-      - run: yarn install --frozen-lockfile
+      # Clear npm cache and install with proper permissions
+      - name: Install dependencies
+        run: |
+          rm -rf node_modules || true
+          yarn cache clean || true
+          yarn install --frozen-lockfile
 
       # Debugging: Check if the secret is available
       - name: Debug Secret Length
@@ -46,7 +61,17 @@ jobs:
         run: yarn run build
       - name: Run pm2 stop
         run: pm2 stop all
+        continue-on-error: true
       - name: Run pm2 delete
         run: pm2 delete all
+        continue-on-error: true
       - name: Run pm2 start
         run: yarn run start:prod
+
+      # Fix permissions for next run
+      - name: Fix workspace permissions
+        if: always()
+        run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE || true
+          sudo chmod -R u+w $GITHUB_WORKSPACE || true
+        continue-on-error: true
