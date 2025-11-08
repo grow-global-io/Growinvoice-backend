@@ -120,10 +120,10 @@
                         <%= product?.product?.tax?.percentage %>%
                       </td>
                       <td class="tm_width_3">
-                        <%= product?.product?.currency?.symbol %> <%= product?.price %>
+                        <%= product?.product?.currency?.symbol %> <%= Number(product?.price).toFixed(2) %>
                       </td>
                       <td class="tm_width_3  tm_text_right">
-                        <%= product?.product?.currency?.symbol %><%= product?.total %>
+                        <%= product?.product?.currency?.symbol %> <%= Number(product?.total).toFixed(2) %>
                       </td>
                     </tr>
 
@@ -151,7 +151,7 @@
                       <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtoal</td>
                       <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.sub_total %>
+                        <%= Number(invoice?.sub_total).toFixed(2) %>
                       </td>
                     </tr>
                     <% if(invoice?.tax_id !==null ){ %>
@@ -178,14 +178,14 @@
                       <td class="tm_width_3 tm_primary_color text-danger font-weight-bold">Due Amount </td>
                       <td class="tm_width_3 tm_primary_color tm_text_right text-danger font-weight-bold">
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.due_amount %>
+                        <%= Number(invoice?.due_amount).toFixed(2) %>
                       </td>
                     </tr>
                     <tr class="tm_gray_bg">
                       <td class="tm_width_3 tm_primary_color text-success font-weight-bold">Paid Amount </td>
                       <td class="tm_width_3 tm_primary_color tm_text_right text-success font-weight-bold">
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.paid_amount %>
+                        <%= Number(invoice?.paid_amount).toFixed(2) %>
                       </td>
                     </tr>
                     <tr class="tm_border_top tm_border_bottom">
@@ -194,7 +194,7 @@
                         Total </td>
                       <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right">
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.total %>
+                        <%= Number(invoice?.total).toFixed(2) %>
                       </td>
                     </tr>
                   </tbody>
@@ -408,7 +408,7 @@
                       </td>
                       <td>
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
-                        <%= invoice?.total %>
+                        <%= Number(invoice?.total).toFixed(2) %>
                       </td>
                     </tr>
                     
