@@ -1,6 +1,12 @@
 import { PaymentType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UpdatePaymentsDto {
   @ApiProperty({
@@ -80,4 +86,12 @@ export class UpdatePaymentsDto {
   @IsOptional()
   @IsString()
   otherId?: string;
+  @ApiProperty({
+    type: 'boolean',
+    default: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isNeglected?: boolean;
 }

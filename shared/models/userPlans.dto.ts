@@ -1,3 +1,4 @@
+import { PlanPaymentType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserPlansDto {
@@ -46,4 +47,8 @@ export class UserPlansDto {
     type: 'boolean',
   })
   status: boolean;
+  @ApiProperty({
+    enum: PlanPaymentType,
+  })
+  payment_type: PlanPaymentType;
 }

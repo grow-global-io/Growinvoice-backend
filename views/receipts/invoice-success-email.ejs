@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Plan Purchase Successful</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #f4f7fa;
+    "
+  >
+    <table
+      role="presentation"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      style="background-color: #f4f7fa; padding: 20px 0"
+    >
+      <tr>
+        <td align="center">
+          <!-- Main Container -->
+          <table
+            role="presentation"
+            cellpadding="0"
+            cellspacing="0"
+            width="600"
+            style="background-color: #ffffff; max-width: 600px"
+          >
+            <!-- Header Section -->
+            <tr>
+              <td
+                style="
+                  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                  padding: 40px 30px;
+                  text-align: center;
+                "
+              >
+                <!-- Success Icon -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                >
+                  <tr>
+                    <td align="center" style="padding-bottom: 20px">
+                      <div
+                        style="
+                          width: 80px;
+                          height: 80px;
+                          background-color: rgba(255, 255, 255, 0.2);
+                          border-radius: 50%;
+                          display: inline-block;
+                          line-height: 80px;
+                          text-align: center;
+                        "
+                      >
+                        <span style="color: #ffffff; font-size: 48px">✓</span>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+                <h1
+                  style="
+                    margin: 0 0 10px 0;
+                    color: #ffffff;
+                    font-size: 28px;
+                    font-weight: 600;
+                  "
+                >
+                  Payment Successful!
+                </h1>
+                <p style="margin: 0; color: #ffffff; font-size: 16px">
+                  Your invoice payment has been received successfully.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Body Section -->
+            <tr>
+              <td style="padding: 40px 30px">
+                <p
+                  style="
+                    margin: 0 0 20px 0;
+                    font-size: 18px;
+                    color: #333333;
+                    font-weight: 500;
+                    text-transform: capitalize;
+                  "
+                >
+                  Hi <%= receipt.invoice?.customer?.name %>,
+                </p>
+
+                <p
+                  style="
+                    margin: 0 0 30px 0;
+                    font-size: 15px;
+                    color: #555555;
+                    line-height: 1.7;
+                  "
+                >
+                  <!-- Thank you for your purchase! We're excited to have you on
+                  board. Your payment has been processed successfully, and your
+                  plan is now active. -->
+                  Thank you for your payment. We have received your payment for the invoice.
+                </p>
+
+                <!-- Plan Details -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                  style="
+                    background-color: #f8f9fc;
+                    border-left: 4px solid #667eea;
+                    margin: 30px 0;
+                  "
+                >
+                  <tr>
+                    <td style="padding: 25px">
+                      <h2
+                        style="
+                          margin: 0 0 15px 0;
+                          font-size: 18px;
+                          color: #333333;
+                          font-weight: 600;
+                        "
+                      >
+                        📋 Order Summary
+                      </h2>
+
+                      <table
+                        role="presentation"
+                        cellpadding="0"
+                        cellspacing="0"
+                        width="100%"
+                      >
+                        <tr>
+                          <td
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #6b7280;
+                                font-weight: 500;
+                              "
+                              >Invoice Number</span
+                            >
+                          </td>
+                          <td
+                            align="right"
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #1f2937;
+                                font-weight: 600;
+                              "
+                              >
+                              <%= receipt?.invoice?.invoice_number %>
+                              </span
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #6b7280;
+                                font-weight: 500;
+                              "
+                              >Invoice Link</span
+                            >
+                          </td>
+                          <td
+                            align="right"
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #1f2937;
+                                font-weight: 600;
+                              "
+                              >
+                              <a href="<%= receipt?.invoiceLink %>" style="color: #667eea; text-decoration: none"
+                                >View Invoice</a
+                              >
+                              </span
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #6b7280;
+                                font-weight: 500;
+                              "
+                              >Amount Paid</span
+                            >
+                          </td>
+                          <td
+                            align="right"
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #1f2937;
+                                font-weight: 600;
+                              "
+                              >
+                              <%= receipt?.price %></span
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #6b7280;
+                                font-weight: 500;
+                              "
+                              >Payment Type</span
+                            >
+                          </td>
+                          <td
+                            align="right"
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #1f2937;
+                                font-weight: 600;
+                              "
+                              >
+                              <%= receipt?.payment_type %></span
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #6b7280;
+                                font-weight: 500;
+                              "
+                              >Payment Date</span
+                            >
+                          </td>
+                          <td
+                            align="right"
+                            style="
+                              padding: 10px 0;
+                              border-bottom: 1px solid #e5e7eb;
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                color: #1f2937;
+                                font-weight: 600;
+                              "
+                              >
+                              <%= new Date().toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              }) %>
+                              </span
+                            >
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Download Button -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                  style="margin: 35px 0"
+                >
+                  <tr>
+                    <td align="center">
+                      <a
+                        href="<%= receipt?.invoiceReceiptDownloadLink %>"
+                        style="
+                          display: inline-block;
+                          background: linear-gradient(
+                            135deg,
+                            #667eea 0%,
+                            #764ba2 100%
+                          );
+                          color: #ffffff;
+                          text-decoration: none;
+                          padding: 16px 40px;
+                          border-radius: 6px;
+                          font-size: 16px;
+                          font-weight: 600;
+                        "
+                      >
+                        ⬇ Download Receipt
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Tip Box -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                  style="
+                    background-color: #fef3c7;
+                    border-left: 4px solid #f59e0b;
+                    margin: 25px 0;
+                  "
+                >
+                  <tr>
+                    <td style="padding: 15px 20px">
+                      <p style="margin: 0; font-size: 14px; color: #92400e">
+                        <strong>💡 Tip:</strong> Keep your receipt for your
+                        records. You can download it anytime by clicking the button above.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Support Section -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                  style="
+                    margin-top: 30px;
+                    padding-top: 25px;
+                    border-top: 1px solid #e5e7eb;
+                  "
+                >
+                  <tr>
+                    <td>
+                      <p
+                        style="
+                          margin: 0 0 10px 0;
+                          font-size: 14px;
+                          color: #6b7280;
+                        "
+                      >
+                        If you have any questions or need assistance, our
+                        support team is here to help.
+                      </p>
+                      <p style="margin: 0; font-size: 14px; color: #6b7280">
+                        Contact us at
+                        <a
+                          href="mailto:support@growinvoice.com"
+                          style="
+                            color: #667eea;
+                            text-decoration: none;
+                            font-weight: 500;
+                          "
+                          >support@growinvoice.com</a
+                        >
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer Section -->
+            <tr>
+              <td
+                style="
+                  background-color: #f8f9fc;
+                  padding: 25px 30px;
+                  text-align: center;
+                  border-top: 1px solid #e5e7eb;
+                "
+              >
+                <p
+                  style="margin: 15px 0 5px 0; font-size: 13px; color: #6b7280"
+                >
+                  © 2025 Growinvoice. All rights reserved.
+                </p>
+                <p
+                  style="margin: 10px 0 5px 0; font-size: 12px; color: #9ca3af"
+                >
+                  You received this email because you made a purchase on our
+                  platform.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

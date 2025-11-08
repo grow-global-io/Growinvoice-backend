@@ -102,6 +102,12 @@ enum PlanFeature {
     AIDashboard
 }
 
+enum PlanPaymentType {
+    Stripe
+    Growlimitless
+    Razorpay
+}
+
 model Country extends Base {
     id                    String                  @id @default(cuid())
     name                  String
@@ -550,6 +556,7 @@ model Payments extends Base {
     invoice_id        String         @DtoRelationIncludeId
     invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
     otherId           String         @DtoRelationIncludeId @default("") @DtoCreateOptional @DtoUpdateOptional
+    isNeglected       Boolean        @default(false) @DtoCreateOptional @DtoUpdateOptional
 }
 
 enum DashboardTypes {
@@ -601,15 +608,16 @@ model PlanFeatures extends Base {
 }
 
 model UserPlans extends Base {
-    id         String   @id @default(cuid())
-    user_id    String   @DtoRelationIncludeId
-    user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    plan_id    String   @DtoRelationIncludeId
-    plan       Plans    @relation(fields: [plan_id], references: [id], onDelete: Cascade)
-    session_id String   @DtoCreateOptional @DtoUpdateOptional
-    start_date DateTime
-    end_date   DateTime
-    status     Boolean  @default(false) @DtoCreateOptional @DtoUpdateOptional
+    id           String          @id @default(cuid())
+    user_id      String          @DtoRelationIncludeId
+    user         User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+    plan_id      String          @DtoRelationIncludeId
+    plan         Plans           @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+    session_id   String          @DtoCreateOptional @DtoUpdateOptional
+    start_date   DateTime
+    end_date     DateTime
+    status       Boolean         @default(false) @DtoCreateOptional @DtoUpdateOptional
+    payment_type PlanPaymentType @default(Stripe) @DtoCreateOptional @DtoUpdateOptional
 }
 
 model Vendors extends Base {

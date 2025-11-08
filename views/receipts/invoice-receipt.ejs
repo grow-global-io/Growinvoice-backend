@@ -1,0 +1,188 @@
+<!doctype html>
+<html class="no-js" lang="en" id="html_content">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Growinvoice" />
+    <!-- Site Title -->
+    <title>Grow Invoice Template</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #f0f0f0;
+        padding: 20px;
+      }
+
+      .receipt-container {
+        max-width: 768px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        background-color: #ffffff;
+        padding: 40px 50px 30px 50px;
+        border-bottom: 1px solid #e0e0e0;
+        text-align: center;
+      }
+
+      .logo {
+        font-size: 30px;
+        font-weight: 700;
+        color: #0000cc;
+        letter-spacing: -0.5px;
+      }
+
+      .content {
+        padding: 50px 50px 40px 50px;
+      }
+
+      .field {
+        margin-bottom: 32px;
+      }
+
+      .field-label {
+        font-size: 14px;
+        font-weight: 700;
+        color: #000000;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .field-value {
+        font-size: 18px;
+        color: #000000;
+        line-height: 1.6;
+        font-weight: 400;
+      }
+
+      .field-value.large {
+        font-size: 20px;
+        font-weight: 400;
+      }
+
+      .date-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .date-line {
+        font-size: 18px;
+        color: #000000;
+        line-height: 1.6;
+      }
+
+      .footer {
+        padding: 20px 50px 30px 50px;
+        font-size: 14px;
+        color: #666666;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      @media print {
+        body {
+          background-color: #ffffff;
+          padding: 0;
+        }
+
+        .receipt-container {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="receipt-container">
+      <div class="header">
+        <div class="logo">
+          Invoice Payment Receipt - <%= receipt?.invoice?.invoice_number %>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="field">
+          <div class="field-label">FROM</div>
+          <div class="field-value">
+            <%= receipt?.user?.company?.[0]?.name %><br />
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">TO</div>
+          <div class="field-value" style="text-transform: capitalize">
+            <%= receipt.invoice?.customer?.name %><br />
+            <%= receipt.invoice?.customer?.billingAddress?.address %>, <br />
+            <%= receipt.invoice?.customer?.billingAddress?.city %>, <br /><%=
+            receipt.invoice?.customer?.billingAddress?.state?.name ??
+            receipt.invoice?.customer?.billingAddress?.state_name %>, <%=
+            receipt.invoice?.customer?.billingAddress?.country?.name ??
+            receipt.invoice?.customer?.billingAddress?.country_name %> - <%=
+            receipt.invoice?.customer?.billingAddress?.zip %>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">AMOUNT</div>
+          <div class="field-value large"><%= receipt?.price %></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">MESSAGE</div>
+          <div class="field-value">
+            Thank you for your payment. We have received your payment for the
+            invoice.
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">TRANSACTION TYPE</div>
+          <div class="field-value"><%= receipt?.payment_type %></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">DATE</div>
+          <div class="field-value">
+            <div class="date-group">
+              <div class="date-line">Paid on: <%= 
+                  new Date(receipt?.createdAt).toLocaleDateString( 'en-US', { month: '2-digit', day: '2-digit', year: '2-digit' } )
+                %></div>
+              <div class="date-line">
+                Invoice Due Date: <%= new Date(receipt?.invoice?.due_date).toLocaleDateString( 'en-US', { month: '2-digit', day: '2-digit', year: '2-digit' } ) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">CURRENCY INFORMATION</div>
+          <div class="field-value">
+            <div class="date-group">
+              <div class="date-line">
+                Original amount: <%= receipt?.price %>
+              </div>
+              <div class="date-line">
+                Original currency: <%= receipt?.invoice?.currency?.short_code %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer" style="text-align: center">
+        &copy; <%= new Date().getFullYear() %> Growinvoice. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>

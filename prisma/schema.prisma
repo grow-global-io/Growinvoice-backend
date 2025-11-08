@@ -98,6 +98,12 @@ enum PlanFeature {
   AIDashboard
 }
 
+enum PlanPaymentType {
+  Stripe
+  Growlimitless
+  Razorpay
+}
+
 enum invoiceHeadingType {
   COMPANY_NAME
   COMPANY_LOGO
@@ -1160,6 +1166,9 @@ model Payments {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   otherId           String         @default("")
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  isNeglected       Boolean        @default(false)
 }
 
 /// @@allow('read', isExist == true)
@@ -1278,28 +1287,31 @@ model PlanFeatures {
 model UserPlans {
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  createdAt  DateTime  @default(now())
+  createdAt    DateTime        @default(now())
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  updatedAt  DateTime? @updatedAt()
+  updatedAt    DateTime?       @updatedAt()
   /// @DtoCreateHidden
   /// @DtoUpdateHidden
-  isExist    Boolean   @default(true)
-  id         String    @id() @default(cuid())
+  isExist      Boolean         @default(true)
+  id           String          @id() @default(cuid())
   /// @DtoRelationIncludeId
-  user_id    String
-  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id      String
+  user         User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
   /// @DtoRelationIncludeId
-  plan_id    String
-  plan       Plans     @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  plan_id      String
+  plan         Plans           @relation(fields: [plan_id], references: [id], onDelete: Cascade)
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  session_id String
-  start_date DateTime
-  end_date   DateTime
+  session_id   String
+  start_date   DateTime
+  end_date     DateTime
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
-  status     Boolean   @default(false)
+  status       Boolean         @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  payment_type PlanPaymentType @default(Stripe)
 }
 
 /// @@allow('read', isExist == true)

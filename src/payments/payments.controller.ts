@@ -21,12 +21,14 @@ import { SuccessResponseDto } from '@shared/dto/success-response.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import {
   ApiExtraModels,
+  ApiHideProperty,
   ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { IsPublic } from '@shared/decorators/public.decorator';
 import { Response } from 'express';
+import moment = require('moment-timezone');
 
 @ApiExtraModels(PaymentsDto)
 @ApiExtraModels(Payments)
@@ -285,5 +287,87 @@ export class PaymentsController {
       invoice_id,
     );
     return link;
+  }
+
+  @IsPublic()
+  @ApiHideProperty()
+  @Get('plan-receipt-view/:user_plan_id')
+  @ApiResponse({ status: 200, type: String })
+  async planReceiptView(
+    @Param('user_plan_id') user_plan_id: string,
+    @Res() res?: Response,
+  ) {
+    const receipt = await this.paymentsService.planReceiptView(user_plan_id);
+    const priceFromatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: receipt.plan?.currency?.short_code || 'USD',
+    });
+    const data = {
+      receipt: {
+        ...receipt,
+        price: priceFromatter.format(receipt.plan?.price || 0),
+        start_date: moment(receipt.start_date).format('MM/DD/YY'),
+        end_date: moment(receipt.end_date).format('MM/DD/YY'),
+      },
+    };
+    // console.dir(data, { depth: null });
+    return res.render('receipts/plan-receipt', data);
+  }
+
+  @IsPublic()
+  @ApiHideProperty()
+  @Get('plan-receipt-download/:user_plan_id')
+  @ApiResponse({ status: 200, type: String })
+  async planReceiptDownload(
+    @Param('user_plan_id') user_plan_id: string,
+    @Res() res: Response,
+  ) {
+    const pdfBuffer =
+      await this.paymentsService.getPdfBufferForPlanReceipt(user_plan_id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=plan-receipt.pdf',
+      'Content-Length': pdfBuffer.length,
+    });
+    res.end(pdfBuffer);
+  }
+
+  @IsPublic()
+  @ApiHideProperty()
+  @Get('invoice-receipt-view/:id')
+  @ApiResponse({ status: 200, type: String })
+  async invoiceReceiptView(@Param('id') id: string, @Res() res?: Response) {
+    const receipt = await this.paymentsService.invoiceReceiptView(id);
+    const data = {
+      receipt: {
+        ...receipt,
+        price: new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: receipt.invoice?.currency?.short_code || 'USD',
+        }).format(receipt.amount || 0),
+        paymentMade: id,
+        // http://localhost:5173/invoice/invoicetemplate/cmhnwji0k000awyop7y4jhaq1
+        invoiceLink: `${process.env.FRONTEND_URL}/invoice/invoicetemplate/${receipt.invoice?.id}`,
+        invoiceReceiptDownloadLink: `${process.env.BACKEND_URL}/api/payments/invoice-receipt-download/${id}`,
+      },
+    };
+    return res.render('receipts/invoice-receipt', {
+      receipt: data.receipt,
+    });
+  }
+
+  @IsPublic()
+  @ApiHideProperty()
+  @Get('invoice-receipt-download/:id')
+  @ApiResponse({ status: 200, type: String })
+  async invoiceReceiptDownload(@Param('id') id: string, @Res() res: Response) {
+    const pdfBuffer =
+      await this.paymentsService.getPdfBufferForInvoiceReceipt(id);
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=invoice-receipt.pdf',
+      'Content-Length': pdfBuffer.length,
+    });
+    res.end(pdfBuffer);
   }
 }

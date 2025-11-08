@@ -1,3 +1,4 @@
+import { PlanPaymentType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
@@ -47,4 +48,10 @@ export class CreateUserPlansDto {
   @IsOptional()
   @IsBoolean()
   status?: boolean;
+  @ApiProperty({
+    enum: PlanPaymentType,
+    default: 'Stripe',
+  })
+  @IsOptional()
+  payment_type?: PlanPaymentType;
 }

@@ -17,6 +17,8 @@ export class UserplansService {
         end_date: createUserplanDto.end_date,
         session_id: createUserplanDto.session_id,
         status: createUserplanDto.status,
+        payment_type: createUserplanDto.payment_type,
+        ...createUserplanDto,
       },
     });
 

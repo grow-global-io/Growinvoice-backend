@@ -66,4 +66,8 @@ export class PaymentsDto {
     type: 'string',
   })
   otherId: string;
+  @ApiProperty({
+    type: 'boolean',
+  })
+  isNeglected: boolean;
 }

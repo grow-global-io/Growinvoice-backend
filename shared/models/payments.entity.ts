@@ -84,4 +84,8 @@ export class Payments {
     type: 'string',
   })
   otherId: string;
+  @ApiProperty({
+    type: 'boolean',
+  })
+  isNeglected: boolean;
 }

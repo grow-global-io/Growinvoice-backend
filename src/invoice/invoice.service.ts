@@ -20,6 +20,7 @@ import * as puppeteer from 'puppeteer';
 import * as moment from 'moment-timezone';
 import { MailService } from '@/mail/mail.service';
 import { ConfigService } from '@nestjs/config';
+import * as ejs from 'ejs';
 
 @Injectable()
 export class InvoiceService {
@@ -833,5 +834,105 @@ export class InvoiceService {
     });
     invoices.forEach((invoice) => sentInvoices.push(invoice));
     return plainToInstance(InvoiceDto, sentInvoices);
+  }
+
+  async sendInvoicePaymentReceiptManually(id: string) {
+    let paymentId: string | null = null;
+    const invoice = await this.findOne(id);
+    if (!invoice.customer.email) {
+      throw new BadRequestException('Customer email not found');
+    }
+    const payments = await this.prismaService.payments.findMany({
+      where: {
+        invoice_id: id,
+      },
+    });
+
+    if (payments.length === 1) {
+      paymentId = payments[0].id;
+    }
+    if (payments.length > 1 || payments.length === 0) {
+      let paymentDetailId: string | null = null;
+      const paymentDetail = await this.prismaService.paymentDetails.findFirst({
+        where: {
+          paymentType: 'Cash',
+        },
+      });
+      if (paymentDetail) {
+        paymentDetailId = paymentDetail.id;
+      } else {
+        const newPayment = await this.prismaService.paymentDetails.create({
+          data: {
+            user_id: invoice.user_id,
+            paymentType: 'Cash',
+          },
+        });
+        paymentDetailId = newPayment.id;
+      }
+
+      const payment = await this.prismaService.payments.create({
+        data: {
+          amount: invoice.total,
+          paymentDate: new Date().toISOString(),
+          reference_number: invoice.invoice_number,
+          paymentDetails_id: paymentDetailId,
+          notes: '',
+          payment_type: 'Cash',
+          user_id: invoice.user_id,
+          invoice_id: invoice.id,
+        },
+      });
+      paymentId = payment.id;
+    }
+    const receipt = await this.prismaService.payments.findUnique({
+      where: { id: paymentId! },
+      include: {
+        invoice: {
+          include: {
+            currency: true,
+            customer: {
+              include: {
+                billingAddress: {
+                  include: {
+                    country: true,
+                    state: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        paymentDetails: true,
+        user: {
+          include: {
+            company: true,
+          },
+        },
+      },
+    });
+
+    const data = {
+      receipt: {
+        ...receipt,
+        price: new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: receipt.invoice?.currency?.short_code || 'USD',
+        }).format(receipt.amount || 0),
+        paymentMade: paymentId,
+        invoiceLink: `${process.env.FRONTEND_URL}/invoice/invoicetemplate/${receipt.invoice?.id}`,
+        invoiceReceiptDownloadLink: `${process.env.BACKEND_URL}/api/payments/invoice-receipt-download/${paymentId}`,
+      },
+    };
+    const template = await ejs.renderFile(
+      './views/receipts/invoice-success-email.ejs',
+      data,
+    );
+    await this.mailService.sendMail({
+      email: receipt.invoice?.customer?.email || '',
+      subject:
+        'payment Success for invoice - ' + receipt.invoice?.invoice_number,
+      body: template,
+    });
+    return invoice;
   }
 }

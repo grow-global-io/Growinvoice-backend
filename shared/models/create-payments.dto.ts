@@ -1,6 +1,7 @@
 import { PaymentType } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsDateString,
   IsNotEmpty,
   IsNumber,
@@ -79,4 +80,11 @@ export class CreatePaymentsDto {
   @IsOptional()
   @IsString()
   otherId?: string;
+  @ApiProperty({
+    type: 'boolean',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isNeglected?: boolean;
 }

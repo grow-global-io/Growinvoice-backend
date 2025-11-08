@@ -281,6 +281,19 @@ export class InvoiceController {
     };
   }
 
+  @Post('send-invoice-payment-receipt-manually')
+  @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  async sendInvoicePaymentReceiptManually(
+    @Query('id') id: string,
+  ): Promise<SuccessResponseDto<InvoiceDto>> {
+    const invoice =
+      await this.invoiceService.sendInvoicePaymentReceiptManually(id);
+    return {
+      message: 'Invoice payment receipt sent successfully',
+      result: invoice,
+    };
+  }
+
   @Post('markedAsUnpaid')
   @ApiSuccessResponse(InvoiceDto, { status: 200 })
   async markedAsUnpaid(

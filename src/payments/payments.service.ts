@@ -22,6 +22,8 @@ import { ConfigService } from '@nestjs/config';
 import { UserplansService } from '@/userplans/userplans.service';
 import axios from 'axios';
 import { MailService } from '@/mail/mail.service';
+import * as puppeteer from 'puppeteer';
+import * as ejs from 'ejs';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Razorpay = require('razorpay');
@@ -48,6 +50,41 @@ export class PaymentsService {
       payments.invoice_id,
       payments.amount,
     );
+    const email = await this.prisma.invoice.findUnique({
+      where: { id: payments.invoice_id },
+      select: {
+        customer: {
+          select: {
+            email: true,
+          },
+        },
+      },
+    });
+    if (email?.customer?.email) {
+      const receipt = await this.invoiceReceiptView(payments.id);
+      const data = {
+        receipt: {
+          ...receipt,
+          price: new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: receipt.invoice?.currency?.short_code || 'USD',
+          }).format(receipt.amount || 0),
+          paymentMade: payments.id,
+          invoiceLink: `${process.env.FRONTEND_URL}/invoice/invoicetemplate/${receipt.invoice?.id}`,
+          invoiceReceiptDownloadLink: `${process.env.BACKEND_URL}/api/payments/invoice-receipt-download/${payments.id}`,
+        },
+      };
+      const template = await ejs.renderFile(
+        './views/receipts/invoice-success-email.ejs',
+        data,
+      );
+      await this.mailService.sendMail({
+        email: receipt.invoice?.customer?.email || '',
+        subject:
+          'Payment Success for invoice - ' + receipt.invoice?.invoice_number,
+        body: template,
+      });
+    }
     return plainToInstance(PaymentsDto, payments);
   }
 
@@ -66,8 +103,27 @@ export class PaymentsService {
     const payment = await this.prisma.payments.findUnique({
       where: { id },
       include: {
-        invoice: true,
+        invoice: {
+          include: {
+            currency: true,
+            customer: {
+              include: {
+                billingAddress: {
+                  include: {
+                    country: true,
+                    state: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         paymentDetails: true,
+        user: {
+          include: {
+            company: true,
+          },
+        },
       },
     });
     return plainToInstance(Payments, payment);
@@ -325,6 +381,7 @@ export class PaymentsService {
         session_id,
         status: true,
         user_id,
+        payment_type: 'Stripe',
       });
       await this.notificationService.create({
         user_id,
@@ -346,48 +403,63 @@ export class PaymentsService {
     if (!plan) {
       throw new Error('Plan not found');
     }
+    const user = await this.prisma.user.findFirst({
+      where: { id: user_id },
+      include: {
+        company: {
+          include: {
+            country: true,
+            state: true,
+          },
+        },
+        currency: true,
+      },
+    });
+    const templateData = {
+      user,
+      plan: {
+        ...plan,
+        price: new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: plan?.currency?.short_code || 'USD',
+        }).format(plan?.price || 0),
+      },
+      // paymentMade: payment,
+      // transaction: {
+      //   id: '-',
+      // },
+    };
     if (plan.price === 0 && !session_id) {
       const end_date = new Date();
       end_date.setDate(end_date.getDate() + plan.days);
-      const user = await this.prisma.user.findFirst({
-        where: {
-          id: user_id,
-        },
-      });
-      await this.userplansService.create({
+      const payment = await this.userplansService.create({
         end_date: end_date,
         plan_id,
         start_date: new Date(),
         session_id: 'Test',
         status: true,
         user_id,
+        payment_type: 'Growlimitless',
       });
       await this.notificationService.create({
         user_id,
         title: 'Payment Success',
         body: 'Payment for plan ' + plan.name + ' is successful',
       });
+      const template = await ejs.renderFile(
+        './views/receipts/plan-success-email.ejs',
+        {
+          ...templateData,
+          paymentMade: payment,
+          transaction: {
+            id: '-',
+          },
+        },
+      );
       await this.mailService.sendMail({
         email: user.email,
         subject: 'Payment Success',
-        // body: `Payment for plan ${plan.name} is successful. Your plan will be active for ${plan.days} days. Thank you for choosing our service!`,
-        body: `
-          <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-            <h2>Payment Success</h2>
-            <p>Dear ${user.name},</p>
-            <p>
-              We are pleased to inform you that your payment for the plan <strong>${plan.name}</strong> has been successfully processed.
-            </p>
-            <p>
-              Your plan will be active for <strong>${plan.days} days</strong>.
-            </p>
-            <p>
-              Thank you for choosing our service!
-            </p>
-            <p>Best regards,</p>
-            <p>Grow Global Strategies Pvt Ltd</p>
-          </div>
-        `,
+        body: template,
       });
       // redirect to success page
       return true;
@@ -424,18 +496,34 @@ export class PaymentsService {
     if (data.data.paymentStatus === 'SUCCESS') {
       const end_date = new Date();
       end_date.setDate(end_date.getDate() + plan.days);
-      await this.userplansService.create({
+      const payment = await this.userplansService.create({
         end_date: end_date,
         plan_id,
         start_date: new Date(),
         session_id,
         status: true,
         user_id,
+        payment_type: 'Growlimitless',
       });
       await this.notificationService.create({
         user_id,
         title: 'Payment Success',
         body: 'Payment for plan ' + plan.name + ' is successful',
+      });
+      const template = await ejs.renderFile(
+        './views/receipts/plan-success-email.ejs',
+        {
+          ...templateData,
+          paymentMade: payment,
+          transaction: {
+            id: session_id,
+          },
+        },
+      );
+      await this.mailService.sendMail({
+        email: user.email,
+        subject: 'Payment Success',
+        body: template,
       });
       // redirect to success page
       return true;
@@ -617,6 +705,7 @@ export class PaymentsService {
         session_id: razorpay_payment_id,
         status: true,
         user_id,
+        payment_type: 'Razorpay',
       });
       await this.notificationService.create({
         user_id,
@@ -701,5 +790,93 @@ export class PaymentsService {
       currency: order.currency,
       receipt: order.receipt,
     });
+  }
+  async planReceiptView(user_plan_id: string) {
+    const userPlan = await this.prisma.userPlans.findUnique({
+      where: { id: user_plan_id },
+      include: {
+        plan: {
+          include: {
+            currency: true,
+          },
+        },
+        user: {
+          include: {
+            company: {
+              include: {
+                country: true,
+                state: true,
+              },
+            },
+            currency: true,
+          },
+        },
+      },
+    });
+    if (!userPlan) {
+      throw new NotFoundException('User plan not found');
+    }
+    return userPlan;
+  }
+
+  async getPdfBufferForPlanReceipt(user_plan_id: string) {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // useful for servers
+    });
+    const page = await browser.newPage();
+    const htmlFetchLink = `${
+      process.env.BACKEND_URL || 'http://localhost:5000'
+    }/api/payments/plan-receipt-view/${user_plan_id}`;
+    await page.goto(htmlFetchLink, {
+      waitUntil: 'networkidle0',
+    });
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+      },
+    });
+
+    await browser.close();
+
+    return pdfBuffer;
+  }
+
+  async invoiceReceiptView(id: string) {
+    const invoice = await this.findOne(id);
+    return invoice;
+  }
+
+  async getPdfBufferForInvoiceReceipt(id: string) {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // useful for servers
+    });
+    const page = await browser.newPage();
+    const htmlFetchLink = `${
+      process.env.BACKEND_URL || 'http://localhost:5000'
+    }/api/payments/invoice-receipt-view/${id}`;
+    await page.goto(htmlFetchLink, {
+      waitUntil: 'networkidle0',
+    });
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+      },
+    });
+
+    await browser.close();
+
+    return pdfBuffer;
   }
 }
