@@ -930,7 +930,7 @@ export class InvoiceService {
     await this.mailService.sendMail({
       email: receipt.invoice?.customer?.email || '',
       subject:
-        'payment Success for invoice - ' + receipt.invoice?.invoice_number,
+        'Payment Success for Invoice - ' + receipt.invoice?.invoice_number,
       body: template,
     });
     return invoice;

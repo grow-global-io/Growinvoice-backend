@@ -132,10 +132,10 @@
                       </td>
                       <% } %>
                       <td class="tm_width_1">
-                        <%= product?.tax_forInvoiceProducts?.[0]?.tax?.percentage %>%
+                        <%= product?.tax_forInvoiceProducts?.[0]?.tax?.percentage ?? 0 %>%
                       </td>
                       <td class="tm_width_1">
-                        <%= product?.product?.currency?.symbol %> <%= Number((product?.tax_forInvoiceProducts?.[0]?.tax?.percentage / 100) * (product?.price * product?.quantity))?.toFixed(2) %>
+                        <%= product?.product?.currency?.symbol %> <%= Number(((product?.tax_forInvoiceProducts?.[0]?.tax?.percentage ?? 0) / 100) * (product?.price * product?.quantity))?.toFixed(2) %>
                       </td>
                       <td class="tm_width_3  tm_text_right">
                         <%= product?.product?.currency?.symbol %><%= Number(product?.total)?.toFixed(2) %>
