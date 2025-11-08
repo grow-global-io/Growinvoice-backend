@@ -335,9 +335,15 @@ export class InvoiceService {
 
     const mapNew = {
       ...invoice,
+      sub_total: Math.round(Number(invoice.sub_total) * 10) / 10,
+      due_amount: Math.round(Number(invoice.due_amount) * 10) / 10,
+      paid_amount: Math.round(Number(invoice.paid_amount) * 10) / 10,
+      total: Math.round(Number(invoice.total) * 10) / 10,
       product: [
         ...invoice.product.map((item) => ({
           ...item,
+          price: Math.round(Number(item.price) * 10) / 10,
+          total: Math.round(Number(item.total) * 10) / 10,
           product: {
             ...item.product,
             tax: {
