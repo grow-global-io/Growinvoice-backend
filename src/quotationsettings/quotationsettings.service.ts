@@ -72,7 +72,7 @@ export class QuotationsettingsService {
     return plainToInstance(QuotationSettingsDto, quotationsetting);
   }
 
-  @Cron('* * 0 * * *')
+  @Cron('0 0 0 * * *')
   async findAllByUserToStatusUpdate() {
     try {
       const overdueDate = moment().subtract(30, 'days').toDate();
@@ -121,7 +121,7 @@ export class QuotationsettingsService {
     }
   }
 
-  @Cron('* * 0 * * *')
+  @Cron('0 0 0 * * *')
   async findAllByUserToMail() {
     try {
       const currentDate = moment().startOf('day');

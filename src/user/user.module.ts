@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { PrismaService } from '@/prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from '@/auth/auth.service';
@@ -10,13 +9,7 @@ import { SharedService } from '@/shared/shared.service';
 
 @Module({
   imports: [PassportModule, ConfigModule.forRoot()],
-  providers: [
-    UserService,
-    PrismaService,
-    AuthService,
-    MailService,
-    SharedService,
-  ],
+  providers: [UserService, AuthService, MailService, SharedService],
   controllers: [UserController],
   exports: [UserService],
 })

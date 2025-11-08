@@ -71,7 +71,7 @@ export class InvoicesettingsService {
     });
   }
 
-  @Cron('* * 0 * * *')
+  @Cron('0 0 0 * * *')
   async findAllByUserToStatusUpdate() {
     try {
       const overdueDate = moment().subtract(30, 'days').toDate();
@@ -120,7 +120,7 @@ export class InvoicesettingsService {
     // return plainToInstance(User, users);
   }
 
-  @Cron('* * 0 * * *')
+  @Cron('0 0 0 * * *')
   async findAllByUserToMail() {
     try {
       const currentDate = moment().startOf('day');

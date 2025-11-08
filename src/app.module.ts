@@ -92,7 +92,6 @@ import { CouponsModule } from './coupons/coupons.module';
         };
       },
       inject: [PrismaService, ClsService],
-      extraProviders: [PrismaService],
       global: true,
     }),
     StoreModule,

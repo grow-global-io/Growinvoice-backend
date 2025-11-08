@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
-import { PrismaService } from '@/prisma/prisma.service';
 import { InvoiceService } from '@/invoice/invoice.service';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 import { UserService } from '@/user/user.service';
@@ -17,7 +16,6 @@ import { SharedService } from '@/shared/shared.service';
   controllers: [PaymentsController],
   providers: [
     PaymentsService,
-    PrismaService,
     InvoiceService,
     InvoicesettingsService,
     UserService,
