@@ -15,6 +15,7 @@ import { User as UserTokenDetails } from '@shared/decorators/user.decorator';
 import { AdminUsersListDto } from './dto/admin-users-list.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginSuccessDto } from './dto/login-success.dto';
+import { AuthService } from '@/auth/auth.service';
 
 @Injectable()
 export class UserService {
@@ -22,9 +23,13 @@ export class UserService {
     private prismaService: PrismaService,
     private mailService: MailService,
     private jwtService: JwtService,
+    private authService: AuthService,
   ) {}
 
-  private async validateCreateUserDto(data: CreateUserDto) {
+  private async validateCreateUserDto(
+    data: CreateUserDto,
+    hasGoogleToken: boolean = false,
+  ) {
     const errors = [];
 
     if (!data.email) {
@@ -33,12 +38,15 @@ export class UserService {
       errors.push('Email is not valid');
     }
 
-    if (!data.password) {
-      errors.push('Password is required');
-    } else if (!this.isValidPassword(data.password)) {
-      errors.push(
-        'Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
-      );
+    // Password is only required if not using Google OAuth
+    if (!hasGoogleToken) {
+      if (!data.password) {
+        errors.push('Password is required');
+      } else if (!this.isValidPassword(data.password)) {
+        errors.push(
+          'Password must be at least 6 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+        );
+      }
     }
 
     if (errors.length > 0) {
@@ -58,7 +66,14 @@ export class UserService {
   }
 
   async createUser(data: CreateUserCompany) {
-    await this.validateCreateUserDto(data);
+    // Handle Google OAuth flow
+    if (data.googleToken) {
+      // Verify Google token and handle login/registration
+      return await this.authService.verifyGoogleToken(data.googleToken);
+    }
+
+    // Regular email/password flow
+    await this.validateCreateUserDto(data, false);
 
     // Check if user already exists
     const existingUser = await this.prismaService.user.findUnique({

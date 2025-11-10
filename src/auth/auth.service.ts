@@ -125,6 +125,13 @@ export class AuthService {
         where: { email: payload.email },
       });
 
+      // If user exists, log them in (link Google account to existing account)
+      if (user) {
+        console.log(
+          `✅ Existing user logged in via Google OAuth: ${user.email}`,
+        );
+      }
+
       // If user doesn't exist, create a new user with Google data
       if (!user) {
         // Generate a random password for Google OAuth users (they won't use it)
