@@ -199,7 +199,7 @@
 
       </div>
 
-      <div class="invoice-title">Tax Invoice</div>
+      <div class="invoice-title"><%= invoice?.paid_status === 'Paid' ? 'Receipt' : 'Tax Invoice' %></div>
 
       <!-- MODIFICATION: Information is now stacked vertically to prevent overflow -->
       <table class="info-table" style="margin-bottom: 15px;" aria-hidden="true">

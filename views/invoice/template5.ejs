@@ -50,7 +50,7 @@
                 
               </div>
             </div>
-            <div class="tm_primary_color tm_text_uppercase tm_watermark_title tm_white_color">Invoice</div>
+            <div class="tm_primary_color tm_text_uppercase tm_watermark_title tm_white_color"><%= invoice?.paid_status === 'Paid' ? 'Receipt' : 'Invoice' %></div>
           </div>
           <div class="tm_invoice_info">
             <div class="tm_invoice_info_left tm_gray_bg">
@@ -148,7 +148,7 @@
                       <tr>
                         <td class="tm_width_3 tm_primary_color tm_bold">Subtoal</td>
                         <td class="tm_width_3 tm_primary_color tm_text_right tm_bold"><%= invoice?.product[0]?.product?.currency?.symbol %>
-                          <%= invoice?.sub_total %></td>
+                          <%= invoice?.paid_status === 'Paid' ? '0.00' : invoice?.sub_total %></td>
                       </tr>
                      <% if(invoice?.tax_id !==null ){ %>
 

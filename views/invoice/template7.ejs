@@ -32,7 +32,7 @@
                 </div>
               </div>
               <div class="tm_invoice_right tm_text_right">
-                <b class="tm_f30 tm_medium tm_primary_color">Invoice</b>
+                <b class="tm_f30 tm_medium tm_primary_color"><%= invoice?.paid_status === 'Paid' ? 'Receipt' : 'Invoice' %></b>
                 <p class="tm_m0"><b class="tm_medium tm_primary_color">Invoice No:</b> #<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %>
                 </p>
                 <p class="tm_m0"><b class="tm_medium tm_primary_color">Date:</b>
@@ -148,7 +148,7 @@
                         <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtoal</td>
                         <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">
                           <%= invoice?.product[0]?.product?.currency?.symbol %>
-                            <%= invoice?.sub_total %>
+                            <%= invoice?.paid_status === 'Paid' ? '0.00' : invoice?.sub_total %>
                         </td>
                       </tr>
                       <% if(invoice?.tax_id !==null ){ %>

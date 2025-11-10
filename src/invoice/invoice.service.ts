@@ -276,8 +276,14 @@ export class InvoiceService {
         payment: true,
 
         product: {
+          where: {
+            isExist: true,
+          },
           include: {
             tax_forInvoiceProducts: {
+              where: {
+                isExist: true,
+              },
               include: {
                 tax: true,
               },
@@ -341,26 +347,107 @@ export class InvoiceService {
       paid_amount: Math.round(Number(invoice.paid_amount) * 10) / 10,
       total: Math.round(Number(invoice.total) * 10) / 10,
       product: [
-        ...invoice.product.map((item) => ({
-          ...item,
-          price: Math.round(Number(item.price) * 10) / 10,
-          total: Math.round(Number(item.total) * 10) / 10,
-          product: {
-            ...item.product,
-            tax: {
-              percentage:
-                item?.product?.tax
-                  ?.map((tax) => tax.tax?.percentage)
-                  .reduce((acc, curr) => acc + curr, 0) ?? 0,
+        ...invoice.product.map((item) => {
+          // Calculate tax percentage - prioritize invoice-specific taxes, then product taxes
+          let taxPercentage = 0;
+
+          // First check invoice-specific taxes (tax_forInvoiceProducts)
+          if (
+            item?.tax_forInvoiceProducts &&
+            item.tax_forInvoiceProducts.length > 0
+          ) {
+            taxPercentage = item.tax_forInvoiceProducts
+              .map((tax) => tax.tax?.percentage || 0)
+              .reduce((acc, curr) => acc + curr, 0);
+          }
+          // Fall back to product-level taxes
+          else if (item?.product?.tax && item.product.tax.length > 0) {
+            taxPercentage = item.product.tax
+              .map((tax) => tax.tax?.percentage || 0)
+              .reduce((acc, curr) => acc + curr, 0);
+          }
+
+          return {
+            ...item,
+            price: Math.round(Number(item.price) * 10) / 10,
+            total: Math.round(Number(item.total) * 10) / 10,
+            product: {
+              ...item.product,
+              tax: {
+                percentage: taxPercentage,
+              },
+              currency: {
+                ...invoice.currency,
+              },
             },
-            currency: {
-              ...invoice.currency,
-            },
-          },
-        })),
+          };
+        }),
       ],
     };
-    return plainToInstance(InvoiceWithAllDataDto, mapNew);
+    // Transform to DTO but preserve our tax.percentage structure
+    // plainToInstance will convert tax back to array, so we restore it after
+    const dtoInvoice = plainToInstance(InvoiceWithAllDataDto, mapNew) as any;
+
+    // CRITICAL: Always preserve the products array from mapNew to ensure products are never lost
+    // This ensures products show up even if plainToInstance filters them out
+    if (mapNew.product && mapNew.product.length > 0) {
+      dtoInvoice.product = mapNew.product.map((item: any) => {
+        const taxPercentage = item?.product?.tax?.percentage;
+
+        // If we have a calculated tax percentage, use it
+        if (taxPercentage !== undefined && taxPercentage !== null) {
+          return {
+            ...item,
+            product: {
+              ...item.product,
+              tax: {
+                percentage: taxPercentage,
+              },
+            },
+          };
+        }
+
+        // Fallback: try to calculate from tax_forInvoiceProducts or product.tax array
+        let calculatedTax = 0;
+        if (item?.tax_forInvoiceProducts?.length > 0) {
+          calculatedTax = item.tax_forInvoiceProducts.reduce(
+            (acc: number, taxItem: any) => {
+              return acc + (taxItem?.tax?.percentage || 0);
+            },
+            0,
+          );
+        } else if (
+          Array.isArray(item?.product?.tax) &&
+          item.product.tax.length > 0
+        ) {
+          calculatedTax = item.product.tax.reduce(
+            (acc: number, taxItem: any) => {
+              return acc + (taxItem?.tax?.percentage || 0);
+            },
+            0,
+          );
+        }
+
+        if (calculatedTax > 0) {
+          return {
+            ...item,
+            product: {
+              ...item.product,
+              tax: {
+                percentage: calculatedTax,
+              },
+            },
+          };
+        }
+
+        return item;
+      });
+    } else if (!dtoInvoice.product) {
+      // If products are missing, ensure we have an empty array at minimum
+      dtoInvoice.product = [];
+    }
+
+    return dtoInvoice;
   }
 
   async createInvoicePreview(
