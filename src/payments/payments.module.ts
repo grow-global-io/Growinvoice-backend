@@ -3,7 +3,7 @@ import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
 import { InvoiceService } from '@/invoice/invoice.service';
 import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
-import { UserService } from '@/user/user.service';
+import { UserModule } from '@/user/user.module';
 import { MailService } from '@/mail/mail.service';
 import { GatewaydetailsService } from '@/gatewaydetails/gatewaydetails.service';
 import { NotificationsService } from '@/notifications/notifications.service';
@@ -13,12 +13,12 @@ import { UserplansService } from '@/userplans/userplans.service';
 import { SharedService } from '@/shared/shared.service';
 
 @Module({
+  imports: [UserModule],
   controllers: [PaymentsController],
   providers: [
     PaymentsService,
     InvoiceService,
     InvoicesettingsService,
-    UserService,
     MailService,
     GatewaydetailsService,
     NotificationsService,
