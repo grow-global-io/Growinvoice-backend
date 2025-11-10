@@ -66,10 +66,23 @@ export class UserService {
   }
 
   async createUser(data: CreateUserCompany) {
+    console.log('createUser called with:', {
+      email: data.email,
+      hasGoogleToken: !!data.googleToken,
+      hasPassword: !!data.password,
+    });
+
     // Handle Google OAuth flow
     if (data.googleToken) {
+      console.log('Processing Google OAuth flow');
       // Verify Google token and handle login/registration
-      return await this.authService.verifyGoogleToken(data.googleToken);
+      try {
+        return await this.authService.verifyGoogleToken(data.googleToken);
+      } catch (error: any) {
+        // If Google token verification fails, log the error and re-throw
+        console.error('Google token verification failed:', error);
+        throw error;
+      }
     }
 
     // Regular email/password flow
@@ -103,31 +116,91 @@ export class UserService {
     }
 
     // User doesn't exist - create new user
-    const hashedPassword = await bcrypt.hash(data.password, 12);
-    await this.mailService.sendWelcomeMail(data.email, data.name);
-    const result = await this.prismaService.user.create({
-      data: {
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-        password: hashedPassword,
-        company: {
-          create: {
-            name: data.companyName,
+    console.log('User does not exist, creating new user');
+    try {
+      const hashedPassword = await bcrypt.hash(data.password, 12);
+      await this.mailService.sendWelcomeMail(data.email, data.name);
+      const result = await this.prismaService.user.create({
+        data: {
+          email: data.email,
+          name: data.name,
+          phone: data.phone,
+          password: hashedPassword,
+          company: {
+            create: {
+              name: data.companyName,
+            },
           },
         },
-      },
-    });
+      });
 
-    // Generate JWT token for new user
-    const payload = { sub: result.id, email: result.email };
-    const authToken = await this.jwtService.signAsync(payload);
+      // Generate JWT token for new user
+      const payload = { sub: result.id, email: result.email };
+      const authToken = await this.jwtService.signAsync(payload);
 
-    // Return login response format for new user too
-    return plainToInstance(LoginSuccessDto, {
-      message: 'User created and logged in successfully',
-      authToken,
-    });
+      // Return login response format for new user too
+      return plainToInstance(LoginSuccessDto, {
+        message: 'User created and logged in successfully',
+        authToken,
+      });
+    } catch (createError: any) {
+      console.error('Error creating user:', {
+        code: createError?.code,
+        message: createError?.message,
+        meta: createError?.meta,
+      });
+
+      // Handle Prisma unique constraint error (user already exists)
+      // This can happen due to race conditions
+      if (
+        createError?.code === 'P2002' ||
+        createError?.message?.includes('already exists') ||
+        createError?.message?.includes('Unique constraint')
+      ) {
+        console.log(
+          'User already exists (race condition or duplicate), attempting login',
+        );
+        // User was created between our check and create - fetch and try to log them in
+        const raceConditionUser = await this.prismaService.user.findUnique({
+          where: { email: data.email },
+        });
+
+        if (raceConditionUser) {
+          // Try to verify password
+          const passwordMatch = await bcrypt.compare(
+            data.password,
+            raceConditionUser.password,
+          );
+
+          if (passwordMatch) {
+            // Password matches - log them in
+            console.log('Password matches, logging in existing user');
+            const payload = {
+              sub: raceConditionUser.id,
+              email: raceConditionUser.email,
+            };
+            const authToken = await this.jwtService.signAsync(payload);
+
+            return plainToInstance(LoginSuccessDto, {
+              message: 'Login successful',
+              authToken,
+            });
+          } else {
+            console.log('Password does not match, user already exists');
+            throw new BadRequestException(
+              'User already exists. Please use the login endpoint or sign in with Google.',
+            );
+          }
+        } else {
+          throw new BadRequestException(
+            'User already exists. Please use the login endpoint or sign in with Google.',
+          );
+        }
+      } else {
+        // Re-throw other errors
+        throw createError;
+      }
+    }
   }
 
   async forgotPassword(email: string) {

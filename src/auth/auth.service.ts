@@ -168,10 +168,27 @@ export class AuthService {
 
           console.log(`✅ New user created via Google OAuth: ${user.email}`);
         } catch (createError: any) {
-          console.error('Error creating user:', createError);
-          throw new BadRequestException(
-            `Failed to create user account: ${createError.message || 'Unknown error'}`,
-          );
+          // Handle Prisma unique constraint error (user already exists)
+          // This can happen due to race conditions or if user was created between check and create
+          if (createError?.code === 'P2002') {
+            // User already exists - fetch and log them in
+            console.log(
+              `⚠️ User already exists (race condition), logging in: ${payload.email}`,
+            );
+            user = await this.prismaService.user.findUnique({
+              where: { email: payload.email },
+            });
+            if (!user) {
+              throw new BadRequestException(
+                'User account exists but could not be retrieved. Please try again.',
+              );
+            }
+          } else {
+            console.error('Error creating user:', createError);
+            throw new BadRequestException(
+              `Failed to create user account: ${createError.message || 'Unknown error'}`,
+            );
+          }
         }
       }
 
