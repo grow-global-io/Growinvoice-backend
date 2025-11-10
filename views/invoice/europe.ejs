@@ -132,10 +132,10 @@
                       </td>
                       <% } %>
                       <td class="tm_width_1">
-                        <%= product?.tax_forInvoiceProducts?.[0]?.tax?.percentage ?? 0 %>%
+                        <%= product?.product?.tax?.percentage %>%
                       </td>
                       <td class="tm_width_1">
-                        <%= product?.product?.currency?.symbol %> <%= Number(((product?.tax_forInvoiceProducts?.[0]?.tax?.percentage ?? 0) / 100) * (product?.price * product?.quantity))?.toFixed(2) %>
+                        <%= product?.product?.currency?.symbol %> <%= Number(((product?.product?.tax?.percentage || 0) / 100) * (product?.price * product?.quantity))?.toFixed(2) %>
                       </td>
                       <td class="tm_width_3  tm_text_right">
                         <%= product?.product?.currency?.symbol %><%= Number(product?.total)?.toFixed(2) %>
@@ -168,8 +168,7 @@
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
                         <%= Number(
                           invoice?.product?.reduce((acc, item) => {
-                            const taxPercentage = item?.tax_forInvoiceProducts?.[0]?.tax?.percentage || 0;
-                            return acc + taxPercentage;
+                            return acc + (item?.product?.tax?.percentage || 0);
                           }, 0)
                         )?.toFixed(2) %>
                       </td>
@@ -180,7 +179,7 @@
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
                         <%= Number(
                           invoice?.product?.reduce((acc, item) => {
-                            const taxPercentage = item?.tax_forInvoiceProducts?.[0]?.tax?.percentage || 0;
+                            const taxPercentage = item?.product?.tax?.percentage || 0;
                             const taxAmount = (taxPercentage / 100) * (item?.price * item?.quantity);
                             return acc + taxAmount;
                           }, 0)
