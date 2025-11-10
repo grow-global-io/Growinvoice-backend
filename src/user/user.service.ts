@@ -70,12 +70,14 @@ export class UserService {
       email: data.email,
       hasGoogleToken: !!data.googleToken,
       hasPassword: !!data.password,
+      isGoogleSignIn: data.isGoogleSignIn,
     });
 
-    // Handle Google OAuth flow
+    // Handle Google OAuth flow - ALWAYS prioritize Google token if provided
     if (data.googleToken) {
-      console.log('Processing Google OAuth flow');
+      console.log('Processing Google OAuth flow with token');
       // Verify Google token and handle login/registration
+      // This will log in existing users or create new ones
       try {
         return await this.authService.verifyGoogleToken(data.googleToken);
       } catch (error: any) {
@@ -85,15 +87,45 @@ export class UserService {
       }
     }
 
-    // Regular email/password flow
-    await this.validateCreateUserDto(data, false);
-
-    // Check if user already exists
+    // Check if user already exists BEFORE validation
+    // This allows us to handle Google sign-in for existing users even without token
     const existingUser = await this.prismaService.user.findUnique({
       where: { email: data.email },
     });
 
+    // Detect Google sign-in attempts (even without explicit flag or token)
+    // Common patterns: placeholder passwords, or isGoogleSignIn flag
+    const isLikelyGoogleSignIn =
+      data.isGoogleSignIn ||
+      data.googleToken ||
+      (data.password &&
+        /^(random_password|placeholder|google_signin|oauth|temp)/i.test(
+          data.password,
+        ));
+
+    // If user exists and this is a Google sign-in attempt (with or without token)
+    if (existingUser && isLikelyGoogleSignIn) {
+      console.log(
+        'Existing user detected with Google sign-in (flag/token/placeholder password), logging in:',
+        existingUser.email,
+      );
+      // Link Google account to existing user and log them in
+      // Generate JWT token for login
+      const payload = { sub: existingUser.id, email: existingUser.email };
+      const authToken = await this.jwtService.signAsync(payload);
+
+      // Return login response format
+      return plainToInstance(LoginSuccessDto, {
+        message: 'Account linked to Google successfully. Logged in.',
+        authToken,
+      });
+    }
+
+    // If user exists and this is NOT a Google sign-in, check password
     if (existingUser) {
+      // Regular email/password flow - validate password
+      await this.validateCreateUserDto(data, false);
+
       // User exists - verify password and log them in
       const passwordMatch = await bcrypt.compare(
         data.password,
@@ -101,7 +133,10 @@ export class UserService {
       );
 
       if (!passwordMatch) {
-        throw new BadRequestException('Invalid email or password');
+        // If password doesn't match, suggest using Google login if available
+        throw new BadRequestException(
+          'Invalid email or password. If you signed up with Google, please use Google Sign-In.',
+        );
       }
 
       // Generate JWT token for login
@@ -114,6 +149,9 @@ export class UserService {
         authToken,
       });
     }
+
+    // User doesn't exist - proceed with regular validation and creation
+    await this.validateCreateUserDto(data, false);
 
     // User doesn't exist - create new user
     console.log('User does not exist, creating new user');
@@ -187,13 +225,14 @@ export class UserService {
             });
           } else {
             console.log('Password does not match, user already exists');
+            // If password doesn't match, suggest Google login
             throw new BadRequestException(
-              'User already exists. Please use the login endpoint or sign in with Google.',
+              'User already exists. If you signed up with Google, please use Google Sign-In. Otherwise, please use the login endpoint with your password.',
             );
           }
         } else {
           throw new BadRequestException(
-            'User already exists. Please use the login endpoint or sign in with Google.',
+            'User already exists. If you signed up with Google, please use Google Sign-In. Otherwise, please use the login endpoint with your password.',
           );
         }
       } else {

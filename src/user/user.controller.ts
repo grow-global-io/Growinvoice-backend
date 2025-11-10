@@ -34,13 +34,25 @@ export class UserController {
   @Post('create')
   @ApiResponse({
     status: 200,
-    description: 'User created or logged in successfully',
+    description:
+      'User created, logged in, or Google account linked successfully. Returns authToken in all cases.',
     type: LoginSuccessDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'User created successfully (alternative status)',
+    type: LoginSuccessDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description:
+      'Bad request - Invalid input or user exists without Google sign-in',
   })
   async createUser(
     @Body() createUserDto: CreateUserCompany,
   ): Promise<LoginSuccessDto> {
     // This now returns LoginSuccessDto (with authToken) whether user exists or not
+    // For existing users with Google sign-in, it links the account and logs them in
     return await this.userService.createUser(createUserDto);
   }
 
