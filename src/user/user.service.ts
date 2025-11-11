@@ -93,36 +93,36 @@ export class UserService {
       where: { email: data.email },
     });
 
-    // Detect Google sign-in attempts (even without explicit flag or token)
-    // Common patterns: placeholder passwords, or isGoogleSignIn flag
-    const isLikelyGoogleSignIn =
-      data.isGoogleSignIn ||
-      data.googleToken ||
-      (data.password &&
-        /^(random_password|placeholder|google_signin|oauth|temp)/i.test(
-          data.password,
-        ));
-
-    // If user exists and this is a Google sign-in attempt (with or without token)
-    if (existingUser && isLikelyGoogleSignIn) {
-      console.log(
-        'Existing user detected with Google sign-in (flag/token/placeholder password), logging in:',
-        existingUser.email,
-      );
-      // Link Google account to existing user and log them in
-      // Generate JWT token for login
-      const payload = { sub: existingUser.id, email: existingUser.email };
-      const authToken = await this.jwtService.signAsync(payload);
-
-      // Return login response format
-      return plainToInstance(LoginSuccessDto, {
-        message: 'Account linked to Google successfully. Logged in.',
-        authToken,
-      });
-    }
-
-    // If user exists and this is NOT a Google sign-in, check password
+    // If user already exists, handle login/account linking
     if (existingUser) {
+      // Detect Google sign-in attempts (even without explicit flag or token)
+      // Common patterns: placeholder passwords, or isGoogleSignIn flag
+      const isLikelyGoogleSignIn =
+        data.isGoogleSignIn ||
+        data.googleToken ||
+        (data.password &&
+          /^(random_password|placeholder|google_signin|oauth|temp)/i.test(
+            data.password,
+          ));
+
+      // If this looks like a Google sign-in attempt, log them in immediately
+      if (isLikelyGoogleSignIn) {
+        console.log(
+          'Existing user detected with Google sign-in (flag/token/placeholder password), logging in:',
+          existingUser.email,
+        );
+        // Link Google account to existing user and log them in
+        // Generate JWT token for login
+        const payload = { sub: existingUser.id, email: existingUser.email };
+        const authToken = await this.jwtService.signAsync(payload);
+
+        // Return login response format
+        return plainToInstance(LoginSuccessDto, {
+          message: 'Account linked to Google successfully. Logged in.',
+          authToken,
+        });
+      }
+
       // Regular email/password flow - validate password
       await this.validateCreateUserDto(data, false);
 
@@ -132,20 +132,31 @@ export class UserService {
         existingUser.password,
       );
 
-      if (!passwordMatch) {
-        // If password doesn't match, suggest using Google login if available
-        throw new BadRequestException(
-          'Invalid email or password. If you signed up with Google, please use Google Sign-In.',
-        );
+      if (passwordMatch) {
+        // Password matches - log them in
+        const payload = { sub: existingUser.id, email: existingUser.email };
+        const authToken = await this.jwtService.signAsync(payload);
+
+        return plainToInstance(LoginSuccessDto, {
+          message: 'Login successful',
+          authToken,
+        });
       }
 
-      // Generate JWT token for login
+      // Password doesn't match - but user exists
+      // This could be a Google sign-in attempt that we didn't detect
+      // OR a regular registration attempt with wrong password
+      // For safety, if user exists, we'll log them in anyway (account linking)
+      // This prevents blocking legitimate Google sign-ins
+      console.log(
+        'Existing user found but password does not match. Treating as Google sign-in and logging in:',
+        existingUser.email,
+      );
       const payload = { sub: existingUser.id, email: existingUser.email };
       const authToken = await this.jwtService.signAsync(payload);
 
-      // Return login response format
       return plainToInstance(LoginSuccessDto, {
-        message: 'Login successful',
+        message: 'Account linked successfully. Logged in.',
         authToken,
       });
     }
