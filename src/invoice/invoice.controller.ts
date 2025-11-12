@@ -178,7 +178,7 @@ export class InvoiceController {
     const newInvoice = {
       ...invoiceSettingsWithFormat,
       footer: {
-        text: `By viewing this invoice, you acknowledge that the data displayed is processed by ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} on behalf of ${invoice.customer?.name || 'Customer'} for the purpose of billing and record-keeping in accordance with applicable data protection laws (GDPR).`,
+        text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'}'s customer invoicing and accounting purposes.`,
       },
     };
     return res.render(
@@ -332,7 +332,7 @@ export class InvoiceController {
     const newInvoice = {
       ...invoiceSettings,
       footer: {
-        text: `By viewing this invoice, you acknowledge that the data displayed is processed by ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} on behalf of ${invoice.customer?.name || 'Customer'} for the purpose of billing and record-keeping in accordance with applicable data protection laws (GDPR).`,
+        text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'}'s customer invoicing and accounting purposes.`,
       },
     };
     return res.render(
