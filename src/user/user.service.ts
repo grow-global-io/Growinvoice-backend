@@ -170,10 +170,24 @@ export class UserService {
       const hashedPassword = await bcrypt.hash(data.password, 12);
 
       // Send welcome email asynchronously - don't block user creation if it fails
-      this.mailService.sendWelcomeMail(data.email, data.name).catch((error) => {
-        console.error('Failed to send welcome email (non-blocking):', error);
+      // Wrap in try-catch to ensure any synchronous errors don't block registration
+      try {
+        this.mailService
+          .sendWelcomeMail(data.email, data.name)
+          .catch((error) => {
+            console.error(
+              'Failed to send welcome email (non-blocking):',
+              error,
+            );
+            // Don't throw - user creation should succeed even if email fails
+          });
+      } catch (emailError) {
+        console.error(
+          'Failed to initiate welcome email (non-blocking):',
+          emailError,
+        );
         // Don't throw - user creation should succeed even if email fails
-      });
+      }
 
       const result = await this.prismaService.user.create({
         data: {

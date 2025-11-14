@@ -161,15 +161,26 @@ export class MailService {
       companyNameString = companyName;
     }
 
-    await this.transporter.sendMail({
-      to: sendMailDto.email,
-      subject: sendMailDto.subject,
-      html: sendMailDto.body,
-      sender: {
-        name: companyNameString ?? 'Grow Global Strategies Pvt Ltd',
-        address: 'no-reply@growinvoice.com',
-      },
-    });
+    try {
+      await this.transporter.sendMail({
+        to: sendMailDto.email,
+        subject: sendMailDto.subject,
+        html: sendMailDto.body,
+        sender: {
+          name: companyNameString ?? 'Grow Global Strategies Pvt Ltd',
+          address: 'no-reply@growinvoice.com',
+        },
+      });
+    } catch (error: any) {
+      // Log SMTP errors but don't throw - let the caller handle it
+      console.error('SMTP email sending failed:', {
+        error: error?.message,
+        code: error?.code,
+        response: error?.response,
+      });
+      // Re-throw so caller can handle (they should catch it)
+      throw error;
+    }
   }
 
   async sendWelcomeMail(email: string, name: string) {
@@ -210,8 +221,14 @@ export class MailService {
 
       return mail.data;
     } catch (error) {
-      console.error('Error sending welcome mail:', error?.error?.response);
-      throw new Error('Failed to send welcome mail');
+      // Log error but don't throw - this is a non-critical operation
+      console.error('Error sending welcome mail (non-blocking):', {
+        error: error?.message,
+        response: error?.error?.response,
+        email: email,
+      });
+      // Return null instead of throwing - caller should handle gracefully
+      return null;
     }
   }
 }
