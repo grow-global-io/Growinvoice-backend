@@ -51,21 +51,9 @@ export class UserController {
   async createUser(
     @Body() createUserDto: CreateUserCompany,
   ): Promise<LoginSuccessDto> {
-    try {
-      // This now returns LoginSuccessDto (with authToken) whether user exists or not
-      // For existing users with Google sign-in, it links the account and logs them in
-      return await this.userService.createUser(createUserDto);
-    } catch (error: any) {
-      console.error('Error in createUser controller:', {
-        message: error?.message,
-        stack: error?.stack,
-        code: error?.code,
-        status: error?.status,
-        response: error?.response,
-      });
-      // Re-throw to let NestJS handle it properly
-      throw error;
-    }
+    // This now returns LoginSuccessDto (with authToken) whether user exists or not
+    // For existing users with Google sign-in, it links the account and logs them in
+    return await this.userService.createUser(createUserDto);
   }
 
   @IsPublic()

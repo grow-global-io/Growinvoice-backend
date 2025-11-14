@@ -66,107 +66,107 @@ export class UserService {
   }
 
   async createUser(data: CreateUserCompany) {
-    try {
-      console.log('createUser called with:', {
-        email: data.email,
-        hasGoogleToken: !!data.googleToken,
-        hasPassword: !!data.password,
-        isGoogleSignIn: data.isGoogleSignIn,
-      });
+    console.log('createUser called with:', {
+      email: data.email,
+      hasGoogleToken: !!data.googleToken,
+      hasPassword: !!data.password,
+      isGoogleSignIn: data.isGoogleSignIn,
+    });
 
-      // Handle Google OAuth flow - ALWAYS prioritize Google token if provided
-      if (data.googleToken) {
-        console.log('Processing Google OAuth flow with token');
-        // Verify Google token and handle login/registration
-        // This will log in existing users or create new ones
-        try {
-          return await this.authService.verifyGoogleToken(data.googleToken);
-        } catch (error: any) {
-          // If Google token verification fails, log the error and re-throw
-          console.error('Google token verification failed:', error);
-          throw error;
-        }
+    // Handle Google OAuth flow - ALWAYS prioritize Google token if provided
+    if (data.googleToken) {
+      console.log('Processing Google OAuth flow with token');
+      // Verify Google token and handle login/registration
+      // This will log in existing users or create new ones
+      try {
+        return await this.authService.verifyGoogleToken(data.googleToken);
+      } catch (error: any) {
+        // If Google token verification fails, log the error and re-throw
+        console.error('Google token verification failed:', error);
+        throw error;
       }
+    }
 
-      // Check if user already exists BEFORE validation
-      // This allows us to handle Google sign-in for existing users even without token
-      const existingUser = await this.prismaService.user.findUnique({
-        where: { email: data.email },
-      });
+    // Check if user already exists BEFORE validation
+    // This allows us to handle Google sign-in for existing users even without token
+    const existingUser = await this.prismaService.user.findUnique({
+      where: { email: data.email },
+    });
 
-      // If user already exists, handle login/account linking
-      if (existingUser) {
-        // Detect Google sign-in attempts (even without explicit flag or token)
-        // Common patterns: placeholder passwords, or isGoogleSignIn flag
-        const isLikelyGoogleSignIn =
-          data.isGoogleSignIn ||
-          data.googleToken ||
-          (data.password &&
-            /^(random_password|placeholder|google_signin|oauth|temp)/i.test(
-              data.password,
-            ));
+    // If user already exists, handle login/account linking
+    if (existingUser) {
+      // Detect Google sign-in attempts (even without explicit flag or token)
+      // Common patterns: placeholder passwords, or isGoogleSignIn flag
+      const isLikelyGoogleSignIn =
+        data.isGoogleSignIn ||
+        data.googleToken ||
+        (data.password &&
+          /^(random_password|placeholder|google_signin|oauth|temp)/i.test(
+            data.password,
+          ));
 
-        // If this looks like a Google sign-in attempt, log them in immediately
-        if (isLikelyGoogleSignIn) {
-          console.log(
-            'Existing user detected with Google sign-in (flag/token/placeholder password), logging in:',
-            existingUser.email,
-          );
-          // Link Google account to existing user and log them in
-          // Generate JWT token for login
-          const payload = { sub: existingUser.id, email: existingUser.email };
-          const authToken = await this.jwtService.signAsync(payload);
-
-          // Return login response format
-          return plainToInstance(LoginSuccessDto, {
-            message: 'Account linked to Google successfully. Logged in.',
-            authToken,
-          });
-        }
-
-        // Regular email/password flow - validate password
-        await this.validateCreateUserDto(data, false);
-
-        // User exists - verify password and log them in
-        const passwordMatch = await bcrypt.compare(
-          data.password,
-          existingUser.password,
-        );
-
-        if (passwordMatch) {
-          // Password matches - log them in
-          const payload = { sub: existingUser.id, email: existingUser.email };
-          const authToken = await this.jwtService.signAsync(payload);
-
-          return plainToInstance(LoginSuccessDto, {
-            message: 'Login successful',
-            authToken,
-          });
-        }
-
-        // Password doesn't match - but user exists
-        // This could be a Google sign-in attempt that we didn't detect
-        // OR a regular registration attempt with wrong password
-        // For safety, if user exists, we'll log them in anyway (account linking)
-        // This prevents blocking legitimate Google sign-ins
+      // If this looks like a Google sign-in attempt, log them in immediately
+      if (isLikelyGoogleSignIn) {
         console.log(
-          'Existing user found but password does not match. Treating as Google sign-in and logging in:',
+          'Existing user detected with Google sign-in (flag/token/placeholder password), logging in:',
           existingUser.email,
         );
+        // Link Google account to existing user and log them in
+        // Generate JWT token for login
         const payload = { sub: existingUser.id, email: existingUser.email };
         const authToken = await this.jwtService.signAsync(payload);
 
+        // Return login response format
         return plainToInstance(LoginSuccessDto, {
-          message: 'Account linked successfully. Logged in.',
+          message: 'Account linked to Google successfully. Logged in.',
           authToken,
         });
       }
 
-      // User doesn't exist - proceed with regular validation and creation
+      // Regular email/password flow - validate password
       await this.validateCreateUserDto(data, false);
 
-      // User doesn't exist - create new user
-      console.log('User does not exist, creating new user');
+      // User exists - verify password and log them in
+      const passwordMatch = await bcrypt.compare(
+        data.password,
+        existingUser.password,
+      );
+
+      if (passwordMatch) {
+        // Password matches - log them in
+        const payload = { sub: existingUser.id, email: existingUser.email };
+        const authToken = await this.jwtService.signAsync(payload);
+
+        return plainToInstance(LoginSuccessDto, {
+          message: 'Login successful',
+          authToken,
+        });
+      }
+
+      // Password doesn't match - but user exists
+      // This could be a Google sign-in attempt that we didn't detect
+      // OR a regular registration attempt with wrong password
+      // For safety, if user exists, we'll log them in anyway (account linking)
+      // This prevents blocking legitimate Google sign-ins
+      console.log(
+        'Existing user found but password does not match. Treating as Google sign-in and logging in:',
+        existingUser.email,
+      );
+      const payload = { sub: existingUser.id, email: existingUser.email };
+      const authToken = await this.jwtService.signAsync(payload);
+
+      return plainToInstance(LoginSuccessDto, {
+        message: 'Account linked successfully. Logged in.',
+        authToken,
+      });
+    }
+
+    // User doesn't exist - proceed with regular validation and creation
+    await this.validateCreateUserDto(data, false);
+
+    // User doesn't exist - create new user
+    console.log('User does not exist, creating new user');
+    try {
       const hashedPassword = await bcrypt.hash(data.password, 12);
 
       // Send welcome email asynchronously - don't block user creation if it fails
@@ -189,113 +189,87 @@ export class UserService {
         // Don't throw - user creation should succeed even if email fails
       }
 
-      try {
-        const result = await this.prismaService.user.create({
-          data: {
-            email: data.email,
-            name: data.name,
-            phone: data.phone,
-            password: hashedPassword,
-            company: {
-              create: {
-                name: data.companyName,
-              },
+      const result = await this.prismaService.user.create({
+        data: {
+          email: data.email,
+          name: data.name,
+          phone: data.phone,
+          password: hashedPassword,
+          company: {
+            create: {
+              name: data.companyName,
             },
           },
+        },
+      });
+
+      // Generate JWT token for new user
+      const payload = { sub: result.id, email: result.email };
+      const authToken = await this.jwtService.signAsync(payload);
+
+      // Return login response format for new user too
+      return plainToInstance(LoginSuccessDto, {
+        message: 'User created and logged in successfully',
+        authToken,
+      });
+    } catch (createError: any) {
+      console.error('Error creating user:', {
+        code: createError?.code,
+        message: createError?.message,
+        meta: createError?.meta,
+      });
+
+      // Handle Prisma unique constraint error (user already exists)
+      // This can happen due to race conditions
+      if (
+        createError?.code === 'P2002' ||
+        createError?.message?.includes('already exists') ||
+        createError?.message?.includes('Unique constraint')
+      ) {
+        console.log(
+          'User already exists (race condition or duplicate), attempting login',
+        );
+        // User was created between our check and create - fetch and try to log them in
+        const raceConditionUser = await this.prismaService.user.findUnique({
+          where: { email: data.email },
         });
 
-        // Generate JWT token for new user
-        const payload = { sub: result.id, email: result.email };
-        const authToken = await this.jwtService.signAsync(payload);
-
-        // Return login response format for new user too
-        return plainToInstance(LoginSuccessDto, {
-          message: 'User created and logged in successfully',
-          authToken,
-        });
-      } catch (createError: any) {
-        console.error('Error creating user:', {
-          code: createError?.code,
-          message: createError?.message,
-          meta: createError?.meta,
-        });
-
-        // Handle Prisma unique constraint error (user already exists)
-        // This can happen due to race conditions
-        if (
-          createError?.code === 'P2002' ||
-          createError?.message?.includes('already exists') ||
-          createError?.message?.includes('Unique constraint')
-        ) {
-          console.log(
-            'User already exists (race condition or duplicate), attempting login',
+        if (raceConditionUser) {
+          // Try to verify password
+          const passwordMatch = await bcrypt.compare(
+            data.password,
+            raceConditionUser.password,
           );
-          // User was created between our check and create - fetch and try to log them in
-          const raceConditionUser = await this.prismaService.user.findUnique({
-            where: { email: data.email },
-          });
 
-          if (raceConditionUser) {
-            // Try to verify password
-            const passwordMatch = await bcrypt.compare(
-              data.password,
-              raceConditionUser.password,
-            );
+          if (passwordMatch) {
+            // Password matches - log them in
+            console.log('Password matches, logging in existing user');
+            const payload = {
+              sub: raceConditionUser.id,
+              email: raceConditionUser.email,
+            };
+            const authToken = await this.jwtService.signAsync(payload);
 
-            if (passwordMatch) {
-              // Password matches - log them in
-              console.log('Password matches, logging in existing user');
-              const payload = {
-                sub: raceConditionUser.id,
-                email: raceConditionUser.email,
-              };
-              const authToken = await this.jwtService.signAsync(payload);
-
-              return plainToInstance(LoginSuccessDto, {
-                message: 'Login successful',
-                authToken,
-              });
-            } else {
-              console.log('Password does not match, user already exists');
-              // If password doesn't match, suggest Google login
-              throw new BadRequestException(
-                'User already exists. If you signed up with Google, please use Google Sign-In. Otherwise, please use the login endpoint with your password.',
-              );
-            }
+            return plainToInstance(LoginSuccessDto, {
+              message: 'Login successful',
+              authToken,
+            });
           } else {
+            console.log('Password does not match, user already exists');
+            // If password doesn't match, suggest Google login
             throw new BadRequestException(
               'User already exists. If you signed up with Google, please use Google Sign-In. Otherwise, please use the login endpoint with your password.',
             );
           }
         } else {
-          // Log the full error for debugging
-          console.error('Unexpected error during user creation:', {
-            error: createError,
-            stack: createError?.stack,
-            name: createError?.name,
-          });
-          // Re-throw with a more user-friendly message
           throw new BadRequestException(
-            `Failed to create user account: ${createError?.message || 'Unknown error'}. Please try again.`,
+            'User already exists. If you signed up with Google, please use Google Sign-In. Otherwise, please use the login endpoint with your password.',
           );
         }
+      } else {
+        // Re-throw other errors
+        throw createError;
       }
-    } catch (outerError: any) {
-      // Catch any errors that occur outside the inner try-catch
-      console.error('Unexpected error in createUser method:', {
-        error: outerError,
-        message: outerError?.message,
-        stack: outerError?.stack,
-        name: outerError?.name,
-        code: outerError?.code,
-      });
-      // Convert to BadRequestException to return 400 instead of 500
-      if (outerError instanceof BadRequestException) {
-        throw outerError;
-      }
-      throw new BadRequestException(
-        `Failed to process user registration: ${outerError?.message || 'Unknown error'}. Please try again.`,
-      );
     }
   }
 
