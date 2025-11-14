@@ -168,7 +168,13 @@ export class UserService {
     console.log('User does not exist, creating new user');
     try {
       const hashedPassword = await bcrypt.hash(data.password, 12);
-      await this.mailService.sendWelcomeMail(data.email, data.name);
+
+      // Send welcome email asynchronously - don't block user creation if it fails
+      this.mailService.sendWelcomeMail(data.email, data.name).catch((error) => {
+        console.error('Failed to send welcome email (non-blocking):', error);
+        // Don't throw - user creation should succeed even if email fails
+      });
+
       const result = await this.prismaService.user.create({
         data: {
           email: data.email,
