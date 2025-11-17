@@ -344,6 +344,7 @@ model PaymentDetails extends Base {
     stripeId    String?     @DtoCreateOptional @DtoUpdateOptional
     razorpayId  String?     @DtoCreateOptional @DtoUpdateOptional
     mollieId    String?     @DtoCreateOptional @DtoUpdateOptional
+    bankName    String?     @DtoCreateOptional @DtoUpdateOptional
     user_id     String      @DtoRelationIncludeId
     user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
     invoice     Invoice[]   @DtoApiHidden
