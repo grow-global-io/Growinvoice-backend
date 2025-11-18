@@ -165,12 +165,11 @@
                     <tr>
                       <td class="tm_width_3 tm_primary_color tm_bold">Total Taxes (%)</td>
                       <td class="tm_width_3 tm_primary_color tm_text_right tm_bold">
-                        <%= invoice?.product[0]?.product?.currency?.symbol %>
                         <%= Number(
                           invoice?.product?.reduce((acc, item) => {
                             return acc + (item?.product?.tax?.percentage || 0);
                           }, 0)
-                        )?.toFixed(2) %>
+                        )?.toFixed(2) %>%
                       </td>
                     </tr>
                     <tr>
