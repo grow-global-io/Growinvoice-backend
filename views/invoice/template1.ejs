@@ -60,6 +60,9 @@
                     <b style="text-transform: capitalize;">
                       <%= invoice?.customer?.name %>
                     </b><br>
+                    <% if (invoice?.customer?.email) { %>
+                      <%= invoice?.customer?.email %><br>
+                    <% } %>
                     <%= invoice?.customer?.billingAddress?.address %><br>
                       <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state_name 
                       ?? invoice?.customer?.billingAddress?.state?.name
@@ -71,6 +74,9 @@
                               <% } else { %>
 
                                 <%- invoice?.customerBillingAddress %>
+                                <% if (invoice?.customer?.email) { %>
+                                  <br><%= invoice?.customer?.email %>
+                                <% } %>
 
                                   <% } %>
 
@@ -376,10 +382,16 @@
                             <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
                                   invoice?.user?.company[0]?.country?.name %><br>
                                   <%= invoice?.user?.company[0]?.zip %><br>
+                                  <% if (invoice?.customer?.email) { %>
+                                    <%= invoice?.customer?.email %><br>
+                                  <% } %>
 
                                     <% } else { %>
 
                                       <%- invoice?.companyAddress %>
+                                      <% if (invoice?.customer?.email) { %>
+                                        <br><%= invoice?.customer?.email %>
+                                      <% } %>
 
                                         <% } %>
                       </p>
