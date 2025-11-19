@@ -78,12 +78,45 @@ export class PaymentsService {
         './views/receipts/invoice-success-email.ejs',
         data,
       );
-      await this.mailService.sendMail({
-        email: receipt.invoice?.customer?.email || '',
-        subject:
-          'Payment Success for Invoice - ' + receipt.invoice?.invoice_number,
-        body: template,
-      });
+
+      // Generate PDF attachment for receipt
+      let pdfAttachment = null;
+      try {
+        const pdfBuffer = await this.getPdfBufferForInvoiceReceipt(payments.id);
+        if (pdfBuffer && pdfBuffer.length > 0) {
+          pdfAttachment = [
+            {
+              filename: `Receipt-${receipt.invoice?.invoice_number}-${payments.id}.pdf`,
+              content: pdfBuffer,
+              contentType: 'application/pdf',
+            },
+          ];
+        }
+      } catch (error) {
+        // Continue without PDF attachment if generation fails
+      }
+
+      // Send email asynchronously - don't block payment processing if email fails
+      this.mailService
+        .sendMail(
+          {
+            email: receipt.invoice?.customer?.email || '',
+            subject:
+              'Payment Success for Invoice - ' +
+              receipt.invoice?.invoice_number,
+            body: template,
+          },
+          receipt.invoice?.user_id,
+          undefined,
+          pdfAttachment,
+        )
+        .catch((error) => {
+          console.error(
+            'Failed to send invoice payment receipt email (non-blocking):',
+            error,
+          );
+          // Don't throw - payment processing should succeed even if email fails
+        });
     }
     return plainToInstance(PaymentsDto, payments);
   }
@@ -446,21 +479,40 @@ export class PaymentsService {
         title: 'Payment Success',
         body: 'Payment for plan ' + plan.name + ' is successful',
       });
-      const template = await ejs.renderFile(
-        './views/receipts/plan-success-email.ejs',
-        {
-          ...templateData,
-          paymentMade: payment,
-          transaction: {
-            id: '-',
+
+      // Send email asynchronously - don't block payment success if email fails
+      try {
+        const template = await ejs.renderFile(
+          './views/receipts/plan-success-email.ejs',
+          {
+            ...templateData,
+            paymentMade: payment,
+            transaction: {
+              id: '-',
+            },
           },
-        },
-      );
-      await this.mailService.sendMail({
-        email: user.email,
-        subject: 'Payment Success',
-        body: template,
-      });
+        );
+        this.mailService
+          .sendMail({
+            email: user.email,
+            subject: 'Payment Success',
+            body: template,
+          })
+          .catch((error) => {
+            console.error(
+              'Failed to send payment success email (non-blocking):',
+              error,
+            );
+            // Don't throw - payment processing should succeed even if email fails
+          });
+      } catch (emailError) {
+        console.error(
+          'Failed to prepare or send payment success email (non-blocking):',
+          emailError,
+        );
+        // Don't throw - payment processing should succeed even if email fails
+      }
+
       // redirect to success page
       return true;
     }
@@ -510,21 +562,40 @@ export class PaymentsService {
         title: 'Payment Success',
         body: 'Payment for plan ' + plan.name + ' is successful',
       });
-      const template = await ejs.renderFile(
-        './views/receipts/plan-success-email.ejs',
-        {
-          ...templateData,
-          paymentMade: payment,
-          transaction: {
-            id: session_id,
+
+      // Send email asynchronously - don't block payment success if email fails
+      try {
+        const template = await ejs.renderFile(
+          './views/receipts/plan-success-email.ejs',
+          {
+            ...templateData,
+            paymentMade: payment,
+            transaction: {
+              id: session_id,
+            },
           },
-        },
-      );
-      await this.mailService.sendMail({
-        email: user.email,
-        subject: 'Payment Success',
-        body: template,
-      });
+        );
+        this.mailService
+          .sendMail({
+            email: user.email,
+            subject: 'Payment Success',
+            body: template,
+          })
+          .catch((error) => {
+            console.error(
+              'Failed to send payment success email (non-blocking):',
+              error,
+            );
+            // Don't throw - payment processing should succeed even if email fails
+          });
+      } catch (emailError) {
+        console.error(
+          'Failed to prepare or send payment success email (non-blocking):',
+          emailError,
+        );
+        // Don't throw - payment processing should succeed even if email fails
+      }
+
       // redirect to success page
       return true;
     }
@@ -855,28 +926,54 @@ export class PaymentsService {
   async getPdfBufferForInvoiceReceipt(id: string) {
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'], // useful for servers
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--disable-gpu',
+      ],
     });
-    const page = await browser.newPage();
-    const htmlFetchLink = `${
-      process.env.BACKEND_URL || 'http://localhost:5000'
-    }/api/payments/invoice-receipt-view/${id}`;
-    await page.goto(htmlFetchLink, {
-      waitUntil: 'networkidle0',
-    });
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: {
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-      },
-    });
+    try {
+      const page = await browser.newPage();
+      page.setDefaultNavigationTimeout(15000); // 15 seconds
+      page.setDefaultTimeout(15000);
 
-    await browser.close();
+      const backendUrl =
+        this.configService.get<string>('BACKEND_URL') ||
+        process.env.BACKEND_URL;
+      const htmlFetchLink = `${backendUrl}/api/payments/invoice-receipt-view/${id}`;
 
-    return pdfBuffer;
+      await page.goto(htmlFetchLink, {
+        waitUntil: 'domcontentloaded', // Faster than networkidle0
+        timeout: 15000,
+      });
+
+      // Wait a short time for any remaining content to render
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Generate PDF with lower quality for smaller file size and faster generation
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: {
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+        },
+        // Optimize for speed and smaller file size
+        preferCSSPageSize: false,
+        displayHeaderFooter: false,
+        scale: 0.8, // Reduce scale for smaller file size
+      });
+
+      await browser.close();
+      return pdfBuffer;
+    } catch (error) {
+      await browser.close();
+      console.error('Error generating receipt PDF:', error);
+      throw error;
+    }
   }
 }

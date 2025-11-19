@@ -89,6 +89,11 @@ export class MailService {
       html: string;
       userId?: string;
       companyName?: string;
+      attachments?: Array<{
+        filename: string;
+        content: Buffer;
+        contentType?: string;
+      }>;
     }[];
     userId?: string;
     companyName?: string;
@@ -121,7 +126,7 @@ export class MailService {
     const emailPromises = body.map(async (mail) => {
       const companyNameString = companyName;
 
-      return bulkTransporter.sendMail({
+      const mailOptions: any = {
         to: mail.to,
         subject: mail.subject,
         html: mail.html,
@@ -129,10 +134,25 @@ export class MailService {
           name: companyNameString ?? 'Grow Global Strategies Pvt Ltd',
           address: 'no-reply@growinvoice.com',
         },
-      });
+      };
+
+      // Add attachments if provided
+      if (mail.attachments && mail.attachments.length > 0) {
+        mailOptions.attachments = mail.attachments.map((att) => ({
+          filename: att.filename,
+          content: att.content,
+          contentType: att.contentType || 'application/pdf',
+        }));
+        console.log(
+          `Sending bulk email with ${mail.attachments.length} attachment(s) to ${mail.to}`,
+        );
+      }
+
+      return bulkTransporter.sendMail(mailOptions);
     });
     try {
       await Promise.all(emailPromises);
+      console.log(`Successfully sent ${body.length} bulk email(s)`);
     } catch (error) {
       console.error('Error sending bulk emails:', error);
     } finally {
@@ -144,6 +164,11 @@ export class MailService {
     sendMailDto: SendMailDto,
     userId?: string,
     companyName?: string,
+    attachments?: Array<{
+      filename: string;
+      content: Buffer;
+      contentType?: string;
+    }>,
   ) {
     let companyNameString = '';
     if (userId) {
@@ -162,7 +187,7 @@ export class MailService {
     }
 
     try {
-      await this.transporter.sendMail({
+      const mailOptions: any = {
         to: sendMailDto.email,
         subject: sendMailDto.subject,
         html: sendMailDto.body,
@@ -170,13 +195,29 @@ export class MailService {
           name: companyNameString ?? 'Grow Global Strategies Pvt Ltd',
           address: 'no-reply@growinvoice.com',
         },
-      });
+      };
+
+      // Add attachments if provided
+      if (attachments && attachments.length > 0) {
+        mailOptions.attachments = attachments.map((att) => ({
+          filename: att.filename,
+          content: att.content,
+          contentType: att.contentType || 'application/pdf',
+        }));
+        console.log(
+          `Sending email with ${attachments.length} attachment(s) to ${sendMailDto.email}`,
+        );
+      }
+
+      await this.transporter.sendMail(mailOptions);
+      console.log(`Email sent successfully to ${sendMailDto.email}`);
     } catch (error: any) {
       // Log SMTP errors but don't throw - let the caller handle it
       console.error('SMTP email sending failed:', {
         error: error?.message,
         code: error?.code,
         response: error?.response,
+        email: sendMailDto.email,
       });
       // Re-throw so caller can handle (they should catch it)
       throw error;

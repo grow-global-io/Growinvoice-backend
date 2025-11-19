@@ -214,7 +214,30 @@ export class InvoiceController {
     @Query('id') id: string,
   ): Promise<SuccessResponseDto<InvoiceDto>> {
     const invoice = await this.invoiceService.statusToMailed(id);
-    await this.mailService.sendMail(createInvoiceDto, invoice?.user_id);
+
+    // Generate PDF attachment for invoice
+    let pdfAttachment = null;
+    try {
+      const pdfBuffer = await this.invoiceService.getPdfBufferForInvoice(id);
+      if (pdfBuffer && pdfBuffer.length > 0) {
+        pdfAttachment = [
+          {
+            filename: `Invoice-${invoice.invoice_number}.pdf`,
+            content: pdfBuffer,
+            contentType: 'application/pdf',
+          },
+        ];
+      }
+    } catch (error) {
+      // Continue without PDF attachment if generation fails
+    }
+
+    await this.mailService.sendMail(
+      createInvoiceDto,
+      invoice?.user_id,
+      undefined,
+      pdfAttachment,
+    );
     return {
       message: 'Invoice created and sent to mail successfully',
       result: invoice,
