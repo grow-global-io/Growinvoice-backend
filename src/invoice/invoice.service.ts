@@ -92,7 +92,8 @@ export class InvoiceService {
         }),
       );
     }
-    return plainToInstance(InvoiceDto, invoicedata);
+    const returnData = plainToInstance(InvoiceDto, invoicedata);
+    return returnData;
   }
 
   async findAll(user_id: string, customerId?: string) {
