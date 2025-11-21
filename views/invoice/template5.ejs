@@ -59,6 +59,25 @@
                 <b style="text-transform: capitalize;">
                   <%= invoice?.customer?.name %>
                 </b><br>
+                <% if (invoice?.customer?.option) { %>
+                  <%
+                    let businessType = '';
+                    switch(invoice?.customer?.option) {
+                      case 'BusinessWithGST':
+                        businessType = 'BusinesswithGST';
+                        break;
+                      case 'BusinessWithoutGST':
+                        businessType = 'BusinesswithoutGST';
+                        break;
+                      case 'Freelancer':
+                        businessType = 'Freelancer';
+                        break;
+                      default:
+                        businessType = invoice?.customer?.option;
+                    }
+                  %>
+                  <span style="text-transform: capitalize;"><%= businessType %></span><br>
+                <% } %>
                 <% if (invoice?.customer?.email) { %>
                   <%= invoice?.customer?.email %><br>
                 <% } %>
@@ -396,6 +415,25 @@
                           <b style="text-transform: capitalize;">
                             <%= invoice?.customer?.name %>
                           </b><br>
+                          <% if (invoice?.customer?.option) { %>
+                            <%
+                              let businessTypePayer = '';
+                              switch(invoice?.customer?.option) {
+                                case 'BusinessWithGST':
+                                  businessTypePayer = 'BusinesswithGST';
+                                  break;
+                                case 'BusinessWithoutGST':
+                                  businessTypePayer = 'BusinesswithoutGST';
+                                  break;
+                                case 'Freelancer':
+                                  businessTypePayer = 'Freelancer';
+                                  break;
+                                default:
+                                  businessTypePayer = invoice?.customer?.option;
+                              }
+                            %>
+                            <span style="text-transform: capitalize;"><%= businessTypePayer %></span><br>
+                          <% } %>
                           <%= invoice?.customer?.billingAddress?.address %><br>
                           <%= invoice?.customer?.billingAddress?.city %>, <%= invoice?.customer?.billingAddress?.state?.name %>,
                           <%= invoice?.customer?.billingAddress?.country?.name %><br>
