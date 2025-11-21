@@ -796,7 +796,7 @@ export class InvoiceService {
       const newInvoice = {
         ...invoiceSettingsWithFormat,
         footer: {
-          text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'}'s customer invoicing and accounting purposes.`,
+          text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} customer invoicing and accounting purposes.`,
         },
       };
 
