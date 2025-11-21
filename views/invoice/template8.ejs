@@ -290,7 +290,7 @@
                     </td>
                     <td class="w-50">
                       <% 
-                    if(invoice?.payment?.paymentType === 'EuropeanBank'){ %>
+                    if(invoice?.payment?.paymentType === 'EuropeanBank' || invoice?.payment?.paymentType === 'Revolut' || invoice?.payment?.paymentType === 'Wise'){ %>
                       %>
                       <% if(invoice?.payment?.bankName){ %>
                         <span class="ibanNumberTitleTextField font-weight-bold">Bank Name</span>
