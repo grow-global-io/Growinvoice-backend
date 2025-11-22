@@ -46,11 +46,11 @@ export class InvoiceController {
   @ApiSuccessResponse(InvoiceDto, { status: 201 })
   async create(
     @Body() createInvoiceDto: CreateInvoiceWithProducts,
-  ): Promise<SuccessResponseDto<InvoiceDto>> {
+  ): Promise<SuccessResponseDto<InvoiceDto[]>> {
     const invoice = await this.invoiceService.create(createInvoiceDto);
     return {
       message: 'Invoice created successfully',
-      result: invoice[0],
+      result: invoice,
     };
   }
 
