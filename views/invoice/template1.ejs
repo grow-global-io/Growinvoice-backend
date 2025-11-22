@@ -34,18 +34,18 @@
               </div>
             </div>
             <div class="tm_invoice_right tm_text_right tm_mobile_hide">
-              <div class="tm_f50 tm_text_uppercase tm_white_color"><%= invoice?.paid_status === 'Paid' ? 'Receipt' : 'Invoice' %></div>
+              <div class="tm_f50 tm_text_uppercase tm_white_color"><%= invoice?.paid_status === 'Paid' ? t('translation.invoice.template.receipt') : t('translation.invoice.template.invoice') %></div>
             </div>
             <div class="tm_shape_bg tm_accent_bg tm_mobile_hide"></div>
           </div>
           <div class="tm_invoice_info tm_mb25">
-            <div class="tm_card_note tm_mobile_hide"><b class="tm_primary_color">Payment Method: </b>
+            <div class="tm_card_note tm_mobile_hide"><b class="tm_primary_color"><%= t('translation.invoice.template.paymentMethod') %> </b>
               <%= invoice?.payment?.paymentType %>
             </div>
             <div class="tm_invoice_info_list tm_white_color">
-              <p class="tm_invoice_number tm_m0">Invoice No: <b>#<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%=
+              <p class="tm_invoice_number tm_m0"><%= t('translation.invoice.template.invoiceNo') %> <b>#<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%=
                       invoice?.invoice_number %></b></p>
-              <p class="tm_invoice_date tm_m0">Date: <b>
+              <p class="tm_invoice_date tm_m0"><%= t('translation.invoice.template.date') %><b>
                   <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %>
                 </b></p>
             </div>
@@ -53,7 +53,7 @@
           </div>
           <div class="tm_invoice_head tm_mb10" style="height: auto;">
             <div class="tm_invoice_left">
-              <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
+              <p class="tm_mb2"><b class="tm_primary_color"><%= t('translation.invoice.template.invoiceTo') %></b></p>
               <div class="templateTo">
                 <p>
                   <% if (invoice?.customerBillingAddress==="" ) { %>
@@ -103,7 +103,7 @@
               </div>
             </div>
             <div class="tm_invoice_right tm_text_right">
-              <p class="tm_mb2"><b class="tm_primary_color">Pay To:</b></p>
+              <p class="tm_mb2"><b class="tm_primary_color"><%= t('translation.invoice.template.payTo') %></b></p>
               <div class="templateTo">
                 <p>
                   <% if (invoice?.companyAddress==="" ) { %>
@@ -131,13 +131,13 @@
                   <thead>
                     <tr class="tm_accent_bg">
                       <!-- S. No -->
-                      <th class="tm_width_2 tm_semi_bold tm_white_color">S. No</th>
-                      <th class="tm_width_3 tm_semi_bold tm_white_color">Item</th>
-                      <th class="tm_width_1 tm_semi_bold tm_white_color">Qty</th>
-                      <th class="tm_width_1 tm_semi_bold tm_white_color">HSN</th>
-                      <th class="tm_width_1 tm_semi_bold tm_white_color">Tax(%)</th>
-                      <th class="tm_width_2 tm_semi_bold tm_white_color">Price</th>
-                      <th class="tm_width_2 tm_semi_bold tm_white_color tm_text_right">Total</th>
+                      <th class="tm_width_2 tm_semi_bold tm_white_color"><%= t('translation.invoice.template.serialNo') %></th>
+                      <th class="tm_width_3 tm_semi_bold tm_white_color"><%= t('translation.invoice.template.item') %></th>
+                      <th class="tm_width_1 tm_semi_bold tm_white_color"><%= t('translation.invoice.template.qty') %></th>
+                      <th class="tm_width_1 tm_semi_bold tm_white_color"><%= t('translation.invoice.template.hsn') %></th>
+                      <th class="tm_width_1 tm_semi_bold tm_white_color"><%= t('translation.invoice.template.tax') %></th>
+                      <th class="tm_width_2 tm_semi_bold tm_white_color"><%= t('translation.invoice.template.price') %></th>
+                      <th class="tm_width_2 tm_semi_bold tm_white_color tm_text_right"><%= t('translation.invoice.template.total') %></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -178,8 +178,8 @@
                 <!-- check if notes availble then show -->
                  <% if(invoice?.notes !==null && invoice?.notes !=="" ){ %>
                 <div class="tm_note tm_font_style_normal border p-2 m-0">
-                  <b class="tm_primary_color">Note:</b>
-                  <%= invoice?.notes ?? "Thank you for your business!" %>
+                  <b class="tm_primary_color"><%= t('translation.invoice.template.note') %></b>
+                  <%= invoice?.notes ?? t('translation.invoice.template.thankYouMessage') %>
                 </div>
                 <% } %>
               </div>
@@ -187,7 +187,7 @@
                 <table class="tm_mb15">
                   <tbody>
                     <tr class="tm_gray_bg ">
-                      <td class="tm_width_3 tm_primary_color tm_bold">Subtoal</td>
+                      <td class="tm_width_3 tm_primary_color tm_bold"><%= t('translation.invoice.template.subtotal') %></td>
                       <td class="tm_width_3 tm_primary_color tm_bold tm_text_right">
                         <%= invoice?.product[0]?.product?.currency?.symbol %>
                           <%= invoice?.paid_status === 'Paid' ? '0.00' : invoice?.sub_total %>
@@ -196,7 +196,7 @@
                     <% if(invoice?.tax_id !==null ){ %>
 
                       <tr class="tm_gray_bg">
-                        <td class="tm_width_3 tm_primary_color">Tax <span class="tm_ternary_color">(<%=
+                        <td class="tm_width_3 tm_primary_color"><%= t('translation.invoice.template.tax_text') %><span class="tm_ternary_color">(<%=
                               invoice?.tax?.percentage %>%)</span></td>
                         <td class="tm_width_3 tm_primary_color tm_text_right">
                           <%= invoice?.product[0]?.product?.currency?.symbol %>
@@ -206,7 +206,7 @@
                       <% } %>
                         <% if(invoice?.discountPercentage !==null || invoice?.discountPercentage>0 ){ %>
                           <tr class="tm_gray_bg">
-                            <td class="tm_width_3 tm_primary_color">Discount <span class="tm_ternary_color">(<%=
+                            <td class="tm_width_3 tm_primary_color"><%= t('translation.invoice.template.discount') %> <span class="tm_ternary_color">(<%=
                                   invoice?.discountPercentage %>%)</span></td>
                             <td class="tm_width_3 tm_primary_color tm_text_right">
                               <%= invoice?.product[0]?.product?.currency?.symbol %>
@@ -215,21 +215,21 @@
                           </tr>
                           <% } %>
                             <tr class="tm_gray_bg">
-                              <td class="tm_width_3 tm_primary_color text-danger font-weight-bold">Due Amount </td>
+                              <td class="tm_width_3 tm_primary_color text-danger font-weight-bold"><%= t('translation.invoice.template.dueAmount') %></td>
                               <td class="tm_width_3 tm_primary_color tm_text_right text-danger font-weight-bold">
                                 <%= invoice?.product[0]?.product?.currency?.symbol %>
                                   <%= invoice?.due_amount %>
                               </td>
                             </tr>
                             <tr class="tm_gray_bg">
-                              <td class="tm_width_3 tm_primary_color text-success font-weight-bold">Paid Amount </td>
+                              <td class="tm_width_3 tm_primary_color text-success font-weight-bold"><%= t('translation.invoice.template.paidAmount') %></td>
                               <td class="tm_width_3 tm_primary_color tm_text_right text-success font-weight-bold">
                                 <%= invoice?.product[0]?.product?.currency?.symbol %>
                                   <%= invoice?.paid_amount %>
                               </td>
                             </tr>
                             <tr class="tm_accent_bg">
-                              <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color">Grand Total </td>
+                              <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color"><%= t('translation.invoice.template.grandTotal') %></td>
                               <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_white_color tm_text_right">
                                 <%= invoice?.product[0]?.product?.currency?.symbol %>
                                   <%= invoice?.total %>
@@ -243,13 +243,13 @@
               <div class="tm_invoice_left" style="width: 49%">
                 <table class="table table-bordered">
                   <tr>
-                    <td class="font-weight-bold left">Company:</td>
+                    <td class="font-weight-bold left"><%= t('translation.invoice.template.company') %></td>
                     <td class="left">
                       <%= invoice?.user?.company[0]?.name %>
                     </td>
                   </tr>
                   <tr>
-                    <td class="font-weight-bold">Address:</td>
+                    <td class="font-weight-bold"><%= t('translation.invoice.template.address') %></td>
                     <td>
                       <%= invoice?.user?.company[0]?.address %><br>
                         <%= invoice?.user?.company[0]?.city %>, <%= invoice?.user?.company[0]?.state?.name %>, <%=
@@ -258,13 +258,13 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="font-weight-bold">VAT Number:</td>
+                    <td class="font-weight-bold"><%= t('translation.invoice.template.vatNumber') %></td>
                     <td>
                       <%= invoice?.user?.company[0]?.vat %>
                     </td>
                   </tr>
                   <tr>
-                    <td class="font-weight-bold">Email:</td>
+                    <td class="font-weight-bold"><%= t('translation.invoice.template.email') %></td>
                     <td>
                       <%= invoice?.user?.email %>
                     </td>
@@ -274,7 +274,7 @@
               <div class="tm_invoice_right tm_text_right" style="width: 49%;text-align:left">
                 <table class="table table-bordered float-right">
                   <tr>
-                    <td class="font-weight-bold mr-2">Tel:</td>
+                    <td class="font-weight-bold mr-2"><%= t('translation.invoice.template.tel') %></td>
                     <td style="text-align:left">
                       <%= invoice?.user?.company[0]?.phone %>
                     </td>
@@ -289,19 +289,21 @@
               <table class="table table-bordered">
                 <tr>
                   <td class="w-50">
-                    Recipient's
+                    <!-- TODO: CONFIRM THIS ONE -->
+                    <!-- Recipient's
                     <%= invoice?.payment?.paymentType==="UPI" ? invoice?.payment?.paymentType :
                       invoice?.payment?.paymentType.replace(/([a-z])([A-Z])/g, "$1 $2" )
                       .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2" ) .replace(/([a-z])([A-Z])/g, "$1 $2" )
                       .replace(/([A-Z])([A-Z])/g, "$1 $2" ) .trim(); %>
 
-                      Details
+                      Details -->
+                    <%= t('translation.invoice.template.recipientsDetails') %>
                   </td>
                   <td class="w-50">
                     <% if(invoice?.payment?.paymentType==='EuropeanBank' || invoice?.payment?.paymentType==='Revolut' || invoice?.payment?.paymentType==='Wise' ){ %>
                       %>
                       <% if(invoice?.payment?.bankName){ %>
-                        <span class="ibanNumberTitleTextField font-weight-bold">Bank Name</span>
+                        <span class="ibanNumberTitleTextField font-weight-bold"><%= t('translation.invoice.template.bankName') %></span>
                         <span class="ibanNumberTextField">
                           <%= invoice?.payment?.bankName %>
                         </span>
@@ -389,7 +391,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Recipient's Details</td>
+                  <td><%= t('translation.invoice.template.nameAddress') %></td>
                   <td>
                     <div class="templateTo">
                       <p>
@@ -418,7 +420,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Payer's Name & Address</td>
+                  <td><%= t('translation.invoice.template.payerNameAddress') %></td>
                   <td>
                     <div class="templateTo">
                       <p>
@@ -465,7 +467,7 @@
                   <td colspan="2" class="p-0">
                     <table class="w-100">
                       <tr>
-                        <td>Ref. No.</td>
+                        <td><%= t('translation.invoice.template.refNo') %></td>
                         <td>
                           <%= invoice?.reference_number ?? invoice?.invoice_number %>
                         </td>
@@ -477,7 +479,7 @@
                   <td colspan="2" class="p-0">
                     <table class="w-100">
                       <tr>
-                        <td>Due Date</td>
+                        <td><%= t('translation.invoice.template.dueDate') %></td>
                         <td>
                           <%= new Date(invoice?.due_date)?.toISOString()?.split('T')[0] %>
                         </td>
@@ -503,7 +505,7 @@
           <div class="row">
             <div class="col">
               <%- invoiceSettings?.footer
-                ?? "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer."
+                ?? t('translation.invoice.template.paymentTerms')
                 %>
             </div>
           </div>

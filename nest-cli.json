@@ -29,7 +29,8 @@
         "include": "../.well-known",
         "outDir": "dist/.well-known",
         "watchAssets": true
-      }
+      },
+      { "include": "i18n/**/*", "outDir": "dist/src", "watchAssets": true }
     ],
     "watchAssets": true
   },

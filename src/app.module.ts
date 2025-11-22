@@ -42,6 +42,8 @@ import { PrismaService } from './prisma/prisma.service';
 import { enhance } from '@zenstackhq/runtime';
 import { StoreModule } from './store/store.module';
 import { CouponsModule } from './coupons/coupons.module';
+import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -96,6 +98,17 @@ import { CouponsModule } from './coupons/coupons.module';
     }),
     StoreModule,
     CouponsModule,
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: {
+        path: path.join(__dirname, '/i18n/'),
+        watch: true,
+      },
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+      ],
+    }),
   ],
   controllers: [MailController],
   providers: [

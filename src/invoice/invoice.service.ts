@@ -21,6 +21,7 @@ import * as moment from 'moment-timezone';
 import { MailService } from '@/mail/mail.service';
 import { ConfigService } from '@nestjs/config';
 import * as ejs from 'ejs';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class InvoiceService {
@@ -30,6 +31,7 @@ export class InvoiceService {
     private invoiceSettings: InvoicesettingsService,
     private readonly mailService: MailService,
     private readonly conf: ConfigService,
+    private readonly i18nService: I18nService,
   ) {}
 
   async create(createInvoiceDto: CreateInvoiceWithProducts) {
@@ -386,7 +388,7 @@ export class InvoiceService {
     };
     // Transform to DTO but preserve our tax.percentage structure
     // plainToInstance will convert tax back to array, so we restore it after
-    const dtoInvoice = plainToInstance(InvoiceWithAllDataDto, mapNew) as any;
+    const dtoInvoice = plainToInstance(InvoiceWithAllDataDto, mapNew);
 
     // CRITICAL: Always preserve the products array from mapNew to ensure products are never lost
     // This ensures products show up even if plainToInstance filters them out
@@ -747,7 +749,14 @@ export class InvoiceService {
     return pdfBuffer;
   }
 
-  async getPdfBufferForInvoice(id: string) {
+  async getPdfBufferForInvoice(id: string, lang: string = 'en') {
+    const t = (key: string, args?: any) => {
+      return this.i18nService.t(key, {
+        lang: lang,
+        args: args,
+      });
+    };
+
     const browser = await puppeteer.launch({
       headless: true,
       args: [
@@ -798,6 +807,7 @@ export class InvoiceService {
         footer: {
           text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} customer invoicing and accounting purposes.`,
         },
+        t: t,
       };
 
       // Render the HTML using EJS
@@ -850,7 +860,7 @@ export class InvoiceService {
     });
   }
 
-  async bulkInvoiceSentToMail(ids: string[]) {
+  async bulkInvoiceSentToMail(ids: string[], lang?: string) {
     const sentInvoices: InvoiceDto[] = [];
     const invoices = await this.prismaService.invoice.findMany({
       where: {
@@ -996,7 +1006,10 @@ export class InvoiceService {
           // Generate PDF attachment for invoice
           let pdfAttachment = null;
           try {
-            const pdfBuffer = await this.getPdfBufferForInvoice(invoice.id);
+            const pdfBuffer = await this.getPdfBufferForInvoice(
+              invoice.id,
+              lang,
+            );
             if (pdfBuffer && pdfBuffer.length > 0) {
               pdfAttachment = [
                 {

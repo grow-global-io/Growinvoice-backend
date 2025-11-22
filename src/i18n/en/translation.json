@@ -1,0 +1,1483 @@
+{
+  "app": {
+    "name": "GrowInvoice",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create": "Create",
+    "update": "Update",
+    "uploadFile": "Upload File",
+    "remove": "Remove",
+    "avatarAlt": "avatar",
+    "install": "Install the App",
+    "select": "Select",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "success": "Success",
+    "error": "Error",
+    "actions": "Actions",
+    "search": "Search",
+    "more": "More",
+    "back": "Back",
+    "skip": "Skip",
+    "next": "Next",
+    "finish": "Finish",
+    "installed": "App installed successfully!",
+    "installCancelled": "Installation cancelled",
+    "installUnavailable": "Installation not available at this time",
+    "trial": {
+      "daysLeft": "{{days}} days left",
+      "expired": "Trial expired",
+      "active": "Trial active"
+    }
+  },
+  "dialog": {
+    "confirmTitle": "Are you sure?"
+  },
+  "upload": {
+    "errors": {
+      "maxSize": "Maximum file size is 5MB",
+      "invalidType": "Only .png, .jpg, .jpeg files are allowed"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "customers": "Customers",
+    "invoices": "Invoices",
+    "products": "Products",
+    "payments": "Payments",
+    "reports": "Reports",
+    "settings": "Settings",
+    "vendors": "Vendors",
+    "plans": "Plans",
+    "store": "Store",
+    "notifications": "Notifications",
+    "profile": "My Profile",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+  },
+  "dashboard": {
+    "rollUpAiStore": "Roll UP AI Store",
+    "aiAssistant": "AI Assistant",
+    "noWidgetsFound": "No Dashboard Widgets Found",
+    "deleteData": "Delete Data",
+    "deleteConfirm": "Are you sure you want to delete this data?",
+    "summary": {
+      "customers": "Customers",
+      "invoices": "Invoices",
+      "estimates": "Estimates",
+      "dueAmount": "Due Amount"
+    }
+  },
+  "aiAssistant": {
+    "greeting": "Hey! How can I help you today?",
+    "promptPlaceholder": "Tell us what you want to see?",
+    "type": "Type",
+    "columnFilter": "Column Filter",
+    "reset": "Reset",
+    "requestWidgetAgain": "Please request your widget again.",
+    "saveDataTitle": "Save the Data",
+    "title": "Title",
+    "titlePlaceholder": "Enter Title",
+    "submit": "Submit",
+    "validation": {
+      "promptRequired": "Prompt is required",
+      "typeRequired": "Type is required"
+    },
+    "errors": {
+      "retryAfter30": "Error occurred! please try again after 30 seconds"
+    },
+    "types": {
+      "table": "Table",
+      "graph": "Graph"
+    }
+  },
+  "quotation": {
+    "title": "Quotations",
+    "create": "Create Quotation",
+    "number": "Quotation Number",
+    "date": "Quotation Date",
+    "expiryDate": "Expiry Date",
+    "total": "Total",
+    "table": {
+      "action": "Action",
+      "status": "Status",
+      "view": "View Quotation",
+      "edit": "Edit Quotation",
+      "delete": "Delete Quotation"
+    },
+    "status": {
+      "draft": "Draft",
+      "due": "Due",
+      "mailedtocustomer": "Receipt Sent",
+      "viewed": "Viewed",
+      "paid": "Paid",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "converted": "Converted"
+    },
+    "actions": {
+      "deleteTitle": "Delete Quotation",
+      "deleteConfirm": "Are you sure you want to delete this quotation?"
+    },
+    "quotationPrefix": "Quotation Prefix",
+    "quotationPrefixPlaceholder": "Ex \"QUO\"",
+    "autoArchive": "Auto Archive",
+    "autoArchiveHelp": "Enable this if you wish to auto archive approved or rejected estimates after 30 days.",
+    "autoConvert": "Auto Convert",
+    "autoConvertHelp": "Automatically convert estimates to invoices when Estimate is approved by customer.",
+    "footer": "Footer",
+    "dueNotices": "Due Notices",
+    "dueNoticesHelp": "Due reminders are sent to unpaid and partially paid invoices as reminders to the customer to pay the invoice before is due.",
+    "dueNoticeInDays": "Due Notice in Days",
+    "dueNoticePlaceholder": "x days before due date",
+    "overdueNotices": "Overdue Notices",
+    "overdueNoticesHelp": "Reminders are sent after the due date for unpaid or partially paid invoices.",
+    "overdueNoticeInDays": "Overdue Notice in Days",
+    "overdueNoticePlaceholder": "x days before due date",
+    "addresses": "Addresses",
+    "showTemplates": "Show Templates",
+    "companyAddressFormat": "Company Address Format",
+    "customerBillingAddressFormat": "Customer Billing Address Format",
+    "customerShippingAddressFormat": "Customer Shipping Address Format",
+    "quotationTemplates": "Quotation Templates",
+    "saveSettings": "Save Settings",
+    "resetSettings": "Reset Settings",
+    "validation": {
+      "quotationPrefixRequired": "Quotation Prefix is required",
+      "autoArchiveRequired": "Auto Archive is required",
+      "dueNoticeRequired": "Due Notice is required",
+      "overdueNoticeRequired": "Overdue Notice is required",
+      "companyAddressRequired": "Company Address Template is required",
+      "customerBillingRequired": "Customer Billing Address Template is required",
+      "customerShippingRequired": "Customer Shipping Address Template is required",
+      "userIdRequired": "User ID is required",
+      "templateIdRequired": "Quotation Template ID is required"
+    },
+    "template": {
+      "quotation": "QUOTATION",
+      "quotationNo": "Quotation No:",
+      "date": "Date:",
+      "quotationTo": "Quotation To:",
+      "payTo": "Pay To:",
+      "serialNo": "S. No",
+      "item": "Item",
+      "qty": "Qty",
+      "hsn": "HSN",
+      "tax": "Tax(%)",
+      "price": "Price",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "discount": "Discount (",
+      "grandTotal": "Grand Total",
+      "company": "Company:",
+      "address": "Address:",
+      "vatNumber": "VAT Number:",
+      "email": "Email:",
+      "tel": "Tel:",
+      "recipientsDetails": "Recipient's Details:",
+      "nameAddress": "Name & Address:",
+      "payerNameAddress": "Payer's Name & Address:",
+      "refNo": "Ref. No.:",
+      "dueDate": "Due Date:",
+      "note": "Note:",
+      "recipientUpiDetails": "Recipient's UPI Details",
+      "recipientCashDetails": "Recipient's Cash Details",
+      "recipientEuropeanBankDetails": "Recipient's European Bank Details",
+      "cash": "Cash",
+      "unit": "Unit",
+      "unitPrice": "Unit Price",
+      "totalTaxesPercent": "Total Taxes (%)",
+      "totalTaxesAmount": "Total Taxes (Amount)",
+      "thankYouMessage": "Thank you for shopping with us. Have a Great Day.",
+      "paymentTerms": "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer.",
+      "termsConditions": "Terms & Conditions:",
+      "termsClaim": "All claims relating to quantity or shipping errors shall be waived by Buyer unless made in writing to Seller within thirty (30) days after delivery of goods to the address stated.",
+      "termsDelivery": "Delivery dates are not guaranteed and Seller has no liability for damages that may be incurred due to any delay in shipment of goods hereunder. Taxes are excluded unless otherwise stated."
+    }
+  },
+  "expenses": {
+    "title": "Expenses",
+    "create": "Create Expense",
+    "vendorName": "Vendor Name",
+    "amount": "Amount",
+    "category": "Category",
+    "date": "Date",
+    "notes": "Notes",
+    "table": {
+      "action": "Action",
+      "edit": "Edit expenses",
+      "delete": "Delete expenses"
+    },
+    "actions": {
+      "deleteTitle": "Delete Expenses",
+      "deleteConfirm": "Are you sure you want to delete this expenses?"
+    },
+    "categoryTypes": {
+      "travel": "Travel",
+      "food": "Food",
+      "office": "Office",
+      "rent": "Rent",
+      "salary": "Salary",
+      "other": "Other"
+    }
+  },
+  "expensesForm": {
+    "title": "New Expenses",
+    "iconAlt": "Expense Icon",
+    "receipt": "Receipt",
+    "category": "Category",
+    "vendor": "Vendor",
+    "addVendor": "Add Vendor",
+    "expenseDate": "Expense Date",
+    "amount": "Amount",
+    "currency": "Currency",
+    "notes": "Notes",
+    "save": "Save",
+    "validation": {
+      "categoryRequired": "Category is required",
+      "invalidType": "Invalid Type",
+      "vendorRequired": "Vendor is required",
+      "userRequired": "User is required",
+      "expenseDateRequired": "Expense date is required",
+      "amountRequired": "Amount is required",
+      "currencyRequired": "Currency is required"
+    }
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign in",
+    "signInWithGoogle": "Sign in with Google",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "welcome": "Welcome back",
+    "pleaseLogin": "Please login to continue with growinvoice",
+    "emailRequired": "Email is required",
+    "passwordMin": "Password is at least 7 chars",
+    "passwordRequired": "Password is required",
+    "forgotPasswordTitle": "Forgot Password",
+    "forgotPasswordHelp": "Enter your email address below and we will send you a link to reset your password.",
+    "letsStart": "Lets Start!",
+    "createAccount": "Please create your account to continue with",
+    "fullName": "Full Name",
+    "companyName": "Company Name",
+    "phone": "Phone",
+    "confirmPassword": "Confirm Password",
+    "register": "Register",
+    "login": "Login",
+    "fullNameRequired": "Full Name is required",
+    "companyNameRequired": "Company Name is required",
+    "phoneInvalid": "Phone number is not valid",
+    "passwordsMatch": "Passwords must match",
+    "confirmPasswordRequired": "Confirm Password is required",
+    "notifications": {
+      "loginSuccess": "Login successful"
+    },
+    "errors": {
+      "invalidPassword": "Invalid password",
+      "userNotFound": "User not found"
+    }
+  },
+  "customer": {
+    "title": "Customers",
+    "create": "Create Customer",
+    "edit": "Edit Customer",
+    "createInvoice": "Create Invoice",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "table": {
+      "fullName": "Full Name",
+      "source": "Source",
+      "store": "Store",
+      "direct": "Direct",
+      "contactEmail": "Contact Email",
+      "contactNumber": "Contact Number",
+      "invoiceCount": "Invoice",
+      "amountDue": "Amount Due",
+      "action": "Action",
+      "viewCustomer": "View Customer",
+      "editCustomer": "Edit Customer",
+      "deleteCustomer": "Delete Customer"
+    },
+    "actions": {
+      "deleteTitle": "Delete Customer",
+      "deleteConfirm": "Are you sure you want to delete this customer?"
+    }
+  },
+  "customerForm": {
+    "createNew": "Create New Customer",
+    "iconAlt": "Customer Icon",
+    "addNew": "Add New Customer",
+    "customerType": "Customer Type",
+    "customerName": "Customer Name",
+    "displayName": "Display Name",
+    "email": "Email",
+    "phone": "Phone",
+    "website": "Website",
+    "currency": "Currency",
+    "gstNumber": "GST Number",
+    "billingAddress": "Billing Address",
+    "addBillingAddressQuestion": "Do you want to add billing address?",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "zipCode": "Zip Code",
+    "address": "Address",
+    "shippingAddress": "Shipping Address",
+    "sameAsBilling": "Same as billing address",
+    "save": "Save",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameInvalid": "Name is invalid",
+      "optionRequired": "Option is required",
+      "invalidType": "Invalid Type",
+      "gstInvalid": "GST Number is invalid",
+      "userRequired": "User is required",
+      "addressRequired": "Address is required",
+      "cityRequired": "City is required",
+      "countryRequired": "Country is required",
+      "stateRequired": "State is required",
+      "zipRequired": "Zip is required",
+      "displayNameRequired": "Display Name is required",
+      "emailInvalid": "Email is invalid",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Phone number is not valid",
+      "websiteInvalid": "Website is invalid"
+    },
+    "type": {
+      "freelancer": "Freelancer",
+      "businessWithGST": "Business with GST",
+      "businessWithoutGST": "Business without GST"
+    }
+  },
+  "receipt": {
+    "title": "Receipts",
+    "saveReceipt": "Save Receipt",
+    "createReceipt": "Create Receipt",
+    "successfullyCreated": "Receipt Successfully Created",
+    "form": {
+      "title": "New Receipt",
+      "receiptDate": "Receipt Date",
+      "receiptDueDate": "Receipt Due Date",
+      "receiptTemplate": "Receipt Template"
+    }
+  },
+  "invoice": {
+    "title": "Invoices",
+    "create": "Create Invoice",
+    "edit": "Edit Invoice",
+    "number": "Invoice Number",
+    "date": "Date",
+    "dueDate": "Due Date",
+    "total": "Total",
+    "download": "Download",
+    "send": "Send",
+    "dueInvoices": "Due Invoices",
+    "paidInvoices": "Paid Invoices",
+    "allInvoices": "All Invoices",
+    "table": {
+      "product": "Product",
+      "qty": "QTY",
+      "price": "Price",
+      "stockPrice": "Stock Price",
+      "sellingPrice": "Selling Price",
+      "taxPercent": "Tax/GST %",
+      "vatPercent": "VAT %",
+      "hsnCode": "HSN Code",
+      "amount": "Amount",
+      "saveRecord": "Save Record",
+      "cancelRecord": "Cancel Record",
+      "editRecord": "Edit Record",
+      "deleteRecord": "Delete Record",
+      "invoiceNumber": "Invoice Number",
+      "source": "Source",
+      "dueDate": "Due Date",
+      "status": "Status",
+      "dueAmount": "Due Amount",
+      "paidAmount": "Paid Amount",
+      "paidStatus": "Paid Status",
+      "totalDueAmount": "Total Due Amount",
+      "totalPaidAmount": "Total Paid Amount",
+      "total": "Total",
+      "action": "Action",
+      "viewInvoice": "View Invoice",
+      "editInvoice": "Edit Invoice",
+      "deleteInvoice": "Delete Invoice"
+    },
+    "source": {
+      "direct": "Direct",
+      "store": "Store"
+    },
+    "status": {
+      "draft": "Draft",
+      "due": "Due",
+      "mailedtocustomer": "Receipt Sent",
+      "receiptsent": "Receipt Sent",
+      "invoicesent": "Invoice Sent",
+      "viewed": "Viewed",
+      "paid": "Paid",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "paymentStatus": {
+      "unpaid": "Unpaid",
+      "paid": "Paid",
+      "partiallypaid": "PartiallyPaid"
+    },
+    "actions": {
+      "deleteTitle": "Delete Invoice",
+      "deleteConfirm": "Are you sure you want to delete this invoice?"
+    },
+    "share": {
+      "copied": "Copied!",
+      "copyLink": "Copy Link",
+      "socialMedia": "Share on social media:"
+    },
+    "detail": {
+      "share": "Share",
+      "markAsPaid": "Mark as Paid",
+      "markSend": "Mark Send",
+      "download": "Download",
+      "eInvoice": "E-Invoice",
+      "print": "Print",
+      "sendMail": "Send Mail",
+      "sendPaymentReceipt": "Send Payment Receipt",
+      "sendWhatsapp": "Send Whatsapp",
+      "customerEmailNotFound": "Customer email not found",
+      "dear": "Dear",
+      "thankYouPurchase": "Thank you for making the purchase of",
+      "on": "on",
+      "at": "at",
+      "clickHereToView": "Click here",
+      "toViewInvoice": "to view Invoice.",
+      "feedbackRequest": "Your feedback is essential in helping us improve our services and serve you better. Please share your shopping experience on the above link.",
+      "status": "Status:",
+      "paymentWithStripe": "Payment With Stripe",
+      "paymentWithGrowlimitless": "Payment With Growlimitless",
+      "paymentWithRazorpay": "Payment With Razorpay",
+      "noInvoiceFound": "No Invoice Found",
+      "invoicesSentSuccessfully": "Invoices sent to customers successfully",
+      "downloadUpiQr": "Download UPI QR",
+      "pleaseAcceptTerms": "By viewing this invoice, you acknowledge that the data displayed is processed by {companyName} on behalf of {customerName} for the purpose of billing and record-keeping in accordance with applicable data protection laws (GDPR)."
+    },
+    "summary": {
+      "outstandingReceivables": "Outstanding Receivables",
+      "dueToday": "Due Today",
+      "dueWithin30Days": "Due Within 30 Days",
+      "overdueInvoice": "Overdue Invoice"
+    },
+    "template": {
+      "invoice": "INVOICE",
+      "receipt": "RECEIPT",
+      "invoiceNo": "Invoice No:",
+      "date": "Date:",
+      "invoiceTo": "Invoice To:",
+      "payTo": "Pay To:",
+      "serialNo": "S. No",
+      "item": "Item",
+      "qty": "Qty",
+      "hsn": "HSN",
+      "tax": "Tax(%)",
+      "price": "Price",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "discount": "Discount (",
+      "dueAmount": "Due Amount",
+      "paidAmount": "Paid Amount",
+      "grandTotal": "Grand Total",
+      "company": "Company:",
+      "address": "Address:",
+      "vatNumber": "VAT Number:",
+      "email": "Email:",
+      "tel": "Tel:",
+      "paymentMethod": "Payment Method:",
+      "recipientsDetails": "Recipient's Details:",
+      "bankName": "Bank Name",
+      "nameAddress": "Name & Address:",
+      "payerNameAddress": "Payer's Name & Address:",
+      "refNo": "Ref. No.:",
+      "dueDate": "Due Date:",
+      "note": "Note:",
+      "recipientUpiDetails": "Recipient's UPI Details",
+      "recipientCashDetails": "Recipient's Cash Details",
+      "recipientEuropeanBankDetails": "Recipient's European Bank Details",
+      "cash": "Cash",
+      "unit": "Unit",
+      "unitPrice": "Unit Price",
+      "totalTaxesPercent": "Total Taxes (%)",
+      "totalTaxesAmount": "Total Taxes (Amount)",
+      "thankYouMessage": "Thank you for shopping with us. Have a Great Day.",
+      "tax_text": "Tax",
+      "gdprDisclaimer": "By viewing this invoice, you acknowledge that the data displayed is processed by {companyName} on behalf of {customerName} for the purpose of billing and record-keeping in accordance with applicable data protection laws (GDPR).",
+      "gdprAgreement": "I agree that my name, email, and interaction data (such as invoice open time) may be stored by [GrowInvoice.com] for invoicing and notification purposes in accordance with GDPR and your privacy policy.",
+      "termsConditions": "Terms & Conditions:",
+      "termsClaim": "All claims relating to quantity or shipping errors shall be waived by Buyer unless made in writing to Seller within thirty (30) days after delivery of goods to the address stated.",
+      "termsDelivery": "Delivery dates are not guaranteed and Seller has no liability for damages that may be incurred due to any delay in shipment of goods hereunder. Taxes are excluded unless otherwise stated.",
+      "paymentTerms": "The payment will be cleared for the recipient in accordance with the General items for payment transmission and only on the basis of the account number given by the payer.",
+      "gdprDisclaimerPersonalData": "The personal data presented in this {invoiceType} is processed in accordance with the EU GDPR data protection laws for {companyName}'s customer invoicing and accounting purposes."
+    },
+    "receiptEmail": {
+      "title": "Payment Receipt",
+      "greeting": "Dear {customerName},",
+      "thankYou": "Thank you! Your invoice #{invoiceNumber} has been successfully paid.",
+      "appreciation": "We appreciate your prompt payment and your business with us.",
+      "viewInvoice": "View Invoice",
+      "viewReceipt": "View Receipt",
+      "questions": "If you have any questions or concerns, please don't hesitate to contact us.",
+      "signature": "Best regards,<br/>Growinvoice Team",
+      "subject": "Payment Receipt - Invoice #{invoiceNumber}"
+    },
+    "invoiceEmail": {
+      "title": "Invoice notification",
+      "greeting": "Hello {customerName},",
+      "intro": "You have received a new invoice from {companyName}. Please review the invoice details below and use the button to view or download the invoice.",
+      "invoiceNumber": "Invoice #{invoiceNumber}",
+      "status": "Status:",
+      "amount": "Amount:",
+      "date": "Date:",
+      "dueDate": "Due date:",
+      "viewDownloadButton": "View & Download Invoice",
+      "invoiceNumberLabel": "Invoice number:",
+      "linkInstructions": "If the link does not work, copy & paste this URL into your browser:",
+      "questions": "If you have any questions, contact us at {contactEmail}.",
+      "signature": "Best regards,<br/>{companyName}",
+      "subject": "Invoice #{invoiceNumber} from {companyName}"
+    }
+  },
+  "invoiceForm": {
+    "addProducts": "Add Products",
+    "addProductsSubtitle": "for each product, click save once changes are made",
+    "addRecord": "Add record",
+    "title": "New Invoices",
+    "invoiceIconAlt": "Invoice Icon",
+    "customerName": "Customer Name",
+    "addCustomer": "Add Customer",
+    "currency": "Currency",
+    "invoiceNumber": "Invoice Number",
+    "invoicePrefixFallback": "INV",
+    "referenceNumber": "Reference Number",
+    "invoiceDate": "Invoice Date",
+    "invoiceDueDate": "Invoice Due Date",
+    "isRecurring": "Is Recurring",
+    "recurring": "Recurring",
+    "recurringTypes": {
+      "Daily": "Daily",
+      "Weekly": "Weekly",
+      "Monthly": "Monthly",
+      "Quarterly": "Quarterly",
+      "HalfYearly": "Half Yearly",
+      "Yearly": "Yearly"
+    },
+    "notes": "Notes",
+    "defaultNote": "Thank you for shopping with us. Have a Great Day.",
+    "paymentDetails": "Payment Details",
+    "addPayment": "Add Payment",
+    "accountNumber": "Account Number",
+    "ifscCode": "IFSC Code",
+    "bankName": "Bank Name",
+    "bicNumber": "BIC Number",
+    "ibanNumber": "IBAN Number",
+    "swiftCode": "Swift Code",
+    "invoiceTemplate": "Invoice Template",
+    "preview": "Preview",
+    "saveInvoice": "Save Invoice",
+    "invoicePreview": "Invoice Preview",
+    "saveAndSendInvoice": "Save and Send Invoice",
+    "validation": {
+      "currencyRequired": "Currency is required",
+      "customerRequired": "Customer is required",
+      "invoiceNumberRequired": "Invoice number is required",
+      "invoiceDateRequired": "Invoice date is required",
+      "dueDateRequired": "Due date is required",
+      "dueDateAfterInvoice": "Due date should be greater than invoice date",
+      "isRecurringRequired": "Is recurring is required",
+      "paymentDetailsRequired": "Payment details is required",
+      "subtotalRequired": "Subtotal is required",
+      "totalRequired": "Total is required",
+      "discountMin": "discount must be greater than 0",
+      "invalidType": "Invalid Type",
+      "productRequired": "Product is required",
+      "quantityRequired": "Quantity is required",
+      "priceRequired": "Price is required",
+      "userRequired": "User is required",
+      "templateRequired": "Template is required",
+      "atLeastOneProduct": "At least one product is required",
+      "fillAllProductDetails": "Fullfill all the product details"
+    },
+    "errors": {
+      "saveFailed": "Failed to save invoice",
+      "saveAndSendFailed": "Failed to save and send invoice"
+    },
+    "success": {
+      "saveAndSend": "Invoice saved and sent successfully!"
+    }
+  },
+  "product": {
+    "title": "Products",
+    "create": "Create Product",
+    "createNew": "New Product",
+    "update": "Update Product",
+    "edit": "Edit Product",
+    "name": "Product Name",
+    "price": "Price",
+    "quantity": "Quantity",
+    "tax": "Tax",
+    "unit": "Unit",
+    "table": {
+      "product": "Product",
+      "unit": "Unit",
+      "productType": "Product Type",
+      "createdAt": "Created At",
+      "action": "Action",
+      "viewProduct": "View Product",
+      "editProduct": "Edit Product",
+      "deleteProduct": "Delete Product"
+    },
+    "actions": {
+      "deleteTitle": "Delete Product",
+      "deleteConfirm": "Are you sure you want to delete this product?"
+    },
+    "productType": "Product Type",
+    "type": {
+      "goods": "Goods",
+      "services": "Services",
+      "service": "Service"
+    },
+    "units": {
+      "month": "Month",
+      "months": "Months",
+      "hour": "Hour",
+      "hours": "Hours",
+      "day": "Day",
+      "days": "Days",
+      "week": "Week",
+      "weeks": "Weeks",
+      "year": "Year",
+      "years": "Years"
+    }
+  },
+  "productForm": {
+    "title": "New Product",
+    "iconAlt": "Product Icon",
+    "type": "Type",
+    "productName": "Product Name",
+    "includeStore": "Include in Store Products",
+    "productImages": "Product Images",
+    "unit": "Unit",
+    "addUnit": "Add Unit",
+    "hsnCodeIndia": "HSN Code (India)",
+    "addHsn": "Add HSN",
+    "taxes": "Taxes",
+    "addTaxes": "Add Taxes",
+    "priceBook": "Price Book",
+    "currency": "Currency",
+    "price": "Price",
+    "stockPrice": "Stock Price",
+    "sellPrice": "Selling Price",
+    "noPriceBook": "No price book entries found. Please add at least one.",
+    "addPrice": "Add Price",
+    "description": "Description",
+    "save": "Save",
+    "validation": {
+      "typeRequired": "Type is required",
+      "invalidType": "Invalid Type",
+      "nameRequired": "Name is required",
+      "unitRequired": "Unit is required",
+      "imageUrl": "Each image must be a valid URL",
+      "imageRequiredForStore": "At least one image is required when including the product in the store.",
+      "imagesRequired": "Images are required",
+      "userIdRequired": "User id is required",
+      "taxRequired": "Tax is required",
+      "currencyRequired": "Currency is required",
+      "priceNumber": "Price must be a number",
+      "priceRequired": "Price is required",
+      "priceMin": "Price should be greater than 0",
+      "priceBookRequired": "Price book is required",
+      "priceBookAtLeastOne": "At least one price book is required"
+    }
+  },
+  "productUnit": {
+    "title": "Product Unit",
+    "createNew": "Create New",
+    "new": "New Product Unit",
+    "form": {
+      "name": "Unit Name",
+      "create": "Create"
+    },
+    "validation": {
+      "nameRequired": "Unit Name is required",
+      "userRequired": "User id is required"
+    },
+    "table": {
+      "name": "Name",
+      "action": "Action",
+      "edit": "Edit Product Unit",
+      "delete": "Delete Product Unit"
+    },
+    "actions": {
+      "deleteTitle": "Delete Product Unit",
+      "deleteConfirm": "Are you sure you want to delete this Product Unit?"
+    }
+  },
+  "paymentDetails": {
+    "title": "Payment Details",
+    "add": "Add Payment Details",
+    "table": {
+      "paymentType": "Payment Type",
+      "accountDetails": "Account Details",
+      "action": "Action",
+      "edit": "Edit"
+    },
+    "labels": {
+      "accountNo": "Account No",
+      "bankName": "Bank Name",
+      "ifsc": "IFSC Code",
+      "bic": "BIC No.",
+      "iban": "IBAN No.",
+      "upiId": "UPI ID",
+      "swift": "Swift Code",
+      "paypal": "Paypal ID",
+      "stripe": "Stripe ID",
+      "razorpay": "Razorpay ID",
+      "mollie": "Mollie ID"
+    },
+    "actions": {
+      "deleteTitle": "Delete Details",
+      "deleteConfirm": "Are you sure you want to delete this payment?"
+    },
+    "form": {
+      "paymentType": "Payment Type",
+      "accountNumber": "Account Number",
+      "bankName": "Bank Name (optional)",
+      "bicOptional": "BIC Number (optional)",
+      "ibanNumber": "IBAN Number"
+    },
+    "placeholders": {
+      "accountNumber": "Enter account number",
+      "bankName": "Enter bank name (optional)",
+      "ifsc": "Enter IFSC code",
+      "bic": "Enter BIC number (optional)",
+      "iban": "Enter IBAN number",
+      "mollie": "Enter Mollie ID",
+      "paypal": "Enter Paypal ID",
+      "razorpay": "Enter Razorpay ID",
+      "stripe": "Enter Stripe ID",
+      "swift": "Enter Swift code",
+      "upi": "Enter UPI ID"
+    },
+    "validation": {
+      "paymentTypeRequired": "Payment type is required",
+      "accountNumberRequired": "Account number is required",
+      "ibanRequired": "IBAN number is required",
+      "ifscRequired": "IFSC code is required",
+      "mollieRequired": "Mollie ID is required",
+      "paypalRequired": "Paypal ID is required",
+      "razorpayRequired": "Razorpay ID is required",
+      "stripeRequired": "Stripe ID is required",
+      "swiftRequired": "Swift code is required",
+      "upiRequired": "UPI ID is required",
+      "userRequired": "User is required"
+    },
+    "types": {
+      "upi": "UPI",
+      "europeanbank": "European Bank",
+      "swiftcode": "Swift Code",
+      "paypal": "PayPal",
+      "stripe": "Stripe",
+      "razorpay": "Razorpay",
+      "mollie": "Mollie",
+      "manual": "Manual",
+      "cash": "Cash",
+      "cheque": "Cheque",
+      "growlimitless": "Grow Limitless",
+      "indianbanks": "Indian Banks"
+    }
+  },
+  "gatewayDetails": {
+    "title": "Gateway Details",
+    "add": "Add Gateway Details",
+    "getRazorpayKey": "Get Razorpay Key",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "table": {
+      "type": "Type",
+      "status": "Status",
+      "action": "Action",
+      "edit": "Edit"
+    },
+    "actions": {
+      "deleteTitle": "Delete this Gateway Detail?",
+      "deleteConfirm": "Are you sure you want to delete this Gateway Detail?"
+    },
+    "form": {
+      "title": "Add Gateway Details",
+      "type": "Type",
+      "key": "Key",
+      "keyPlaceholder": "Enter Key",
+      "secret": "Secret Id",
+      "secretPlaceholder": "Enter Secret Id",
+      "submit": "Submit"
+    },
+    "validation": {
+      "typeRequired": "Type is required",
+      "keyRequired": "key is required",
+      "keyInvalid": "key should be valid",
+      "secretInvalid": "secret should be valid",
+      "userIdRequired": "user id is required"
+    }
+  },
+  "payment": {
+    "title": "Payments",
+    "create": "Create Payment",
+    "edit": "Edit Payment",
+    "amount": "Amount",
+    "method": "Method",
+    "status": "Status",
+    "date": "Payment Date",
+    "createNew": "Create New Payment",
+    "noPaymentsFound": "No Payments Found"
+  },
+  "hsn": {
+    "title": "HSN Code",
+    "createNew": "Create New",
+    "table": {
+      "code": "Code",
+      "percentage": "Percentage",
+      "action": "Action",
+      "edit": "Edit HSN Code",
+      "delete": "Delete HSN Code"
+    },
+    "actions": {
+      "deleteTitle": "Delete HSN Code",
+      "deleteConfirm": "Are you sure you want to delete this HSN Code?"
+    },
+    "form": {
+      "title": "New HSN Code",
+      "code": "HSN Code",
+      "codeShort": "HSN Code",
+      "tax": "Tax (in percentage)",
+      "create": "Create"
+    },
+    "placeholders": {
+      "code": "Enter HSN code",
+      "tax": "Enter percentage"
+    },
+    "validation": {
+      "codeRequired": "HSN Code is required",
+      "codeInvalid": "Invalid HSN Code",
+      "taxRequired": "Tax is required",
+      "taxMin": "Tax should be greater than 0",
+      "taxMax": "Tax should be less than 100",
+      "userRequired": "User id is required"
+    }
+  },
+  "tax": {
+    "title": "Tax Type",
+    "createNew": "Create New",
+    "table": {
+      "name": "Tax Name",
+      "percentage": "Percentage",
+      "action": "Action",
+      "edit": "Edit Tax Type",
+      "delete": "Delete Tax Type"
+    },
+    "actions": {
+      "deleteTitle": "Delete Tax Type",
+      "deleteConfirm": "Are you sure you want to delete this Tax Type?"
+    },
+    "form": {
+      "title": "New Tax",
+      "titleShort": "Tax",
+      "name": "Tax Name",
+      "percentage": "Percentage",
+      "description": "Description",
+      "create": "Create"
+    },
+    "placeholders": {
+      "name": "Tax Name",
+      "description": "Description"
+    },
+    "validation": {
+      "nameRequired": "Tax Name is required",
+      "percentageRequired": "Percentage is required",
+      "percentageMin": "Percentage should be greater than 0",
+      "percentageMax": "Percentage should be less than 100",
+      "userRequired": "User id is required"
+    }
+  },
+  "paymentForm": {
+    "title": "New Payment",
+    "iconAlt": "Payment Icon",
+    "referenceNumber": "Reference Number",
+    "invoice": "Invoice",
+    "amount": "Amount",
+    "paymentDetails": "Payment Details",
+    "addPayment": "Add Payment",
+    "notes": "Notes",
+    "privateNotes": "Private Notes",
+    "save": "Save",
+    "validation": {
+      "amountRequired": "Amount is required",
+      "amountLteInvoice": "Amount must be less than or equal to invoice total",
+      "amountMin": "Amount must be greater than 1",
+      "invoiceRequired": "Invoice is required",
+      "paymentDetailsRequired": "Payment Details is required",
+      "userRequired": "User is required",
+      "paymentDateRequired": "Payment Date is required"
+    }
+  },
+  "report": {
+    "title": "Reports",
+    "profitLoss": "Profit & Loss",
+    "sales": "Products Sell",
+    "expensesLabel": "Expenses",
+    "totalIncome": "Total Income",
+    "totalExpenses": "Total Expenses",
+    "profit": "Profit",
+    "loss": "Loss",
+    "selectDateRange": "Select Date Range",
+    "export": {
+      "title": "Export",
+      "csv": "Download as CSV",
+      "excel": "Download as Excel"
+    },
+    "product": {
+      "title": "Product Report",
+      "productName": "Product Name",
+      "invoiceDate": "Invoice Date",
+      "invoiceNumber": "Invoice Number",
+      "invoiceAmount": "Invoice Amount"
+    },
+    "customer": {
+      "title": "All Invoice Report",
+      "customerName": "Customer Name",
+      "invoiceDate": "Invoice Date",
+      "invoiceNumber": "Invoice Number",
+      "invoiceAmount": "Invoice Amount"
+    },
+    "customerData": {
+      "title": "All Customers Uploaded",
+      "customerName": "Customer Name",
+      "invoiceDate": "Invoice Date",
+      "invoiceNumber": "Invoice Number",
+      "invoiceAmount": "Invoice Amount"
+    },
+    "expenses": {
+      "title": "Expenses Report",
+      "category": "Expense Category",
+      "date": "Expense Date",
+      "amount": "Expense Amount"
+    },
+    "pl": {
+      "type": "Type",
+      "expenseId": "Expense ID",
+      "invoiceNumber": "Invoice Number",
+      "category": "Category",
+      "amount": "Amount",
+      "referenceNumber": "Reference Number"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "myProfile": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter full name",
+      "email": "Email",
+      "emailPlaceholder": "Enter email ID",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter mobile number",
+      "currency": "Currency",
+      "updatePassword": "Update Password",
+      "updatePasswordInfo": "If you want to update your password please fill the information below.",
+      "oldPassword": "Old Password",
+      "oldPasswordPlaceholder": "Enter old password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmEmailChangeTitle": "Email Change",
+      "confirmEmailChangeMessage": "Are you sure you want to change your email?",
+      "validation": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Email is invalid",
+        "phoneRequired": "Phone Number is required",
+        "currencyRequired": "Select Currency is required",
+        "passwordMin": "Password is at least 7 characters"
+      }
+    },
+    "preferences": "Preferences",
+    "financialYear": "Financial Year",
+    "monthStarts": "Month Starts",
+    "monthEnds": "Month Ends",
+    "discountType": "Discount Type",
+    "discountTypeHelp": "Choose how to apply discount on invoices/estimates",
+    "taxCodes": "Tax Codes",
+    "hsnCodes": "HSN Codes",
+    "productUnits": "Product Units",
+    "apiCredentials": "API Credentials",
+    "menu": {
+      "myProfile": "My profile",
+      "membership": "Membership",
+      "receipt": "Receipt",
+      "createReceipt": "Create Receipt",
+      "company": "Company",
+      "invoices": "Invoices",
+      "quotation": "Quotation",
+      "productUnit": "Product Unit",
+      "paymentDetails": "Payment Details",
+      "gatewayDetails": "Gateway Details",
+      "hsnCode": "HSN Code",
+      "taxTypes": "Tax Types",
+      "apiCredentials": "API Credentials"
+    },
+    "gateway": "Gateway Details",
+    "company": {
+      "logo": "Logo",
+      "name": "Company Name",
+      "namePlaceholder": "Enter company name",
+      "nameRequired": "Company name is required",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter mobile number",
+      "phoneRequired": "Phone Number is required",
+      "vat": "VAT/GSTIN",
+      "vatPlaceholder": "VAT Number",
+      "country": "Country",
+      "countryRequired": "Select Country",
+      "state": "State",
+      "stateRequired": "Select state",
+      "city": "City",
+      "cityRequired": "Select city",
+      "zip": "Postal Code",
+      "zipPlaceholder": "Enter postal code",
+      "zipRequired": "Postal Code is required",
+      "address": "Address",
+      "addressPlaceholder": "Add address",
+      "addressRequired": "Address is required",
+      "userIdRequired": "user Id is required"
+    },
+    "invoice": {
+      "invoiceHeadingType": "Invoice Heading Type",
+      "invoicePrefix": "Invoice Prefix",
+      "headingTypes": {
+        "COMPANY_NAME": "Company Name",
+        "COMPANY_LOGO": "Company Logo"
+      },
+      "invoicePrefixPlaceholder": "Ex “INV”",
+      "autoArchive": "Auto Archive",
+      "autoArchiveHelp": "Enable this if you wish to auto archive approved or rejected estimates after 30 days.",
+      "footer": "Footer",
+      "dueNotices": "Due Notices",
+      "dueNoticesHelp": "Due reminders are sent to unpaid and partially paid invoices as reminders to the customer to pay before due.",
+      "dueNoticeInDays": "Due Notice in Days",
+      "overdueNotices": "Overdue Notices",
+      "overdueNoticesHelp": "Reminders are sent after the due date for unpaid or partially paid invoices.",
+      "overdueNoticeInDays": "Overdue Notice in Days",
+      "daysBeforeDue": "x days before due date",
+      "addresses": "Addresses",
+      "showTemplates": "Show Templates",
+      "companyAddressFormat": "Company Address Format",
+      "customerBillingAddressFormat": "Customer Billing Address Format",
+      "customerShippingAddressFormat": "Customer Shipping Address Format",
+      "invoiceTemplates": "Invoice Templates",
+      "saveSettings": "Save Settings",
+      "resetSettings": "Reset Settings",
+      "validation": {
+        "invoicePrefixRequired": "Invoice Prefix is required",
+        "autoArchiveRequired": "Auto Archive is required",
+        "dueNoticeRequired": "Due Notice is required",
+        "overdueNoticeRequired": "Overdue Notice is required",
+        "userIdRequired": "User ID is required",
+        "templateIdRequired": "Invoice Template ID is required",
+        "invalidHeadingType": "Invalid Invoice Heading Type",
+        "invoiceHeadingTypeRequired": "Invoice Heading Type is required"
+      }
+    }
+  },
+  "apiCredentials": {
+    "token": "API Token",
+    "copied": "Token copied to clipboard",
+    "learnMore": "To learn more, check the documentation:",
+    "clickHere": "click here"
+  },
+  "quotationForm": {
+    "title": "New Quotation",
+    "iconAlt": "Quotation Icon",
+    "customerName": "Customer Name",
+    "addCustomer": "Add Customer",
+    "currency": "Currency",
+    "number": "Quotation Number",
+    "referenceNumber": "Reference Number",
+    "date": "Quotation Date",
+    "expiryDate": "Expiry Date",
+    "notes": "Add Notes",
+    "privateNotes": "Private Notes",
+    "template": "Quotation Template",
+    "preview": "Preview",
+    "save": "Save Quotation",
+    "previewTitle": "Quotation Preview",
+    "validation": {
+      "customerRequired": "Customer is required",
+      "currencyRequired": "Currency is required",
+      "userRequired": "User is required",
+      "numberRequired": "Quotation number is required",
+      "dateRequired": "Quotation date is required",
+      "expiryRequired": "Due date is required",
+      "expiryAfterDate": "Expiry date should be greater than quotation date",
+      "subtotalRequired": "Subtotal is required",
+      "totalRequired": "Total is required",
+      "productRequired": "Product is required",
+      "quantityRequired": "Quantity is required",
+      "priceRequired": "Price is required",
+      "atLeastOneProduct": "At least one product is required",
+      "templateRequired": "Template is required"
+    }
+  },
+  "aiStore": {
+    "title": "ROLL UP AI STORE",
+    "subtitle": "Create and manage your AI store with ease.",
+    "companyName": "Company Name",
+    "lineOfBusiness": "Line of Business",
+    "lineOfBusinessPlaceholder": "Enter line of business",
+    "shortDescription": "Short Description",
+    "shortDescriptionPlaceholder": "Enter short description",
+    "submitButton": "Let's Roll Up AI Store",
+    "validation": {
+      "companyNameRequired": "Company name is required",
+      "lineOfBusinessRequired": "Line of business is required",
+      "shortDescriptionRequired": "Short description is required"
+    }
+  },
+  "store": {
+    "link": "Store Link",
+    "create": "Create Store",
+    "updateStoreName": "Update Store Name",
+    "welcome": "Welcome to the store!",
+    "invoiceSent": "Invoice Sent to your email",
+    "invoiceDetails": "Invoice Details",
+    "loadingAiStore": "Loading your AI Store... Please wait.",
+    "title": "Store",
+    "searchPlaceholder": "Search Products/Companies",
+    "currencyRequired": "Currency is required",
+    "addToCart": "Add to Cart",
+    "removeFromCart": "Remove from Cart",
+    "name": "Store Name",
+    "namePlaceholder": "Enter your store name",
+    "qrCodeAlt": "QR Code",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "uploadProducts": "Upload Products to Store",
+    "shareOnSocialMedia": "Share on social media:",
+    "facebook": "Facebook",
+    "twitter": "Twitter",
+    "email": "Email",
+    "verification": {
+      "title": "Store URL Verification",
+      "description": "Please verify your store URL. You can use the following suggestions:",
+      "suggestedNames": "Suggested Store Names (click to use):"
+    },
+    "validation": {
+      "nameRequired": "Store name is required",
+      "mustBeUnique": "Store name must be unique"
+    },
+    "checkout": {
+      "title": "Checkout Items",
+      "empty": "Your cart is empty.",
+      "total": "Total:",
+      "next": "Proceed to Next Step"
+    },
+    "customer": {
+      "title": "Customer Details",
+      "iconAlt": "Address Icon",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "shippingAddress": "Shipping Address",
+      "country": "Country",
+      "state": "State",
+      "city": "City",
+      "zip": "Zip Code",
+      "address": "Address",
+      "review": "Please review your details before proceeding to payment.",
+      "proceedToPayment": "Proceed to Payment",
+      "back": "Back",
+      "validation": {
+        "nameRequired": "Name is required",
+        "emailInvalid": "Invalid email",
+        "emailRequired": "Email is required",
+        "phoneRequired": "Phone number is required",
+        "addressRequired": "Address is required",
+        "cityRequired": "City is required",
+        "countryRequired": "Country is required",
+        "stateRequired": "State is required",
+        "zipRequired": "Zip code is required"
+      }
+    }
+  },
+  "table": {
+    "noRows": "No rows",
+    "rowsPerPage": "Rows per page:"
+  },
+  "time": {
+    "justNow": "Just now",
+    "minuteAgo": "{{count}} minute ago",
+    "minutesAgo": "{{count}} minutes ago",
+    "hourAgo": "{{count}} hour ago",
+    "hoursAgo": "{{count}} hours ago",
+    "dayAgo": "{{count}} day ago",
+    "daysAgo": "{{count}} days ago"
+  },
+  "store.cart": {
+    "tax": "Tax",
+    "quantity": "Quantity:",
+    "total": "Total:"
+  },
+  "store.product": {
+    "details": "Product Details",
+    "noImages": "No Images Available",
+    "name": "Product Name",
+    "description": "Product Description",
+    "noDescription": "No description available.",
+    "price": "Price:"
+  },
+  "vendor": {
+    "title": "Vendors",
+    "create": "Create Vendor",
+    "edit": "Edit Vendor",
+    "displayName": "Display Name",
+    "createNew": "Create New",
+    "table": {
+      "createdAt": "Created At",
+      "action": "Action",
+      "viewVendor": "View Vendor",
+      "editVendor": "Edit Vendor",
+      "deleteVendor": "Delete Vendor"
+    },
+    "actions": {
+      "deleteTitle": "Delete Vendor",
+      "deleteConfirm": "Are you sure you want to delete this vendor?"
+    }
+  },
+  "vendorForm": {
+    "iconAlt": "Vendor Icon",
+    "addNew": "Add New Vendor",
+    "contactName": "Contact Name",
+    "displayName": "Display Name",
+    "email": "Email",
+    "phone": "Phone",
+    "website": "Website",
+    "billingAddress": "Billing Address",
+    "country": "Country",
+    "state": "State",
+    "city": "City",
+    "pincode": "Pincode",
+    "address": "Address",
+    "save": "Save",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameInvalid": "Name is invalid",
+      "displayNameRequired": "Display Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is invalid",
+      "phoneInvalid": "Phone number is not valid",
+      "websiteInvalid": "Website is invalid",
+      "userRequired": "User is required",
+      "addressRequired": "Address is required",
+      "cityRequired": "City is required",
+      "countryRequired": "Country is required",
+      "stateRequired": "State is required",
+      "zipRequired": "Zip is required"
+    }
+  },
+  "admin": {
+    "overview": "Overview",
+    "customers": "Customers",
+    "invoices": "Invoices",
+    "estimates": "Estimates",
+    "users": "Users"
+  },
+  "common": {
+    "loading": "Loading...",
+    "typeHere": "Please type here...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "create": "Create",
+    "update": "Update",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "active": "Active",
+    "actions": "Actions",
+    "enter": "Enter {{label}}",
+    "subtotal": "Subtotal",
+    "discountPercent": "Discount in %",
+    "taxesExtra": "Taxes (Extra)",
+    "total": "Total",
+    "fileUploadFailed": "File upload failed. Please try again.",
+    "fileUploaded": "File uploaded successfully",
+    "uploadPlaceholder": "Upload {{label}}",
+    "maxFileSize": "Maximum file size is 5MB",
+    "onlyPdfAllowed": "Only PDF files are allowed",
+    "notFound": "Page not found",
+    "internalServerError": "Internal server error",
+    "tryAgain": "Try again"
+  },
+  "plan": {
+    "choosePlan": "Choose a Plan",
+    "subscribe": "Subscribe"
+  },
+  "getStarted": {
+    "company": {
+      "title": "Tell us about your company",
+      "subtitle": "Provide some basic company details to get started.",
+      "companyName": "Company Name",
+      "phoneNumber": "Phone Number",
+      "country": "Country",
+      "state": "State",
+      "city": "City",
+      "zipCode": "Zip Code",
+      "address": "Address",
+      "vat": "VAT/GSTIN",
+      "logo": "Logo",
+      "companyNameRequired": "Company Name is required",
+      "phoneInvalid": "Phone number is not valid",
+      "countryRequired": "Country is required",
+      "stateRequired": "State is required",
+      "cityRequired": "City is required",
+      "addressRequired": "Address is required",
+      "zipCodeRequired": "Zip Code is required"
+    },
+    "initial": {
+      "title": "Almost There! Just a Few Details",
+      "subtitle": "Just enter a few details like currency and company information to start creating your invoices in no time!"
+    },
+    "currency": {
+      "title": "Choose Your Currency",
+      "help": "We need to verify your email address to ensure you have access to the application.",
+      "label": "Currency",
+      "required": "Currency is required"
+    },
+    "banner": {
+      "title": "Action Required",
+      "message": "You need to complete the get started process before using this feature.",
+      "cta": "Get Started"
+    },
+    "steps": {
+      "step1": "Personal Inf.",
+      "step2": "Verification",
+      "step3": "Insurance",
+      "step4": "Payment"
+    }
+  },
+  "plans": {
+    "title": "Plans",
+    "currentPlanSuffix": "(Current Plan)",
+    "unlimited": "Unlimited",
+    "startTrial": "Start Your Free Trial",
+    "upgrade": "Upgrade",
+    "upgradeHint": "upgrade your plan to generate more other features.",
+    "planTitle": "{{order}} Plan",
+    "planLabel": "Plan",
+    "planNames": {
+      "normalplan": "Normal Plan",
+      "freeplan": "Free Plan",
+      "basicplan": "Basic Plan",
+      "premiumplan": "Premium Plan",
+      "enterpriseplan": "Enterprise Plan"
+    },
+    "features": {
+      "Quotation": "Quotation",
+      "Customer": "Customer",
+      "Product": "Product",
+      "Tax": "Tax",
+      "HSNCode": "HSN Code",
+      "ProductUnit": "Product Unit",
+      "PaymentDetails": "Payment Details",
+      "InvoiceSettings": "Invoice Settings",
+      "QuotationSettings": "Quotation Settings",
+      "Payments": "Payments",
+      "Invoice": "Invoice"
+    },
+    "status": "Status",
+    "trialEnds": "Trial Ends",
+    "trialEndsText": "{{date}} ({{days}} days left)",
+    "payment": {
+      "selectMethod": "Select Payment Method",
+      "stripe": "Stripe",
+      "growlimitless": "Growlimitless",
+      "razorpay": "Razorpay"
+    },
+    "priceUnit": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "months": "{{count}} months",
+      "years": "{{count}} years",
+      "days": "{{count}} days"
+    },
+    "limitExceeded": "Limit exceeded. Please upgrade your plan to add more features.",
+    "upgradeCta": "Click here to upgrade",
+    "updateFeatures": "Update Features"
+  },
+  "notification": {
+    "newMessage": "New message",
+    "title": "Notifications",
+    "markAllAsRead": "Mark all as read",
+    "none": "No notifications",
+    "payment": {
+      "success": "Payment Success",
+      "successMessage": "Payment for plan {{plan}} is successful",
+      "successMessageGeneric": "Your payment has been completed successfully"
+    }
+  },
+  "orders": {
+    "title": "My Orders",
+    "table": {
+      "customerName": "Customer Name",
+      "customerEmail": "Customer Email",
+      "customerAddress": "Customer Address",
+      "invoiceNumber": "Invoice Number",
+      "invoiceStatus": "Invoice Status",
+      "orderStatus": "Order Status",
+      "shippingStatus": "Shipment Status",
+      "shippingStatus.shipped": "Shipped",
+      "shippingStatus.toBeShipped": "To be shipped",
+      "shippingRefNumber": "Shipping Reference Number",
+      "editShipping": "Edit Shipping Details",
+      "paymentStatus": "Payment Status",
+      "paymentMode": "Payment Mode",
+      "total": "Total"
+    },
+    "dialog": {
+      "editShipping": "Edit Shipping Details",
+      "shippingRefPlaceholder": "Enter shipping reference number"
+    },
+    "summary": {
+      "totalOrders": "Total Orders",
+      "totalPaidInvoices": "Total Paid",
+      "totalAmountPaid": "Total Amount Paid",
+      "totalDueAmount": "Total Due Amount"
+    },
+    "toBeFilled": "to be filled"
+  }
+}
