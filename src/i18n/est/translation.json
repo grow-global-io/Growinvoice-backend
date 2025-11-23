@@ -490,6 +490,7 @@
       "hsn": "HSN",
       "tax": "Maks(%)",
       "taxAmount": "Kokku(Summa)",
+      "taxDiscount": "Maksusoodustus",
       "price": "Hind",
       "total": "Kokku",
       "subtotal": "Vahesumma",
@@ -520,6 +521,7 @@
       "totalTaxesPercent": "Maksud kokku (%)",
       "totalTaxesAmount": "Maksud kokku (Summa)",
       "thankYouMessage": "Täname teid meiega ostlemise eest. Head päeva.",
+      "restaurantThanksYouMessage": "Täname, et valisite meid einestama. Näeme varsti",
       "tax_text": "Maks",
       "gdprDisclaimer": "Selle arve vaatamisega kinnitate, et kuvatud andmeid töödeldakse {companyName} poolt {customerName} nimel arvelduse ja arvestuse eesmärgil kohaldatavate andmekaitse seaduste (GDPR) kohaselt.",
       "gdprAgreement": "Nõustun, et minu nimi, e-posti aadress ja interaktsiooni andmed (näiteks arve avamise aeg) võivad olla salvestatud [GrowInvoice.com] arvelduse ja teavitamise eesmärgil GDPR ja teie privaatsuspoliitika kohaselt.",
@@ -527,7 +529,8 @@
       "termsClaim": "Kõik tarnitud kaubaga seotud pretensioonid tuleb esitada 30 päeva jooksul kirjalikult.",
       "termsDelivery": "Tarnekuupäevad ei ole garanteeritud ja müüja ei vastuta viivituste eest.",
       "paymentTerms": "Makse edastatakse saajale vastavalt üldistele makseülekande reeglitele ja ainult maksja poolt esitatud kontonumbri alusel.",
-      "gdprDisclaimerPersonalData": "Selles {invoiceType} esitatud isikuandmeid töödeldakse vastavalt EL GDPR andmekaitse seadustele {companyName} kliendi arvelduse ja arvestuse eesmärgil."
+      "gdprDisclaimerPersonalData": "Selles {invoiceType} esitatud isikuandmeid töödeldakse vastavalt EL GDPR andmekaitse seadustele {companyName} kliendi arvelduse ja arvestuse eesmärgil.",
+      "netBillAmount": "Arve netosumma:"
     },
     "receiptEmail": {
       "title": "Makse kviitung.",

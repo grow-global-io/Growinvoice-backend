@@ -495,6 +495,7 @@
       "hsn": "HSN",
       "tax": "Vero(%)",
       "taxAmount": "Verot(Summa)",
+      "taxDiscount": "Veroalennus",
       "price": "Hinta",
       "total": "Yhteensä",
       "subtotal": "Välisumma",
@@ -525,6 +526,7 @@
       "totalTaxesPercent": "Verot yhteensä (%)",
       "totalTaxesAmount": "Verot (Summa)",
       "thankYouMessage": "Kiitos ostoksestasi. Hyvää päivänjatkoa.",
+      "restaurantThanksYouMessage": "Kiitos, että valitsit meidät ruokailemaan. Nähdään pian",
       "tax_text": "Vero",
       "gdprDisclaimer": "Katsomalla tämän laskun, hyväksyt, että näytetyt tiedot käsitellään {companyName} toimesta {customerName} puolesta laskutuksen ja kirjanpidon tarkoituksessa sovellettavien tietosuojalakien (GDPR) mukaisesti.",
       "gdprAgreement": "Hyväksyn, että nimeni, sähköpostiosoitteeni ja vuorovaikutustietoni (kuten laskun avausaika) voidaan tallentaa [GrowInvoice.com]:iin laskutukseen ja ilmoitustarkoituksiin GDPR:n ja tietosuojakäytäntösi mukaisesti.",
@@ -532,7 +534,8 @@
       "termsClaim": "Kaikki väitteet, jotka liittyvät määrään tai toimitusvirheisiin, hylätään ostajalta, ellei niitä tehdä kirjallisesti myyjälle kolmenkymmenen (30) päivän kuluessa tavaroiden toimittamisesta ilmoitettuun osoitteeseen.",
       "termsDelivery": "Toimituspäivät eivät ole taattuja, eikä myyjällä ole vastuuta vahingoista, jotka voivat syntyä tavaroiden lähetyksen viivästymisestä. Verot on jätetty pois, elleivät toisin mainita.",
       "paymentTerms": "Maksu välitetään saajalle yleisten maksunsiirtosääntöjen mukaisesti, ja ainoastaan maksajan ilmoittaman tilinumeron perusteella.",
-      "gdprDisclaimerPersonalData": "Tässä {invoiceType} esitetyt henkilötiedot käsittelevät sovelletusti {companyName}:n asiakaslaskutuksen ja kirjanpitoa varten tarvittavia tietoja EU:n GDPR -tietosuojalakien mukaisesti."
+      "gdprDisclaimerPersonalData": "Tässä {invoiceType} esitetyt henkilötiedot käsittelevät sovelletusti {companyName}:n asiakaslaskutuksen ja kirjanpitoa varten tarvittavia tietoja EU:n GDPR -tietosuojalakien mukaisesti.",
+      "netBillAmount": "Nettolasku:"
     },
     "receiptEmail": {
       "title": "Kuitti maksusta.",

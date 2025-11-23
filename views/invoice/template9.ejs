@@ -199,21 +199,21 @@
 
       </div>
 
-      <div class="invoice-title"><%= invoice?.paid_status === 'Paid' ? 'Receipt' : 'Tax Invoice' %></div>
+      <div class="invoice-title"><%= invoice?.paid_status === 'Paid' ? t('translation.invoice.template.receipt') : t('translation.invoice.template.invoice') %></div>
 
       <!-- MODIFICATION: Information is now stacked vertically to prevent overflow -->
       <table class="info-table" style="margin-bottom: 15px;" aria-hidden="true">
-        <tr><td>DATE: <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %></td></tr>
-        <tr><td>INVOICE NO: #<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %></td></tr>
-        <tr><td>Payment Type: <%= invoice?.payment?.paymentType %></td></tr>
+        <tr><td><%= t('translation.invoice.template.date') %> <%= new Date(invoice?.date)?.toISOString()?.split('T')[0] %></td></tr>
+        <tr><td><%= t('translation.invoice.template.invoiceNo') %> #<%= invoiceSettings?.invoicePrefix ?? "INV" %>-<%= invoice?.invoice_number %></td></tr>
+        <tr><td><%= t('translation.invoice.template.paymentMethod') %> <%= invoice?.payment?.paymentType %></td></tr>
       </table>
 
       <!-- MODIFICATION: Items table is restructured for narrow receipts -->
       <table class="items-table">
         <thead>
           <tr>
-            <th>Item</th>
-            <th class="text-right">Amount</th>
+            <th><%= t('translation.invoice.template.item') %></th>
+            <th class="text-right"><%= t('translation.invoice.table.amount') %></th>
           </tr>
         </thead>
         <tbody>
@@ -228,7 +228,7 @@
             </tr>
             <tr class="item-details">
               <td colspan="2" style="padding-top: 0; font-size: 11px; border-bottom: 1px dashed #ccc;">
-                Qty: <%= product?.quantity %> | HSN: <%= product?.product?.hsnCode?.code %> | Tax: <%= product?.product?.tax?.percentage %>%
+                <%= t('translation.invoice.template.qty') %>: <%= product?.quantity %> | HSN: <%= product?.product?.hsnCode?.code %> | Tax: <%= product?.product?.tax?.percentage %>%
               </td>
             </tr>
           <% }) %>
@@ -237,30 +237,30 @@
 
       <table class="totals-table" style="margin-top: 15px;">
         <tr>
-          <td>Sub Total</td>
+          <td><%= t('translation.invoice.template.subtotal') %></td>
           <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
             <%= invoice?.sub_total %></td>
         </tr>
         <tr>
-          <td>Tax <span class="tm_ternary_color">(<%= invoice?.tax?.percentage ?? 0 %>%)</span></td>
+          <td><%= t('translation.invoice.template.tax') %> <span class="tm_ternary_color">(<%= invoice?.tax?.percentage ?? 0 %>%)</span></td>
           <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
             <%= ((invoice?.tax?.percentage ?? 0 / 100) * invoice?.sub_total).toFixed(2) %></td>
         </tr>
         <tr>
-          <td>Tax Discount <span class="tm_ternary_color">(<%=
+          <td><%= t('translation.invoice.template.taxDiscount') %> <span class="tm_ternary_color">(<%=
             invoice?.discountPercentage %>%)</span></td>
           <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
             <%= ((invoice?.discountPercentage ?? 0 / 100) * invoice?.sub_total).toFixed(2) %></td>
         </tr>
         <tr class="final-total">
-          <td>Net Bill Amount:</td>
+          <td><%= t('translation.invoice.template.netBillAmount') %></td>
           <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
             <%= invoice?.total %>
         </tr>
       </table>
 
       <div class="footer">
-        <p><%= invoice?.notes ?? "Thank you for your business!" %></p>
+        <p><%= invoice?.notes ?? t('translation.invoice.template.thankYouMessage') %></p>
       </div>
     </div>
   </body>
