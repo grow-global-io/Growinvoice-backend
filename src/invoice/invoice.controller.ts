@@ -153,9 +153,24 @@ export class InvoiceController {
   @IsPublic()
   @ApiHideProperty()
   @Get('test/:id')
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    description: 'selected language for email attachments',
+  })
   @ApiResponse({ status: 200, type: String })
-  async test(@Param('id') id: string, @Res() res?: Response) {
+  async test(
+    @Param('id') id: string,
+    @Query('lang') lang?: string,
+    @Res() res?: Response,
+  ) {
     const invoice = await this.invoiceService.findInvoiceTest(id);
+    const t = (key: string, args?: any) => {
+      return this.i18nService.t(key, {
+        lang: lang,
+        args: args,
+      });
+    };
     const a = invoice;
     if (!invoice) {
       return res.status(404).json({
@@ -182,6 +197,7 @@ export class InvoiceController {
       footer: {
         text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} customer invoicing and accounting purposes.`,
       },
+      t: t,
     };
     return res.render(
       'invoice/' + (invoice?.template?.view ?? 'template1'),
@@ -377,6 +393,8 @@ export class InvoiceController {
         args: args,
       });
     };
+
+    console.log({ t });
     const invoice =
       await this.invoiceService.createInvoicePreview(createInvoiceDto);
     const invoiceSettings =

@@ -757,6 +757,8 @@ export class InvoiceService {
       });
     };
 
+    console.log({ t });
+
     const browser = await puppeteer.launch({
       headless: true,
       args: [

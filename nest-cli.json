@@ -30,7 +30,7 @@
         "outDir": "dist/.well-known",
         "watchAssets": true
       },
-      { "include": "i18n/**/*", "outDir": "dist/src", "watchAssets": true }
+      { "include": "i18n/**/*", "outDir": "dist/", "watchAssets": true }
     ],
     "watchAssets": true
   },

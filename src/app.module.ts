@@ -44,6 +44,7 @@ import { StoreModule } from './store/store.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
+import * as fs from 'fs';
 
 @Module({
   imports: [
@@ -101,7 +102,9 @@ import * as path from 'path';
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
-        path: path.join(__dirname, '/i18n/'),
+        path: fs.existsSync(path.join(__dirname, 'i18n'))
+          ? path.join(__dirname, 'i18n/')
+          : path.join(__dirname, '../i18n/'),
         watch: true,
       },
       resolvers: [
