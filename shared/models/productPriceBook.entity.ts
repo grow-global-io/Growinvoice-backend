@@ -37,6 +37,12 @@ export class ProductPriceBook {
   })
   price: number;
   @ApiProperty({
+    type: 'number',
+    format: 'float',
+    nullable: true,
+  })
+  shippingCharges: number | null;
+  @ApiProperty({
     type: 'string',
   })
   currency_id: string;
@@ -45,11 +51,4 @@ export class ProductPriceBook {
     required: false,
   })
   currency?: Currencies;
-  @ApiProperty({
-    type: 'number',
-    format: 'float',
-    required: false,
-    default: 0,
-  })
-  shippingCharges?: number;
 }

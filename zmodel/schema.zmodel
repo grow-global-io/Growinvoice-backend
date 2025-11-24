@@ -242,12 +242,13 @@ model Product extends Base {
 }
 
 model ProductPriceBook extends Base {
-    id          String     @id @default(cuid())
-    product_id  String     @DtoCreateHidden @DtoUpdateHidden @DtoRelationIncludeId
-    product     Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
-    price       Float
-    currency_id String     @DtoRelationIncludeId
-    currency    Currencies @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+    id              String     @id @default(cuid())
+    product_id      String     @DtoCreateHidden @DtoUpdateHidden @DtoRelationIncludeId
+    product         Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    price           Float
+    shippingCharges Float?     @default(0)
+    currency_id     String     @DtoRelationIncludeId
+    currency        Currencies @relation(fields: [currency_id], references: [id], onDelete: Cascade)
 
     @@unique([product_id, currency_id])
 }
