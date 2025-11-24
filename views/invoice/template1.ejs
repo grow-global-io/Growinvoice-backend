@@ -289,15 +289,7 @@
               <table class="table table-bordered">
                 <tr>
                   <td class="w-50">
-                    <!-- TODO: CONFIRM THIS ONE -->
-                    <!-- Recipient's
-                    <%= invoice?.payment?.paymentType==="UPI" ? invoice?.payment?.paymentType :
-                      invoice?.payment?.paymentType.replace(/([a-z])([A-Z])/g, "$1 $2" )
-                      .replace(/([A-Z])([A-Z][a-z])/g, "$1 $2" ) .replace(/([a-z])([A-Z])/g, "$1 $2" )
-                      .replace(/([A-Z])([A-Z])/g, "$1 $2" ) .trim(); %>
-
-                      Details -->
-                    <%= t('translation.invoice.template.recipientsDetails') %>
+                      <%= t('translation.paymentTypes.recipientDetails', { type: t('translation.paymentTypes.types.' + invoice?.payment?.paymentType) })  %>
                   </td>
                   <td class="w-50">
                     <% if(invoice?.payment?.paymentType==='EuropeanBank' || invoice?.payment?.paymentType==='Revolut' || invoice?.payment?.paymentType==='Wise' ){ %>

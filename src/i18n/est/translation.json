@@ -560,6 +560,24 @@
       "subject": "Arve #{invoiceNumber} ettevõttelt {companyName}"
     }
   },
+  "paymentTypes": {
+    "recipientDetails": "Saaja {type} andmed",
+    "types": {
+      "UPI": "UPI",
+      "EuropeanBank": "Euroopa pank",
+      "Revolut": "Revolut",
+      "Wise": "Wise",
+      "SwiftCode": "SWIFT-kood",
+      "Paypal": "PayPal",
+      "Stripe": "Stripe",
+      "Razorpay": "Razorpay",
+      "Mollie": "Mollie",
+      "Cash": "Sularaha",
+      "Cheque": "Tšekk",
+      "GrowLimitLess": "GrowLimitless",
+      "IndianBanks": "India pangad"
+    }
+  },
   "invoiceForm": {
     "addProducts": "Lisa tooteid",
     "addProductsSubtitle": "iga toote puhul klõpsa muudatuste järel salvesta",

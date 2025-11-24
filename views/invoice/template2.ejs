@@ -276,7 +276,7 @@
             <table>
               <tr>
                 <td class="w-50">
-                  <%= t('translation.invoice.template.recipientsDetails') %>
+                  <%= t('translation.paymentTypes.recipientDetails', { type: t('translation.paymentTypes.types.' + invoice?.payment?.paymentType) })  %>
                 </td>
                 <td class="w-50">
                   <% if(invoice?.payment?.paymentType==='EuropeanBank' || invoice?.payment?.paymentType==='Revolut' || invoice?.payment?.paymentType==='Wise' ){ %>

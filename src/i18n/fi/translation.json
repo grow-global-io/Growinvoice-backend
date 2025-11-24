@@ -565,6 +565,24 @@
       "subject": "Lasku #{invoiceNumber} yritykseltä {companyName}"
     }
   },
+  "paymentTypes": {
+    "recipientDetails": "Vastaanottajan {type} tiedot",
+    "types": {
+      "UPI": "UPI",
+      "EuropeanBank": "Eurooppalainen pankki",
+      "Revolut": "Revolut",
+      "Wise": "Wise",
+      "SwiftCode": "SWIFT-koodi",
+      "Paypal": "PayPal",
+      "Stripe": "Stripe",
+      "Razorpay": "Razorpay",
+      "Mollie": "Mollie",
+      "Cash": "Käteinen",
+      "Cheque": "Sekki",
+      "GrowLimitLess": "GrowLimitless",
+      "IndianBanks": "Intialaiset pankit"
+    }
+  },
   "invoiceForm": {
     "selectAllCustomers": "Valitse kaikki asiakkaat",
     "addProducts": "Lisää tuotteita:",
