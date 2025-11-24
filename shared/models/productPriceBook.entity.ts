@@ -45,4 +45,11 @@ export class ProductPriceBook {
     required: false,
   })
   currency?: Currencies;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    required: false,
+    default: 0,
+  })
+  shippingCharges?: number;
 }
