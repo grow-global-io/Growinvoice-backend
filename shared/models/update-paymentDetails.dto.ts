@@ -92,6 +92,14 @@ export class UpdatePaymentDetailsDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  bankName?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
   })
   @IsOptional()
   @IsString()

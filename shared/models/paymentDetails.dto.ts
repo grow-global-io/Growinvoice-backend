@@ -77,6 +77,11 @@ export class PaymentDetailsDto {
   mollieId: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
+  })
+  bankName: string | null;
+  @ApiProperty({
+    type: 'string',
   })
   user_id: string;
 }

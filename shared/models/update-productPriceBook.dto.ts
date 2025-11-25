@@ -11,6 +11,16 @@ export class UpdateProductPriceBookDto {
   @IsNumber()
   price?: number;
   @ApiProperty({
+    type: 'number',
+    format: 'float',
+    default: 0,
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsNumber()
+  shippingCharges?: number | null;
+  @ApiProperty({
     type: 'string',
     required: false,
   })
