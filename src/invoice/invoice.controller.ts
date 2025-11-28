@@ -32,6 +32,7 @@ import { Response } from 'express';
 import { convertLogoToBase64 } from '@shared/utils/constants';
 import { MailService } from '@/mail/mail.service';
 import { SendMailDto } from '@/mail/dto/send-mail.dto';
+import { I18nService } from 'nestjs-i18n';
 
 @ApiExtraModels(InvoiceDto)
 @ApiTags('invoice')
@@ -40,6 +41,7 @@ export class InvoiceController {
   constructor(
     private readonly invoiceService: InvoiceService,
     private readonly mailService: MailService,
+    private readonly i18nService: I18nService,
   ) {}
 
   @Post()
@@ -151,9 +153,24 @@ export class InvoiceController {
   @IsPublic()
   @ApiHideProperty()
   @Get('test/:id')
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    description: 'selected language for email attachments',
+  })
   @ApiResponse({ status: 200, type: String })
-  async test(@Param('id') id: string, @Res() res?: Response) {
+  async test(
+    @Param('id') id: string,
+    @Query('lang') lang?: string,
+    @Res() res?: Response,
+  ) {
     const invoice = await this.invoiceService.findInvoiceTest(id);
+    const t = (key: string, args?: any) => {
+      return this.i18nService.t(key, {
+        lang: lang,
+        args: args,
+      });
+    };
     const a = invoice;
     if (!invoice) {
       return res.status(404).json({
@@ -180,6 +197,7 @@ export class InvoiceController {
       footer: {
         text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} customer invoicing and accounting purposes.`,
       },
+      t: t,
     };
     return res.render(
       'invoice/' + (invoice?.template?.view ?? 'template1'),
@@ -209,16 +227,25 @@ export class InvoiceController {
 
   @Post('invoiceSentToMail')
   @ApiSuccessResponse(InvoiceDto, { status: 200 })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    description: 'selected language for email attachments',
+  })
   async invoiceSentToMail(
     @Body() createInvoiceDto: SendMailDto,
     @Query('id') id: string,
+    @Query('lang') lang?: string,
   ): Promise<SuccessResponseDto<InvoiceDto>> {
     const invoice = await this.invoiceService.statusToMailed(id);
 
     // Generate PDF attachment for invoice
     let pdfAttachment = null;
     try {
-      const pdfBuffer = await this.invoiceService.getPdfBufferForInvoice(id);
+      const pdfBuffer = await this.invoiceService.getPdfBufferForInvoice(
+        id,
+        lang,
+      );
       if (pdfBuffer && pdfBuffer.length > 0) {
         pdfAttachment = [
           {
@@ -253,14 +280,20 @@ export class InvoiceController {
     isArray: true,
     type: String,
   })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    description: 'selected language for email attachments',
+  })
   async bulkInvoiceSentToMail(
     @Query(
       'ids',
       new ParseArrayPipe({ items: String, separator: ',', optional: false }),
     )
     ids: string[],
+    @Query('lang') lang?: string,
   ) {
-    const res = await this.invoiceService.bulkInvoiceSentToMail(ids);
+    const res = await this.invoiceService.bulkInvoiceSentToMail(ids, lang);
     return {
       message: 'Invoices sent to customers successfully',
       result: res,
@@ -344,10 +377,24 @@ export class InvoiceController {
   @IsPublic()
   @Post('invoicePreviewFromBody')
   @ApiResponse({ status: 200, type: String })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    description: 'selected language for email attachments',
+  })
   async invoicePreviewFromBody(
     @Body() createInvoiceDto: CreateDirectInvoiceWithProducts,
+    @Query('lang') lang?: string,
     @Res() res?: Response,
   ) {
+    const t = (key: string, args?: any) => {
+      return this.i18nService.t(key, {
+        lang: lang,
+        args: args,
+      });
+    };
+
+    console.log({ t });
     const invoice =
       await this.invoiceService.createInvoicePreview(createInvoiceDto);
     const invoiceSettings =
@@ -357,6 +404,7 @@ export class InvoiceController {
       footer: {
         text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} customer invoicing and accounting purposes.`,
       },
+      t: t,
     };
     return res.render(
       'invoice/' + (invoice?.template?.view ?? 'template1'),
