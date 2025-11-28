@@ -17,7 +17,18 @@ export class ProductService {
 
   async create(createProductDto: CreateProductWithTaxDto) {
     const { tax, priceBook, ...prodyctData } = createProductDto;
-    await this.sharedService.checkProductQuota(createProductDto.user_id);
+
+    // Check quota first and ensure it completes fully before proceeding
+    // This prevents transaction conflicts with ZenStack's enhanced Prisma client
+    try {
+      await this.sharedService.checkProductQuota(createProductDto.user_id);
+      // Small delay to ensure any transaction context from quota check is fully closed
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    } catch (error) {
+      // Re-throw quota errors immediately
+      throw error;
+    }
+
     if (!Object.keys(prodyctData).includes('description')) {
       prodyctData.description = '';
     }
@@ -27,31 +38,66 @@ export class ProductService {
     if (!Object.keys(prodyctData).includes('images')) {
       prodyctData.images = [];
     }
-    if (!Object.keys(prodyctData).includes('includeStore')) {
+    // Ensure includeStore is explicitly set (default to false if not provided)
+    if (
+      !Object.keys(prodyctData).includes('includeStore') ||
+      prodyctData.includeStore === undefined
+    ) {
       prodyctData.includeStore = false;
     }
-    const product = await this.prismaService.product.create({
-      data: {
-        ...prodyctData,
-        user_id: createProductDto.user_id,
-        ...(tax && {
-          tax: {
-            createMany: {
-              data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
+
+    // Create product with all nested relations in a single operation
+    // This ensures everything happens in one transaction
+    // Add retry logic for transaction errors
+    const maxRetries = 3;
+    let lastError: any;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const product = await this.prismaService.product.create({
+          data: {
+            ...prodyctData,
+            user_id: createProductDto.user_id,
+            ...(tax && {
+              tax: {
+                createMany: {
+                  data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
+                },
+              },
+            }),
+            priceBook: {
+              createMany: {
+                data:
+                  priceBook?.map((price) => ({
+                    ...price,
+                  })) || [],
+              },
             },
           },
-        }),
-        priceBook: {
-          createMany: {
-            data:
-              priceBook?.map((price) => ({
-                ...price,
-              })) || [],
-          },
-        },
-      },
-    });
-    return plainToInstance(ProductWithAllDataDto, product);
+        });
+        return plainToInstance(ProductWithAllDataDto, product);
+      } catch (error: any) {
+        lastError = error;
+        // Check if it's a transaction error that we should retry
+        const isTransactionError =
+          error?.message?.includes('Transaction') ||
+          error?.message?.includes('transaction') ||
+          error?.code === 'P2034' || // Prisma transaction timeout error code
+          error?.message?.includes('Transaction already closed');
+
+        if (isTransactionError && attempt < maxRetries) {
+          // Wait before retrying (exponential backoff)
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          continue;
+        }
+        // If not a transaction error or max retries reached, throw
+        throw error;
+      }
+    }
+
+    // If we get here, all retries failed
+    throw lastError;
   }
 
   async findAll(user_id: string) {
@@ -89,27 +135,43 @@ export class ProductService {
 
   async update(id: string, updateProductDto: UpdateProductWithTaxDto) {
     const { tax, priceBook, ...updateData } = updateProductDto;
+
+    // Build update data object
+    const dataToUpdate: any = {
+      ...updateData,
+    };
+
+    // Only update user_id if provided
+    if (updateProductDto.user_id) {
+      dataToUpdate.user_id = updateProductDto.user_id;
+    }
+
+    // Handle tax associations
+    if (tax !== undefined) {
+      dataToUpdate.tax = {
+        deleteMany: {}, // Remove all existing tax associations
+        createMany: {
+          data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
+        },
+      };
+    }
+
+    // Handle priceBook associations
+    if (priceBook !== undefined) {
+      dataToUpdate.priceBook = {
+        deleteMany: {}, // Remove all existing priceBook associations
+        createMany: {
+          data:
+            priceBook?.map((price) => ({
+              ...price,
+            })) || [],
+        },
+      };
+    }
+
     const product = await this.prismaService.product.update({
       where: { id },
-      data: {
-        ...updateData,
-        user_id: updateProductDto.user_id, // Ensure user_id is updated if provided
-        tax: {
-          deleteMany: {}, // Remove all existing tax associations
-          createMany: {
-            data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
-          },
-        },
-        priceBook: {
-          deleteMany: {}, // Remove all existing priceBook associations
-          createMany: {
-            data:
-              priceBook?.map((price) => ({
-                ...price,
-              })) || [],
-          },
-        },
-      },
+      data: dataToUpdate,
     });
     return plainToInstance(ProductWithAllDataDto, product);
   }
