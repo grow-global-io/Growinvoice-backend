@@ -494,6 +494,7 @@
       "price": "Price",
       "total": "Total",
       "subtotal": "Subtotal",
+      "productDiscount": "Discount",
       "discount": "Discount (",
       "dueAmount": "Due Amount",
       "paidAmount": "Paid Amount",

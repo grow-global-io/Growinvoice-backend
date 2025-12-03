@@ -499,6 +499,7 @@
       "price": "Hinta",
       "total": "Yhteensä",
       "subtotal": "Välisumma",
+      "productDiscount": "Alennus",
       "discount": "Alennus (",
       "dueAmount": "Erääntynyt summa",
       "paidAmount": "Maksettu summa",

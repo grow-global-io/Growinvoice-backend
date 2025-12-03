@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="no-js" lang="en" id="html_content">
 
 <head>
@@ -118,19 +118,20 @@
                 <table>
                   <thead>
                     <tr class="tm_accent_bg_20">
-                      <th class="tm_width_2 tm_semi_bold tm_accent_color"><%= t('translation.invoice.template.serialNo') %></th>
+                      <th class="tm_width_1 tm_semi_bold tm_accent_color"><%= t('translation.invoice.template.serialNo') %></th>
                       <th class="tm_width_3 tm_semi_bold tm_accent_color"><%= t('translation.invoice.template.item') %></th>
                       <th class="tm_width_1 tm_semi_bold tm_accent_color"><%= t('translation.invoice.template.qty') %></th>
                       <th class="tm_width_1 tm_semi_bold tm_accent_color"><%= t('translation.invoice.template.hsn') %></th>
                       <th class="tm_width_1 tm_semi_bold tm_accent_color"><%= t('translation.invoice.template.tax') %></th>
                       <th class="tm_width_2 tm_semi_bold tm_accent_color"><%= t('translation.invoice.template.price') %></th>
+                      <th class="tm_width_1 tm_semi_bold tm_accent_color"><%= t('translation.invoice.template.productDiscount') %></th>
                       <th class="tm_width_2 tm_semi_bold tm_accent_color tm_text_right"><%= t('translation.invoice.template.total') %></th>
                     </tr>
                   </thead>
                   <tbody>
                     <% invoice?.product?.forEach(product=> { %>
                     <tr>
-                      <td class="tm_width_2 tm_border_top_0">
+                      <td class="tm_width_1 tm_border_top_0">
                         <%= invoice?.product?.indexOf(product) + 1 %>
                       </td>
                       <td class="tm_width_3 tm_border_top_0">
@@ -148,6 +149,9 @@
                       <td class="tm_width_2 tm_border_top_0">
                         <%= product?.product?.currency?.symbol %>
                         <%= product?.price %>
+                      </td>
+                      <td class="tm_width_1 tm_border_top_0">
+                        <%= product?.discount || 0 %>%
                       </td>
                       <td class="tm_width_2 tm_border_top_0 tm_text_right">
                         <%= product?.product?.currency?.symbol %>
@@ -487,7 +491,7 @@
               </div>
               </div>
           <hr class="tm_mb20">
-          <p class="tm_mb0 tm_text_center tm_accent_color"><%= t('translation.invoice.template.restaurantThanksYouMessage') %> 🙂</p>
+          <p class="tm_mb0 tm_text_center tm_accent_color"><%= t('translation.invoice.template.restaurantThanksYouMessage') %> ðŸ™‚</p>
         </div>
       </div>
 

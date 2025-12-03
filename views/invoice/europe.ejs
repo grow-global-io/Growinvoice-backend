@@ -122,6 +122,7 @@
                        <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.unit') %>
                       </th>
                       <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.unitPrice') %></th>
+                      <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.productDiscount') %></th>
                       <!-- check if hsn code there or not -->
                       <% if (invoice?.product?.[0]?.product?.hsnCode?.code) { %>
                       <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.hsn') %></th>
@@ -129,7 +130,7 @@
                       <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.tax') %></th>
                       <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.taxAmount') %></th>
 
-                      <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right">
+                      <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right">
                         <%= t('translation.invoice.template.total') %></th>
                     </tr>
                   </thead>
@@ -151,6 +152,9 @@
                       <td class="tm_width_2">
                         <%= product?.product?.currency?.symbol %> <%= Number(product?.price)?.toFixed(2) %>
                       </td>
+                      <td class="tm_width_1">
+                        <%= product?.discount || 0 %>%
+                      </td>
                       <% if (invoice?.product?.[0]?.product?.hsnCode?.code) { %>
                       <td class="tm_width_2">
                         <%= product?.product?.hsnCode?.code %>
@@ -162,7 +166,7 @@
                       <td class="tm_width_1">
                         <%= product?.product?.currency?.symbol %> <%= Number(((product?.product?.tax?.percentage || 0) / 100) * (product?.price * product?.quantity))?.toFixed(2) %>
                       </td>
-                      <td class="tm_width_3  tm_text_right">
+                      <td class="tm_width_2  tm_text_right">
                         <%= product?.product?.currency?.symbol %><%= Number(product?.total)?.toFixed(2) %>
                       </td>
                     </tr>

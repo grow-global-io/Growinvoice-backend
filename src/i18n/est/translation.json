@@ -494,6 +494,7 @@
       "price": "Hind",
       "total": "Kokku",
       "subtotal": "Vahesumma",
+      "productDiscount": "Allahindlus",
       "discount": "Allahindlus (",
       "dueAmount": "Tasumata summa",
       "paidAmount": "Makstud summa",
