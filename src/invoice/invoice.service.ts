@@ -724,31 +724,94 @@ export class InvoiceService {
   }
 
   async testPDFGen(id: string) {
+    const t = (key: string, args?: any) => {
+      return this.i18nService.t(key, {
+        lang: 'en',
+        args: args,
+      });
+    };
+
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'], // useful for servers
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--disable-gpu',
+      ],
     });
-    const page = await browser.newPage();
-    const htmlFetchLink = `${
-      process.env.BACKEND_URL || 'http://localhost:5001'
-    }/api/invoice/test/${id}`;
-    await page.goto(htmlFetchLink, {
-      waitUntil: 'networkidle0',
-    });
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: {
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-      },
-    });
+    try {
+      const page = await browser.newPage();
+      page.setDefaultNavigationTimeout(15000); // 15 seconds
+      page.setDefaultTimeout(15000);
 
-    await browser.close();
+      // Render invoice HTML directly instead of making HTTP request
+      const invoice = await this.findInvoiceTest(id);
+      if (!invoice) {
+        throw new Error(`Invoice ${id} not found`);
+      }
 
-    return pdfBuffer;
+      // Process invoice data similar to test endpoint
+      const a = invoice;
+
+      if (a.customer?.billingAddress?.country_name) {
+        a.customer.billingAddress.country = {
+          name: a.customer.billingAddress.country_name,
+          ...a.customer.billingAddress?.country,
+        };
+        a.customer.billingAddress.state = {
+          name: a.customer.billingAddress.state_name,
+          ...a.customer.billingAddress?.state,
+        };
+      }
+
+      const invoiceSettingsWithFormat =
+        await this.invoiceSettingsWithFormat(invoice);
+      const newInvoice = {
+        ...invoiceSettingsWithFormat,
+        footer: {
+          text: `The personal data presented in this invoice is processed in accordance with the EU GDPR data protection laws for ${invoice?.user?.company[0]?.name || 'Grow Global Strategies Pvt Ltd'} customer invoicing and accounting purposes.`,
+        },
+        t: t,
+      };
+
+      // Render the HTML using EJS
+      const html = await ejs.renderFile(
+        `./views/invoice/${invoice?.template?.view ?? 'template1'}.ejs`,
+        newInvoice,
+      );
+
+      // Set content with simpler wait strategy for faster processing
+      await page.setContent(html, {
+        waitUntil: 'domcontentloaded', // Faster than networkidle0
+        timeout: 15000,
+      });
+
+      // Wait a short time for any remaining content to render
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: {
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+        },
+        preferCSSPageSize: false,
+        displayHeaderFooter: false,
+        scale: 0.8,
+      });
+
+      await browser.close();
+      return pdfBuffer;
+    } catch (error) {
+      await browser.close();
+      console.error('Error generating test PDF:', error);
+      throw error;
+    }
   }
 
   async getPdfBufferForInvoice(id: string, lang: string = 'en') {
