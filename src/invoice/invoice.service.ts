@@ -81,6 +81,7 @@ export class InvoiceService {
               quantity: product.quantity,
               hsnCode_id: product.hsnCode_id,
               price: product.price,
+              discount: product.discount,
               total: product.total,
               invoice_id: invoiceDetails.id,
               tax_forInvoiceProducts: {
@@ -192,6 +193,7 @@ export class InvoiceService {
             quantity: product.quantity,
             hsnCode_id: product.hsnCode_id,
             price: product.price,
+            discount: product.discount,
             total: product.total,
             invoice_id: id,
             tax_forInvoiceProducts: {

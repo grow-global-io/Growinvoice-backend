@@ -39,6 +39,15 @@ export class CreateInvoiceProductsDto {
   @ApiProperty({
     type: 'number',
     format: 'float',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsNumber()
+  discount?: number | null;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
   })
   @IsNotEmpty()
   @IsNumber()

@@ -44,6 +44,15 @@ export class UpdateInvoiceProductsDto {
     type: 'number',
     format: 'float',
     required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsNumber()
+  discount?: number | null;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    required: false,
   })
   @IsOptional()
   @IsNumber()
