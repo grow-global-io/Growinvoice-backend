@@ -73,4 +73,13 @@ export class InvoiceSettingsDto {
     type: 'string',
   })
   customerShippingAddressTemplate: string;
+  @ApiProperty({
+    type: 'boolean',
+  })
+  enableReminder: boolean;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+  })
+  reminderInterval: number;
 }

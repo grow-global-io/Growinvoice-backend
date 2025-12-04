@@ -4,125 +4,125 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 generator nestjsDto {
-    provider                        = "prisma-generator-nestjs-dto"
-    output                          = "../shared/models"
-    outputToNestJsResourceStructure = "false"
-    flatResourceStructure           = "false"
-    exportRelationModifierClasses   = "true"
-    reExport                        = "true"
-    createDtoPrefix                 = "Create"
-    updateDtoPrefix                 = "Update"
-    dtoSuffix                       = "Dto"
-    entityPrefix                    = ""
-    entitySuffix                    = ""
-    classValidation                 = "true"
-    fileNamingStyle                 = "camel"
-    noDependencies                  = "false"
-    outputType                      = "class"
-    definiteAssignmentAssertion     = "false"
-    requiredResponseApiProperty     = "true"
-    prettier                        = "true"
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../shared/models"
+  outputToNestJsResourceStructure = "false"
+  flatResourceStructure           = "false"
+  exportRelationModifierClasses   = "true"
+  reExport                        = "true"
+  createDtoPrefix                 = "Create"
+  updateDtoPrefix                 = "Update"
+  dtoSuffix                       = "Dto"
+  entityPrefix                    = ""
+  entitySuffix                    = ""
+  classValidation                 = "true"
+  fileNamingStyle                 = "camel"
+  noDependencies                  = "false"
+  outputType                      = "class"
+  definiteAssignmentAssertion     = "false"
+  requiredResponseApiProperty     = "true"
+  prettier                        = "true"
 }
 
 enum ProductType {
-    Service
-    Goods
+  Service
+  Goods
 }
 
 enum CustomerOption {
-    Freelancer
-    BusinessWithGST
-    BusinessWithoutGST
-    Individual
-    BusinessWithVAT
-    BusinessWithoutVAT
+  Freelancer
+  BusinessWithGST
+  BusinessWithoutGST
+  Individual
+  BusinessWithVAT
+  BusinessWithoutVAT
 }
 
 enum InvoiceRecurring {
-    Daily
-    Weekly
-    Monthly
-    Quarterly
-    HalfYearly
-    Yearly
+  Daily
+  Weekly
+  Monthly
+  Quarterly
+  HalfYearly
+  Yearly
 }
 
 enum PaymentType {
-    UPI
-    EuropeanBank
-    Revolut
-    Wise
-    SwiftCode
-    Paypal
-    Stripe
-    Razorpay
-    Mollie
-    Cash
-    Cheque
-    GrowLimitLess
-    IndianBanks
+  UPI
+  EuropeanBank
+  Revolut
+  Wise
+  SwiftCode
+  Paypal
+  Stripe
+  Razorpay
+  Mollie
+  Cash
+  Cheque
+  GrowLimitLess
+  IndianBanks
 }
 
 enum paidStatus {
-    Paid
-    Unpaid
-    PartiallyPaid
+  Paid
+  Unpaid
+  PartiallyPaid
 }
 
 enum GateWayType {
-    Stripe
-    Razorpay
-    Growlimitless
+  Stripe
+  Razorpay
+  Growlimitless
 }
 
 enum PlanFeature {
-    Invoice
-    Quotation
-    Customer
-    Product
-    Tax
-    HSNCode
-    ProductUnit
-    PaymentDetails
-    InvoiceSettings
-    QuotationSettings
-    Payments
-    GateWayDetails
-    AIDashboard
+  Invoice
+  Quotation
+  Customer
+  Product
+  Tax
+  HSNCode
+  ProductUnit
+  PaymentDetails
+  InvoiceSettings
+  QuotationSettings
+  Payments
+  GateWayDetails
+  AIDashboard
 }
 
 enum PlanPaymentType {
-    Stripe
-    Growlimitless
-    Razorpay
+  Stripe
+  Growlimitless
+  Razorpay
 }
 
 enum invoiceHeadingType {
-    COMPANY_NAME
-    COMPANY_LOGO
+  COMPANY_NAME
+  COMPANY_LOGO
 }
 
 enum DashboardTypes {
-    Table
-    Chart
+  Table
+  Chart
 }
 
 enum ExpenseCategory {
-    Travel
-    Food
-    Office
-    Rent
-    Salary
-    Other
+  Travel
+  Food
+  Office
+  Rent
+  Salary
+  Other
 }
 
 /// @@allow('read', isExist == true)
@@ -130,29 +130,29 @@ enum ExpenseCategory {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Country {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt             DateTime                @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt             DateTime?               @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist               Boolean                 @default(true)
-    id                    String                  @id() @default(cuid())
-    name                  String
-    code                  String
-    phone_code            String
-    /// @DtoApiHidden
-    state                 State[]
-    /// @DtoApiHidden
-    BillingAddress        BillingAddress[]
-    /// @DtoApiHidden
-    ShippingAddress       ShippingAddress[]
-    /// @DtoApiHidden
-    Company               Company[]
-    /// @DtoApiHidden
-    VendorsBillingAddress VendorsBillingAddress[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt             DateTime                @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt             DateTime?               @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist               Boolean                 @default(true)
+  id                    String                  @id() @default(cuid())
+  name                  String
+  code                  String
+  phone_code            String
+  /// @DtoApiHidden
+  state                 State[]
+  /// @DtoApiHidden
+  BillingAddress        BillingAddress[]
+  /// @DtoApiHidden
+  ShippingAddress       ShippingAddress[]
+  /// @DtoApiHidden
+  Company               Company[]
+  /// @DtoApiHidden
+  VendorsBillingAddress VendorsBillingAddress[]
 }
 
 /// @@allow('read', isExist == true)
@@ -160,28 +160,28 @@ model Country {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model State {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt             DateTime                @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt             DateTime?               @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist               Boolean                 @default(true)
-    id                    String                  @id() @default(cuid())
-    name                  String
-    /// @DtoRelationIncludeId
-    country_id            String
-    country               Country                 @relation(fields: [country_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    BillingAddress        BillingAddress[]
-    /// @DtoApiHidden
-    ShippingAddress       ShippingAddress[]
-    /// @DtoApiHidden
-    Company               Company[]
-    /// @DtoApiHidden
-    VendorsBillingAddress VendorsBillingAddress[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt             DateTime                @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt             DateTime?               @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist               Boolean                 @default(true)
+  id                    String                  @id() @default(cuid())
+  name                  String
+  /// @DtoRelationIncludeId
+  country_id            String
+  country               Country                 @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  BillingAddress        BillingAddress[]
+  /// @DtoApiHidden
+  ShippingAddress       ShippingAddress[]
+  /// @DtoApiHidden
+  Company               Company[]
+  /// @DtoApiHidden
+  VendorsBillingAddress VendorsBillingAddress[]
 }
 
 /// @@allow('read', isExist == true)
@@ -189,78 +189,78 @@ model State {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model User {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt         DateTime            @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt         DateTime?           @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist           Boolean             @default(true)
-    id                String              @id() @default(cuid())
-    email             String              @unique()
-    name              String?
-    phone             String?
-    password          String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    storeName         String?
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    resetToken        String?
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    resetTokenExpiry  DateTime?
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isAdmin           Boolean             @default(false)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    isActive          Boolean             @default(true)
-    /// @DtoRelationIncludeId
-    currency_id       String?
-    currency          Currencies?         @relation(fields: [currency_id], references: [id], onDelete: SetNull)
-    /// @DtoApiHidden
-    company           Company[]
-    /// @DtoApiHidden
-    product           Product[]
-    /// @DtoApiHidden
-    hsnCode           HSNCode[]
-    /// @DtoApiHidden
-    tax               Tax[]
-    /// @DtoApiHidden
-    productUnit       ProductUnit[]
-    /// @DtoApiHidden
-    customer          Customer[]
-    /// @DtoApiHidden
-    invoice           Invoice[]
-    /// @DtoApiHidden
-    paymentDetails    PaymentDetails[]
-    /// @DtoApiHidden
-    quotation         Quotation[]
-    /// @DtoApiHidden
-    InvoiceSettings   InvoiceSettings[]
-    /// @DtoApiHidden
-    OpenAiHistory     OpenAiHistory[]
-    /// @DtoApiHidden
-    QuotationSettings QuotationSettings[]
-    /// @DtoApiHidden
-    Payments          Payments[]
-    /// @DtoApiHidden
-    GateWayDetails    GateWayDetails[]
-    /// @DtoApiHidden
-    AIDashboard       AIDashboard[]
-    /// @DtoApiHidden
-    Notification      Notification[]
-    /// @DtoApiHidden
-    UserPlans         UserPlans[]
-    /// @DtoApiHidden
-    Vendors           Vendors[]
-    /// @DtoApiHidden
-    Expenses          Expenses[]
-    /// @DtoApiHidden
-    Coupons           Coupons[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime            @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?           @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean             @default(true)
+  id                String              @id() @default(cuid())
+  email             String              @unique()
+  name              String?
+  phone             String?
+  password          String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  storeName         String?
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  resetToken        String?
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  resetTokenExpiry  DateTime?
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isAdmin           Boolean             @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  isActive          Boolean             @default(true)
+  /// @DtoRelationIncludeId
+  currency_id       String?
+  currency          Currencies?         @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+  /// @DtoApiHidden
+  company           Company[]
+  /// @DtoApiHidden
+  product           Product[]
+  /// @DtoApiHidden
+  hsnCode           HSNCode[]
+  /// @DtoApiHidden
+  tax               Tax[]
+  /// @DtoApiHidden
+  productUnit       ProductUnit[]
+  /// @DtoApiHidden
+  customer          Customer[]
+  /// @DtoApiHidden
+  invoice           Invoice[]
+  /// @DtoApiHidden
+  paymentDetails    PaymentDetails[]
+  /// @DtoApiHidden
+  quotation         Quotation[]
+  /// @DtoApiHidden
+  InvoiceSettings   InvoiceSettings[]
+  /// @DtoApiHidden
+  OpenAiHistory     OpenAiHistory[]
+  /// @DtoApiHidden
+  QuotationSettings QuotationSettings[]
+  /// @DtoApiHidden
+  Payments          Payments[]
+  /// @DtoApiHidden
+  GateWayDetails    GateWayDetails[]
+  /// @DtoApiHidden
+  AIDashboard       AIDashboard[]
+  /// @DtoApiHidden
+  Notification      Notification[]
+  /// @DtoApiHidden
+  UserPlans         UserPlans[]
+  /// @DtoApiHidden
+  Vendors           Vendors[]
+  /// @DtoApiHidden
+  Expenses          Expenses[]
+  /// @DtoApiHidden
+  Coupons           Coupons[]
 }
 
 /// @@allow('read', isExist == true)
@@ -268,38 +268,38 @@ model User {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Company {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt         DateTime  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt         DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist           Boolean   @default(true)
-    id                String    @id() @default(cuid())
-    name              String
-    address           String?
-    phone             String?
-    /// @DtoRelationIncludeId
-    country_id        String?
-    country           Country?  @relation(fields: [country_id], references: [id])
-    /// @DtoRelationIncludeId
-    state_id          String?
-    state             State?    @relation(fields: [state_id], references: [id])
-    city              String?
-    zip               String?
-    vat               String?
-    logo              String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    lineOfBusiness    String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    short_description String?
-    /// @DtoRelationIncludeId
-    user_id           String    @unique()
-    user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean   @default(true)
+  id                String    @id() @default(cuid())
+  name              String
+  address           String?
+  phone             String?
+  /// @DtoRelationIncludeId
+  country_id        String?
+  country           Country?  @relation(fields: [country_id], references: [id])
+  /// @DtoRelationIncludeId
+  state_id          String?
+  state             State?    @relation(fields: [state_id], references: [id])
+  city              String?
+  zip               String?
+  vat               String?
+  logo              String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  lineOfBusiness    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  short_description String?
+  /// @DtoRelationIncludeId
+  user_id           String    @unique()
+  user              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 /// @@allow('read', isExist == true)
@@ -307,29 +307,29 @@ model Company {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model HSNCode {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt         DateTime            @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt         DateTime?           @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist           Boolean             @default(true)
-    id                String              @id() @default(cuid())
-    code              String
-    /// @DtoRelationIncludeId
-    tax_id            String
-    tax               Tax                 @relation(fields: [tax_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    user_id           String
-    user              User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    Product           Product[]
-    /// @DtoApiHidden
-    InvoiceProducts   InvoiceProducts[]
-    /// @DtoApiHidden
-    QuotationProducts QuotationProducts[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime            @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?           @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean             @default(true)
+  id                String              @id() @default(cuid())
+  code              String
+  /// @DtoRelationIncludeId
+  tax_id            String
+  tax               Tax                 @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id           String
+  user              User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  Product           Product[]
+  /// @DtoApiHidden
+  InvoiceProducts   InvoiceProducts[]
+  /// @DtoApiHidden
+  QuotationProducts QuotationProducts[]
 }
 
 /// @@allow('read', isExist == true)
@@ -337,36 +337,36 @@ model HSNCode {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Tax {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt               DateTime                  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt               DateTime?                 @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist                 Boolean                   @default(true)
-    id                      String                    @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    name                    String?
-    percentage              Float
-    description             String?
-    /// @DtoRelationIncludeId
-    user_id                 String
-    user                    User                      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    Invoice                 Invoice[]
-    /// @DtoApiHidden
-    Quatation               Quotation[]
-    /// @DtoApiHidden
-    hsnCode                 HSNCode[]
-    /// @DtoApiHidden
-    TaxForProduct           TaxForProduct[]
-    /// @DtoApiHidden
-    TaxForInvoiceProducts   TaxForInvoiceProducts[]
-    /// @DtoApiHidden
-    TaxForQuotationProducts TaxForQuotationProducts[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt               DateTime                  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt               DateTime?                 @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist                 Boolean                   @default(true)
+  id                      String                    @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  name                    String?
+  percentage              Float
+  description             String?
+  /// @DtoRelationIncludeId
+  user_id                 String
+  user                    User                      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  Invoice                 Invoice[]
+  /// @DtoApiHidden
+  Quatation               Quotation[]
+  /// @DtoApiHidden
+  hsnCode                 HSNCode[]
+  /// @DtoApiHidden
+  TaxForProduct           TaxForProduct[]
+  /// @DtoApiHidden
+  TaxForInvoiceProducts   TaxForInvoiceProducts[]
+  /// @DtoApiHidden
+  TaxForQuotationProducts TaxForQuotationProducts[]
 }
 
 /// @@allow('read', isExist == true)
@@ -374,22 +374,22 @@ model Tax {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model ProductUnit {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt DateTime  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist   Boolean   @default(true)
-    id        String    @id() @default(cuid())
-    name      String
-    /// @DtoRelationIncludeId
-    user_id   String
-    user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    Product   Product[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  name      String
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  Product   Product[]
 }
 
 /// @@allow('read', isExist == true)
@@ -397,44 +397,44 @@ model ProductUnit {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Product {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt    DateTime            @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt    DateTime?           @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist      Boolean             @default(true)
-    id           String              @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    images       String[]
-    name         String
-    description  String?
-    type         ProductType
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    includeStore Boolean             @default(false)
-    /// @DtoRelationIncludeId
-    unit_id      String
-    unit         ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    hsnCode_id   String?
-    hsnCode      HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    user_id      String
-    user         User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    invoice      InvoiceProducts[]
-    /// @DtoApiHidden
-    Quatation    QuotationProducts[]
-    /// @DtoApiHidden
-    tax          TaxForProduct[]
-    /// @DtoApiHidden
-    priceBook    ProductPriceBook[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt    DateTime            @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt    DateTime?           @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist      Boolean             @default(true)
+  id           String              @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  images       String[]
+  name         String
+  description  String?
+  type         ProductType
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  includeStore Boolean             @default(false)
+  /// @DtoRelationIncludeId
+  unit_id      String
+  unit         ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  hsnCode_id   String?
+  hsnCode      HSNCode?            @relation(fields: [hsnCode_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id      String
+  user         User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  invoice      InvoiceProducts[]
+  /// @DtoApiHidden
+  Quatation    QuotationProducts[]
+  /// @DtoApiHidden
+  tax          TaxForProduct[]
+  /// @DtoApiHidden
+  priceBook    ProductPriceBook[]
 }
 
 /// @@allow('read', isExist == true)
@@ -442,28 +442,28 @@ model Product {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model ProductPriceBook {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt       DateTime   @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt       DateTime?  @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist         Boolean    @default(true)
-    id              String     @id() @default(cuid())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    /// @DtoRelationIncludeId
-    product_id      String
-    product         Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
-    price           Float
-    shippingCharges Float?     @default(0)
-    /// @DtoRelationIncludeId
-    currency_id     String
-    currency        Currencies @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt       DateTime   @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt       DateTime?  @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist         Boolean    @default(true)
+  id              String     @id() @default(cuid())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  /// @DtoRelationIncludeId
+  product_id      String
+  product         Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  price           Float
+  shippingCharges Float?     @default(0)
+  /// @DtoRelationIncludeId
+  currency_id     String
+  currency        Currencies @relation(fields: [currency_id], references: [id], onDelete: Cascade)
 
-    @@unique([product_id, currency_id])
+  @@unique([product_id, currency_id])
 }
 
 /// @@allow('read', isExist == true)
@@ -471,24 +471,24 @@ model ProductPriceBook {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model TaxForProduct {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt  DateTime  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt  DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist    Boolean   @default(true)
-    id         String    @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    product_id String
-    product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    tax_id     String
-    tax        Tax       @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  product_id String
+  product    Product   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  tax_id     String
+  tax        Tax       @relation(fields: [tax_id], references: [id], onDelete: Cascade)
 
-    @@unique([product_id, tax_id])
+  @@unique([product_id, tax_id])
 }
 
 /// @@allow('read', isExist == true)
@@ -496,33 +496,33 @@ model TaxForProduct {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model BillingAddress {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt    DateTime   @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt    DateTime?  @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist      Boolean    @default(true)
-    id           String     @id() @default(cuid())
-    address      String
-    city         String
-    /// @DtoRelationIncludeId
-    state_id     String?
-    state        State?     @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    state_name   String?
-    /// @DtoRelationIncludeId
-    country_id   String?
-    country      Country?   @relation(fields: [country_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    country_name String?
-    zip          String
-    /// @DtoApiHidden
-    customer     Customer[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt    DateTime   @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt    DateTime?  @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist      Boolean    @default(true)
+  id           String     @id() @default(cuid())
+  address      String
+  city         String
+  /// @DtoRelationIncludeId
+  state_id     String?
+  state        State?     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  state_name   String?
+  /// @DtoRelationIncludeId
+  country_id   String?
+  country      Country?   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  country_name String?
+  zip          String
+  /// @DtoApiHidden
+  customer     Customer[]
 }
 
 /// @@allow('read', isExist == true)
@@ -530,33 +530,33 @@ model BillingAddress {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model ShippingAddress {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt    DateTime   @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt    DateTime?  @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist      Boolean    @default(true)
-    id           String     @id() @default(cuid())
-    address      String
-    city         String
-    /// @DtoRelationIncludeId
-    state_id     String?
-    state        State?     @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    state_name   String?
-    /// @DtoRelationIncludeId
-    country_id   String?
-    country      Country?   @relation(fields: [country_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    country_name String?
-    zip          String
-    /// @DtoApiHidden
-    customer     Customer[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt    DateTime   @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt    DateTime?  @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist      Boolean    @default(true)
+  id           String     @id() @default(cuid())
+  address      String
+  city         String
+  /// @DtoRelationIncludeId
+  state_id     String?
+  state        State?     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  state_name   String?
+  /// @DtoRelationIncludeId
+  country_id   String?
+  country      Country?   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  country_name String?
+  zip          String
+  /// @DtoApiHidden
+  customer     Customer[]
 }
 
 /// @@allow('read', isExist == true)
@@ -564,34 +564,34 @@ model ShippingAddress {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Currencies {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt  DateTime           @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt  DateTime?          @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist    Boolean            @default(true)
-    id         String             @id() @default(cuid())
-    name       String
-    symbol     String
-    code       String
-    short_code String
-    /// @DtoApiHidden
-    currency   Customer[]
-    /// @DtoApiHidden
-    user       User[]
-    /// @DtoApiHidden
-    expense    Expenses[]
-    /// @DtoApiHidden
-    priceBook  ProductPriceBook[]
-    /// @DtoApiHidden
-    invoice    Invoice[]
-    /// @DtoApiHidden
-    Quotation  Quotation[]
-    /// @DtoApiHidden
-    Plans      Plans[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime           @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime?          @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean            @default(true)
+  id         String             @id() @default(cuid())
+  name       String
+  symbol     String
+  code       String
+  short_code String
+  /// @DtoApiHidden
+  currency   Customer[]
+  /// @DtoApiHidden
+  user       User[]
+  /// @DtoApiHidden
+  expense    Expenses[]
+  /// @DtoApiHidden
+  priceBook  ProductPriceBook[]
+  /// @DtoApiHidden
+  invoice    Invoice[]
+  /// @DtoApiHidden
+  Quotation  Quotation[]
+  /// @DtoApiHidden
+  Plans      Plans[]
 }
 
 /// @@allow('read', isExist == true)
@@ -599,44 +599,44 @@ model Currencies {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Customer {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt          DateTime         @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt          DateTime?        @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist            Boolean          @default(true)
-    id                 String           @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    fromStore          Boolean          @default(false)
-    name               String
-    display_name       String
-    email              String?
-    phone              String?
-    website            String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    gstIn              String?
-    option             CustomerOption
-    /// @DtoRelationIncludeId
-    currencies_id      String?
-    currencies         Currencies?      @relation(fields: [currencies_id], references: [id])
-    /// @DtoRelationIncludeId
-    billingAddress_id  String?
-    billingAddress     BillingAddress?  @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    shippingAddress_id String?
-    shippingAddress    ShippingAddress? @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    user_id            String
-    user               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    invoice            Invoice[]
-    /// @DtoApiHidden
-    Quatation          Quotation[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt          DateTime         @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt          DateTime?        @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist            Boolean          @default(true)
+  id                 String           @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  fromStore          Boolean          @default(false)
+  name               String
+  display_name       String
+  email              String?
+  phone              String?
+  website            String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  gstIn              String?
+  option             CustomerOption
+  /// @DtoRelationIncludeId
+  currencies_id      String?
+  currencies         Currencies?      @relation(fields: [currencies_id], references: [id])
+  /// @DtoRelationIncludeId
+  billingAddress_id  String?
+  billingAddress     BillingAddress?  @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  shippingAddress_id String?
+  shippingAddress    ShippingAddress? @relation(fields: [shippingAddress_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id            String
+  user               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  invoice            Invoice[]
+  /// @DtoApiHidden
+  Quatation          Quotation[]
 }
 
 /// @@allow('read', isExist == true)
@@ -644,57 +644,57 @@ model Customer {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model PaymentDetails {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt   DateTime    @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt   DateTime?   @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist     Boolean     @default(true)
-    id          String      @id() @default(cuid())
-    paymentType PaymentType
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    ibanNumber  String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    bicNumber   String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    upiId       String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    ifscCode    String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    account_no  String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    swiftCode   String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    paypalId    String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    stripeId    String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    razorpayId  String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    mollieId    String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    bankName    String?
-    /// @DtoRelationIncludeId
-    user_id     String
-    user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    invoice     Invoice[]
-    /// @DtoApiHidden
-    Payments    Payments[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt   DateTime    @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt   DateTime?   @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist     Boolean     @default(true)
+  id          String      @id() @default(cuid())
+  paymentType PaymentType
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  ibanNumber  String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  bicNumber   String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  upiId       String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  ifscCode    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  account_no  String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  swiftCode   String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  paypalId    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  stripeId    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  razorpayId  String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  mollieId    String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  bankName    String?
+  /// @DtoRelationIncludeId
+  user_id     String
+  user        User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  invoice     Invoice[]
+  /// @DtoApiHidden
+  Payments    Payments[]
 }
 
 /// @@allow('read', isExist == true)
@@ -702,31 +702,31 @@ model PaymentDetails {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model GateWayDetails {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt DateTime    @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt DateTime?   @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist   Boolean     @default(true)
-    id        String      @id() @default(cuid())
-    type      GateWayType
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    key       String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    secret    String?
-    /// @DtoRelationIncludeId
-    user_id   String
-    user      User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    enabled   Boolean     @default(false)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime    @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime?   @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean     @default(true)
+  id        String      @id() @default(cuid())
+  type      GateWayType
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  key       String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  secret    String?
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  enabled   Boolean     @default(false)
 
-    @@unique([type, user_id])
+  @@unique([type, user_id])
 }
 
 /// @@allow('read', isExist == true)
@@ -734,30 +734,30 @@ model GateWayDetails {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model InvoiceProducts {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt              DateTime                @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt              DateTime?               @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist                Boolean                 @default(true)
-    id                     String                  @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    invoice_id             String
-    invoice                Invoice                 @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    product_id             String
-    product                Product                 @relation(fields: [product_id], references: [id], onDelete: Cascade)
-    quantity               Float
-    /// @DtoRelationIncludeId
-    hsnCode_id             String?
-    hsnCode                HSNCode?                @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
-    price                  Float
-    total                  Float
-    /// @DtoApiHidden
-    tax_forInvoiceProducts TaxForInvoiceProducts[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt              DateTime                @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt              DateTime?               @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist                Boolean                 @default(true)
+  id                     String                  @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  invoice_id             String
+  invoice                Invoice                 @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  product_id             String
+  product                Product                 @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  quantity               Float
+  /// @DtoRelationIncludeId
+  hsnCode_id             String?
+  hsnCode                HSNCode?                @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
+  price                  Float
+  total                  Float
+  /// @DtoApiHidden
+  tax_forInvoiceProducts TaxForInvoiceProducts[]
 }
 
 /// @@allow('read', isExist == true)
@@ -765,22 +765,22 @@ model InvoiceProducts {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model TaxForInvoiceProducts {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt         DateTime        @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt         DateTime?       @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist           Boolean         @default(true)
-    id                String          @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    invoiceProduct_id String
-    invoiceProduct    InvoiceProducts @relation(fields: [invoiceProduct_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    tax_id            String
-    tax               Tax             @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime        @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?       @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean         @default(true)
+  id                String          @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  invoiceProduct_id String
+  invoiceProduct    InvoiceProducts @relation(fields: [invoiceProduct_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  tax_id            String
+  tax               Tax             @relation(fields: [tax_id], references: [id], onDelete: Cascade)
 }
 
 /// @@allow('read', isExist == true)
@@ -788,71 +788,74 @@ model TaxForInvoiceProducts {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Invoice {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt          DateTime          @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt          DateTime?         @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist            Boolean           @default(true)
-    id                 String            @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    fromStore          Boolean           @default(false)
-    /// @DtoRelationIncludeId
-    customer_id        String
-    customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    currency_id        String?
-    currency           Currencies?       @relation(fields: [currency_id], references: [id], onDelete: SetNull)
-    /// @DtoRelationIncludeId
-    user_id            String
-    user               User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    invoice_number     String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    reference_number   String?
-    date               DateTime
-    due_date           DateTime
-    is_recurring       Boolean
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    recurring          InvoiceRecurring?
-    /// @DtoRelationIncludeId
-    paymentId          String?
-    payment            PaymentDetails?   @relation(fields: [paymentId], references: [id], onDelete: SetNull)
-    /// @DtoApiHidden
-    product            InvoiceProducts[]
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    notes              String?
-    sub_total          Float
-    /// @DtoRelationIncludeId
-    tax_id             String?
-    tax                Tax?              @relation(fields: [tax_id], references: [id], onDelete: SetNull)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    discountPercentage Float?
-    due_amount         Float
-    paid_amount        Float
-    total              Float
-    paid_status        paidStatus        @default(Unpaid)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    status             String?           @default("Draft")
-    /// @DtoRelationIncludeId
-    template_id        String?
-    template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
-    /// @DtoApiHidden
-    Payments           Payments[]
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    template_url       String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    termsAccepted      Boolean           @default(false)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt          DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt          DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist            Boolean           @default(true)
+  id                 String            @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  fromStore          Boolean           @default(false)
+  /// @DtoRelationIncludeId
+  customer_id        String
+  customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  currency_id        String?
+  currency           Currencies?       @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+  /// @DtoRelationIncludeId
+  user_id            String
+  user               User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  invoice_number     String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reference_number   String?
+  date               DateTime
+  due_date           DateTime
+  is_recurring       Boolean
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  recurring          InvoiceRecurring?
+  /// @DtoRelationIncludeId
+  paymentId          String?
+  payment            PaymentDetails?   @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  /// @DtoApiHidden
+  product            InvoiceProducts[]
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes              String?
+  sub_total          Float
+  /// @DtoRelationIncludeId
+  tax_id             String?
+  tax                Tax?              @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  discountPercentage Float?
+  due_amount         Float
+  paid_amount        Float
+  total              Float
+  paid_status        paidStatus        @default(Unpaid)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  status             String?           @default("Draft")
+  /// @DtoRelationIncludeId
+  template_id        String?
+  template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+  /// @DtoApiHidden
+  Payments           Payments[]
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  template_url       String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  termsAccepted      Boolean           @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  lastReminderSentAt DateTime?
 }
 
 /// @@allow('read', isExist == true)
@@ -860,25 +863,25 @@ model Invoice {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model invoiceTemplate {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt       DateTime          @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt       DateTime?         @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist         Boolean           @default(true)
-    id              String            @id() @default(cuid())
-    name            String
-    view            String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    path            String?
-    /// @DtoApiHidden
-    invoice         Invoice[]
-    /// @DtoApiHidden
-    InvoiceSettings InvoiceSettings[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt       DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt       DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist         Boolean           @default(true)
+  id              String            @id() @default(cuid())
+  name            String
+  view            String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  path            String?
+  /// @DtoApiHidden
+  invoice         Invoice[]
+  /// @DtoApiHidden
+  InvoiceSettings InvoiceSettings[]
 }
 
 /// @@allow('read', isExist == true)
@@ -886,42 +889,48 @@ model invoiceTemplate {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model InvoiceSettings {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt                       DateTime           @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt                       DateTime?          @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist                         Boolean            @default(true)
-    id                              String             @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    invoiceHeadingType              invoiceHeadingType @default(COMPANY_NAME)
-    /// @DtoRelationIncludeId
-    user_id                         String
-    user                            User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    invoiceTemplateId               String
-    invoiceTemplate                 invoiceTemplate    @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
-    invoicePrefix                   String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    autoArchive                     Boolean            @default(false)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    footer                          String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    notes                           String?
-    dueNotice                       Int
-    overDueNotice                   Int
-    companyAddressTemplate          String
-    customerBillingAddressTemplate  String
-    customerShippingAddressTemplate String
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt                       DateTime           @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt                       DateTime?          @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist                         Boolean            @default(true)
+  id                              String             @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  invoiceHeadingType              invoiceHeadingType @default(COMPANY_NAME)
+  /// @DtoRelationIncludeId
+  user_id                         String
+  user                            User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  invoiceTemplateId               String
+  invoiceTemplate                 invoiceTemplate    @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
+  invoicePrefix                   String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  autoArchive                     Boolean            @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  footer                          String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes                           String?
+  dueNotice                       Int
+  overDueNotice                   Int
+  companyAddressTemplate          String
+  customerBillingAddressTemplate  String
+  customerShippingAddressTemplate String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  enableReminder                  Boolean            @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reminderInterval                Int                @default(0)
 
-    @@unique([user_id, id])
+  @@unique([user_id, id])
 }
 
 /// @@allow('read', isExist == true)
@@ -929,30 +938,30 @@ model InvoiceSettings {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model QuotationProducts {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt                DateTime                  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt                DateTime?                 @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist                  Boolean                   @default(true)
-    id                       String                    @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    quotation_id             String
-    quotation                Quotation                 @relation(fields: [quotation_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    product_id               String
-    product                  Product                   @relation(fields: [product_id], references: [id], onDelete: Cascade)
-    quantity                 Float
-    /// @DtoRelationIncludeId
-    hsnCode_id               String?
-    hsnCode                  HSNCode?                  @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
-    price                    Float
-    total                    Float
-    /// @DtoApiHidden
-    tax_forQuotationProducts TaxForQuotationProducts[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt                DateTime                  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt                DateTime?                 @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist                  Boolean                   @default(true)
+  id                       String                    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  quotation_id             String
+  quotation                Quotation                 @relation(fields: [quotation_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  product_id               String
+  product                  Product                   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  quantity                 Float
+  /// @DtoRelationIncludeId
+  hsnCode_id               String?
+  hsnCode                  HSNCode?                  @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
+  price                    Float
+  total                    Float
+  /// @DtoApiHidden
+  tax_forQuotationProducts TaxForQuotationProducts[]
 }
 
 /// @@allow('read', isExist == true)
@@ -960,22 +969,22 @@ model QuotationProducts {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model TaxForQuotationProducts {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt           DateTime          @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt           DateTime?         @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist             Boolean           @default(true)
-    id                  String            @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    quotationProduct_id String
-    quotationProduct    QuotationProducts @relation(fields: [quotationProduct_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    tax_id              String
-    tax                 Tax               @relation(fields: [tax_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt           DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt           DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist             Boolean           @default(true)
+  id                  String            @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  quotationProduct_id String
+  quotationProduct    QuotationProducts @relation(fields: [quotationProduct_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  tax_id              String
+  tax                 Tax               @relation(fields: [tax_id], references: [id], onDelete: Cascade)
 }
 
 /// @@allow('read', isExist == true)
@@ -983,56 +992,56 @@ model TaxForQuotationProducts {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Quotation {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt          DateTime            @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt          DateTime?           @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist            Boolean             @default(true)
-    id                 String              @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    customer_id        String
-    customer           Customer            @relation(fields: [customer_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    currency_id        String?
-    currency           Currencies?         @relation(fields: [currency_id], references: [id], onDelete: SetNull)
-    /// @DtoRelationIncludeId
-    user_id            String
-    user               User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    quatation_number   String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    reference_number   String?
-    date               DateTime
-    expiry_at          DateTime
-    /// @DtoApiHidden
-    product            QuotationProducts[]
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    notes              String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    private_notes      String?
-    sub_total          Float
-    /// @DtoRelationIncludeId
-    tax_id             String?
-    tax                Tax?                @relation(fields: [tax_id], references: [id], onDelete: SetNull)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    discountPercentage Float?
-    total              Float
-    /// @DtoRelationIncludeId
-    template_id        String?
-    template           QuotationTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    status             String?             @default("Draft")
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    template_url       String?
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt          DateTime            @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt          DateTime?           @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist            Boolean             @default(true)
+  id                 String              @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  customer_id        String
+  customer           Customer            @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  currency_id        String?
+  currency           Currencies?         @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+  /// @DtoRelationIncludeId
+  user_id            String
+  user               User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  quatation_number   String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reference_number   String?
+  date               DateTime
+  expiry_at          DateTime
+  /// @DtoApiHidden
+  product            QuotationProducts[]
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes              String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  private_notes      String?
+  sub_total          Float
+  /// @DtoRelationIncludeId
+  tax_id             String?
+  tax                Tax?                @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  discountPercentage Float?
+  total              Float
+  /// @DtoRelationIncludeId
+  template_id        String?
+  template           QuotationTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  status             String?             @default("Draft")
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  template_url       String?
 }
 
 /// @@allow('read', isExist == true)
@@ -1040,25 +1049,25 @@ model Quotation {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model QuotationTemplate {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt         DateTime            @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt         DateTime?           @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist           Boolean             @default(true)
-    id                String              @id() @default(cuid())
-    name              String
-    view              String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    path              String?
-    /// @DtoApiHidden
-    quotation         Quotation[]
-    /// @DtoApiHidden
-    quotationSettings QuotationSettings[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime            @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?           @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean             @default(true)
+  id                String              @id() @default(cuid())
+  name              String
+  view              String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  path              String?
+  /// @DtoApiHidden
+  quotation         Quotation[]
+  /// @DtoApiHidden
+  quotationSettings QuotationSettings[]
 }
 
 /// @@allow('read', isExist == true)
@@ -1066,42 +1075,42 @@ model QuotationTemplate {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model QuotationSettings {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt                       DateTime          @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt                       DateTime?         @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist                         Boolean           @default(true)
-    id                              String            @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    user_id                         String
-    user                            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    quotationTemplateId             String
-    quotationTemplate               QuotationTemplate @relation(fields: [quotationTemplateId], references: [id], onDelete: Cascade)
-    quotationPrefix                 String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    autoArchive                     Boolean           @default(false)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    autoConvert                     Boolean           @default(false)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    footer                          String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    notes                           String?
-    companyAddressTemplate          String
-    customerBillingAddressTemplate  String
-    customerShippingAddressTemplate String
-    dueNotice                       Int
-    overDueNotice                   Int
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt                       DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt                       DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist                         Boolean           @default(true)
+  id                              String            @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id                         String
+  user                            User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  quotationTemplateId             String
+  quotationTemplate               QuotationTemplate @relation(fields: [quotationTemplateId], references: [id], onDelete: Cascade)
+  quotationPrefix                 String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  autoArchive                     Boolean           @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  autoConvert                     Boolean           @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  footer                          String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes                           String?
+  companyAddressTemplate          String
+  customerBillingAddressTemplate  String
+  customerShippingAddressTemplate String
+  dueNotice                       Int
+  overDueNotice                   Int
 
-    @@unique([user_id, id])
+  @@unique([user_id, id])
 }
 
 /// @@allow('read', isExist == true)
@@ -1109,23 +1118,23 @@ model QuotationSettings {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model OpenAiHistory {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt DateTime  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist   Boolean   @default(true)
-    id        String    @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    user_id   String
-    user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    query     String
-    result    String
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  query     String
+  result    String
 
-    @@unique([user_id, query])
+  @@unique([user_id, query])
 }
 
 /// @@allow('read', isExist == true)
@@ -1133,48 +1142,48 @@ model OpenAiHistory {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Payments {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt         DateTime       @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt         DateTime?      @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist           Boolean        @default(true)
-    id                String         @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    paymentDate       DateTime       @default(now())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    reference_number  String?
-    amount            Float
-    /// @DtoRelationIncludeId
-    paymentDetails_id String
-    paymentDetails    PaymentDetails @relation(fields: [paymentDetails_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    notes             String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    private_notes     String?
-    /// @DtoRelationIncludeId
-    user_id           String
-    user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    payment_type      PaymentType    @default(Cash)
-    /// @DtoRelationIncludeId
-    invoice_id        String
-    invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    otherId           String         @default("")
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    isNeglected       Boolean        @default(false)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime       @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?      @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean        @default(true)
+  id                String         @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  paymentDate       DateTime       @default(now())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reference_number  String?
+  amount            Float
+  /// @DtoRelationIncludeId
+  paymentDetails_id String
+  paymentDetails    PaymentDetails @relation(fields: [paymentDetails_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes             String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  private_notes     String?
+  /// @DtoRelationIncludeId
+  user_id           String
+  user              User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  payment_type      PaymentType    @default(Cash)
+  /// @DtoRelationIncludeId
+  invoice_id        String
+  invoice           Invoice        @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  otherId           String         @default("")
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  isNeglected       Boolean        @default(false)
 }
 
 /// @@allow('read', isExist == true)
@@ -1182,23 +1191,23 @@ model Payments {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model AIDashboard {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt DateTime       @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt DateTime?      @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist   Boolean        @default(true)
-    id        String         @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    user_id   String
-    user      User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    title     String
-    query     String
-    prompt    String
-    type      DashboardTypes
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime       @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime?      @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean        @default(true)
+  id        String         @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  title     String
+  query     String
+  prompt    String
+  type      DashboardTypes
 }
 
 /// @@allow('read', isExist == true)
@@ -1206,28 +1215,28 @@ model AIDashboard {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Notification {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt DateTime  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist   Boolean   @default(true)
-    id        String    @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    user_id   String
-    user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    title     String
-    body      String
-    read      Boolean   @default(false)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    meta      String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    metaType  String?
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean   @default(true)
+  id        String    @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id   String
+  user      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  title     String
+  body      String
+  read      Boolean   @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  meta      String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  metaType  String?
 }
 
 /// @@allow('read', isExist == true)
@@ -1235,33 +1244,33 @@ model Notification {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Plans {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt    DateTime       @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt    DateTime?      @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist      Boolean        @default(true)
-    id           String         @id() @default(cuid())
-    name         String
-    description  String
-    is_active    Boolean
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    isOneTime    Boolean        @default(false)
-    price        Float
-    days         Int
-    /// @DtoRelationIncludeId
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    currency_id  String         @default("cm5wa4fki001r21tydt35127s")
-    currency     Currencies     @relation(fields: [currency_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    PlanFeatures PlanFeatures[]
-    /// @DtoApiHidden
-    UserPlans    UserPlans[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt    DateTime       @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt    DateTime?      @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist      Boolean        @default(true)
+  id           String         @id() @default(cuid())
+  name         String
+  description  String
+  is_active    Boolean
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  isOneTime    Boolean        @default(false)
+  price        Float
+  days         Int
+  /// @DtoRelationIncludeId
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  currency_id  String         @default("cm5wa4fki001r21tydt35127s")
+  currency     Currencies     @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  PlanFeatures PlanFeatures[]
+  /// @DtoApiHidden
+  UserPlans    UserPlans[]
 }
 
 /// @@allow('read', isExist == true)
@@ -1269,21 +1278,21 @@ model Plans {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model PlanFeatures {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt DateTime    @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt DateTime?   @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist   Boolean     @default(true)
-    id        String      @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    plan_id   String
-    plan      Plans       @relation(fields: [plan_id], references: [id], onDelete: Cascade)
-    feature   PlanFeature
-    count     Int
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt DateTime    @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt DateTime?   @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist   Boolean     @default(true)
+  id        String      @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  plan_id   String
+  plan      Plans       @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  feature   PlanFeature
+  count     Int
 }
 
 /// @@allow('read', isExist == true)
@@ -1291,33 +1300,33 @@ model PlanFeatures {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model UserPlans {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt    DateTime        @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt    DateTime?       @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist      Boolean         @default(true)
-    id           String          @id() @default(cuid())
-    /// @DtoRelationIncludeId
-    user_id      String
-    user         User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    plan_id      String
-    plan         Plans           @relation(fields: [plan_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    session_id   String
-    start_date   DateTime
-    end_date     DateTime
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    status       Boolean         @default(false)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    payment_type PlanPaymentType @default(Stripe)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt    DateTime        @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt    DateTime?       @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist      Boolean         @default(true)
+  id           String          @id() @default(cuid())
+  /// @DtoRelationIncludeId
+  user_id      String
+  user         User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  plan_id      String
+  plan         Plans           @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  session_id   String
+  start_date   DateTime
+  end_date     DateTime
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  status       Boolean         @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  payment_type PlanPaymentType @default(Stripe)
 }
 
 /// @@allow('read', isExist == true)
@@ -1325,29 +1334,29 @@ model UserPlans {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Vendors {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt         DateTime              @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt         DateTime?             @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist           Boolean               @default(true)
-    id                String                @id() @default(cuid())
-    name              String
-    display_name      String
-    email             String
-    phone             String?
-    website           String?
-    /// @DtoRelationIncludeId
-    billingAddress_id String
-    billingAddress    VendorsBillingAddress @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    user_id           String
-    user              User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoApiHidden
-    expenses          Expenses[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt         DateTime              @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt         DateTime?             @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist           Boolean               @default(true)
+  id                String                @id() @default(cuid())
+  name              String
+  display_name      String
+  email             String
+  phone             String?
+  website           String?
+  /// @DtoRelationIncludeId
+  billingAddress_id String
+  billingAddress    VendorsBillingAddress @relation(fields: [billingAddress_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id           String
+  user              User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoApiHidden
+  expenses          Expenses[]
 }
 
 /// @@allow('read', isExist == true)
@@ -1355,27 +1364,27 @@ model Vendors {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model VendorsBillingAddress {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt  DateTime  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt  DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist    Boolean   @default(true)
-    id         String    @id() @default(cuid())
-    address    String
-    city       String
-    /// @DtoRelationIncludeId
-    state_id   String
-    state      State     @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    country_id String
-    country    Country   @relation(fields: [country_id], references: [id], onDelete: Cascade)
-    zip        String
-    /// @DtoApiHidden
-    vendor     Vendors[]
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  address    String
+  city       String
+  /// @DtoRelationIncludeId
+  state_id   String
+  state      State     @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  country_id String
+  country    Country   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+  zip        String
+  /// @DtoApiHidden
+  vendor     Vendors[]
 }
 
 /// @@allow('read', isExist == true)
@@ -1383,34 +1392,34 @@ model VendorsBillingAddress {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Expenses {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt   DateTime        @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt   DateTime?       @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist     Boolean         @default(true)
-    id          String          @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    receipt_url String?
-    category    ExpenseCategory
-    /// @DtoRelationIncludeId
-    vendor_id   String
-    vendor      Vendors         @relation(fields: [vendor_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    user_id     String
-    user        User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    expenseDate DateTime
-    amount      Float
-    /// @DtoRelationIncludeId
-    currency_id String
-    currency    Currencies      @relation(fields: [currency_id], references: [id], onDelete: Cascade)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    notes       String?
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt   DateTime        @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt   DateTime?       @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist     Boolean         @default(true)
+  id          String          @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  receipt_url String?
+  category    ExpenseCategory
+  /// @DtoRelationIncludeId
+  vendor_id   String
+  vendor      Vendors         @relation(fields: [vendor_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  user_id     String
+  user        User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  expenseDate DateTime
+  amount      Float
+  /// @DtoRelationIncludeId
+  currency_id String
+  currency    Currencies      @relation(fields: [currency_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes       String?
 }
 
 /// @@allow('read', isExist == true)
@@ -1418,28 +1427,28 @@ model Expenses {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Coupons {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt  DateTime  @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt  DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist    Boolean   @default(true)
-    id         String    @id() @default(cuid())
-    code       String    @unique()
-    discount   Float
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    is_active  Boolean   @default(true)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    start_date DateTime
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    end_date   DateTime
-    /// @DtoRelationIncludeId
-    user_id    String
-    user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt  DateTime  @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt  DateTime? @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist    Boolean   @default(true)
+  id         String    @id() @default(cuid())
+  code       String    @unique()
+  discount   Float
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  is_active  Boolean   @default(true)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  start_date DateTime
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  end_date   DateTime
+  /// @DtoRelationIncludeId
+  user_id    String
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

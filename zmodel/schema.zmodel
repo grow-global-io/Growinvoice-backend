@@ -421,6 +421,7 @@ model Invoice extends Base {
     Payments           Payments[]        @DtoApiHidden
     template_url       String?           @DtoCreateOptional @DtoUpdateOptional
     termsAccepted      Boolean           @default(false) @DtoCreateOptional @DtoUpdateOptional
+    lastReminderSentAt DateTime?         @DtoCreateOptional @DtoUpdateOptional
 }
 
 
@@ -454,6 +455,8 @@ model InvoiceSettings extends Base {
     companyAddressTemplate          String
     customerBillingAddressTemplate  String
     customerShippingAddressTemplate String
+    enableReminder                  Boolean            @default(false) @DtoCreateOptional @DtoUpdateOptional
+    reminderInterval                Int                @default(0) @DtoCreateOptional @DtoUpdateOptional
 
     @@unique([user_id, id])
 }

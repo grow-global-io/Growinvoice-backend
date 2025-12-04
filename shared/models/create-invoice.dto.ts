@@ -171,4 +171,13 @@ export class CreateInvoiceDto {
   @IsOptional()
   @IsBoolean()
   termsAccepted?: boolean;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsDateString()
+  lastReminderSentAt?: Date | null;
 }

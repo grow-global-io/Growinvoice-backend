@@ -88,4 +88,19 @@ export class CreateInvoiceSettingsDto {
   @IsNotEmpty()
   @IsString()
   customerShippingAddressTemplate: string;
+  @ApiProperty({
+    type: 'boolean',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  enableReminder?: boolean;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    default: 0,
+  })
+  @IsOptional()
+  @IsInt()
+  reminderInterval?: number;
 }
