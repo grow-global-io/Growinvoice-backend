@@ -114,13 +114,14 @@
                   <thead>
                     <tr>
                         <!-- S. No -->
-                      <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.serialNo') %></th>
+                      <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.serialNo') %></th>
                       <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.item') %></th>
                       <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.qty') %>
                       </th>
                       <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.hsn') %></th>
                       <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.tax') %></th>
                       <th class="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.price') %></th>
+                      <th class="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg"><%= t('translation.invoice.template.productDiscount') %></th>
                       <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right">
                         <%= t('translation.invoice.template.total') %></th>
                     </tr>
@@ -128,23 +129,26 @@
                   <tbody>
                     <% invoice?.product?.forEach(product=> { %>
                     <tr>
-                      <td class="tm_width_2">
+                      <td class="tm_width_1">
                         <%= invoice?.product?.indexOf(product) + 1 %>
                       </td>
-                      <td class="tm_width_4">
+                      <td class="tm_width_3">
                         <%= product?.product?.name %>
                       </td>
                       <td class="tm_width_1">
                         <%= product?.quantity %>
                       </td>
-                      <td class="tm_width_1">
+                      <td class="tm_width_2">
                         <%= product?.product?.hsnCode?.code %>
                       </td>
                       <td class="tm_width_1">
                         <%= product?.product?.tax?.percentage %>%
                       </td>
-                      <td class="tm_width_3">
+                      <td class="tm_width_2">
                         <%= product?.product?.currency?.symbol %> <%= Number(product?.price).toFixed(2) %>
+                      </td>
+                      <td class="tm_width_1">
+                        <%= product?.discount || 0 %>%
                       </td>
                       <td class="tm_width_3  tm_text_right">
                         <%= product?.product?.currency?.symbol %> <%= Number(product?.total).toFixed(2) %>

@@ -755,6 +755,9 @@ model InvoiceProducts {
   hsnCode_id             String?
   hsnCode                HSNCode?                @relation(fields: [hsnCode_id], references: [id], onDelete: SetNull)
   price                  Float
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  discount               Float?
   total                  Float
   /// @DtoApiHidden
   tax_forInvoiceProducts TaxForInvoiceProducts[]
