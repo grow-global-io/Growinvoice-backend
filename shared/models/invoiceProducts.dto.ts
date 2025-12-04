@@ -46,6 +46,12 @@ export class InvoiceProductsDto {
   @ApiProperty({
     type: 'number',
     format: 'float',
+    nullable: true,
+  })
+  discount: number | null;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
   })
   total: number;
 }

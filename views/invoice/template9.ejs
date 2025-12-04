@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" id="html_content">
   <head>
     <meta charset="UTF-8" />
@@ -228,7 +228,7 @@
             </tr>
             <tr class="item-details">
               <td colspan="2" style="padding-top: 0; font-size: 11px; border-bottom: 1px dashed #ccc;">
-                <%= t('translation.invoice.template.qty') %>: <%= product?.quantity %> | HSN: <%= product?.product?.hsnCode?.code %> | Tax: <%= product?.product?.tax?.percentage %>%
+                <%= t('translation.invoice.template.qty') %>: <%= product?.quantity %> | HSN: <%= product?.product?.hsnCode?.code %> | Tax: <%= product?.product?.tax?.percentage %>% | <%= t('translation.invoice.template.productDiscount') %>: <%= product?.discount || 0 %>%
               </td>
             </tr>
           <% }) %>
