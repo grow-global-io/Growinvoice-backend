@@ -169,6 +169,7 @@ export class InvoicesettingsService {
     }
     // return plainToInstance(User, users);
   }
+
   @Cron('0 0 0 * * *')
   async sendOverdueReminders() {
     try {
@@ -188,6 +189,9 @@ export class InvoicesettingsService {
               due_date: {
                 lt: currentDate.toDate(),
               },
+            },
+            include: {
+              customer: true,
             },
           },
           InvoiceSettings: true,
@@ -220,11 +224,11 @@ export class InvoicesettingsService {
             }
           }
 
-          if (shouldSend) {
+          if (shouldSend && invoice.customer?.email) {
             const sendMailDto = {
-              email: user.email,
+              email: invoice.customer.email,
               subject: 'Overdue Invoice Reminder',
-              body: `Dear ${user.name},<br><br>This is a reminder that your invoice with due date ${moment(invoice.due_date).format('YYYY-MM-DD')} is overdue by ${daysOverdue} days. Please make the payment as soon as possible.<br><br>Best Regards,<br>${user.company[0]?.name || 'Grow Global Strategies Pvt Ltd'}`,
+              body: `Dear ${invoice.customer.name},<br><br>This is a reminder that your invoice with due date ${moment(invoice.due_date).format('YYYY-MM-DD')} is overdue by ${daysOverdue} days. Please make the payment as soon as possible.<br><br>Best Regards,<br>${user.company[0]?.name || 'Grow Global Strategies Pvt Ltd'}`,
             };
 
             await this.mailService.sendMail(

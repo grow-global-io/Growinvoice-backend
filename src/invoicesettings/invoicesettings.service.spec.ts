@@ -55,6 +55,10 @@ describe('InvoicesettingsService', () => {
             due_date: moment().subtract(5, 'days').toDate(),
             paid_status: 'Unpaid',
             lastReminderSentAt: null,
+            customer: {
+              email: 'customer@example.com',
+              name: 'Test Customer',
+            },
           },
         ],
         company: [{ name: 'Test Company' }],
@@ -66,8 +70,9 @@ describe('InvoicesettingsService', () => {
 
       expect(mailService.sendMail).toHaveBeenCalledWith(
         expect.objectContaining({
-          email: 'test@example.com',
+          email: 'customer@example.com',
           subject: 'Overdue Invoice Reminder',
+          body: expect.stringContaining('Dear Test Customer'),
         }),
         undefined,
         'Test Company',
@@ -90,6 +95,10 @@ describe('InvoicesettingsService', () => {
             due_date: moment().subtract(10, 'days').toDate(),
             paid_status: 'Unpaid',
             lastReminderSentAt: moment().subtract(3, 'days').toDate(),
+            customer: {
+              email: 'customer@example.com',
+              name: 'Test Customer',
+            },
           },
         ],
         company: [{ name: 'Test Company' }],
