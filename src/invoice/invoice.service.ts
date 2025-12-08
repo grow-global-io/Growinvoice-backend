@@ -1,5 +1,10 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { Invoice, InvoiceDto } from '@shared/models';
 import { plainToInstance } from 'class-transformer';
 import {
@@ -28,6 +33,7 @@ export class InvoiceService {
   constructor(
     private sharedService: SharedService,
     @Inject(ENHANCED_PRISMA) private prismaService: PrismaService,
+    @Inject(forwardRef(() => InvoicesettingsService))
     private invoiceSettings: InvoicesettingsService,
     private readonly mailService: MailService,
     private readonly conf: ConfigService,

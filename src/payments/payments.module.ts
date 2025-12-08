@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
-import { InvoiceService } from '@/invoice/invoice.service';
-import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
 import { UserModule } from '@/user/user.module';
+import { InvoiceModule } from '@/invoice/invoice.module';
+import { InvoicesettingsModule } from '@/invoicesettings/invoicesettings.module';
 import { MailService } from '@/mail/mail.service';
 import { GatewaydetailsService } from '@/gatewaydetails/gatewaydetails.service';
 import { NotificationsService } from '@/notifications/notifications.service';
@@ -13,12 +13,10 @@ import { UserplansService } from '@/userplans/userplans.service';
 import { SharedService } from '@/shared/shared.service';
 //this is a test push
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, InvoiceModule, InvoicesettingsModule],
   controllers: [PaymentsController],
   providers: [
     PaymentsService,
-    InvoiceService,
-    InvoicesettingsService,
     MailService,
     GatewaydetailsService,
     NotificationsService,

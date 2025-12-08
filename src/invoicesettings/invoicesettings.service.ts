@@ -1,6 +1,7 @@
 import { MailService } from '@/mail/mail.service';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { InvoiceService } from '@/invoice/invoice.service';
 import {
   CreateInvoiceSettingsDto,
   InvoiceSettingsDto,
@@ -17,6 +18,8 @@ export class InvoicesettingsService {
   constructor(
     private prismaService: PrismaService,
     private mailService: MailService,
+    @Inject(forwardRef(() => InvoiceService))
+    private invoiceService: InvoiceService,
   ) {}
 
   async create(createInvoicesettingDto: CreateInvoiceSettingsDto) {
@@ -231,10 +234,37 @@ export class InvoicesettingsService {
               body: `Dear ${invoice.customer.name},<br><br>This is a reminder that your invoice with due date ${moment(invoice.due_date).format('YYYY-MM-DD')} is overdue by ${daysOverdue} days. Please make the payment as soon as possible.<br><br>Best Regards,<br>${user.company[0]?.name || 'Grow Global Strategies Pvt Ltd'}`,
             };
 
+            // Generate PDF attachment for invoice
+            let pdfAttachment = null;
+            try {
+              const pdfBuffer =
+                await this.invoiceService.getPdfBufferForInvoice(invoice.id);
+              if (pdfBuffer && pdfBuffer.length > 0) {
+                pdfAttachment = [
+                  {
+                    filename: `Invoice-${invoice.invoice_number}.pdf`,
+                    content: pdfBuffer,
+                    contentType: 'application/pdf',
+                  },
+                ];
+              } else {
+                this.logger.error(
+                  `PDF buffer is empty or null for invoice ${invoice.id}`,
+                );
+              }
+            } catch (error) {
+              this.logger.error(
+                `Failed to generate invoice PDF for ${invoice.id}:`,
+                error,
+              );
+              // Continue without PDF attachment if generation fails
+            }
+
             await this.mailService.sendMail(
               sendMailDto,
               undefined,
               user.company[0]?.name,
+              pdfAttachment,
             );
 
             await this.prismaService.invoice.update({
