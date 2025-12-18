@@ -856,6 +856,9 @@ model Invoice {
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   termsAccepted      Boolean           @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  lastReminderSentAt DateTime?
 }
 
 /// @@allow('read', isExist == true)
@@ -923,6 +926,12 @@ model InvoiceSettings {
   companyAddressTemplate          String
   customerBillingAddressTemplate  String
   customerShippingAddressTemplate String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  enableReminder                  Boolean            @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reminderInterval                Int                @default(0)
 
   @@unique([user_id, id])
 }

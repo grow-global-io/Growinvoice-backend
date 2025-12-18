@@ -176,4 +176,10 @@ export class Invoice {
     type: 'boolean',
   })
   termsAccepted: boolean;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    nullable: true,
+  })
+  lastReminderSentAt: Date | null;
 }

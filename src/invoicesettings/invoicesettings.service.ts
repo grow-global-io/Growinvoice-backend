@@ -1,6 +1,7 @@
 import { MailService } from '@/mail/mail.service';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
+import { InvoiceService } from '@/invoice/invoice.service';
 import {
   CreateInvoiceSettingsDto,
   InvoiceSettingsDto,
@@ -17,6 +18,8 @@ export class InvoicesettingsService {
   constructor(
     private prismaService: PrismaService,
     private mailService: MailService,
+    @Inject(forwardRef(() => InvoiceService))
+    private invoiceService: InvoiceService,
   ) {}
 
   async create(createInvoicesettingDto: CreateInvoiceSettingsDto) {
@@ -168,5 +171,112 @@ export class InvoicesettingsService {
       this.logger.error('Error executing findAllByUserToMail method:', error);
     }
     // return plainToInstance(User, users);
+  }
+
+  @Cron('0 0 0 * * *')
+  async sendOverdueReminders() {
+    try {
+      const currentDate = moment().startOf('day');
+      const users = await this.prismaService.user.findMany({
+        where: {
+          InvoiceSettings: {
+            some: {
+              enableReminder: true,
+            },
+          },
+        },
+        include: {
+          invoice: {
+            where: {
+              paid_status: 'Unpaid',
+              due_date: {
+                lt: currentDate.toDate(),
+              },
+            },
+            include: {
+              customer: true,
+            },
+          },
+          InvoiceSettings: true,
+          company: true,
+        },
+      });
+
+      for (const user of users) {
+        const invoiceSettings = user.InvoiceSettings.find(
+          (s) => s.enableReminder,
+        );
+        if (!invoiceSettings || !invoiceSettings.reminderInterval) continue;
+
+        for (const invoice of user.invoice) {
+          const dueDate = moment(invoice.due_date);
+          const daysOverdue = currentDate.diff(dueDate, 'days');
+
+          if (daysOverdue <= 0) continue;
+
+          let shouldSend = false;
+
+          if (!invoice.lastReminderSentAt) {
+            // Send first reminder if overdue
+            shouldSend = true;
+          } else {
+            const lastSent = moment(invoice.lastReminderSentAt).startOf('day');
+            const daysSinceLast = currentDate.diff(lastSent, 'days');
+            if (daysSinceLast >= invoiceSettings.reminderInterval) {
+              shouldSend = true;
+            }
+          }
+
+          if (shouldSend && invoice.customer?.email) {
+            const sendMailDto = {
+              email: invoice.customer.email,
+              subject: 'Overdue Invoice Reminder',
+              body: `Dear ${invoice.customer.name},<br><br>This is a reminder that your invoice with due date ${moment(invoice.due_date).format('YYYY-MM-DD')} is overdue by ${daysOverdue} days. Please make the payment as soon as possible.<br><br>Best Regards,<br>${user.company[0]?.name || 'Grow Global Strategies Pvt Ltd'}`,
+            };
+
+            // Generate PDF attachment for invoice
+            let pdfAttachment = null;
+            try {
+              const pdfBuffer =
+                await this.invoiceService.getPdfBufferForInvoice(invoice.id);
+              if (pdfBuffer && pdfBuffer.length > 0) {
+                pdfAttachment = [
+                  {
+                    filename: `Invoice-${invoice.invoice_number}.pdf`,
+                    content: pdfBuffer,
+                    contentType: 'application/pdf',
+                  },
+                ];
+              } else {
+                this.logger.error(
+                  `PDF buffer is empty or null for invoice ${invoice.id}`,
+                );
+              }
+            } catch (error) {
+              this.logger.error(
+                `Failed to generate invoice PDF for ${invoice.id}:`,
+                error,
+              );
+              // Continue without PDF attachment if generation fails
+            }
+
+            await this.mailService.sendMail(
+              sendMailDto,
+              undefined,
+              user.company[0]?.name,
+              pdfAttachment,
+            );
+
+            await this.prismaService.invoice.update({
+              where: { id: invoice.id },
+              data: { lastReminderSentAt: new Date() },
+            });
+          }
+        }
+      }
+      this.logger.log('sendOverdueReminders method executed successfully.');
+    } catch (error) {
+      this.logger.error('Error executing sendOverdueReminders method:', error);
+    }
   }
 }
