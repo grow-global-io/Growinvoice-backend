@@ -121,7 +121,13 @@ export class MailService {
           company: true,
         },
       });
-      companyName = userDetails.company[0].name ?? '';
+      if (
+        userDetails &&
+        userDetails.company &&
+        userDetails.company.length > 0
+      ) {
+        companyName = userDetails.company[0].name;
+      }
     }
     const emailPromises = body.map(async (mail) => {
       const companyNameString = companyName;
@@ -142,6 +148,7 @@ export class MailService {
           filename: att.filename,
           content: att.content,
           contentType: att.contentType || 'application/pdf',
+          cid: (att as any).cid,
         }));
         console.log(
           `Sending bulk email with ${mail.attachments.length} attachment(s) to ${mail.to}`,
@@ -203,6 +210,7 @@ export class MailService {
           filename: att.filename,
           content: att.content,
           contentType: att.contentType || 'application/pdf',
+          cid: (att as any).cid,
         }));
         console.log(
           `Sending email with ${attachments.length} attachment(s) to ${sendMailDto.email}`,
@@ -271,5 +279,130 @@ export class MailService {
       // Return null instead of throwing - caller should handle gracefully
       return null;
     }
+  }
+
+  async sendPromotionalMail(
+    subject: string,
+    html: string,
+    customerIds: string[] = [],
+    sendToAllCustomers = false,
+    isTest = false,
+    userId?: string,
+    attachments: {
+      filename: string;
+      content: string;
+      contentType: string;
+      cid?: string;
+    }[] = [],
+  ) {
+    let recipients: { email: string; name?: string }[] = [];
+
+    console.log('Promotional Email Request:', {
+      subject,
+      customerIds,
+      sendToAllCustomers,
+      isTest,
+      userId,
+    });
+
+    if (isTest) {
+      console.log('Test mode requested (note: hardcoded list removed).');
+    }
+
+    if (sendToAllCustomers) {
+      // For Admin, 'All Customers' often means all Users (Merchants) of the platform
+      const customers = await this.prismaService.customer.findMany({
+        where: { email: { not: null } },
+        select: { email: true, name: true },
+      });
+      const users = await this.prismaService.user.findMany({
+        where: {
+          isActive: true, // Only send to active users
+        },
+        select: { email: true, name: true },
+      });
+
+      const uniqueRecipients = new Map<string, string | null>();
+      customers.forEach((c) => uniqueRecipients.set(c.email!, c.name));
+      users.forEach((u) => uniqueRecipients.set(u.email!, u.name));
+
+      recipients = Array.from(uniqueRecipients.entries()).map(
+        ([email, name]) => ({ email, name: name ?? undefined }),
+      );
+    } else if (customerIds.length > 0) {
+      // Check Customers
+      const customers = await this.prismaService.customer.findMany({
+        where: {
+          id: { in: customerIds },
+          email: { not: null },
+        },
+        select: { email: true, name: true },
+      });
+
+      // Check Users (Admin might be selecting Merchants)
+      const users = await this.prismaService.user.findMany({
+        where: {
+          id: { in: customerIds },
+        },
+        select: { email: true, name: true },
+      });
+
+      const uniqueRecipients = new Map<string, string | null>();
+      customers.forEach((c) => uniqueRecipients.set(c.email!, c.name));
+      users.forEach((u) => uniqueRecipients.set(u.email!, u.name));
+
+      recipients = Array.from(uniqueRecipients.entries()).map(
+        ([email, name]) => ({ email, name: name ?? undefined }),
+      );
+    } else if (userId && !isTest) {
+      const customers = await this.prismaService.customer.findMany({
+        where: {
+          user_id: userId,
+          email: { not: null },
+        },
+        select: { email: true, name: true },
+      });
+      recipients = customers.map((c) => ({
+        email: c.email!,
+        name: c.name,
+      }));
+    }
+
+    if (recipients.length === 0) {
+      console.log('No recipients found for promotional email. Check:', {
+        customerIdsCount: customerIds?.length,
+        sendToAllCustomers,
+        isTest,
+        userId,
+      });
+      return { count: 0 };
+    }
+
+    console.log(`Found ${recipients.length} recipients for promotional email.`);
+
+    const processedAttachments = attachments.map((att) => {
+      const attachment: any = {
+        filename: att.filename,
+        content: Buffer.from(att.content, 'base64'),
+        contentType: att.contentType,
+      };
+      if (att.cid) {
+        attachment.cid = att.cid; // For inline embedding
+      }
+      return attachment;
+    });
+
+    const emailBody = recipients.map((r) => ({
+      to: r.email,
+      subject: subject,
+      html: html,
+      userId: userId,
+      attachments: processedAttachments,
+    }));
+
+    // Use existing bulkSendMail
+    await this.bulkSendMail({ body: emailBody, userId });
+
+    return { count: recipients.length };
   }
 }

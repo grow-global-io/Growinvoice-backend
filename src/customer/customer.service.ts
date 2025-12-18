@@ -136,9 +136,12 @@ export class CustomerService {
   }
 
   async findAll(userId: string) {
+    const user = await this.prismaServie.user.findUnique({
+      where: { id: userId },
+    });
     const customers = await this.prismaServie.customer.findMany({
       where: {
-        user_id: userId,
+        user_id: user?.isAdmin ? undefined : userId,
       },
       include: {
         _count: {
