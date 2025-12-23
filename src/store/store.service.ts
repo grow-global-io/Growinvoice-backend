@@ -12,6 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@prisma/client';
 import { User } from '@shared/decorators/user.decorator';
 import { ENHANCED_PRISMA } from '@zenstackhq/server/nestjs';
+import { ShiprocketService } from '@/shiprocket/shiprocket.service';
 
 @Injectable()
 export class StoreService {
@@ -19,6 +20,7 @@ export class StoreService {
     @Inject(ENHANCED_PRISMA) private readonly prismaService: PrismaService,
     private readonly mailService: MailService,
     private readonly configService: ConfigService,
+    private readonly shiprocketService: ShiprocketService,
   ) {}
 
   async getStore(userId: string, currency: string): Promise<UserWithProducts> {
@@ -320,6 +322,42 @@ export class StoreService {
         <p>Growinvoice</p>
       `,
     });
+
+    // Create Shiprocket order (best-effort, do not block invoice creation on failure)
+    try {
+      const shippingCountryCode = body.shippingDetails.country_id;
+      const shippingStateCode = body.shippingDetails.state_id;
+
+      // Build basic order items payload for Shiprocket
+      const orderItems = body.products.map((product) => ({
+        name: product.product_id,
+        sku: product.product_id,
+        units: product.quantity,
+        selling_price: product.price,
+      }));
+
+      await this.shiprocketService.createOrderFromCheckout({
+        orderId: invoice.invoice_number,
+        orderDate: invoice.date,
+        customerName: body.name,
+        email: body.email,
+        phone: body.phone,
+        shipping: {
+          address: body.shippingDetails.address,
+          city: body.shippingDetails.city,
+          state: shippingStateCode,
+          country: shippingCountryCode,
+          pincode: body.shippingDetails.zip,
+        },
+        items: orderItems,
+        subTotal: invoice.sub_total,
+        paymentMethod: 'Prepaid',
+      });
+    } catch (error) {
+      // Log and continue – shipping creation failure should not break checkout
+      // eslint-disable-next-line no-console
+      console.error('Failed to create Shiprocket order from checkout', error);
+    }
 
     return plainToInstance(InvoiceDto, invoice);
   }

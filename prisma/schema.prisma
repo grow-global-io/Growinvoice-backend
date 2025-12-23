@@ -82,6 +82,7 @@ enum GateWayType {
   Stripe
   Razorpay
   Growlimitless
+  Shiprocket
 }
 
 enum PlanFeature {

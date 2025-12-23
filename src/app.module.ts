@@ -43,6 +43,7 @@ import { enhance } from '@zenstackhq/runtime';
 import { StoreModule } from './store/store.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
+import { ShiprocketModule } from './shiprocket/shiprocket.module';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -99,6 +100,7 @@ import * as fs from 'fs';
     }),
     StoreModule,
     CouponsModule,
+    ShiprocketModule,
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
