@@ -3,19 +3,18 @@ import { QuotationService } from './quotation.service';
 import { QuotationController } from './quotation.controller';
 import { QuotationsettingsService } from '@/quotationsettings/quotationsettings.service';
 import { MailService } from '@/mail/mail.service';
-import { InvoiceService } from '@/invoice/invoice.service';
-import { InvoicesettingsService } from '@/invoicesettings/invoicesettings.service';
-import { InvoicetemplateService } from '@/invoicetemplate/invoicetemplate.service';
 import { SharedService } from '@/shared/shared.service';
+import { InvoiceModule } from '@/invoice/invoice.module';
+import { InvoicesettingsModule } from '@/invoicesettings/invoicesettings.module';
+import { InvoicetemplateService } from '@/invoicetemplate/invoicetemplate.service';
 
 @Module({
+  imports: [InvoiceModule, InvoicesettingsModule],
   controllers: [QuotationController],
   providers: [
     QuotationService,
     QuotationsettingsService,
     MailService,
-    InvoiceService,
-    InvoicesettingsService,
     InvoicetemplateService,
     SharedService,
   ],

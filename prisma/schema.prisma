@@ -822,71 +822,74 @@ model TaxForInvoiceProducts {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model Invoice {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt DateTime @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist Boolean @default(true)
-    id String @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    fromStore Boolean @default(false)
-    /// @DtoRelationIncludeId
-    customer_id String
-    customer Customer @relation(fields: [customer_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    currency_id String?
-    currency Currencies? @relation(fields: [currency_id], references: [id], onDelete: SetNull)
-    /// @DtoRelationIncludeId
-    user_id String
-    user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    invoice_number String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    reference_number String?
-    date DateTime
-    due_date DateTime
-    is_recurring Boolean
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    recurring InvoiceRecurring?
-    /// @DtoRelationIncludeId
-    paymentId String?
-    payment PaymentDetails? @relation(fields: [paymentId], references: [id], onDelete: SetNull)
-    /// @DtoApiHidden
-    product InvoiceProducts[]
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    notes String?
-    sub_total Float
-    /// @DtoRelationIncludeId
-    tax_id String?
-    tax Tax? @relation(fields: [tax_id], references: [id], onDelete: SetNull)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    discountPercentage Float?
-    due_amount Float
-    paid_amount Float
-    total Float
-    paid_status paidStatus @default(Unpaid)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    status String? @default("Draft")
-    /// @DtoRelationIncludeId
-    template_id String?
-    template invoiceTemplate? @relation(fields: [template_id], references: [id], onDelete: SetNull)
-    /// @DtoApiHidden
-    Payments Payments[]
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    template_url String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    termsAccepted Boolean @default(false)
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt          DateTime          @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt          DateTime?         @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist            Boolean           @default(true)
+  id                 String            @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  fromStore          Boolean           @default(false)
+  /// @DtoRelationIncludeId
+  customer_id        String
+  customer           Customer          @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  currency_id        String?
+  currency           Currencies?       @relation(fields: [currency_id], references: [id], onDelete: SetNull)
+  /// @DtoRelationIncludeId
+  user_id            String
+  user               User              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  invoice_number     String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reference_number   String?
+  date               DateTime
+  due_date           DateTime
+  is_recurring       Boolean
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  recurring          InvoiceRecurring?
+  /// @DtoRelationIncludeId
+  paymentId          String?
+  payment            PaymentDetails?   @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  /// @DtoApiHidden
+  product            InvoiceProducts[]
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes              String?
+  sub_total          Float
+  /// @DtoRelationIncludeId
+  tax_id             String?
+  tax                Tax?              @relation(fields: [tax_id], references: [id], onDelete: SetNull)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  discountPercentage Float?
+  due_amount         Float
+  paid_amount        Float
+  total              Float
+  paid_status        paidStatus        @default(Unpaid)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  status             String?           @default("Draft")
+  /// @DtoRelationIncludeId
+  template_id        String?
+  template           invoiceTemplate?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+  /// @DtoApiHidden
+  Payments           Payments[]
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  template_url       String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  termsAccepted      Boolean           @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  lastReminderSentAt DateTime?
 }
 
 /// @@allow('read', isExist == true)
@@ -920,40 +923,46 @@ model invoiceTemplate {
 /// @@allow('update', isExist == true)
 /// @@allow('delete', isExist == true)
 model InvoiceSettings {
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    createdAt DateTime @default(now())
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    updatedAt DateTime? @updatedAt()
-    /// @DtoCreateHidden
-    /// @DtoUpdateHidden
-    isExist Boolean @default(true)
-    id String @id() @default(cuid())
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    invoiceHeadingType invoiceHeadingType @default(COMPANY_NAME)
-    /// @DtoRelationIncludeId
-    user_id String
-    user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-    /// @DtoRelationIncludeId
-    invoiceTemplateId String
-    invoiceTemplate invoiceTemplate @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
-    invoicePrefix String
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    autoArchive Boolean @default(false)
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    footer String?
-    /// @DtoCreateOptional
-    /// @DtoUpdateOptional
-    notes String?
-    dueNotice Int
-    overDueNotice Int
-    companyAddressTemplate String
-    customerBillingAddressTemplate String
-    customerShippingAddressTemplate String
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  createdAt                       DateTime           @default(now())
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  updatedAt                       DateTime?          @updatedAt()
+  /// @DtoCreateHidden
+  /// @DtoUpdateHidden
+  isExist                         Boolean            @default(true)
+  id                              String             @id() @default(cuid())
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  invoiceHeadingType              invoiceHeadingType @default(COMPANY_NAME)
+  /// @DtoRelationIncludeId
+  user_id                         String
+  user                            User               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  /// @DtoRelationIncludeId
+  invoiceTemplateId               String
+  invoiceTemplate                 invoiceTemplate    @relation(fields: [invoiceTemplateId], references: [id], onDelete: Cascade)
+  invoicePrefix                   String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  autoArchive                     Boolean            @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  footer                          String?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  notes                           String?
+  dueNotice                       Int
+  overDueNotice                   Int
+  companyAddressTemplate          String
+  customerBillingAddressTemplate  String
+  customerShippingAddressTemplate String
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  enableReminder                  Boolean            @default(false)
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  reminderInterval                Int                @default(0)
 
     @@unique([user_id, id])
 }

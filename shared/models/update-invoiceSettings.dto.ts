@@ -92,4 +92,21 @@ export class UpdateInvoiceSettingsDto {
   @IsOptional()
   @IsString()
   customerShippingAddressTemplate?: string;
+  @ApiProperty({
+    type: 'boolean',
+    default: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  enableReminder?: boolean;
+  @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    default: 0,
+    required: false,
+  })
+  @IsOptional()
+  @IsInt()
+  reminderInterval?: number;
 }
