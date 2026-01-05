@@ -20,6 +20,7 @@ import { UserPlans } from './userPlans.entity';
 import { Vendors } from './vendors.entity';
 import { Expenses } from './expenses.entity';
 import { Coupons } from './coupons.entity';
+import { Inventory } from './inventory.entity';
 
 export class User {
   @ApiProperty({
@@ -134,4 +135,6 @@ export class User {
   Expenses?: Expenses[];
   @ApiHideProperty()
   Coupons?: Coupons[];
+  @ApiHideProperty()
+  Inventory?: Inventory[];
 }
