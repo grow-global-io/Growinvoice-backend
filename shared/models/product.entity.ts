@@ -7,6 +7,7 @@ import { InvoiceProducts } from './invoiceProducts.entity';
 import { QuotationProducts } from './quotationProducts.entity';
 import { TaxForProduct } from './taxForProduct.entity';
 import { ProductPriceBook } from './productPriceBook.entity';
+import { Inventory } from './inventory.entity';
 
 export class Product {
   @ApiProperty({
@@ -87,4 +88,6 @@ export class Product {
   tax?: TaxForProduct[];
   @ApiHideProperty()
   priceBook?: ProductPriceBook[];
+  @ApiHideProperty()
+  inventory?: Inventory | null;
 }

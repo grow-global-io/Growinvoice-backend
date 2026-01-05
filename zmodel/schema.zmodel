@@ -167,6 +167,7 @@ model User extends Base {
     Vendors           Vendors[]           @DtoApiHidden
     Expenses          Expenses[]          @DtoApiHidden
     Coupons           Coupons[]           @DtoApiHidden
+    Inventory         Inventory[]         @DtoApiHidden
 }
 
 model Company extends Base {
@@ -240,6 +241,18 @@ model Product extends Base {
     Quatation    QuotationProducts[] @DtoApiHidden
     tax          TaxForProduct[]     @DtoApiHidden
     priceBook    ProductPriceBook[]  @DtoApiHidden
+    inventory    Inventory?          @DtoApiHidden
+}
+
+model Inventory extends Base {
+    id                String   @id @default(cuid())
+    product_id        String   @unique @DtoRelationIncludeId
+    product           Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+    quantity          Int      @default(0)
+    lowStockThreshold Int      @default(10)
+    lastUpdated       DateTime @default(now()) @updatedAt
+    user_id           String   @DtoRelationIncludeId
+    user              User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model ProductPriceBook extends Base {
