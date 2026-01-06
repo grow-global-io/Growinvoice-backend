@@ -34,6 +34,12 @@ export class ProductPriceBookDto {
     format: 'float',
     nullable: true,
   })
+  sellPrice: number | null;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
+    nullable: true,
+  })
   shippingCharges: number | null;
   @ApiProperty({
     type: 'string',
