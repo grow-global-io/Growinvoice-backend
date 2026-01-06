@@ -12,6 +12,15 @@ export class CreateProductPriceBookDto {
   @ApiProperty({
     type: 'number',
     format: 'float',
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsNumber()
+  sellPrice?: number | null;
+  @ApiProperty({
+    type: 'number',
+    format: 'float',
     default: 0,
     required: false,
     nullable: true,

@@ -260,6 +260,7 @@ model ProductPriceBook extends Base {
     product_id      String     @DtoCreateHidden @DtoUpdateHidden @DtoRelationIncludeId
     product         Product    @relation(fields: [product_id], references: [id], onDelete: Cascade)
     price           Float
+    sellPrice       Float?     @DtoCreateOptional @DtoUpdateOptional
     shippingCharges Float?     @default(0)
     currency_id     String     @DtoRelationIncludeId
     currency        Currencies @relation(fields: [currency_id], references: [id], onDelete: Cascade)
