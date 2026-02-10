@@ -1414,11 +1414,15 @@ model VendorsBillingAddress {
     address String
     city String
     /// @DtoRelationIncludeId
-    state_id String
-    state State @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    /// @DtoCreateOptional
+    /// @DtoUpdateOptional
+    state_id String?
+    state State? @relation(fields: [state_id], references: [id], onDelete: SetNull)
     /// @DtoRelationIncludeId
-    country_id String
-    country Country @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    /// @DtoCreateOptional
+    /// @DtoUpdateOptional
+    country_id String?
+    country Country? @relation(fields: [country_id], references: [id], onDelete: SetNull)
     zip String
     /// @DtoApiHidden
     vendor Vendors[]

@@ -30,12 +30,14 @@ export class VendorsBillingAddressDto {
   city: string;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  state_id: string;
+  state_id: string | null;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  country_id: string;
+  country_id: string | null;
   @ApiProperty({
     type: 'string',
   })

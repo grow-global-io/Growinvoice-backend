@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateVendorsBillingAddressDto {
   @ApiProperty({
@@ -16,16 +16,20 @@ export class CreateVendorsBillingAddressDto {
   city: string;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  state_id: string;
+  state_id?: string | null;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  country_id: string;
+  country_id?: string | null;
   @ApiProperty({
     type: 'string',
   })

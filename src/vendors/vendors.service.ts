@@ -11,7 +11,7 @@ import { UpdateVendorsWithAddressDto } from './dto/update-vendor-with-address.dt
 @Injectable()
 export class VendorsService {
   constructor(private prismaService: PrismaService) {}
-  async create(createVendorDto: CreateVendorsWithAddressDto) {
+  async create(createVendorDto: CreateVendorsWithAddressDto, userId: string) {
     const vendor = await this.prismaService.vendors.create({
       data: {
         display_name: createVendorDto.display_name,
@@ -20,7 +20,7 @@ export class VendorsService {
         phone: createVendorDto.phone,
         user: {
           connect: {
-            id: createVendorDto.user_id,
+            id: userId,
           },
         },
         website: createVendorDto.website,
