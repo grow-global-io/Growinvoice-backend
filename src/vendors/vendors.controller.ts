@@ -25,8 +25,10 @@ export class VendorsController {
   @ApiSuccessResponse(VendorsDto)
   async create(
     @Body() createVendorDto: CreateVendorsWithAddressDto,
+    @GetUser() user: User,
   ): Promise<SuccessResponseDto<VendorsDto>> {
-    const vendor = await this.vendorsService.create(createVendorDto);
+    // Always use authenticated user's id for multi-tenancy consistency
+    const vendor = await this.vendorsService.create(createVendorDto, user.sub);
     return {
       result: vendor,
       message: 'Vendor created successfully',

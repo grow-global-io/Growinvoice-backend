@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { RequestLoggerMiddleware } from '@shared/middleware/logger.middleware';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { json, urlencoded } from 'express';
 import { join } from 'path';
 import * as compression from 'compression';
 import { initializeApp } from '@firebase/app';
@@ -14,7 +15,12 @@ import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const logger = new Logger('Main');
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false, // use custom limits below
+  });
+  // Increase body size limit (default ~100kb) to allow larger payloads e.g. OpenAI chat
+  app.use(json({ limit: '10mb' }));
+  app.use(urlencoded({ extended: true, limit: '10mb' }));
   app.use(compression());
   const reflector = app.get(Reflector);
   app.useGlobalGuards(new JwtAuthGuard(reflector, app.get(ClsService)));

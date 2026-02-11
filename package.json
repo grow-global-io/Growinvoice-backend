@@ -10,6 +10,7 @@
     "output": "shared/models"
   },
   "scripts": {
+    "postinstall": "node -e \"const fs=require('fs');const p='node_modules/@zenstackhq/runtime/.zenstack';if(fs.existsSync('node_modules/.zenstack')&&!fs.existsSync(p)){try{fs.symlinkSync('../../.zenstack',p);}catch(e){}}\"",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"shared/**/*.ts\"",
@@ -18,7 +19,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "pm2 start dist/src/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "generate": "rimraf shared/models && zenstack generate --schema zmodel/schema.zmodel",
+    "generate": "rimraf shared/models && zenstack generate --schema zmodel/schema.zmodel && node -e \"const fs=require('fs');const p='node_modules/@zenstackhq/runtime/.zenstack';if(fs.existsSync('node_modules/.zenstack')&&!fs.existsSync(p)){try{fs.symlinkSync('../../.zenstack',p);}catch(e){}}\"",
     "make:migration": "zenstack format && yarn run generate && yarn run migrate",
     "migrate": "prisma format && npx prisma generate && prisma migrate deploy",
     "seed": "ts-node prisma/seeder/seeder.ts"

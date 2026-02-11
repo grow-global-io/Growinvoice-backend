@@ -661,10 +661,10 @@ model VendorsBillingAddress extends Base {
     id         String    @id @default(cuid())
     address    String
     city       String
-    state_id   String    @DtoRelationIncludeId
-    state      State     @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    country_id String    @DtoRelationIncludeId
-    country    Country   @relation(fields: [country_id], references: [id], onDelete: Cascade)
+    state_id   String?   @DtoRelationIncludeId @DtoCreateOptional @DtoUpdateOptional
+    state      State?    @relation(fields: [state_id], references: [id], onDelete: SetNull)
+    country_id String?   @DtoRelationIncludeId @DtoCreateOptional @DtoUpdateOptional
+    country    Country?  @relation(fields: [country_id], references: [id], onDelete: SetNull)
     zip        String
     vendor     Vendors[] @DtoApiHidden
 }
