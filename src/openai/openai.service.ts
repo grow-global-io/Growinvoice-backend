@@ -13,6 +13,33 @@ import { camelCaseToNormalString, chartData } from '@shared/utils/constants';
 import { DashboardsService } from '@/dashboards/dashboards.service';
 import OpenAI from 'openai';
 
+export interface ExtractInvoiceResponse {
+  customer: {
+    name: string;
+    email: string | null;
+    phone: string | null;
+    address: string | null;
+    city: string | null;
+    state: string | null;
+    zip: string | null;
+    country_name: string | null;
+  };
+  invoice_number: string | null;
+  date: string | null;
+  due_date: string | null;
+  line_items: Array<{
+    description: string;
+    quantity: number;
+    unit_price: number;
+    total: number;
+  }>;
+  subtotal: number | null;
+  total: number | null;
+  tax_amount: number | null;
+  currency_code: string | null;
+  notes: string | null;
+}
+
 @Injectable()
 export class OpenaiService {
   private genAI: GoogleGenerativeAI;
@@ -274,6 +301,190 @@ export class OpenaiService {
   //   }
   //   return text;
   // }
+
+  /**
+   * Proxy chat endpoint for Your AI. Builds messages, optionally attaches images
+   * to the last user message, and returns OpenAI reply.
+   */
+  async chat(
+    messages: Array<{ role: string; content: string }>,
+    imageBase64?: string[],
+  ): Promise<{ content: string }> {
+    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+    if (!apiKey) {
+      throw new Error('OPENAI_API_KEY is not configured on the server.');
+    }
+
+    const openaiMessages: OpenAI.ChatCompletionMessageParam[] = [];
+
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      const isLastUserMessage =
+        msg.role === 'user' && i === messages.length - 1 && imageBase64?.length;
+
+      if (isLastUserMessage) {
+        const parts: Array<
+          | { type: 'text'; text: string }
+          | { type: 'image_url'; image_url: { url: string } }
+        > = [
+          {
+            type: 'text',
+            text: msg.content || 'What do you see in these images?',
+          },
+        ];
+        for (const b64 of imageBase64) {
+          const mime = b64.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
+          parts.push({
+            type: 'image_url',
+            image_url: { url: `data:${mime};base64,${b64}` },
+          });
+        }
+        openaiMessages.push({ role: 'user', content: parts });
+      } else {
+        openaiMessages.push({
+          role: msg.role as 'user' | 'assistant' | 'system',
+          content: msg.content,
+        });
+      }
+    }
+
+    const completion = await this.openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: openaiMessages,
+      max_tokens: 1024,
+    });
+
+    const content = completion.choices[0]?.message?.content ?? '';
+    return { content };
+  }
+
+  private readonly EXTRACT_INVOICE_SYSTEM_PROMPT = `You are an invoice data extractor. Given an image of an invoice or receipt, extract structured data as a single JSON object.
+Return ONLY valid JSON, no markdown or explanation. Use this exact structure:
+{
+  "bill_to": {
+    "name": "string (required - the customer/recipient the invoice is TO, i.e. Bill To)",
+    "email": "string or null",
+    "phone": "string or null",
+    "address": "string or null",
+    "city": "string or null",
+    "state": "string or null",
+    "zip": "string or null",
+    "country_name": "string or null"
+  },
+  "from": {
+    "name": "string or null (the seller/issuer - Bill From; do not use for customer)"
+  },
+  "invoice_number": "string or null",
+  "date": "YYYY-MM-DD or null",
+  "due_date": "YYYY-MM-DD or null",
+  "line_items": [
+    { "description": "string", "quantity": number, "unit_price": number, "total": number }
+  ],
+  "subtotal": number or null,
+  "total": number or null,
+  "tax_amount": number or null,
+  "currency_code": "string or null (e.g. USD, EUR)",
+  "notes": "string or null (any notes or terms from the invoice)"
+}
+IMPORTANT: bill_to = the party receiving the invoice (customer we will create). from = the seller/issuer (do not use for customer). If the invoice only has one party, put the recipient in bill_to. For line_items, extract every item/row. Ensure totals and amounts are numbers.`;
+
+  /**
+   * Extract invoice/receipt data from images. Returns structured data for
+   * pre-filling invoice/expense forms.
+   */
+  async extractInvoice(imageBase64: string[]): Promise<ExtractInvoiceResponse> {
+    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+    if (!apiKey) {
+      throw new Error('OPENAI_API_KEY is not configured on the server.');
+    }
+
+    const content: Array<
+      | { type: 'text'; text: string }
+      | { type: 'image_url'; image_url: { url: string } }
+    > = [
+      {
+        type: 'text',
+        text: 'Extract all invoice data from this image. Return only the JSON object.',
+      },
+    ];
+    for (const b64 of imageBase64) {
+      const mime = b64.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
+      content.push({
+        type: 'image_url',
+        image_url: { url: `data:${mime};base64,${b64}` },
+      });
+    }
+
+    const completion = await this.openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: this.EXTRACT_INVOICE_SYSTEM_PROMPT },
+        { role: 'user', content },
+      ],
+      max_tokens: 2048,
+      response_format: { type: 'json_object' },
+    });
+
+    const raw = completion.choices[0]?.message?.content ?? '';
+    let parsed: Record<string, unknown>;
+    try {
+      parsed = JSON.parse(raw) as Record<string, unknown>;
+    } catch {
+      throw new Error('AI did not return valid JSON. Please try again.');
+    }
+
+    return this.mapExtractionToResponse(parsed);
+  }
+
+  private mapExtractionToResponse(
+    obj: Record<string, unknown>,
+  ): ExtractInvoiceResponse {
+    const billTo = obj.bill_to as Record<string, unknown> | undefined;
+    const legacyCustomer = obj.customer as Record<string, unknown> | undefined;
+    const cust = billTo ?? legacyCustomer ?? {};
+
+    const customer = {
+      name: typeof cust.name === 'string' ? cust.name : 'Imported Customer',
+      email: typeof cust.email === 'string' ? cust.email : null,
+      phone: typeof cust.phone === 'string' ? cust.phone : null,
+      address: typeof cust.address === 'string' ? cust.address : null,
+      city: typeof cust.city === 'string' ? cust.city : null,
+      state: typeof cust.state === 'string' ? cust.state : null,
+      zip: typeof cust.zip === 'string' ? cust.zip : null,
+      country_name:
+        typeof cust.country_name === 'string' ? cust.country_name : null,
+    };
+
+    const rawLineItems = Array.isArray(obj.line_items) ? obj.line_items : [];
+    const line_items = rawLineItems.map((item: unknown) => {
+      const i = item as Record<string, unknown>;
+      const desc = typeof i.description === 'string' ? i.description : 'Item';
+      const qty = typeof i.quantity === 'number' ? i.quantity : 1;
+      const up = typeof i.unit_price === 'number' ? i.unit_price : 0;
+      const tot = typeof i.total === 'number' ? i.total : up * qty;
+      return {
+        description: desc,
+        quantity: qty,
+        unit_price: up,
+        total: tot,
+      };
+    });
+
+    return {
+      customer,
+      invoice_number:
+        typeof obj.invoice_number === 'string' ? obj.invoice_number : null,
+      date: typeof obj.date === 'string' ? obj.date : null,
+      due_date: typeof obj.due_date === 'string' ? obj.due_date : null,
+      line_items,
+      subtotal: typeof obj.subtotal === 'number' ? obj.subtotal : null,
+      total: typeof obj.total === 'number' ? obj.total : null,
+      tax_amount: typeof obj.tax_amount === 'number' ? obj.tax_amount : null,
+      currency_code:
+        typeof obj.currency_code === 'string' ? obj.currency_code : null,
+      notes: typeof obj.notes === 'string' ? obj.notes : null,
+    };
+  }
 
   async getChatWithOpenAIForDashboard(dashboard_id: string) {
     const dashboardData = await this.dashboardService.findOne(dashboard_id);

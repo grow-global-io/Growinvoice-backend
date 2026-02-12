@@ -17,7 +17,6 @@ export class NotificationsGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connection', (socket) => {
-
       socket.on('authenticate', (userId: string) => {
         if (userId) {
           socket.join(userId);
