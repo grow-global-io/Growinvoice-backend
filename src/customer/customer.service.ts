@@ -35,7 +35,8 @@ export class CustomerService {
       },
     });
     if (customerExists) {
-      throw new BadRequestException('Customer with this email already exists');
+      // Return existing customer instead of throwing error to support "Get or Create" flow
+      return customerExists;
     }
     await this.sharedService.checkCustomerQuota(createCustomerDto.user_id);
     const { billingDetails, shippingDetails, ...customerDetails } =
