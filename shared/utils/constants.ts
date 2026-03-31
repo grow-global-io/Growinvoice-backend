@@ -2,11 +2,16 @@ import axios from 'axios';
 
 export const convertLogoToBase64 = async (logo: string) => {
   if (logo) {
-    const image = await axios.get(logo, {
-      responseType: 'arraybuffer',
-    });
-    const base64Image = Buffer.from(image.data, 'binary').toString('base64');
-    return `data:image/webp;base64,${base64Image}`;
+    try {
+      const image = await axios.get(logo, {
+        responseType: 'arraybuffer',
+      });
+      const base64Image = Buffer.from(image.data, 'binary').toString('base64');
+      return `data:image/webp;base64,${base64Image}`;
+    } catch (error) {
+      console.error(`Error converting logo to base64 for URL: ${logo}`, error);
+      return logo;
+    }
   }
   return logo;
 };
