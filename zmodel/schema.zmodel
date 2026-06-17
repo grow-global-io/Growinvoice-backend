@@ -231,6 +231,7 @@ model Product extends Base {
     description  String?
     type         ProductType
     includeStore Boolean             @default(false) @DtoCreateOptional @DtoUpdateOptional
+    includeQsr   Boolean             @default(false) @DtoCreateOptional @DtoUpdateOptional
     unit_id      String              @DtoRelationIncludeId
     unit         ProductUnit         @relation(fields: [unit_id], references: [id], onDelete: Cascade)
     hsnCode_id   String?             @DtoRelationIncludeId @DtoCreateOptional @DtoUpdateOptional

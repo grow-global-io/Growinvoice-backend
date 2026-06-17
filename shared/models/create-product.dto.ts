@@ -44,6 +44,13 @@ export class CreateProductDto {
   @IsBoolean()
   includeStore?: boolean;
   @ApiProperty({
+    type: 'boolean',
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  includeQsr?: boolean;
+  @ApiProperty({
     type: 'string',
   })
   @IsNotEmpty()

@@ -1,149 +1,94 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en" id="html_content">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Receipt</title>
     <style>
-      /* print style to portait */
+      *, *:before, *:after {
+        box-sizing: border-box;
+      }
       @media print {
         @page {
-          size: auto;
+          size: 58mm 120mm;
           margin: 0;
-        }
-        body {
-          margin: 0;
-          padding: 0;
-          font-size: 12px;
-        }
-        #html_content {
-          width: 100%;
-          height: 100%;
-        }
-        .receipt-box {
-          width: 100%;
-          max-width: 100%;
-          margin: 0;
-          padding: 0;
-          border: none;
-          box-shadow: none;
-        }
-        .receipt-box .header {
-          margin-bottom: 10px;
-        }
-        .receipt-box .header .logo {
-          width: 50px;
-          height: 50px;
-          line-height: 50px;
-          font-size: 40px;
-        }
-        .receipt-box .header h2 {
-          font-size: 18px;
-        }
-        .receipt-box .header h3 {
-          font-size: 16px;
-        }
-        .receipt-box .header p {
-          font-size: 12px;
-        }
-        .receipt-box .invoice-title {
-          font-size: 16px;
-          margin-bottom: 10px;
-        }
-        .receipt-box table {
-          width: 100%;
-          font-size: 12px;
-        }
-        .receipt-box table td {
-          padding: 2px;
-        }
-        .receipt-box .items-table th {
-          font-size: 12px;
-        }
-        .receipt-box .items-table td {
-          font-size: 12px;
-          padding: 4px 2px;
-        }
-        .receipt-box .totals-table td {
-          font-size: 12px;
-          padding: 2px 2px;
-        }
-        .receipt-box .totals-table tr.final-total td {
-          font-size: 14px;
-          padding: 4px 2px;
-        }
-        .receipt-box .footer {
-          font-size: 12px;
-          margin-top: 10px;
-        }
-        /* print layout = portrait */
-        @page {
-          size: portrait;
         }
       }
-      body {
+      
+      /* Unified styles for both screen and print */
+      html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
         font-family: Arial, sans-serif;
         color: #000;
         background: #fff;
-        line-height: 1.5em;
-        margin: 0;
-        padding: 0;
+        line-height: 1.4em;
+        font-size: 10px;
       }
+      
       .receipt-box {
-        /* MODIFICATION: Set a max-width suitable for 80mm thermal printers */
+        width: 100%;
         max-width: 300px;
-        margin: auto;
-        /* MODIFICATION: Adjust padding and font size for the smaller format */
-        padding: 10px;
-        border: 1px solid #ccc;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
-        font-size: 12px;
+        margin: 0 auto;
+        padding: 2mm 6mm;
       }
+      
+      /* Add border and shadow ONLY in screen preview */
+      @media screen {
+        .receipt-box {
+          border: 1px solid #ccc;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+        }
+      }
+      
       .header {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 5px;
       }
       .header .logo {
-        font-size: 40px;
+        font-size: 30px;
         font-weight: bold;
-        background-color: #f0e6d2; /* A beige-like color from the image */
+        background-color: #f0e6d2; /* Beige color for logo */
         color: #000;
         display: inline-block;
-        width: 50px;
-        height: 50px;
-        line-height: 50px;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
         margin-bottom: 10px;
       }
       .header h2 {
         margin: 0;
-        font-size: 18px;
+        font-size: 12px;
         font-weight: bold;
       }
       .header h3 {
         margin: 5px 0;
-        font-size: 16px;
+        font-size: 10px;
         font-weight: normal;
       }
       .header p {
-        margin: 2px 0;
-        font-size: 12px;
+        margin: 1px 0;
+        font-size: 9px;
       }
       .invoice-title {
         text-align: center;
         font-weight: bold;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
         border-top: 1px dashed #000;
         border-bottom: 1px dashed #000;
-        padding: 5px 0;
+        padding: 2px 0;
+        font-size: 11px;
       }
       .receipt-box table {
         width: 100%;
         line-height: inherit;
         text-align: left;
         border-collapse: collapse;
+        font-size: 9px;
       }
       .receipt-box table td {
-        padding: 5px;
+        padding: 1px;
         vertical-align: top;
       }
       .info-table td {
@@ -155,31 +100,40 @@
         border-bottom: 1px solid #000;
         font-weight: bold;
         text-align: left;
-        padding: 5px;
+        padding: 3px 1px;
+        font-size: 9px;
       }
-      /* MODIFICATION: Remove default border from item rows */
       .items-table td {
         border-bottom: none;
-        padding: 8px 5px;
+        padding: 3px 1px;
+        font-size: 9px;
       }
       .items-table .item.last td {
         border-bottom: none;
       }
+      .receipt-box .items-table .item-details td {
+        font-size: 8px !important;
+        border-bottom: 1px dashed #ccc !important;
+        padding-top: 0;
+      }
       .totals-table td {
-        padding: 2px 5px;
+        padding: 1px 1px;
+        font-size: 9px;
       }
       .totals-table tr.final-total td {
         border-top: 1px solid #000;
         border-bottom: 1px solid #000;
         font-weight: bold;
-        padding: 8px 5px;
+        padding: 3px 1px;
+        font-size: 11px;
       }
       .text-right {
-        text-align: right;
+        text-align: right !important;
       }
       .footer {
-        margin-top: 20px;
+        margin-top: 5px;
         text-transform: uppercase;
+        font-size: 9px;
       }
     </style>
   </head>
@@ -235,6 +189,36 @@
         </tbody>
       </table>
 
+      <% 
+        let calculatedTaxAmount = 0;
+        let taxPercentageString = '';
+        if (invoice?.tax) {
+          calculatedTaxAmount = ((invoice.tax.percentage ?? 0) / 100) * invoice.sub_total;
+          taxPercentageString = `${invoice.tax.percentage}%`;
+        } else {
+          // Sum up the tax from each product
+          invoice?.product?.forEach(item => {
+            const itemTaxPercent = item?.product?.tax?.percentage || 0;
+            const itemTotalBeforeTax = item.total || 0;
+            calculatedTaxAmount += (itemTotalBeforeTax * itemTaxPercent) / 100;
+          });
+          
+          const taxRates = new Set();
+          invoice?.product?.forEach(item => {
+            if (item?.product?.tax?.percentage !== undefined && item?.product?.tax?.percentage !== null) {
+              taxRates.add(item.product.tax.percentage);
+            }
+          });
+          if (taxRates.size === 1) {
+            taxPercentageString = `${Array.from(taxRates)[0]}%`;
+          } else if (taxRates.size > 1) {
+            taxPercentageString = 'Mixed';
+          } else {
+            taxPercentageString = '0%';
+          }
+        }
+      %>
+
       <table class="totals-table" style="margin-top: 15px;">
         <tr>
           <td><%= t('translation.invoice.template.subtotal') %></td>
@@ -242,15 +226,15 @@
             <%= invoice?.sub_total %></td>
         </tr>
         <tr>
-          <td><%= t('translation.invoice.template.tax') %> <span class="tm_ternary_color">(<%= invoice?.tax?.percentage ?? 0 %>%)</span></td>
+          <td><%= t('translation.invoice.template.tax') %> <span class="tm_ternary_color">(<%= taxPercentageString %>)</span></td>
           <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
-            <%= ((invoice?.tax?.percentage ?? 0 / 100) * invoice?.sub_total).toFixed(2) %></td>
+            <%= calculatedTaxAmount.toFixed(2) %></td>
         </tr>
         <tr>
           <td><%= t('translation.invoice.template.taxDiscount') %> <span class="tm_ternary_color">(<%=
             invoice?.discountPercentage %>%)</span></td>
           <td class="text-right"> <%= invoice?.product[0]?.product?.currency?.symbol %>
-            <%= ((invoice?.discountPercentage ?? 0 / 100) * invoice?.sub_total).toFixed(2) %></td>
+            <%= (((invoice?.discountPercentage ?? 0) / 100) * invoice?.sub_total).toFixed(2) %></td>
         </tr>
         <tr class="final-total">
           <td><%= t('translation.invoice.template.netBillAmount') %></td>
@@ -263,5 +247,38 @@
         <p><%= invoice?.notes ?? t('translation.invoice.template.thankYouMessage') %></p>
       </div>
     </div>
+
+    <script>
+      (function() {
+        function adjustPageHeight() {
+          const receipt = document.getElementById('tm_download_section');
+          if (receipt) {
+            const heightPx = receipt.offsetHeight;
+            // Convert pixels to millimeters (1px = 25.4/96 mm = ~0.264583 mm)
+            const computedHeight = Math.ceil(heightPx * 0.264583) + 12; // 12mm safety padding/margin buffer
+            const minHeight = 90; // Enforce a sensible minimum height
+            const heightMm = Math.max(minHeight, computedHeight);
+            
+            // Look for existing dynamic style tag or create a new one
+            let style = document.getElementById('dynamic-page-size');
+            if (!style) {
+              style = document.createElement('style');
+              style.id = 'dynamic-page-size';
+              document.head.appendChild(style);
+            }
+            style.innerHTML = '@media print { @page { size: 58mm ' + heightMm + 'mm; margin: 0; } }';
+          }
+        }
+
+        // Run immediately when parsed
+        adjustPageHeight();
+
+        // Run when DOM structure is ready
+        document.addEventListener('DOMContentLoaded', adjustPageHeight);
+
+        // Run when images and external assets are loaded
+        window.addEventListener('load', adjustPageHeight);
+      })();
+    </script>
   </body>
 </html>

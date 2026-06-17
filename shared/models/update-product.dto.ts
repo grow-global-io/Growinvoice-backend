@@ -42,6 +42,14 @@ export class UpdateProductDto {
   @IsBoolean()
   includeStore?: boolean;
   @ApiProperty({
+    type: 'boolean',
+    default: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  includeQsr?: boolean;
+  @ApiProperty({
     type: 'string',
     required: false,
   })

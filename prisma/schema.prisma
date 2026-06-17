@@ -419,6 +419,9 @@ model Product {
     /// @DtoCreateOptional
     /// @DtoUpdateOptional
     includeStore Boolean @default(false)
+    /// @DtoCreateOptional
+    /// @DtoUpdateOptional
+    includeQsr Boolean @default(false)
     /// @DtoRelationIncludeId
     unit_id String
     unit ProductUnit @relation(fields: [unit_id], references: [id], onDelete: Cascade)

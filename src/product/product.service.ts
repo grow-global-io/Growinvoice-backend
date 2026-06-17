@@ -136,44 +136,79 @@ export class ProductService {
   async update(id: string, updateProductDto: UpdateProductWithTaxDto) {
     const { tax, priceBook, ...updateData } = updateProductDto;
 
-    // Build update data object
-    const dataToUpdate: any = {
-      ...updateData,
-    };
+    const maxRetries = 3;
+    let lastError: any;
 
-    // Only update user_id if provided
-    if (updateProductDto.user_id) {
-      dataToUpdate.user_id = updateProductDto.user_id;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // Delete existing associations first to avoid ZenStack nested transaction conflict
+        if (tax !== undefined) {
+          await this.prismaService.taxForProduct.deleteMany({
+            where: { product_id: id },
+          });
+        }
+
+        if (priceBook !== undefined) {
+          await this.prismaService.productPriceBook.deleteMany({
+            where: { product_id: id },
+          });
+        }
+
+        // Build update data object
+        const dataToUpdate: any = {
+          ...updateData,
+        };
+
+        // Only update user_id if provided
+        if (updateProductDto.user_id) {
+          dataToUpdate.user_id = updateProductDto.user_id;
+        }
+
+        // Handle tax associations
+        if (tax !== undefined) {
+          dataToUpdate.tax = {
+            createMany: {
+              data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
+            },
+          };
+        }
+
+        // Handle priceBook associations
+        if (priceBook !== undefined) {
+          dataToUpdate.priceBook = {
+            createMany: {
+              data:
+                priceBook?.map((price) => ({
+                  ...price,
+                })) || [],
+            },
+          };
+        }
+
+        const product = await this.prismaService.product.update({
+          where: { id },
+          data: dataToUpdate,
+        });
+
+        return plainToInstance(ProductWithAllDataDto, product);
+      } catch (error: any) {
+        lastError = error;
+        const isTransactionError =
+          error?.message?.includes('Transaction') ||
+          error?.message?.includes('transaction') ||
+          error?.code === 'P2034' ||
+          error?.message?.includes('Transaction already closed');
+
+        if (isTransactionError && attempt < maxRetries) {
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          continue;
+        }
+        throw error;
+      }
     }
 
-    // Handle tax associations
-    if (tax !== undefined) {
-      dataToUpdate.tax = {
-        deleteMany: {}, // Remove all existing tax associations
-        createMany: {
-          data: tax?.map((taxId) => ({ tax_id: taxId })) || [],
-        },
-      };
-    }
-
-    // Handle priceBook associations
-    if (priceBook !== undefined) {
-      dataToUpdate.priceBook = {
-        deleteMany: {}, // Remove all existing priceBook associations
-        createMany: {
-          data:
-            priceBook?.map((price) => ({
-              ...price,
-            })) || [],
-        },
-      };
-    }
-
-    const product = await this.prismaService.product.update({
-      where: { id },
-      data: dataToUpdate,
-    });
-    return plainToInstance(ProductWithAllDataDto, product);
+    throw lastError;
   }
 
   async remove(id: string) {

@@ -794,10 +794,13 @@ export class InvoiceService {
         timeout: 15000,
       });
 
+      // Emulate print media
+      await page.emulateMediaType('print');
+
       // Wait a short time for any remaining content to render
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const pdfBuffer = await page.pdf({
+      let pdfOptions: puppeteer.PDFOptions = {
         format: 'A4',
         printBackground: true,
         margin: {
@@ -809,7 +812,25 @@ export class InvoiceService {
         preferCSSPageSize: false,
         displayHeaderFooter: false,
         scale: 0.8,
-      });
+      };
+
+      if (invoice?.template?.view === 'template9') {
+        pdfOptions = {
+          width: '58mm',
+          height: '210mm',
+          printBackground: true,
+          margin: {
+            top: '0mm',
+            bottom: '0mm',
+            left: '0mm',
+            right: '0mm',
+          },
+          preferCSSPageSize: true,
+          displayHeaderFooter: false,
+        };
+      }
+
+      const pdfBuffer = await page.pdf(pdfOptions);
 
       await browser.close();
       return pdfBuffer;
@@ -895,11 +916,14 @@ export class InvoiceService {
         timeout: 15000,
       });
 
+      // Emulate print media
+      await page.emulateMediaType('print');
+
       // Wait a short time for any remaining content to render
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Generate PDF with lower quality for smaller file size and faster generation
-      const pdfBuffer = await page.pdf({
+      // Generate PDF
+      let pdfOptions: puppeteer.PDFOptions = {
         format: 'A4',
         printBackground: true,
         margin: {
@@ -908,12 +932,28 @@ export class InvoiceService {
           left: 0,
           right: 0,
         },
-        // Optimize for speed and smaller file size
         preferCSSPageSize: false,
         displayHeaderFooter: false,
-        // Lower quality for faster generation and smaller files
-        scale: 0.8, // Reduce scale for smaller file size
-      });
+        scale: 0.8,
+      };
+
+      if (invoice?.template?.view === 'template9') {
+        pdfOptions = {
+          width: '58mm',
+          height: '210mm',
+          printBackground: true,
+          margin: {
+            top: '0mm',
+            bottom: '0mm',
+            left: '0mm',
+            right: '0mm',
+          },
+          preferCSSPageSize: true,
+          displayHeaderFooter: false,
+        };
+      }
+
+      const pdfBuffer = await page.pdf(pdfOptions);
 
       await browser.close();
       return pdfBuffer;
