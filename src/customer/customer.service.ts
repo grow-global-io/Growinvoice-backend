@@ -28,15 +28,17 @@ export class CustomerService {
   ) {}
 
   async create(createCustomerDto: CreateCustomerWithAddressDto) {
-    const customerExists = await this.prismaServie.customer.findFirst({
-      where: {
-        email: createCustomerDto.email,
-        user_id: createCustomerDto.user_id,
-      },
-    });
-    if (customerExists) {
-      // Return existing customer instead of throwing error to support "Get or Create" flow
-      return customerExists;
+    if (createCustomerDto.email && createCustomerDto.email.trim() !== '') {
+      const customerExists = await this.prismaServie.customer.findFirst({
+        where: {
+          email: createCustomerDto.email,
+          user_id: createCustomerDto.user_id,
+        },
+      });
+      if (customerExists) {
+        // Return existing customer instead of throwing error to support "Get or Create" flow
+        return customerExists;
+      }
     }
     await this.sharedService.checkCustomerQuota(createCustomerDto.user_id);
     const { billingDetails, shippingDetails, ...customerDetails } =
@@ -76,18 +78,20 @@ export class CustomerService {
       display_name: customerDetails.display_name,
       email: customerDetails.email,
       phone: customerDetails.phone,
-      website: customerDetails.website,
-      currencies: {
-        connect: {
-          id: customerDetails.currencies_id,
-        },
-      },
       user: {
         connect: {
           id: customerDetails.user_id,
         },
       },
     };
+
+    if (customerDetails.currencies_id) {
+      customerData.currencies = {
+        connect: {
+          id: customerDetails.currencies_id,
+        },
+      };
+    }
 
     // Only create billing address if it has meaningful data
     if (hasAddressData(billingDetails)) {
@@ -230,18 +234,20 @@ export class CustomerService {
       display_name: customerDetails.display_name,
       email: customerDetails.email,
       phone: customerDetails.phone,
-      website: customerDetails.website,
-      currencies: {
-        connect: {
-          id: customerDetails.currencies_id,
-        },
-      },
       user: {
         connect: {
           id: customerDetails.user_id,
         },
       },
     };
+
+    if (customerDetails.currencies_id) {
+      customerData.currencies = {
+        connect: {
+          id: customerDetails.currencies_id,
+        },
+      };
+    }
 
     // Handle billing address
     if (hasAddressData(billingDetails)) {
