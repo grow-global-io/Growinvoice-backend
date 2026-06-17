@@ -52,6 +52,10 @@ export class Product {
   })
   includeStore: boolean;
   @ApiProperty({
+    type: 'boolean',
+  })
+  includeQsr: boolean;
+  @ApiProperty({
     type: 'string',
   })
   unit_id: string;

@@ -2,6 +2,7 @@ import { Body, Controller, Post, ForbiddenException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { MailService } from './mail.service';
 import { SendMailDto } from './dto/send-mail.dto';
+import { SendPromotionalMailDto } from './dto/send-promotional-mail.dto';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 
@@ -23,7 +24,7 @@ export class MailController {
   @ApiSuccessResponse()
   async sendPromotionalMail(
     @Body()
-    dto: import('./dto/send-promotional-mail.dto').SendPromotionalMailDto,
+    dto: SendPromotionalMailDto,
     @GetUser() user: User,
   ) {
     if (user.email !== 'admin@growinvoice.com') {

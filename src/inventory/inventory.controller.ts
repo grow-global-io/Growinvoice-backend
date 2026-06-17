@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiTags, ApiQuery, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiQuery, ApiOperation, ApiExtraModels } from '@nestjs/swagger';
 import { InventoryService } from './inventory.service';
 import { CreateInventoryDto } from './dto/create-inventory.dto';
 import { UpdateInventoryDto } from './dto/update-inventory.dto';
@@ -17,6 +17,7 @@ import { BulkUpdateInventoryDto } from './dto/bulk-update-inventory.dto';
 import { GetUser, User } from '@shared/decorators/user.decorator';
 import { ApiSuccessResponse } from '@shared/decorators/api-success-response.decorator';
 
+@ApiExtraModels(InventoryResponseDto)
 @ApiTags('inventory')
 @Controller('inventory')
 export class InventoryController {

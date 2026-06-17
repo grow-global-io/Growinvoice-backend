@@ -39,7 +39,10 @@ export class OpenaiController {
         invoice_number: { type: 'string' },
         date: { type: 'string' },
         due_date: { type: 'string' },
-        line_items: { type: 'array' },
+        line_items: {
+          type: 'array',
+          items: { type: 'object' },
+        },
         subtotal: { type: 'number' },
         total: { type: 'number' },
         tax_amount: { type: 'number' },
